@@ -1,0 +1,7 @@
+Acceso
+Inicio sesión
+Registro 
+Página principal pasajero
+Página principal vendedor
+Página principal maquinista
+Página principal mantenimiento
