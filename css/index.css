@@ -1,0 +1,315 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f6f8;
+    color: #333;
+}
+
+/* ================= HEADER ================= */
+
+.header {
+    background-color: #0a2a66;
+    color: white;
+    padding: 16px 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.nav {
+    display: flex;
+    gap: 25px;
+    margin-left: auto;
+    margin-right: 30px;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+.nav a:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* Dropdown idiomas */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background: white;
+    min-width: 140px;
+    border-radius: 6px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    display: none;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 10px;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background: #f0f0f0;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Login */
+.btn-login {
+    color: white;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.5);
+    transition: background 0.3s;
+}
+
+.btn-login:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* ================= MAIN ================= */
+
+.main {
+    padding: 40px;
+}
+
+/* ================= BUSCADOR ================= */
+
+.search-section {
+    position: relative;
+    background: rgba(255,255,255,0.95);
+    padding: 80px 40px;
+    border-radius: 16px;
+    margin: 60px auto;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    max-width: 1200px;
+    overflow: hidden;
+}
+
+.search-bg {
+    position: absolute;
+    inset: 0;
+    background: url('../imagenes/tren.jpg') center/cover no-repeat;
+    opacity: 0.22;
+    z-index: 0;
+}
+
+.search-section h1 {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 30px;
+    font-size: 2.4rem;
+}
+
+.search-form {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+}
+
+.search-form input,
+.search-form select {
+    padding: 14px;
+    width: 180px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.search-form input:hover,
+.search-form select:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(10,42,102,0.25);
+}
+
+.search-form button {
+    padding: 14px 30px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #0a2a66;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.search-form button:hover {
+    background: rgba(10,42,102,0.8);
+    transform: scale(1.05);
+}
+
+/* ================= SECCIONES ================= */
+
+.popular-section,
+.offers-section {
+    margin: 80px auto;
+    max-width: 1200px;
+}
+
+.popular-section h2,
+.offers-section h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+/* ================= CARRUSEL ================= */
+
+.carousel {
+    position: relative;
+    overflow: hidden;
+}
+
+.popular-track,
+.offers-track {
+    display: flex;
+    gap: 25px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+.popular-track::-webkit-scrollbar,
+.offers-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* Flechas */
+.prev,
+.next {
+    position: absolute;
+    top: 45%;
+    background: rgba(10,42,102,0.85);
+    color: white;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.prev { left: -20px; }
+.next { right: -20px; }
+
+.prev:hover,
+.next:hover {
+    background: rgba(10,42,102,0.65);
+}
+
+/* ================= TARJETAS ================= */
+
+.popular-card,
+.offer-card {
+    min-width: 320px;
+    max-width: 320px;
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    transition: transform 0.3s, box-shadow 0.3s;
+    flex-shrink: 0;
+}
+
+.popular-card:hover,
+.offer-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 35px rgba(0,0,0,0.25);
+}
+
+.popular-card img,
+.offer-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.popular-content,
+.offer-content {
+    padding: 18px;
+}
+
+.btn-popular {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: #0a2a66;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+.btn-popular:hover {
+    background: rgba(10,42,102,0.75);
+}
+
+/* ================= FOOTER ================= */
+
+.footer {
+    background: #1c1c1c;
+    color: #ccc;
+    padding: 60px 40px 20px;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.footer-column h3,
+.footer-column h4 {
+    color: white;
+    margin-bottom: 15px;
+}
+
+.footer-column a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 0.3s;
+}
+
+.footer-column a:hover {
+    color: #7fb4ff;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 0.9rem;
+    color: #aaa;
+}
