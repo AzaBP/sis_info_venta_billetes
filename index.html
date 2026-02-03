@@ -39,20 +39,44 @@
             <div class="search-bg"></div>
             <h1>Busca tu tren</h1>
             <form class="search-form">
-                <input type="text" placeholder="Origen">
-                <input type="text" placeholder="Destino">
-                <div class="date-type">
-                    <input type="date">
-                    <input type="date">
-                </div>
-                <select>
-                    <option value="1">1 pasajero</option>
-                    <option value="2">2 pasajeros</option>
-                    <option value="3">3 pasajeros</option>
-                    <option value="4">4 pasajeros</option>
-                </select>
-                <button type="submit">Buscar</button>
-            </form>
+
+            <!-- Tipo de viaje -->
+            <div class="trip-type">
+                <label>
+                    <input type="radio" name="trip" value="oneway" checked>
+                    Solo ida
+                </label>
+                <label>
+                    <input type="radio" name="trip" value="roundtrip">
+                    Ida y vuelta
+                </label>
+            </div>
+
+            <!-- Origen -->
+            <div class="input-group">
+                <input type="text" id="origen" placeholder="Origen" autocomplete="off">
+                <div class="suggestions" id="suggestions-origen"></div>
+            </div>
+
+            <!-- Destino -->
+            <div class="input-group">
+                <input type="text" id="destino" placeholder="Destino" autocomplete="off">
+                <div class="suggestions" id="suggestions-destino"></div>
+            </div>
+
+            <!-- Fechas dinámicas -->
+            <div class="date-type" id="date-container">
+                <input type="date" id="fecha-ida">
+            </div>
+
+            <select>
+                <option value="1">1 pasajero</option>
+                <option value="2">2 pasajeros</option>
+                <option value="3">3 pasajeros</option>
+                <option value="4">4 pasajeros</option>
+            </select>
+            <button type="submit">Buscar</button>
+        </form>
         </section>
 
         <!-- DESTINOS POPULARES -->
@@ -198,6 +222,8 @@
             prev.addEventListener('click', () => track.scrollBy({left: -cardWidth * cardsPerScroll, behavior:'smooth'}));
         });
     </script>
+    <script src="scripts/index.js"></script>
+
 
 </body>
 </html>
