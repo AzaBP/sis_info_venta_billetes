@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>TrainWeb - Ayuda y contacto</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <!--HEADER -->
+    <header class="header">
+        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+        <nav class="nav">
+            <a href="#">Inicio</a>
+            <a href="#">Billetes</a>
+            <div class="dropdown">
+                <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="#">Español</a>
+                    <a href="#">Inglés</a>
+                    <a href="#">Francés</a>
+                    <a href="#">Alemán</a>
+                </div>
+            </div>
+            <a href="#">Ofertas</a>
+            <a href="#">Contacto</a>
+        </nav>
+        <div class="user-actions">
+            <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</a>
+        </div>
+    </header>
+
+    <main class="help-main">
+        <!--BUSCADOR AYUDA-->
+        <section class="help-hero">
+            <div class="hero-content">
+                <h1>¿En qué podemos ayudarte?</h1>
+                <p>Busca soluciones rápidas a tus dudas sobre viajes, billetes y servicios.</p>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" placeholder="Ej: Cambiar billete, equipaje, mascotas...">
+                    <button>Buscar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTENIDO AYUDA Y CONTACTO -->
+        <div class="profile-container help-container">
+            <!-- TEMAS FRECUENTES -->
+            <h2 class="section-title">Temas frecuentes</h2>
+            <div class="topics-grid">
+                <a href="#" class="topic-card">
+                    <i class="fa-solid fa-ticket"></i>
+                    <span>Compra y Cambio</span>
+                </a>
+                <a href="#" class="topic-card">
+                    <i class="fa-solid fa-suitcase-rolling"></i>
+                    <span>Equipajes</span>
+                </a>
+                <a href="#" class="topic-card">
+                    <i class="fa-solid fa-dog"></i>
+                    <span>Mascotas</span>
+                </a>
+                <a href="#" class="topic-card">
+                    <i class="fa-solid fa-wheelchair"></i>
+                    <span>Asistencia PMR</span>
+                </a>
+                <a href="#" class="topic-card">
+                    <i class="fa-solid fa-train-subway"></i>
+                    <span>Estado de trenes</span>
+                </a>
+                <a href="#" class="topic-card">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Facturas</span>
+                </a>
+            </div>
+            <!-- PREGUNTAS POPULARES -->
+            <h2 class="section-title" style="margin-top: 40px;">Preguntas populares</h2>
+            <!--ACORDEON DE PREGUNTAS-->
+            <div class="profile-panel accordion-wrapper">
+                <!-- PREGUNTA 1-->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="header-title">¿Cómo puedo anular mi billete?</div>
+                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p style="padding-bottom: 20px; color: #555;">
+                            Puedes anular tu billete hasta 15 minutos antes de la salida del tren desde la sección "Mis Viajes" en tu área privada. Dependiendo de tu tarifa, podrían aplicarse gastos de anulación.
+                        </p>
+                    </div>
+                </div>
+                <!-- PREGUNTA 2-->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="header-title">¿Con cuánta antelación debo llegar a la estación?</div>
+                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p style="padding-bottom: 20px; color: #555;">
+                            Recomendamos llegar al menos <strong>30 minutos antes</strong> de la salida para pasar los controles de seguridad con tranquilidad. El cierre de puertas se realiza 2 minutos antes de la hora de salida.
+                        </p>
+                    </div>
+                </div>
+                <!-- PREGUNTA 3-->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="header-title">Indemnizaciones por retraso</div>
+                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p style="padding-bottom: 20px; color: #555;">
+                            Si tu tren llega con retraso superior a 15 minutos (AVE) o 30 minutos (Larga Distancia), tienes derecho a devolución parcial o total. Solicítalo automáticamente pasadas 24 horas de la llegada.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CANALES DE CONTACTO -->
+            <div class="contact-channels">
+                <!-- ATENCIÓN TELEFÓNICA -->
+                <div class="contact-box info-box">
+                    <i class="fa-solid fa-phone-volume"></i>
+                    <h3>Atención Telefónica</h3>
+                    <p class="phone-number">912 320 320</p>
+                    <p class="small-text">Lunes a Domingo: 24h</p>
+                    <hr>
+                    <p class="phone-number">900 878 333</p>
+                    <p class="small-text">Atención a personas con discapacidad</p>
+                </div>
+                <!-- REDES SOCIALES -->
+                <div class="contact-box social-box">
+                    <i class="fa-brands fa-x-twitter"></i>
+                    <h3>Soporte en X (Twitter)</h3>
+                    <p>Escríbenos para consultas rápidas e incidencias en tiempo real.</p>
+                    <a href="#" class="btn-social">@TrainWeb_Ayuda</a>
+                </div>
+                <!-- FORMULARIO DE CONTACTO -->
+                <div class="contact-box form-box">
+                    <i class="fa-regular fa-envelope"></i>
+                    <h3>Formulario / Quejas</h3>
+                    <p>Para reclamaciones formales o consultas extensas, utiliza nuestro formulario.</p>
+                    <a href="#" class="btn-primary">Abrir formulario</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!--FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>TrainWeb</h3>
+                <p>Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Servicios</h4>
+                <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
+                <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
+                <a href="#"><i class="fa-solid fa-tags"></i> Ofertas</a>
+                <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
+            </div>
+            <div class="footer-column">
+                <h4>Información legal</h4>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+            </div>
+            <div class="footer-column">
+                <h4>Redes sociales</h4>
+                <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
+    </footer>
+
+    <!-- ACCORDION SCRIPT -->
+    <script>
+        const accordions = document.querySelectorAll('.accordion-header');
+        accordions.forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+
+</body>
+</html>

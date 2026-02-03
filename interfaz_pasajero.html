@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>TrainWeb - Página Usuario</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+        <nav class="nav">
+            <a href="#">Inicio</a>
+            <a href="#">Billetes</a>
+            <div class="dropdown">
+                <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="#">Español</a>
+                    <a href="#">Inglés</a>
+                    <a href="#">Francés</a>
+                    <a href="#">Alemán</a>
+                </div>
+            </div>
+            <a href="#">Ofertas</a>
+            <a href="interfaz_ayuda_contacto.html">Contacto</a>
+        </nav>
+        <div class="user-actions">
+            <a href="perfil.html" class="btn-profile" aria-label="Mi Perfil">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
+        
+    </header>
+
+    <!-- CONTENIDO PERFIL -->
+    <main class="perfil-main">
+
+        <!--BIENVENIDA USUARIO-->
+        <section class="welcome-section">
+            <div class="welcome-text">
+                <h1>Hola Misamores</h1>
+                <p class="welcome-subtitle">Aquí tienes el resumen de tu actividad y próximos viajes.</p>
+            </div>
+                
+        </section>
+
+
+        <!--VIAJES COMPRADOS POR EL USUARIO-->
+        <div class="profile-container">
+            <h2 class="section-title">Mis Viajes</h2>
+
+            <div class="profile-panel">
+                
+                <!--VIAJE ACTIVO-->
+                <div class="trip-item active-trip">
+                    <div class="trip-header">
+                        <span class="trip-status status-upcoming">Próximo viaje</span>
+                        <span class="trip-id">Ref: #TW-8923</span>
+                    </div>
+                    <div class="trip-body">
+                        <div class="trip-route">
+                            <div class="route-time">
+                                <span class="time">08:30</span>
+                                <span class="city">Madrid P. Atocha</span>
+                            </div>
+                            <div class="route-line">
+                                <i class="fa-solid fa-arrow-right-long"></i>
+                                <span class="duration">2h 30m</span>
+                            </div>
+                            <div class="route-time">
+                                <span class="time">11:00</span>
+                                <span class="city">Barcelona Sants</span>
+                            </div>
+                        </div>
+                        <div class="trip-date">
+                            <i class="fa-regular fa-calendar"></i> 15 Oct, 2026
+                        </div>
+                    </div>
+                    <div class="trip-actions">
+                        <a href="#" class="btn-secondary">Ver detalles</a>
+                        <a href="#" class="btn-primary"><i class="fa-solid fa-file-pdf"></i> Descargar billete</a>
+                    </div>
+                </div>
+
+                <hr class="trip-separator">
+
+                <!--VIAJE PASADO-->
+                <div class="trip-item past-trip">
+                    <div class="trip-header">
+                        <span class="trip-status status-completed">Finalizado</span>
+                        <span class="trip-id">Ref: #TW-1044</span>
+                    </div>
+                    <div class="trip-body">
+                        <div class="trip-route">
+                            <div class="route-time">
+                                <span class="time">14:00</span>
+                                <span class="city">Valencia J. Sorolla</span>
+                            </div>
+                            <div class="route-line">
+                                <i class="fa-solid fa-arrow-right-long"></i>
+                                <span class="duration">1h 50m</span>
+                            </div>
+                            <div class="route-time">
+                                <span class="time">15:50</span>
+                                <span class="city">Madrid Chamartín</span>
+                            </div>
+                        </div>
+                        <div class="trip-date">
+                            <i class="fa-regular fa-calendar"></i> 02 Sep, 2026
+                        </div>
+                    </div>
+                    <div class="trip-actions">
+                        <a href="#" class="btn-secondary">Volver a comprar</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--ABONOS COMPRADOS POR EL USUARIO-->
+        <div class="profile-container" style="margin-top: 40px;">
+            <h2 class="section-title">Mis Abonos</h2>
+
+            <div class="profile-panel">
+                <!--ABONO ACTIVO-->
+                <div class="trip-item"> <div class="trip-header">
+                        <span class="trip-status status-active">Activo</span>
+                        <span class="trip-id">Abono: #BONO-10-MD</span>
+                    </div>
+                    <!--DETALLES DEL ABONO-->
+                    <div class="trip-body">
+                        <div class="trip-route">
+                            <div class="route-city-only">
+                                <span class="city-large">Madrid</span>
+                            </div>
+                            <div class="route-line">
+                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                <span class="duration">Media Distancia</span>
+                            </div>
+                            <div class="route-city-only">
+                                <span class="city-large">Toledo</span>
+                            </div>
+                        </div>
+
+                        <div class="pass-info">
+                            <p><strong>Caducidad:</strong> 31 Dic, 2026</p>
+                            <p><strong>Titular:</strong> Usuario Ejemplo</p>
+                        </div>
+                    </div>
+                    <!--BARRA DE PROGRESO DEL ABONO-->
+                    <div class="pass-progress-wrapper">
+                        <div class="progress-labels">
+                            <span>Gastados: <strong>4</strong></span>
+                            <span>Quedan: <strong>6 viajes</strong></span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                    <!--ACCIONES DEL ABONO-->
+                    <div class="trip-actions">
+                        <a href="#" class="btn-secondary">Ver usos</a>
+                        <a href="#" class="btn-primary">Formalizar viaje</a>
+                    </div>
+                </div>
+
+                <hr class="trip-separator">
+                <!--ABONO CADUCADO-->
+                <div class="trip-item past-trip">
+                    <div class="trip-header">
+                        <span class="trip-status status-completed">Agotado</span>
+                        <span class="trip-id">Abono: #RECURRENTE-25</span>
+                    </div>
+                    <!--DETALLES DEL ABONO-->
+                    <div class="trip-body">
+                        <div class="trip-route">
+                            <div class="route-city-only">
+                                <span class="city-large">Sevilla</span>
+                            </div>
+                            <div class="route-line">
+                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                <span class="duration">Cercanías</span>
+                            </div>
+                            <div class="route-city-only">
+                                <span class="city-large">Utrera</span>
+                            </div>
+                        </div>
+                        <div class="pass-info">
+                            <p><strong>Caducidad:</strong> 30 Abr, 2026</p>
+                        </div>
+                    </div>
+                    <!--BARRA DE PROGRESO DEL ABONO-->
+                    <div class="pass-progress-wrapper">
+                        <div class="progress-labels">
+                            <span>Gastados: 10</span>
+                            <span>Quedan: 0 viajes</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: 100%; background-color: #aaa;"></div>
+                        </div>
+                    </div>
+                    <!--ACCIONES DEL ABONO-->
+                    <div class="trip-actions">
+                        <a href="#" class="btn-secondary">Renovar abono</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--DATOS DEL USUARIO-->
+        <div class="profile-container" style="margin-top: 40px; margin-bottom: 60px;"> 
+            <h2 class="section-title">Mis Datos</h2>
+            <!--ACORDEON DATOS USUARIO-->
+            <div class="profile-panel accordion-wrapper">
+                <!--DATOS PERSONALES-->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="header-title">
+                            <i class="fa-regular fa-id-card"></i> Datos Personales
+                        </div>
+                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </div>
+                    <!-- FORMULARIO DATOS USUARIO -->
+                    <div class="accordion-content">
+                        <form class="form-grid">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input type="text" value="Juan" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Apellidos</label>
+                                <input type="text" value="Pérez García" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Documento (DNI/NIE)</label>
+                                <input type="text" value="12345678Z" class="form-input" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Fecha de Nacimiento</label>
+                                <input type="date" value="1990-05-15" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" value="juan.perez@email.com" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Teléfono Móvil</label>
+                                <input type="tel" value="+34 600 000 000" class="form-input">
+                            </div>
+                            <div class="form-full">
+                                <button type="button" class="btn-primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--DATOS DE FACTURACIÓN-->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="header-title">
+                            <i class="fa-solid fa-file-invoice-dollar"></i> Datos de Facturación
+                        </div>
+                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </div>
+                    <!-- FORMULARIO DIRECCIÓN FACTURACIÓN -->
+                    <div class="accordion-content">
+                        <form class="form-grid">
+                            <div class="form-group full-width">
+                                <label>Dirección Postal</label>
+                                <input type="text" placeholder="Calle, Número, Piso..." class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Código Postal</label>
+                                <input type="text" placeholder="28000" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Localidad</label>
+                                <input type="text" placeholder="Madrid" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Provincia</label>
+                                <input type="text" placeholder="Madrid" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>País</label>
+                                <select class="form-input">
+                                    <option>España</option>
+                                    <option>Portugal</option>
+                                    <option>Francia</option>
+                                </select>
+                            </div>
+                            <div class="form-full">
+                                <button type="button" class="btn-primary">Actualizar Dirección</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--GESTIÓN DE NOTIFICACIONES-->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="header-title">
+                            <i class="fa-regular fa-bell"></i> Gestión de Notificaciones
+                        </div>
+                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </div>
+                    
+                    <div class="accordion-content">
+                        <div class="notifications-list">
+                            <div class="notification-option">
+                                <div class="notif-text">
+                                    <strong>Avisos de viaje</strong>
+                                    <p>Retrasos, cambios de vía e incidencias en tiempo real.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <hr class="trip-separator">
+                            <div class="notification-option">
+                                <div class="notif-text">
+                                    <strong>Ofertas comerciales</strong>
+                                    <p>Promociones exclusivas y descuentos personalizados.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <hr class="trip-separator">
+                            <div class="notification-option">
+                                <div class="notif-text">
+                                    <strong>Encuestas de calidad</strong>
+                                    <p>Ayúdanos a mejorar el servicio tras tu viaje.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--SCRIPT ACORDEON -->
+        <script>
+            const accordions = document.querySelectorAll('.accordion-header');
+
+            accordions.forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentElement;
+                    // Alternar la clase 'active' para abrir/cerrar
+                    item.classList.toggle('active');
+                });
+            });
+        </script>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>TrainWeb</h3>
+                <p>Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Servicios</h4>
+                <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
+                <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
+                <a href="#"><i class="fa-solid fa-tags"></i> Ofertas</a>
+                <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
+            </div>
+            <div class="footer-column">
+                <h4>Información legal</h4>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+            </div>
+            <div class="footer-column">
+                <h4>Redes sociales</h4>
+                <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
+    </footer>
+
+</body>
+</html>
