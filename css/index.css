@@ -92,22 +92,6 @@ body {
     background: rgba(255,255,255,0.2);
 }
 
-/* Botón de perfil */
-.btn-profile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;            /* Ancho fijo */
-    height: 40px;           /* Alto fijo igual al ancho */
-    border-radius: 50%;     /* Esto lo hace totalmente redondo */
-    color: white;
-    text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    background-color: transparent; /* Fondo transparente inicial */
-    font-size: 1.1rem;      /* Tamaño del icono */
-    transition: all 0.3s ease;
-}
-
 /* ================= MAIN ================= */
 
 .main {
@@ -330,3 +314,51 @@ body {
     color: #aaa;
 }
 
+/* ================= TIPO DE VIAJE ================= */
+
+.trip-type {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.trip-type label {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.trip-type input {
+    margin-right: 6px;
+}
+
+
+/* ================= AUTOCOMPLETE ================= */
+
+.input-group {
+    position: relative;
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.suggestions div {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.suggestions div:hover {
+    background: #f0f0f0;
+}
