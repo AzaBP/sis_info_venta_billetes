@@ -211,19 +211,122 @@
         </div>
 
         <!--DATOS DEL USUARIO-->
-        <div class="profile-container" style="margin-top: 40px; margin-bottom: 60px;"> 
+        <div class="profile-container" style="margin-top: 40px;"> 
             <h2 class="section-title">Mis Datos</h2>
-            <!--ACORDEON DATOS USUARIO-->
             <div class="profile-panel accordion-wrapper">
-                <!--DATOS PERSONALES-->
+                <!-- Datos del usuario-->
                 <div class="accordion-item">
                     <div class="accordion-header">
                         <div class="header-title">
-                            <i class="fa-regular fa-id-card"></i> Datos Personales
+                            <i class="fa-regular fa-id-card"></i> Información Personal
                         </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
-                    <!-- FORMULARIO DATOS USUARIO -->
+                    <div class="accordion-content">
+                        <div class="form-grid">
+                            <div class="form-group read-only-group">
+                                <label>Nombre</label>
+                                <div class="static-value">Juan</div>
+                            </div>
+                            <div class="form-group read-only-group">
+                                <label>Apellidos</label>
+                                <div class="static-value">Pérez García</div>
+                            </div>
+                            <div class="form-group read-only-group">
+                                <label>Documento (DNI/NIE)</label>
+                                <div class="static-value">12345678Z</div>
+                            </div>
+                            <div class="form-group read-only-group">
+                                <label>Fecha de Nacimiento</label>
+                                <div class="static-value">15/05/1990</div>
+                            </div>
+                            <div class="form-group read-only-group">
+                                <label>Email</label>
+                                <div class="static-value">juan.perez@email.com</div>
+                            </div>
+                            <div class="form-group read-only-group">
+                                <label>Teléfono Móvil</label>
+                                <div class="static-value">+34 600 000 000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Dirección de facturación -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="header-title">
+                            <i class="fa-solid fa-file-invoice-dollar"></i> Dirección de Facturación
+                        </div>
+                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="form-grid">
+                            <div class="form-group full-width read-only-group">
+                                <label>Dirección Postal</label>
+                                <div class="static-value">Calle Gran Vía, 42, 4º Derecha</div>
+                            </div>
+                            <div class="form-group read-only-group">
+                                <label>Código Postal</label>
+                                <div class="static-value">28013</div>
+                            </div>
+                            <div class="form-group read-only-group">
+                                <label>Localidad</label>
+                                <div class="static-value">Madrid</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--CONFIGURACIÓN DE LA CUENTA-->
+        <div class="profile-container" style="margin-top: 40px; margin-bottom: 60px;"> 
+            <h2 class="section-title">Configuración de Cuenta</h2>
+            <div class="profile-panel accordion-wrapper">
+                <!--notificaciones-->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="header-title">
+                            <i class="fa-regular fa-bell"></i> Preferencias de Avisos
+                        </div>
+                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="notifications-list">
+                            <div class="notification-option">
+                                <div class="notif-text">
+                                    <strong>Avisos de viaje</strong>
+                                    <p>Retrasos, cambios de vía e incidencias.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <hr class="trip-separator">
+                            <div class="notification-option">
+                                <div class="notif-text">
+                                    <strong>Ofertas comerciales</strong>
+                                    <p>Promociones exclusivas y descuentos.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--modificar datos personales-->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="header-title">
+                            <i class="fa-solid fa-user-pen"></i> Modificar Datos Personales
+                        </div>
+                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </div>
                     <div class="accordion-content">
                         <form class="form-grid">
                             <div class="form-group">
@@ -236,14 +339,14 @@
                             </div>
                             <div class="form-group">
                                 <label>Documento (DNI/NIE)</label>
-                                <input type="text" value="12345678Z" class="form-input" disabled>
+                                <input type="text" value="12345678Z" class="form-input" disabled style="background-color: #f0f0f0; cursor: not-allowed;">
                             </div>
                             <div class="form-group">
                                 <label>Fecha de Nacimiento</label>
                                 <input type="date" value="1990-05-15" class="form-input">
                             </div>
                             <div class="form-group">
-                                <label>Email</label>
+                                <label>Email de Contacto</label>
                                 <input type="email" value="juan.perez@email.com" class="form-input">
                             </div>
                             <div class="form-group">
@@ -256,96 +359,53 @@
                         </form>
                     </div>
                 </div>
-                <!--DATOS DE FACTURACIÓN-->
+                <!--cambio de contraseña-->
                 <div class="accordion-item">
                     <div class="accordion-header">
                         <div class="header-title">
-                            <i class="fa-solid fa-file-invoice-dollar"></i> Datos de Facturación
+                            <i class="fa-solid fa-lock"></i> Seguridad y Contraseña
                         </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
-                    <!-- FORMULARIO DIRECCIÓN FACTURACIÓN -->
                     <div class="accordion-content">
                         <form class="form-grid">
                             <div class="form-group full-width">
-                                <label>Dirección Postal</label>
-                                <input type="text" placeholder="Calle, Número, Piso..." class="form-input">
+                                <label>Contraseña Actual</label>
+                                <input type="password" placeholder="••••••••" class="form-input">
                             </div>
                             <div class="form-group">
-                                <label>Código Postal</label>
-                                <input type="text" placeholder="28000" class="form-input">
+                                <label>Nueva Contraseña</label>
+                                <input type="password" class="form-input">
                             </div>
                             <div class="form-group">
-                                <label>Localidad</label>
-                                <input type="text" placeholder="Madrid" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label>Provincia</label>
-                                <input type="text" placeholder="Madrid" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label>País</label>
-                                <select class="form-input">
-                                    <option>España</option>
-                                    <option>Portugal</option>
-                                    <option>Francia</option>
-                                </select>
+                                <label>Repetir Nueva Contraseña</label>
+                                <input type="password" class="form-input">
                             </div>
                             <div class="form-full">
-                                <button type="button" class="btn-primary">Actualizar Dirección</button>
+                                <button type="button" class="btn-primary">Cambiar Contraseña</button>
                             </div>
                         </form>
                     </div>
                 </div>
-                <!--GESTIÓN DE NOTIFICACIONES-->
+                <!--eliminar cuenta-->
                 <div class="accordion-item">
                     <div class="accordion-header">
-                        <div class="header-title">
-                            <i class="fa-regular fa-bell"></i> Gestión de Notificaciones
+                        <div class="header-title" style="color: #d9534f;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Eliminar la cuenta
                         </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
-                    
                     <div class="accordion-content">
-                        <div class="notifications-list">
-                            <div class="notification-option">
-                                <div class="notif-text">
-                                    <strong>Avisos de viaje</strong>
-                                    <p>Retrasos, cambios de vía e incidencias en tiempo real.</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                            <hr class="trip-separator">
-                            <div class="notification-option">
-                                <div class="notif-text">
-                                    <strong>Ofertas comerciales</strong>
-                                    <p>Promociones exclusivas y descuentos personalizados.</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                            <hr class="trip-separator">
-                            <div class="notification-option">
-                                <div class="notif-text">
-                                    <strong>Encuestas de calidad</strong>
-                                    <p>Ayúdanos a mejorar el servicio tras tu viaje.</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
+                        <div style="padding: 15px 0;">
+                            <p style="margin-bottom: 15px; color: #666;">Si eliminas tu cuenta, perderás acceso a tus billetes y abonos activos.</p>
+                            <button type="button" class="btn-danger">Eliminar mi cuenta</button>
                         </div>
                     </div>
                 </div>
 
             </div>
         </div>
+
         <!--SCRIPT ACORDEON -->
         <script>
             const accordions = document.querySelectorAll('.accordion-header');

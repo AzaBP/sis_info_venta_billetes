@@ -431,3 +431,38 @@ input:checked + .slider:before {
     transform: translateX(24px);
 }
 
+/* Botón de peligro (Rojo) */
+.btn-danger {
+    background-color: white;
+    color: #d9534f;
+    border: 1px solid #d9534f;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+/* Hover para el botón de peligro */
+.btn-danger:hover {
+    background-color: #d9534f;
+    color: white;
+}
+
+/* Estilo para datos de solo lectura */
+.static-value {
+    padding: 12px 0;
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+    border-bottom: 1px solid #eee; /* Una línea sutil para separar */
+    margin-bottom: 5px;
+}
+
+/* Para que las etiquetas (label) se vean un poco más grisáceas en modo lectura */
+.read-only-group label {
+    color: #888;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
