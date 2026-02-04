@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>TrainWeb - Registro</title>
+    <link rel="stylesheet" href="css/registro.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+        <nav class="nav">
+            <a href="index.html">Inicio</a>
+            <a href="#">Billetes</a>
+            <div class="dropdown">
+                <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="#">Español</a>
+                    <a href="#">Inglés</a>
+                    <a href="#">Francés</a>
+                    <a href="#">Alemán</a>
+                </div>
+            </div>
+            <a href="#">Ofertas</a>
+            <a href="ayuda.html">Ayuda</a>
+        </nav>
+        <div class="user-actions">
+            <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</a>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+        <section class="register-wrap">
+            <div class="register-container">
+                
+                <!-- PROGRESS BAR -->
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="steps-tracker">
+                        <div class="step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">Personales</div>
+                        </div>
+                        <div class="step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">Contacto</div>
+                        </div>
+                        <div class="step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">Seguridad</div>
+                        </div>
+                        <div class="step" data-step="4">
+                            <div class="step-number">4</div>
+                            <div class="step-label">Términos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORM CONTAINER -->
+                <form class="register-form" id="registerForm">
+
+                    <!-- STEP 1: DATOS PERSONALES -->
+                    <div class="form-step active" data-step="1">
+                        <div class="step-header">
+                            <h2>Datos Personales</h2>
+                            <p>Cuéntanos quién eres</p>
+                        </div>
+                        
+                        <div class="step-content">
+                            <div class="form-group">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="apellido">Apellido</label>
+                                <input type="text" id="apellido" name="apellido" placeholder="Ej: García López" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nacimiento">Fecha de Nacimiento</label>
+                                <input type="date" id="nacimiento" name="nacimiento" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="genero">Género</label>
+                                <select id="genero" name="genero" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="masculino">Masculino</option>
+                                    <option value="femenino">Femenino</option>
+                                    <option value="otro">Otro</option>
+                                    <option value="no_especificar">Prefiero no especificar</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tipo_documento">Tipo de Documento</label>
+                                <select id="tipo_documento" name="tipo_documento" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="dni">DNI</option>
+                                    <option value="nie">NIE</option>
+                                    <option value="pasaporte">Pasaporte</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="numero_documento">Número de Documento</label>
+                                <input type="text" id="numero_documento" name="numero_documento" placeholder="Ej: 12345678A" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: CONTACTO -->
+                    <div class="form-step" data-step="2">
+                        <div class="step-header">
+                            <h2>Información de Contacto</h2>
+                            <p>¿Dónde te encontramos?</p>
+                        </div>
+
+                        <div class="step-content">
+                            <div class="form-group">
+                                <label for="email">Correo Electrónico</label>
+                                <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="telefono">Teléfono</label>
+                                <input type="tel" id="telefono" name="telefono" placeholder="+34 612 345 678" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="calle">Calle y Número</label>
+                                <input type="text" id="calle" name="calle" placeholder="Ej: Calle Principal 42" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ciudad">Ciudad</label>
+                                <input type="text" id="ciudad" name="ciudad" placeholder="Ej: Madrid" required>
+                            </div>
+
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="codigo_postal">Código Postal</label>
+                                    <input type="text" id="codigo_postal" name="codigo_postal" placeholder="28001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pais">País</label>
+                                    <select id="pais" name="pais" required>
+                                        <option value="">Seleccionar</option>
+                                        <option value="españa">España</option>
+                                        <option value="portugal">Portugal</option>
+                                        <option value="francia">Francia</option>
+                                        <option value="italia">Italia</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: SEGURIDAD -->
+                    <div class="form-step" data-step="3">
+                        <div class="step-header">
+                            <h2>Crea tu Contraseña</h2>
+                            <p>Mantén tu cuenta segura</p>
+                        </div>
+
+                        <div class="step-content">
+                            <div class="form-group">
+                                <label for="contraseña">Contraseña</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="contraseña" name="contraseña" placeholder="Mínimo 8 caracteres" required>
+                                    <button type="button" class="toggle-password"><i class="fa-solid fa-eye"></i></button>
+                                </div>
+                                <div class="password-strength">
+                                    <div class="strength-bar"></div>
+                                    <span class="strength-text">Fuerza: <strong>Débil</strong></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirmar_contraseña">Confirmar Contraseña</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="confirmar_contraseña" name="confirmar_contraseña" placeholder="Repite tu contraseña" required>
+                                    <button type="button" class="toggle-password"><i class="fa-solid fa-eye"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="password-tips">
+                                <p class="tips-title">Una buena contraseña contiene:</p>
+                                <div class="tips-list">
+                                    <div class="tip" id="tip-length"><i class="fa-solid fa-circle-xmark"></i> Al menos 8 caracteres</div>
+                                    <div class="tip" id="tip-upper"><i class="fa-solid fa-circle-xmark"></i> Mayúsculas</div>
+                                    <div class="tip" id="tip-lower"><i class="fa-solid fa-circle-xmark"></i> Minúsculas</div>
+                                    <div class="tip" id="tip-number"><i class="fa-solid fa-circle-xmark"></i> Números</div>
+                                    <div class="tip" id="tip-special"><i class="fa-solid fa-circle-xmark"></i> Caracteres especiales (!@#$%)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: TÉRMINOS Y CONDICIONES -->
+                    <div class="form-step" data-step="4">
+                        <div class="step-header">
+                            <h2>Términos y Condiciones</h2>
+                            <p>Casi listo, acepta nuestros términos</p>
+                        </div>
+
+                        <div class="step-content">
+                            <div class="terms-box">
+                                <label class="checkbox-custom">
+                                    <input type="checkbox" name="terminos" required>
+                                    <span class="checkmark"></span>
+                                    Acepto los <a href="#" class="link-term">Términos y Condiciones</a>
+                                </label>
+                                <label class="checkbox-custom">
+                                    <input type="checkbox" name="privacidad" required>
+                                    <span class="checkmark"></span>
+                                    Acepto la <a href="#" class="link-term">Política de Privacidad</a>
+                                </label>
+                                <label class="checkbox-custom">
+                                    <input type="checkbox" name="newsletter">
+                                    <span class="checkmark"></span>
+                                    Deseo recibir ofertas y promociones
+                                </label>
+                            </div>
+
+                            <div class="success-preview">
+                                <div class="success-icon">
+                                    <i class="fa-solid fa-check-circle"></i>
+                                </div>
+                                <h3>¡Casi listo!</h3>
+                                <p>Haz clic en "Crear Cuenta" para completar tu registro y disfrutar de todos nuestros servicios</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FORM ACTIONS -->
+                    <div class="form-actions">
+                        <button type="button" class="btn-prev" id="prevBtn" style="display:none;">
+                            <i class="fa-solid fa-chevron-left"></i> Atrás
+                        </button>
+                        <button type="button" class="btn-next" id="nextBtn">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>TrainWeb</h3>
+                <p>Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Servicios</h4>
+                <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
+                <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
+                <a href="#"><i class="fa-solid fa-tags"></i> Ofertas</a>
+                <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
+            </div>
+            <div class="footer-column">
+                <h4>Información legal</h4>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+            </div>
+            <div class="footer-column">
+                <h4>Redes sociales</h4>
+                <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
+    </footer>
+
+    <script src="scripts/registro.js"></script>
+</body>
+</html>
