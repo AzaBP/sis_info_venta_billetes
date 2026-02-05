@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrainWeb - Panel de Vendedor</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/vendedor.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <i class="fa-solid fa-train"></i> TrainWeb 
+            <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; margin-left: 10px; vertical-align: middle; position: relative; bottom: 2px;">| Portal Vendedor</span>
+        </div>
+        <nav class="nav">
+            <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-id-badge" style="font-size: 1.2rem;"></i> Vendedor #402
+            </div>
+            <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        
+        <div class="dashboard-header">
+            <h1>Gestión Comercial y Venta Asistida</h1>
+            <p>Introduce el DNI del cliente para comenzar una operación.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            
+            <section class="card search-section-panel">
+                <h2><i class="fa-solid fa-magnifying-glass"></i> Identificación Cliente</h2>
+                <div class="search-box">
+                    <input type="text" id="dniInput" placeholder="DNI / NIE del Pasajero" maxlength="9">
+                    <button id="btnBuscar" class="btn-primary">Buscar</button>
+                </div>
+                
+                <div id="clientInfo" class="client-details hidden">
+                    <div class="status-badge active">Cliente Verificado</div>
+                    <h3><span id="clientName">---</span></h3>
+                    <p><strong>Email:</strong> <span id="clientEmail">---</span></p>
+                    <p><strong>Teléfono:</strong> <span id="clientPhone">---</span></p>
+                    <hr>
+                    <p class="privacy-note"><i class="fa-solid fa-shield-halved"></i> Método de Pago guardado:</p>
+                    <p class="payment-method"><i class="fa-brands fa-cc-visa"></i> VISA terminada en <span id="clientCard">****</span></p>
+                </div>
+                
+                <div id="clientError" class="error-msg hidden">
+                    <i class="fa-solid fa-circle-exclamation"></i> Cliente no encontrado.
+                </div>
+            </section>
+
+            <section class="card operations-section disabled" id="operationsPanel">
+                <h2><i class="fa-solid fa-ticket"></i> Consola de Operaciones</h2>
+                
+                <div class="actions-grid">
+                    <button class="action-btn" onclick="openModal('venta')">
+                        <i class="fa-solid fa-cart-plus"></i>
+                        <span>Nueva Venta</span>
+                    </button>
+                    <button class="action-btn" onclick="openModal('cambio')">
+                        <i class="fa-solid fa-repeat"></i>
+                        <span>Cambio Billete</span>
+                    </button>
+                    <button class="action-btn" onclick="alert('Funcionalidad de cancelación')">
+                        <i class="fa-solid fa-ban"></i>
+                        <span>Cancelar Reserva</span>
+                    </button>
+                    <button class="action-btn" onclick="alert('Factura enviada al email del cliente')">
+                        <i class="fa-solid fa-file-invoice"></i>
+                        <span>Reenviar Factura</span>
+                    </button>
+                </div>
+
+                <div class="mini-list-container">
+                    <h4>Últimos viajes del cliente</h4>
+                    <ul class="mini-list" id="recentTrips"></ul>
+                </div>
+            </section>
+
+            <section class="card feed-section">
+                <h2><i class="fa-solid fa-route"></i> Estado de Rutas (Hoy)</h2>
+                <table class="routes-table">
+                    <thead>
+                        <tr>
+                            <th>Origen - Destino</th>
+                            <th>Hora</th>
+                            <th>Plazas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Zaragoza - Madrid</td>
+                            <td>08:30</td>
+                            <td><span class="tag low">3 Libres</span></td>
+                        </tr>
+                        <tr>
+                            <td>Madrid - Barcelona</td>
+                            <td>09:15</td>
+                            <td><span class="tag high">42 Libres</span></td>
+                        </tr>
+                        <tr>
+                            <td>Zaragoza - Huesca</td>
+                            <td>10:00</td>
+                            <td><span class="tag medium">15 Libres</span></td>
+                        </tr>
+                        <tr>
+                            <td>Sevilla - Madrid</td>
+                            <td>11:45</td>
+                            <td><span class="tag full">COMPLETO</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>TrainWeb</h3>
+                <p>Conectando personas y destinos con la mejor experiencia de viaje ferroviario en todo el territorio nacional.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Servicios</h4>
+                <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
+                <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
+                <a href="#"><i class="fa-solid fa-tags"></i> Ofertas</a>
+                <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
+            </div>
+            <div class="footer-column">
+                <h4>Información legal</h4>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+            </div>
+            <div class="footer-column">
+                <h4>Redes sociales</h4>
+                <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            © 2026 TrainWeb · Todos los derechos reservados
+        </div>
+    </footer>
+
+    <script src="js/vendedor.js"></script>
+</body>
+</html>

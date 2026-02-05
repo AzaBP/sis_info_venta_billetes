@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrainWeb - Gestión de Mantenimiento</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/mantenimiento.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <i class="fa-solid fa-train"></i> TrainWeb 
+            <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; margin-left: 10px; vertical-align: middle; position: relative; bottom: 2px;">| Mantenimiento</span>
+        </div>
+        <nav class="nav">
+            <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-helmet-safety" style="font-size: 1.2rem;"></i> Técnico: Juan Carlos NLB 
+            </div>
+            <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
+        </nav>
+    </header>
+
+    <main class="maint-container">
+        
+        <div class="page-title">
+            <h1><i class="fa-solid fa-wrench"></i> Centro de control de unidades</h1>
+            <p>Supervisión técnica de unidades y gestión de incidencias en tiempo real.</p>
+        </div>
+
+        <div class="maint-grid">
+            
+            <section class="panel fleet-status">
+                <h2>Estado de Unidades</h2>
+                <div class="train-card status-ok">
+                    <div class="train-id">AVE-102</div>
+                    <div class="train-route">Madrid - BCN</div>
+                    <div class="train-badge"><i class="fa-solid fa-check"></i> Operativo</div>
+                </div>
+
+                <div class="train-card status-warning">
+                    <div class="train-id">ALVIA-405</div>
+                    <div class="train-route">Zaragoza - Huesca</div>
+                    <div class="train-badge"><i class="fa-solid fa-triangle-exclamation"></i> Revisión A/C</div>
+                </div>
+
+                <div class="train-card status-critical">
+                    <div class="train-id">AVE-208</div>
+                    <div class="train-route">Talleres</div>
+                    <div class="train-badge"><i class="fa-solid fa-xmark"></i> Bloqueado</div>
+                </div>
+
+                <div class="train-card status-ok">
+                    <div class="train-id">AVLO-003</div>
+                    <div class="train-route">Sevilla - Madrid</div>
+                    <div class="train-badge"><i class="fa-solid fa-check"></i> Operativo</div>
+                </div>
+            </section>
+
+            <section class="panel issues-list">
+                <h2>Incidencias Pendientes</h2>
+                <div id="incidenciasContainer">
+                    <div class="issue-item high-priority">
+                        <div class="issue-header">
+                            <span class="issue-id">#INC-8892</span>
+                            <span class="priority-tag">URGENTE</span>
+                        </div>
+                        <p class="issue-desc">Fallo en sistema de frenado auxiliar.</p>
+                        <div class="issue-meta">
+                            <span><i class="fa-solid fa-train"></i> AVE-208</span>
+                            <button onclick="resolverIncidencia(this)" class="btn-resolve">Reparado</button>
+                        </div>
+                    </div>
+
+                    <div class="issue-item medium-priority">
+                        <div class="issue-header">
+                            <span class="issue-id">#INC-8901</span>
+                            <span class="priority-tag">MEDIA</span>
+                        </div>
+                        <p class="issue-desc">Asiento 4B atascado en vagón 2.</p>
+                        <div class="issue-meta">
+                            <span><i class="fa-solid fa-train"></i> ALVIA-405</span>
+                            <button onclick="resolverIncidencia(this)" class="btn-resolve">Reparado</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel report-form">
+                <h2><i class="fa-solid fa-pen-to-square"></i> Nueva Incidencia</h2>
+                <form id="formMantenimiento">
+                    <div class="form-group">
+                        <label>ID Tren</label>
+                        <select id="trainSelect">
+                            <option value="AVE-102">AVE-102</option>
+                            <option value="ALVIA-405">ALVIA-405</option>
+                            <option value="AVE-208">AVE-208</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Prioridad</label>
+                        <select id="prioritySelect">
+                            <option value="low">Baja (Estética/Limpieza)</option>
+                            <option value="medium">Media (Confort)</option>
+                            <option value="high">Alta (Seguridad/Mecánica)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descripción del fallo</label>
+                        <textarea id="issueDesc" rows="4" placeholder="Describe la avería..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Registrar Incidencia</button>
+                </form>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>TrainWeb</h3>
+                <p>Conectando personas y destinos con la mejor experiencia de viaje ferroviario en todo el territorio nacional.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Servicios</h4>
+                <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
+                <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
+                <a href="#"><i class="fa-solid fa-tags"></i> Ofertas</a>
+                <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
+            </div>
+            <div class="footer-column">
+                <h4>Información legal</h4>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+            </div>
+            <div class="footer-column">
+                <h4>Redes sociales</h4>
+                <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            © 2026 TrainWeb · Todos los derechos reservados
+        </div>
+    </footer>
+
+    <script src="js/mantenimiento.js"></script>
+</body>
+</html>
