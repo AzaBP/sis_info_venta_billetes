@@ -1,11 +1,12 @@
 -- ================================================
--- 1️⃣ USUARIO (superclase)
+-- 1️ USUARIO (superclase)
 -- ================================================
 CREATE TABLE USUARIO (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    telefono VARCHAR(20),
     metodo_pago VARCHAR(50)
 );
 
@@ -15,7 +16,18 @@ CREATE TABLE USUARIO (
 CREATE TABLE PASAJERO (
     id_pasajero INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
-    fecha_nacimiento DATE,
+    apellido VARCHAR(100) NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
+    genero ENUM('masculino','femenino','otro','no_especificar') NOT NULL,
+    tipo_documento ENUM('dni','nie','pasaporte') NOT NULL,
+    numero_documento VARCHAR(20) UNIQUE NOT NULL,
+    calle VARCHAR(255),
+    ciudad VARCHAR(100),
+    codigo_postal VARCHAR(10),
+    pais VARCHAR(50),
+    acepta_terminos BOOLEAN DEFAULT FALSE,
+    acepta_privacidad BOOLEAN DEFAULT FALSE,
+    newsletter BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario)
 );
 
@@ -32,7 +44,6 @@ CREATE TABLE EMPLEADO (
 -- ================================================
 -- Subtablas de EMPLEADO
 -- ================================================
-
 -- VENDEDOR
 CREATE TABLE VENDEDOR (
     id_empleado INT PRIMARY KEY,
@@ -93,23 +104,7 @@ CREATE TABLE ASIENTO (
 );
 
 -- ================================================
--- 8️⃣ BILLETE
--- ================================================
-CREATE TABLE BILLETE (
-    id_billete INT AUTO_INCREMENT PRIMARY KEY,
-    id_pasajero INT NOT NULL,
-    id_asiento INT,
-    id_abono INT,
-    id_viaje_mongo VARCHAR(24),   -- ObjectId de VIAJE en MongoDB que incluye promociones
-    id_promocion_mongo VARCHAR(24), -- ObjectId de MongoDB de la promoción aplicada
-    FOREIGN KEY (id_pasajero) REFERENCES PASAJERO(id_pasajero),
-    FOREIGN KEY (id_asiento) REFERENCES ASIENTO(id_asiento),
-    FOREIGN KEY (id_abono) REFERENCES ABONO(id_abono)
-);
-
-
--- ================================================
--- 9️⃣ ABONO / SUSCRIPCIÓN
+-- 9️ABONO / SUSCRIPCIÓN
 -- ================================================
 CREATE TABLE ABONO (
     id_abono INT AUTO_INCREMENT PRIMARY KEY,
