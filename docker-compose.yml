@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # Base de datos Relacional (PostgreSQL)
+  postgres:
+    image: postgres:15
+    container_name: trenes_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: gestion_ferroviaria
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./datos_postgres:/var/lib/postgresql/data
+      - ./scripts_inicio:/docker-entrypoint-initdb.d
+
+  # Base de datos Documental (MongoDB)
+  mongo:
+    image: mongo:6.0
+    container_name: trenes_mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./datos_mongo:/data/db
+
+  # Gestor visual (pgAdmin) - Opcional pero útil
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: trenes_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@trenes.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
