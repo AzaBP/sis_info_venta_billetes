@@ -1,0 +1,124 @@
+/* ESTRUCTURA GENERAL */
+.booking-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    min-height: 80vh;
+}
+
+/* BARRA DE PROGRESO */
+.progress-bar-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+.step {
+    font-weight: bold;
+    color: #aaa;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+.step.active { color: #0a2a66; border-bottom: 3px solid #0a2a66; margin-bottom: -12px; }
+
+/* RESUMEN BÚSQUEDA */
+.search-summary {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.search-summary h2 { font-size: 1.2rem; color: #333; }
+.search-summary p { color: #666; margin-top: 5px; }
+.btn-modify { background: none; border: 1px solid #aaa; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+
+/* LISTA DE RESULTADOS */
+.ticket-card {
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border-left: 5px solid #0a2a66;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+.ticket-card:hover { transform: translateY(-3px); }
+
+.ticket-time { text-align: center; display: flex; gap: 20px; align-items: center; }
+.departure, .arrival { font-size: 1.5rem; font-weight: bold; color: #333; }
+.departure span, .arrival span { font-size: 0.8rem; display: block; color: #666; font-weight: normal; }
+.duration { color: #888; font-size: 0.9rem; }
+
+.ticket-price-box { text-align: right; }
+.price { font-size: 1.8rem; font-weight: bold; color: #0a2a66; margin-bottom: 5px; }
+.btn-select { background: #0a2a66; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+.btn-select:hover { background: #0056b3; }
+
+/* MAPA DE ASIENTOS */
+.hidden { display: none; }
+
+.seat-section { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+.wagon-container {
+    background: #f0f0f0;
+    padding: 40px;
+    border-radius: 20px;
+    width: fit-content;
+    margin: 20px auto;
+    border: 2px solid #ccc;
+}
+.wagon-front { text-align: center; margin-bottom: 20px; color: #aaa; font-weight: bold; letter-spacing: 2px; }
+
+.seats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 2 asientos - Pasillo - 2 asientos */
+    gap: 15px;
+}
+
+.seat {
+    width: 45px;
+    height: 45px;
+    background: white;
+    border: 2px solid #bbb;
+    border-radius: 8px 8px 0 0; /* Forma de silla */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #555;
+    position: relative;
+}
+.seat::after { /* Reposapiés visual */
+    content: ''; position: absolute; bottom: -5px; width: 80%; height: 5px; background: #bbb; border-radius: 2px;
+}
+
+.seat:hover { background: #e0e7ff; border-color: #0a2a66; }
+.seat.occupied { background: #ddd; color: #999; border-color: #ccc; cursor: not-allowed; pointer-events: none; }
+.seat.selected { background: #0a2a66; color: white; border-color: #0a2a66; }
+.seat.table-seat { border-color: #d4a017; } /* Asientos especiales */
+
+.aisle { width: 30px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 0.7rem; }
+
+/* BARRA INFERIOR DE PAGO */
+.booking-summary-bar {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.total-price { font-size: 1.5rem; font-weight: bold; color: #0a2a66; }
+.btn-pay { background: #28a745; color: white; border: none; padding: 12px 30px; border-radius: 5px; font-size: 1.1rem; cursor: pointer; }
+.btn-pay:disabled { background: #ccc; cursor: not-allowed; }
+.btn-back { background: none; border: none; text-decoration: underline; color: #666; cursor: pointer; }
