@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrainWeb - Selección de Viaje</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/compra.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">
+            <a href="index.html" style="text-decoration:none; color:white;">
+                <i class="fa-solid fa-train"></i> TrainWeb
+            </a>
+        </div>
+        <nav class="nav">
+            <div class="user-display" style="color: white; margin-right: 20px;">
+                <i class="fa-solid fa-user"></i> Hola, Pasajero
+            </div>
+            <a href="index.html"><i class="fa-solid fa-house"></i> Inicio</a>
+        </nav>
+    </header>
+
+    <main class="booking-container">
+        
+        <div class="progress-bar-container">
+            <div class="step active" id="step1">1. Horarios</div>
+            <div class="step" id="step2">2. Asientos</div>
+            <div class="step" id="step3">3. Pago</div>
+        </div>
+
+        <div class="search-summary">
+            <h2><i class="fa-solid fa-route"></i> Madrid Puerta de Atocha <i class="fa-solid fa-arrow-right"></i> Barcelona Sants</h2>
+            <p>Jueves, 12 de Febrero | 1 Pasajero</p>
+            <button class="btn-modify">Modificar búsqueda</button>
+        </div>
+
+        <section id="trainResults" class="results-section">
+            
+            <div class="ticket-card">
+                <div class="ticket-time">
+                    <div class="departure">07:30 <span>MAD</span></div>
+                    <div class="duration"><i class="fa-solid fa-arrow-right-long"></i> 2h 30min</div>
+                    <div class="arrival">10:00 <span>BCN</span></div>
+                </div>
+                <div class="ticket-info">
+                    <span class="train-type">AVE</span>
+                    <span class="features"><i class="fa-solid fa-wifi"></i> <i class="fa-solid fa-plug"></i></span>
+                </div>
+                <div class="ticket-price-box">
+                    <div class="price">45,50 €</div>
+                    <button class="btn-select" onclick="seleccionarTren('AVE-0730', 45.50)">Seleccionar</button>
+                </div>
+            </div>
+
+            <div class="ticket-card">
+                <div class="ticket-time">
+                    <div class="departure">09:15 <span>MAD</span></div>
+                    <div class="duration"><i class="fa-solid fa-arrow-right-long"></i> 2h 45min</div>
+                    <div class="arrival">12:00 <span>BCN</span></div>
+                </div>
+                <div class="ticket-info">
+                    <span class="train-type">AVLO</span>
+                    <span class="features"><i class="fa-solid fa-plug"></i></span>
+                </div>
+                <div class="ticket-price-box">
+                    <div class="price">19,00 €</div>
+                    <button class="btn-select" onclick="seleccionarTren('AVLO-0915', 19.00)">Seleccionar</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="seatSelection" class="seat-section hidden">
+            <div class="seat-header">
+                <h3><i class="fa-solid fa-chair"></i> Elige tu asiento</h3>
+                <button class="btn-back" onclick="volverAResultados()">Cambiar tren</button>
+            </div>
+
+            <div class="wagon-container">
+                <div class="wagon-front">Cabina</div>
+                
+                <div class="seats-grid">
+                    <div class="seat occupied" title="Ocupado">1A</div>
+                    <div class="seat" onclick="toggleSeat(this)" data-price="0">1B</div>
+                    <div class="aisle"></div> <div class="seat" onclick="toggleSeat(this)" data-price="0">1C</div>
+                    <div class="seat" onclick="toggleSeat(this)" data-price="0">1D</div>
+
+                    <div class="seat occupied">2A</div>
+                    <div class="seat occupied">2B</div>
+                    <div class="aisle"></div>
+                    <div class="seat" onclick="toggleSeat(this)" data-price="0">2C</div>
+                    <div class="seat" onclick="toggleSeat(this)" data-price="0">2D</div>
+
+                    <div class="seat table-seat" onclick="toggleSeat(this)" data-price="5">3A</div> <div class="seat table-seat" onclick="toggleSeat(this)" data-price="5">3B</div>
+                    <div class="aisle">MESA</div>
+                    <div class="seat table-seat" onclick="toggleSeat(this)" data-price="5">3C</div>
+                    <div class="seat table-seat" onclick="toggleSeat(this)" data-price="5">3D</div>
+                </div>
+            </div>
+
+            <div class="booking-summary-bar">
+                <div>
+                    <span>Tren: <b id="selectedTrainId">--</b></span> | 
+                    <span>Asiento: <b id="selectedSeatId">Ninguno</b></span>
+                </div>
+                <div class="total-price">Total: <span id="totalPrice">0,00</span> €</div>
+                <button class="btn-pay" id="btnPay" disabled onclick="irAlPago()">Pagar Ahora</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-bottom">
+            © 2026 TrainWeb System | Compra de Billetes
+        </div>
+    </footer>
+
+    <script src="js/compra.js"></script>
+</body>
+</html>
