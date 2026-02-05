@@ -1,5 +1,5 @@
 -- ================================================
--- 1️ USUARIO (superclase)
+-- USUARIO (superclase)
 -- ================================================
 CREATE TABLE USUARIO (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
