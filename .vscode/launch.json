@@ -1,0 +1,14 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Open vendedor.html",
+            "file": "c:\\Users\\josem\\OneDrive\\Escritorio\\Unizarrio\\3_Ing_Informatica_T\\Cuatri2\\SisInfo2\\sis_info_venta_billetes\\vendedor.html"
+        }
+    ]
+}
