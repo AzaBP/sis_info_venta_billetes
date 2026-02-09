@@ -1,0 +1,11 @@
+# --- Bases de Datos (CRÍTICO) ---
+datos_postgres/
+datos_mongo/
+
+# --- Configuración y Secretos ---
+.env
+
+# --- Archivos de Sistema y Temporales ---
+.DS_Store
+Thumbs.db
+*.log
