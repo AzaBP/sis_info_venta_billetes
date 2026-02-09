@@ -14,13 +14,12 @@ CREATE TABLE USUARIO (
 --  PASAJERO
 -- ================================================
 CREATE TABLE PASAJERO (
-    id_pasajero INT AUTO_INCREMENT PRIMARY KEY,
+    id_pasajero INT PRIMARY KEY,
     id_usuario INT NOT NULL,
     apellido VARCHAR(100) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
     genero ENUM('masculino','femenino','otro','no_especificar') NOT NULL,
     tipo_documento ENUM('dni','nie','pasaporte') NOT NULL,
-    numero_documento VARCHAR(20) UNIQUE NOT NULL,
     calle VARCHAR(255),
     ciudad VARCHAR(100),
     codigo_postal VARCHAR(10),
@@ -95,9 +94,8 @@ CREATE TABLE TREN (
 --ASIENTO
 -- ================================================
 CREATE TABLE ASIENTO (
-    id_asiento INT AUTO_INCREMENT PRIMARY KEY,
+    numero_asiento INT PRIMARY KEY,
     id_tren INT NOT NULL,
-    numero VARCHAR(10) NOT NULL,
     clase ENUM('primera','segunda') NOT NULL,
     estado ENUM('disponible','ocupado','reservado') DEFAULT 'disponible',
     FOREIGN KEY (id_tren) REFERENCES TREN(id_tren)
