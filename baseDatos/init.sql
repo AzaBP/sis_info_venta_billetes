@@ -84,12 +84,15 @@ CREATE TABLE ABONO (
     CONSTRAINT check_fechas CHECK (fecha_fin > fecha_inicio)
 );
 
--- 9. BILLETE (Híbrido SQL-Mongo)
+-- 9. BILLETE 
 CREATE TABLE BILLETE (
-    id_billete SERIAL PRIMARY KEY,
-    id_pasajero INT NOT NULL REFERENCES PASAJERO(id_pasajero),
-    id_asiento INT REFERENCES ASIENTO(id_asiento),
-    id_abono INT REFERENCES ABONO(id_abono),
-    id_viaje_mongo CHAR(24) NOT NULL, 
-    id_promocion_mongo CHAR(24)
+    id_billete INT AUTO_INCREMENT PRIMARY KEY,
+    id_pasajero INT NOT NULL,
+    id_asiento INT,
+    id_abono INT,
+    id_viaje_mongo VARCHAR(24),   -- ObjectId de VIAJE en MongoDB que incluye promociones
+    id_promocion_mongo VARCHAR(24), -- ObjectId de MongoDB de la promoción aplicada
+    FOREIGN KEY (id_pasajero) REFERENCES PASAJERO(id_pasajero),
+    FOREIGN KEY (id_asiento) REFERENCES ASIENTO(id_asiento),
+    FOREIGN KEY (id_abono) REFERENCES ABONO(id_abono)
 );
