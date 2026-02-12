@@ -58,7 +58,6 @@ function cambiarVagon(direccion) {
     document.getElementById(`wagon${estado.vagonActual}`).classList.add('hidden');
     document.getElementById(`wagon${nuevoVagon}`).classList.remove('hidden');
     
-    // NOMBRES DE VAGÓN
     let nombreVagon = "";
     if(nuevoVagon === 1) nombreVagon = "1 (Primera Clase)";
     else if(nuevoVagon === 2) nombreVagon = "2 (Turista)";

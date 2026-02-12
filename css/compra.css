@@ -2,7 +2,7 @@
 .booking-container { max-width: 1300px; margin: 0 auto; padding: 30px 20px; }
 .hidden { display: none !important; }
 
-/* BARRA PROGRESO Y HEADER */
+/* PROGRESS & HEADER */
 .progress-bar-container { display: flex; justify-content: space-between; margin-bottom: 30px; position: relative; padding: 0 50px; }
 .progress-bar-container::after { content: ''; position: absolute; top: 50%; left: 50px; right: 50px; height: 2px; background: #e0e0e0; z-index: -1; }
 .step { background: #f4f6f8; padding: 5px 15px; font-weight: 600; color: #999; display: flex; align-items: center; gap: 10px; border-radius: 20px; cursor: default; }
@@ -15,24 +15,37 @@
 .summary-text { text-align: left; }
 .summary-text h2 { font-size: 1.2rem; color: #333; margin-bottom: 5px; }
 .summary-text p { color: #666; font-size: 0.95rem; }
-.btn-modify { background: white; border: 1px solid #0a2a66; color: #0a2a66; font-weight: bold; cursor: pointer; font-size: 0.9rem; padding: 8px 15px; border-radius: 5px; }
+.btn-modify { background: white; border: 1px solid #0a2a66; color: #0a2a66; font-weight: bold; cursor: pointer; font-size: 0.9rem; padding: 8px 15px; border-radius: 5px; transition: all 0.2s; }
+.btn-modify:hover { background: #0a2a66; color: white; }
 
 /* TICKET CARD (GRID) */
-.ticket-card { background: white; padding: 20px 30px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid transparent; display: grid; grid-template-columns: 20% 55% 25%; align-items: center; gap: 10px; }
+.ticket-card { background: white; padding: 20px 30px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid transparent; transition: transform 0.2s; display: grid; grid-template-columns: 20% 55% 25%; align-items: center; gap: 10px; }
 .ticket-card:hover:not(.full-train) { transform: translateY(-3px); border-left-color: #0a2a66; }
 .col-train-info, .col-schedule, .col-price { display: flex; flex-direction: column; align-items: center; gap: 5px; }
 .col-schedule { flex-direction: row; justify-content: center; gap: 40px; }
+
 .train-type { font-weight: bold; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; }
 .type-ave { background: #6f2c91; color: white; } .type-avlo { background: #a6237c; color: white; } .type-md { background: #666; color: white; }
 .train-id { color: #666; font-size: 0.85rem; font-family: monospace; }
-.hour { font-size: 1.6rem; font-weight: bold; color: #333; } .city { font-size: 0.9rem; color: #777; }
-.duration-line { text-align: center; width: 140px; position: relative; }
+.amenities { color: #888; display: flex; gap: 8px; font-size: 0.9rem; margin-top: 5px; }
+
+/* FIX HORARIO */
+.hour { font-size: 1.6rem; font-weight: bold; color: #333; display: block; }
+.city { font-size: 0.9rem; color: #777; font-weight: normal; }
+.duration-line { text-align: center; width: 140px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.duration-text { font-size: 0.8rem; color: #888; margin-bottom: 8px; z-index: 2; position: relative; }
 .line { height: 2px; background: #ddd; width: 100%; position: relative; }
-.line .fa-train { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); color: #aaa; background: white; padding: 0 8px; z-index: 1; }
+/* ICONO TREN NO TAPA TEXTO */
+.line .fa-train { 
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+    color: #aaa; background: white; padding: 0 8px; z-index: 1; 
+}
+
 .price { font-size: 1.8rem; font-weight: bold; color: #0a2a66; }
 .btn-select { background: #0a2a66; color: white; border: none; padding: 10px 30px; border-radius: 5px; cursor: pointer; width: 100%; max-width: 150px; }
 .btn-select:disabled { background: #ccc; }
-.full-train { opacity: 0.8; background: #fafafa; } .price-full { color: #d9534f; font-weight: bold; font-size: 1.2rem; text-align: center; width: 100%; }
+.full-train { opacity: 0.8; background: #fafafa; cursor: default; }
+.price-full { color: #d9534f; font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; text-align: center; width: 100%; }
 
 /* MAPA ASIENTOS */
 .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -48,55 +61,50 @@
 .info-message, .info-message-premium { text-align: center; margin-bottom: 15px; color: #666; font-size: 0.9rem; font-weight: bold; background: rgba(255,255,255,0.5); padding: 5px; border-radius: 5px; }
 .info-message-premium { color: #5d4037; background: #fff8e1; border: 1px solid #d4a017; }
 
-/* FILAS COMUNES */
-.seat-row { display: flex; gap: 5px; margin-bottom: 5px; align-items: center; justify-content: center; }
-.aisle-horizontal { height: 30px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 0.7rem; }
-
-/* ESTRUCTURA PRIMERA CLASE (GRUPOS GRANDES A+B y C+D) */
+/* ESTRUCTURA DE BLOQUES (FILAS UNIDAS) */
 .wagon-super-row {
     display: flex;
     align-items: center;
-    justify-content: center; /* Centrado pero con espacio */
-    gap: 40px; /* Espacio extra entre los bloques de asientos y la mesa central */
+    justify-content: center;
+    gap: 40px; /* Separación central */
     margin-bottom: 10px;
 }
 .seat-block { display: flex; flex-direction: column; gap: 5px; }
-.seat-row-tight { display: flex; gap: 20px; /* Mucho espacio entre columnas */ }
+.seat-row-tight { display: flex; gap: 5px; } /* Asientos pegados en turista */
+.premium-row .seat-row-tight { gap: 20px; } /* Asientos separados en premium */
+
+.aisle-horizontal { height: 30px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 0.7rem; }
 
 /* ASIENTOS */
 .seat { width: 35px; height: 35px; background: white; border: 1px solid #bbb; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #555; cursor: pointer; position: relative; user-select: none; }
 .seat-left::after { content: ''; position: absolute; right: -3px; top: 5px; bottom: 5px; width: 3px; background: #bbb; border-radius: 2px; }
 .seat-right::after { content: ''; position: absolute; left: -3px; top: 5px; bottom: 5px; width: 3px; background: #bbb; border-radius: 2px; }
 
-/* ASIENTOS PREMIUM (MISMO TAMAÑO, DISTINTO COLOR) */
+/* PREMIUM (COLOR DIFERENTE) */
 .seat-premium { background-color: #fdf5e6; border-color: #d2b48c; }
 .seat-premium.seat-left::after, .seat-premium.seat-right::after { background-color: #d2b48c; }
 .seat-premium.selected { background: #5d4037; border-color: #5d4037; } 
 .seat-premium.selected::after { background: #3e2723; }
 
-/* ESTADO OCUPADO */
 .seat.occupied { background: #e0e0e0; color: #a0a0a0; border-color: #d0d0d0; cursor: not-allowed; pointer-events: none; font-size: 1rem; }
 .seat.occupied::after { display: none; }
 .seat.selected { background: #0a2a66; color: white; border-color: #0a2a66; }
 .seat.selected::after { background: #004494; }
 
 /* MESAS */
-.table-group { width: 30px; height: 35px; background: #e0e0e0; border: 2px solid #d4a017; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; color: #d4a017; font-weight: bold; writing-mode: vertical-rl; }
-
-/* MESA LARGA VERTICAL (PRIMERA CLASE) */
+/* Mesa estándar vertical compartida */
 .long-table {
-    width: 40px;
-    height: 80px; /* Altura para cubrir 2 filas */
-    background: #fff8e1;
-    border: 2px solid #d4a017;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    color: #d4a017;
-    font-weight: bold;
-    writing-mode: vertical-rl;
+    width: 40px; height: 80px; 
+    background: #e0e0e0; border: 2px solid #d4a017; border-radius: 6px; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 0.7rem; color: #d4a017; font-weight: bold; writing-mode: vertical-rl;
+}
+/* Mesa Ancha Cuadrada (Premium) */
+.long-table-wide {
+    width: 80px; height: 80px; 
+    background: #fff8e1; border: 2px solid #d4a017; border-radius: 6px; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 0.7rem; color: #d4a017; font-weight: bold; writing-mode: vertical-rl;
 }
 
 /* FOOTER & PAGO */
