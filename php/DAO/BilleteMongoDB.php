@@ -1,19 +1,16 @@
 <?php
 
 require_once(__DIR__ . '/../VO/Billete.php');
+require_once(__DIR__ . '/../ConexionMongo.php');
 
 class BilleteMongoDB {
     private $collection;
-    private $mongo;
+    private $conexion;
 
-    public function __construct($uri = "mongodb://localhost:27017", $database = "trenesDB", $collection = "billetes") {
-        try {
-            $this->mongo = new MongoDB\Client($uri);
-            $db = $this->mongo->selectDatabase($database);
-            $this->collection = $db->selectCollection($collection);
-        } catch (Exception $e) {
-            echo "Error de conexión a MongoDB: " . $e->getMessage();
-        }
+    public function __construct() {
+        $this->conexion = new ConexionMongo();
+        $db = $this->conexion->conectar();
+        $this->collection = $db->selectCollection("billetes");
     }
 
     // INSERTAR
