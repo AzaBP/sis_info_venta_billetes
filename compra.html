@@ -13,18 +13,14 @@
 
     <header class="header">
         <div class="logo">
-            <a href="index.html" style="text-decoration:none; color:white;">
-                <i class="fa-solid fa-train"></i> TrainWeb
-            </a>
+            <i class="fa-solid fa-train"></i> TrainWeb 
+            <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; margin-left: 10px; vertical-align: middle; position: relative; bottom: 2px;">| Área de Cliente</span>
         </div>
         <nav class="nav">
-            <div class="user-display">
-                <i class="fa-solid fa-circle-user"></i> Hola, Pasajero
+            <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-circle-user" style="font-size: 1.2rem;"></i> Hola, Pasajero
             </div>
-            <div class="dropdown">
-                <a href="#"><i class="fa-solid fa-globe"></i> ES <i class="fa-solid fa-caret-down"></i></a>
-            </div>
-            <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
+            <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
         </nav>
     </header>
 
@@ -44,159 +40,48 @@
 
         <div class="search-summary">
             <div class="summary-text">
-                <h2><i class="fa-solid fa-route"></i> Madrid (Todas) <i class="fa-solid fa-arrow-right"></i> Barcelona Sants</h2>
+                <h2>Madrid (Todas) <i class="fa-solid fa-arrow-right"></i> Barcelona Sants</h2>
                 <p>Jueves, 12 de Febrero | 1 Pasajero</p>
             </div>
-            <button class="btn-back-arrow" title="Volver a la búsqueda" onclick="window.location.href='index.html'">
-                <i class="fa-solid fa-arrow-left"></i> Volver
+            <button class="btn-modify" onclick="window.location.href='index.html'">
+                <i class="fa-solid fa-pen-to-square"></i> Modificar datos
             </button>
         </div>
 
         <section id="sectionTrains" class="booking-section">
-            
             <div class="ticket-card">
                 <div class="col-train-info">
-                    <span class="train-type type-ave">AVE</span>
-                    <span class="train-id">0730</span>
-                    <div class="amenities">
-                        <i class="fa-solid fa-wifi" title="WiFi Gratis"></i>
-                        <i class="fa-solid fa-utensils" title="Coche Cafetería"></i>
-                    </div>
+                    <span class="train-type type-ave">AVE</span> <span class="train-id">0730</span>
+                    <div class="amenities"><i class="fa-solid fa-wifi"></i></div>
                 </div>
-
                 <div class="col-schedule">
-                    <div class="time-group">
-                        <span class="hour">07:30</span>
-                        <span class="city">MAD</span>
-                    </div>
-                    <div class="duration-line">
-                        <span class="duration-text">2h 30min</span>
-                        <div class="line"><i class="fa-solid fa-train"></i></div>
-                    </div>
-                    <div class="time-group">
-                        <span class="hour">10:00</span>
-                        <span class="city">BCN</span>
-                    </div>
+                    <div class="time-group"><span class="hour">07:30</span><span class="city">MAD</span></div>
+                    <div class="duration-line"><span class="duration-text">2h 30min</span><div class="line"><i class="fa-solid fa-train"></i></div></div>
+                    <div class="time-group"><span class="hour">10:00</span><span class="city">BCN</span></div>
                 </div>
-
                 <div class="col-price">
                     <div class="price">45,50 €</div>
                     <button class="btn-select" onclick="seleccionarTren('AVE-0730', 45.50)">Elegir</button>
                 </div>
             </div>
-
-            <div class="ticket-card">
-                <div class="col-train-info">
-                    <span class="train-type type-avlo">AVLO</span>
-                    <span class="train-id">0915</span>
-                    <div class="amenities"><i class="fa-solid fa-plug"></i></div>
-                </div>
-                <div class="col-schedule">
-                    <div class="time-group">
-                        <span class="hour">09:15</span>
-                        <span class="city">MAD</span>
-                    </div>
-                    <div class="duration-line">
-                        <span class="duration-text">2h 45min</span>
-                        <div class="line"><i class="fa-solid fa-train"></i></div>
-                    </div>
-                    <div class="time-group">
-                        <span class="hour">12:00</span>
-                        <span class="city">BCN</span>
-                    </div>
-                </div>
-                <div class="col-price">
-                    <div class="price">19,00 €</div>
-                    <button class="btn-select" onclick="seleccionarTren('AVLO-0915', 19.00)">Elegir</button>
-                </div>
-            </div>
-
-            <div class="ticket-card">
-                <div class="col-train-info">
-                    <span class="train-type type-md">ALVIA</span>
-                    <span class="train-id">1030</span>
-                    <div class="amenities"><i class="fa-solid fa-person-walking-luggage"></i></div>
-                </div>
-                <div class="col-schedule">
-                    <div class="time-group">
-                        <span class="hour">10:30</span>
-                        <span class="city">MAD</span>
-                    </div>
-                    <div class="duration-line">
-                        <span class="duration-text">3h 05min</span>
-                        <div class="line"><i class="fa-solid fa-train"></i></div>
-                    </div>
-                    <div class="time-group">
-                        <span class="hour">13:35</span>
-                        <span class="city">BCN</span>
-                    </div>
-                </div>
-                <div class="col-price">
-                    <div class="price">32,10 €</div>
-                    <button class="btn-select" onclick="seleccionarTren('ALVIA-1030', 32.10)">Elegir</button>
-                </div>
-            </div>
-
-            <div class="ticket-card">
-                <div class="col-train-info">
-                    <span class="train-type type-ave">AVE</span>
-                    <span class="train-id">1200</span>
-                    <div class="amenities"><i class="fa-solid fa-wifi"></i></div>
-                </div>
-                <div class="col-schedule">
-                    <div class="time-group">
-                        <span class="hour">12:00</span>
-                        <span class="city">MAD</span>
-                    </div>
-                    <div class="duration-line">
-                        <span class="duration-text">2h 30min</span>
-                        <div class="line"><i class="fa-solid fa-train"></i></div>
-                    </div>
-                    <div class="time-group">
-                        <span class="hour">14:30</span>
-                        <span class="city">BCN</span>
-                    </div>
-                </div>
-                <div class="col-price">
-                    <div class="price">55,90 €</div>
-                    <button class="btn-select" onclick="seleccionarTren('AVE-1200', 55.90)">Elegir</button>
-                </div>
-            </div>
-
             <div class="ticket-card full-train">
-                <div class="col-train-info">
-                    <span class="train-type type-md">MD</span>
-                    <span class="train-id">1400</span>
-                </div>
+                <div class="col-train-info"><span class="train-type type-md">MD</span></div>
                 <div class="col-schedule">
-                    <div class="time-group">
-                        <span class="hour">14:00</span>
-                        <span class="city">MAD</span>
-                    </div>
-                    <div class="duration-line">
-                        <span class="duration-text">3h 10min</span>
-                        <div class="line"><i class="fa-solid fa-train"></i></div>
-                    </div>
-                    <div class="time-group">
-                        <span class="hour">17:10</span>
-                        <span class="city">BCN</span>
-                    </div>
+                    <div class="time-group"><span class="hour">14:00</span></div>
+                    <div class="duration-line"><span class="duration-text">3h 10min</span><div class="line"><i class="fa-solid fa-train"></i></div></div>
+                    <div class="time-group"><span class="hour">17:10</span></div>
                 </div>
-                <div class="col-price">
-                    <div class="price-full">COMPLETO</div>
-                    <button class="btn-select" disabled>Agotado</button>
-                </div>
+                <div class="col-price"><div class="price-full">COMPLETO</div><button class="btn-select" disabled>Agotado</button></div>
             </div>
         </section>
 
         <section id="sectionSeats" class="booking-section hidden">
             <div class="seat-header">
                 <h3>Selecciona tu plaza en <span id="lblTrenSeleccionado">--</span></h3>
-                
                 <div class="wagon-navigator">
-                    <button class="nav-arrow" onclick="cambiarVagon(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="nav-arrow" id="btnPrev" onclick="cambiarVagon(-1)"><i class="fa-solid fa-chevron-left"></i></button>
                     <span class="wagon-title">Vagón <span id="currentWagonNum">1</span></span>
-                    <button class="nav-arrow" onclick="cambiarVagon(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                    <button class="nav-arrow" id="btnNext" onclick="cambiarVagon(1)"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
             </div>
 
@@ -205,70 +90,118 @@
                 
                 <div class="wagon-frame">
                     
-                    <div class="wagon-body active" id="wagon1">
-                        <div class="seat-row">
-                            <div class="seat seat-left" data-seat="1A">1A</div> <div class="seat seat-left" data-seat="2A">2A</div> <div class="seat seat-left occupied">3A</div> <div class="seat seat-left" data-seat="4A">4A</div> <div class="seat seat-left" data-seat="5A">5A</div> <div class="seat seat-left" data-seat="6A">6A</div>
-                            <div class="table-group">MESA</div>
-                            <div class="seat seat-right" data-seat="7A">7A</div> <div class="seat seat-right" data-seat="8A">8A</div> <div class="seat seat-right occupied">9A</div> <div class="seat seat-right" data-seat="10A">10A</div> <div class="seat seat-right" data-seat="11A">11A</div> <div class="seat seat-right" data-seat="12A">12A</div>
-                        </div>
+                    <div class="wagon-body active wagon-premium" id="wagon1">
+                        <div class="info-message-premium">PRIMERA CLASE (Filas 1-8)</div>
                         
-                        <div class="seat-row">
-                            <div class="seat seat-left" data-seat="1B">1B</div> <div class="seat seat-left occupied">2B</div> <div class="seat seat-left occupied">3B</div> <div class="seat seat-left" data-seat="4B">4B</div> <div class="seat seat-left" data-seat="5B">5B</div> <div class="seat seat-left" data-seat="6B">6B</div>
-                            <div class="table-spacer"></div>
-                            <div class="seat seat-right" data-seat="7B">7B</div> <div class="seat seat-right" data-seat="8B">8B</div> <div class="seat seat-right occupied">9B</div> <div class="seat seat-right" data-seat="10B">10B</div> <div class="seat seat-right" data-seat="11B">11B</div> <div class="seat seat-right" data-seat="12B">12B</div>
+                        <div class="wagon-super-row">
+                            <div class="seat-block">
+                                <div class="seat-row-tight">
+                                    <div class="seat seat-premium seat-left" data-seat="1A">1A</div><div class="seat seat-premium seat-left" data-seat="2A">2A</div><div class="seat seat-premium seat-left occupied"><i class="fa-solid fa-xmark"></i></div><div class="seat seat-premium seat-left" data-seat="4A">4A</div>
+                                </div>
+                                <div class="seat-row-tight">
+                                    <div class="seat seat-premium seat-left" data-seat="1B">1B</div><div class="seat seat-premium seat-left" data-seat="2B">2B</div><div class="seat seat-premium seat-left" data-seat="3B">3B</div><div class="seat seat-premium seat-left" data-seat="4B">4B</div>
+                                </div>
+                            </div>
+
+                            <div class="long-table">MESA</div>
+
+                            <div class="seat-block">
+                                <div class="seat-row-tight">
+                                    <div class="seat seat-premium seat-right" data-seat="5A">5A</div><div class="seat seat-premium seat-right" data-seat="6A">6A</div><div class="seat seat-premium seat-right" data-seat="7A">7A</div><div class="seat seat-premium seat-right" data-seat="8A">8A</div>
+                                </div>
+                                <div class="seat-row-tight">
+                                    <div class="seat seat-premium seat-right" data-seat="5B">5B</div><div class="seat seat-premium seat-right" data-seat="6B">6B</div><div class="seat seat-premium seat-right occupied"><i class="fa-solid fa-xmark"></i></div><div class="seat seat-premium seat-right" data-seat="8B">8B</div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="aisle-horizontal"></div>
+                        <div class="aisle-horizontal">PASILLO PREMIUM</div>
 
-                        <div class="seat-row">
-                            <div class="seat seat-left" data-seat="1C">1C</div> <div class="seat seat-left" data-seat="2C">2C</div> <div class="seat seat-left" data-seat="3C">3C</div> <div class="seat seat-left" data-seat="4C">4C</div> <div class="seat seat-left" data-seat="5C">5C</div> <div class="seat seat-left" data-seat="6C">6C</div>
-                            <div class="table-spacer"></div>
-                            <div class="seat seat-right" data-seat="7C">7C</div> <div class="seat seat-right" data-seat="8C">8C</div> <div class="seat seat-right" data-seat="9C">9C</div> <div class="seat seat-right" data-seat="10C">10C</div> <div class="seat seat-right" data-seat="11C">11C</div> <div class="seat seat-right" data-seat="12C">12C</div>
-                        </div>
+                        <div class="wagon-super-row">
+                             <div class="seat-block">
+                                <div class="seat-row-tight">
+                                    <div class="seat seat-premium seat-left" data-seat="1C">1C</div><div class="seat seat-premium seat-left" data-seat="2C">2C</div><div class="seat seat-premium seat-left" data-seat="3C">3C</div><div class="seat seat-premium seat-left" data-seat="4C">4C</div>
+                                </div>
+                                <div class="seat-row-tight">
+                                    <div class="seat seat-premium seat-left" data-seat="1D">1D</div><div class="seat seat-premium seat-left" data-seat="2D">2D</div><div class="seat seat-premium seat-left occupied"><i class="fa-solid fa-xmark"></i></div><div class="seat seat-premium seat-left" data-seat="4D">4D</div>
+                                </div>
+                            </div>
 
-                        <div class="seat-row">
-                            <div class="seat seat-left" data-seat="1D">1D</div> <div class="seat seat-left" data-seat="2D">2D</div> <div class="seat seat-left" data-seat="3D">3D</div> <div class="seat seat-left occupied">4D</div> <div class="seat seat-left" data-seat="5D">5D</div> <div class="seat seat-left" data-seat="6D">6D</div>
-                            <div class="table-group">MESA</div>
-                            <div class="seat seat-right" data-seat="7D">7D</div> <div class="seat seat-right" data-seat="8D">8D</div> <div class="seat seat-right" data-seat="9D">9D</div> <div class="seat seat-right occupied">10D</div> <div class="seat seat-right" data-seat="11D">11D</div> <div class="seat seat-right" data-seat="12D">12D</div>
+                            <div class="long-table">MESA</div>
+
+                            <div class="seat-block">
+                                <div class="seat-row-tight">
+                                    <div class="seat seat-premium seat-right" data-seat="5C">5C</div><div class="seat seat-premium seat-right" data-seat="6C">6C</div><div class="seat seat-premium seat-right" data-seat="7C">7C</div><div class="seat seat-premium seat-right" data-seat="8C">8C</div>
+                                </div>
+                                <div class="seat-row-tight">
+                                    <div class="seat seat-premium seat-right" data-seat="5D">5D</div><div class="seat seat-premium seat-right" data-seat="6D">6D</div><div class="seat seat-premium seat-right occupied"><i class="fa-solid fa-xmark"></i></div><div class="seat seat-premium seat-right" data-seat="8D">8D</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="wagon-body hidden" id="wagon2">
-                         <div class="seat-row">
-                            <div class="seat seat-left" data-seat="1A">1A</div> <div class="seat seat-left" data-seat="2A">2A</div> <div class="seat seat-left" data-seat="3A">3A</div> <div class="seat seat-left" data-seat="4A">4A</div> <div class="seat seat-left" data-seat="5A">5A</div> <div class="seat seat-left" data-seat="6A">6A</div>
-                            <div class="table-group">MESA</div>
-                            <div class="seat seat-right" data-seat="7A">7A</div> <div class="seat seat-right" data-seat="8A">8A</div> <div class="seat seat-right" data-seat="9A">9A</div> <div class="seat seat-right" data-seat="10A">10A</div> <div class="seat seat-right" data-seat="11A">11A</div> <div class="seat seat-right" data-seat="12A">12A</div>
-                        </div>
+                        <div class="info-message">CLASE TURISTA (Filas 1-12)</div>
                         
                         <div class="seat-row">
-                            <div class="seat seat-left" data-seat="1B">1B</div> <div class="seat seat-left" data-seat="2B">2B</div> <div class="seat seat-left" data-seat="3B">3B</div> <div class="seat seat-left" data-seat="4B">4B</div> <div class="seat seat-left" data-seat="5B">5B</div> <div class="seat seat-left" data-seat="6B">6B</div>
-                            <div class="table-spacer"></div>
-                            <div class="seat seat-right" data-seat="7B">7B</div> <div class="seat seat-right" data-seat="8B">8B</div> <div class="seat seat-right" data-seat="9B">9B</div> <div class="seat seat-right" data-seat="10B">10B</div> <div class="seat seat-right" data-seat="11B">11B</div> <div class="seat seat-right" data-seat="12B">12B</div>
-                        </div>
-
-                        <div class="aisle-horizontal"> <i class="fa-solid fa-volume-xmark"></i> ZONA SILENCIO</div>
-
-                        <div class="seat-row">
-                            <div class="seat seat-left" data-seat="1C">1C</div> <div class="seat seat-left" data-seat="2C">2C</div> <div class="seat seat-left" data-seat="3C">3C</div> <div class="seat seat-left" data-seat="4C">4C</div> <div class="seat seat-left" data-seat="5C">5C</div> <div class="seat seat-left" data-seat="6C">6C</div>
-                            <div class="table-spacer"></div>
-                            <div class="seat seat-right" data-seat="7C">7C</div> <div class="seat seat-right" data-seat="8C">8C</div> <div class="seat seat-right" data-seat="9C">9C</div> <div class="seat seat-right" data-seat="10C">10C</div> <div class="seat seat-right" data-seat="11C">11C</div> <div class="seat seat-right" data-seat="12C">12C</div>
-                        </div>
-
-                        <div class="seat-row">
-                            <div class="seat seat-left" data-seat="1D">1D</div> <div class="seat seat-left" data-seat="2D">2D</div> <div class="seat seat-left" data-seat="3D">3D</div> <div class="seat seat-left" data-seat="4D">4D</div> <div class="seat seat-left" data-seat="5D">5D</div> <div class="seat seat-left" data-seat="6D">6D</div>
+                            <div class="seat seat-left" data-seat="1A">1A</div><div class="seat seat-left" data-seat="2A">2A</div><div class="seat seat-left" data-seat="3A">3A</div><div class="seat seat-left" data-seat="4A">4A</div><div class="seat seat-left" data-seat="5A">5A</div><div class="seat seat-left" data-seat="6A">6A</div>
                             <div class="table-group">MESA</div>
-                            <div class="seat seat-right" data-seat="7D">7D</div> <div class="seat seat-right" data-seat="8D">8D</div> <div class="seat seat-right" data-seat="9D">9D</div> <div class="seat seat-right" data-seat="10D">10D</div> <div class="seat seat-right" data-seat="11D">11D</div> <div class="seat seat-right" data-seat="12D">12D</div>
+                            <div class="seat seat-right" data-seat="7A">7A</div><div class="seat seat-right" data-seat="8A">8A</div><div class="seat seat-right" data-seat="9A">9A</div><div class="seat seat-right" data-seat="10A">10A</div><div class="seat seat-right" data-seat="11A">11A</div><div class="seat seat-right" data-seat="12A">12A</div>
+                        </div>
+                        <div class="seat-row">
+                            <div class="seat seat-left" data-seat="1B">1B</div><div class="seat seat-left" data-seat="2B">2B</div><div class="seat seat-left" data-seat="3B">3B</div><div class="seat seat-left" data-seat="4B">4B</div><div class="seat seat-left" data-seat="5B">5B</div><div class="seat seat-left" data-seat="6B">6B</div>
+                            <div class="table-group">MESA</div>
+                            <div class="seat seat-right" data-seat="7B">7B</div><div class="seat seat-right" data-seat="8B">8B</div><div class="seat seat-right" data-seat="9B">9B</div><div class="seat seat-right" data-seat="10B">10B</div><div class="seat seat-right" data-seat="11B">11B</div><div class="seat seat-right" data-seat="12B">12B</div>
+                        </div>
+                        
+                        <div class="aisle-horizontal"></div>
+                        
+                        <div class="seat-row">
+                            <div class="seat seat-left" data-seat="1C">1C</div><div class="seat seat-left" data-seat="2C">2C</div><div class="seat seat-left" data-seat="3C">3C</div><div class="seat seat-left" data-seat="4C">4C</div><div class="seat seat-left" data-seat="5C">5C</div><div class="seat seat-left" data-seat="6C">6C</div>
+                            <div class="table-group">MESA</div>
+                            <div class="seat seat-right" data-seat="7C">7C</div><div class="seat seat-right" data-seat="8C">8C</div><div class="seat seat-right" data-seat="9C">9C</div><div class="seat seat-right" data-seat="10C">10C</div><div class="seat seat-right" data-seat="11C">11C</div><div class="seat seat-right" data-seat="12C">12C</div>
+                        </div>
+                        <div class="seat-row">
+                            <div class="seat seat-left" data-seat="1D">1D</div><div class="seat seat-left" data-seat="2D">2D</div><div class="seat seat-left" data-seat="3D">3D</div><div class="seat seat-left" data-seat="4D">4D</div><div class="seat seat-left" data-seat="5D">5D</div><div class="seat seat-left" data-seat="6D">6D</div>
+                            <div class="table-group">MESA</div>
+                            <div class="seat seat-right" data-seat="7D">7D</div><div class="seat seat-right" data-seat="8D">8D</div><div class="seat seat-right" data-seat="9D">9D</div><div class="seat seat-right" data-seat="10D">10D</div><div class="seat seat-right" data-seat="11D">11D</div><div class="seat seat-right" data-seat="12D">12D</div>
+                        </div>
+                    </div>
+
+                    <div class="wagon-body hidden" id="wagon3">
+                        <div class="info-message"><i class="fa-solid fa-volume-xmark"></i> VAGÓN SILENCIO (Filas 1-12)</div>
+                        <div class="seat-row">
+                            <div class="seat seat-left" data-seat="1A">1A</div><div class="seat seat-left" data-seat="2A">2A</div><div class="seat seat-left" data-seat="3A">3A</div><div class="seat seat-left" data-seat="4A">4A</div><div class="seat seat-left" data-seat="5A">5A</div><div class="seat seat-left" data-seat="6A">6A</div>
+                            <div class="table-group">MESA</div>
+                            <div class="seat seat-right" data-seat="7A">7A</div><div class="seat seat-right" data-seat="8A">8A</div><div class="seat seat-right" data-seat="9A">9A</div><div class="seat seat-right" data-seat="10A">10A</div><div class="seat seat-right" data-seat="11A">11A</div><div class="seat seat-right" data-seat="12A">12A</div>
+                        </div>
+                        <div class="seat-row">
+                            <div class="seat seat-left" data-seat="1B">1B</div><div class="seat seat-left" data-seat="2B">2B</div><div class="seat seat-left" data-seat="3B">3B</div><div class="seat seat-left" data-seat="4B">4B</div><div class="seat seat-left" data-seat="5B">5B</div><div class="seat seat-left" data-seat="6B">6B</div>
+                            <div class="table-group">MESA</div>
+                            <div class="seat seat-right" data-seat="7B">7B</div><div class="seat seat-right" data-seat="8B">8B</div><div class="seat seat-right" data-seat="9B">9B</div><div class="seat seat-right" data-seat="10B">10B</div><div class="seat seat-right" data-seat="11B">11B</div><div class="seat seat-right" data-seat="12B">12B</div>
+                        </div>
+                        
+                        <div class="aisle-horizontal"></div>
+                        
+                        <div class="seat-row">
+                            <div class="seat seat-left" data-seat="1C">1C</div><div class="seat seat-left" data-seat="2C">2C</div><div class="seat seat-left" data-seat="3C">3C</div><div class="seat seat-left" data-seat="4C">4C</div><div class="seat seat-left" data-seat="5C">5C</div><div class="seat seat-left" data-seat="6C">6C</div>
+                            <div class="table-group">MESA</div>
+                            <div class="seat seat-right" data-seat="7C">7C</div><div class="seat seat-right" data-seat="8C">8C</div><div class="seat seat-right" data-seat="9C">9C</div><div class="seat seat-right" data-seat="10C">10C</div><div class="seat seat-right" data-seat="11C">11C</div><div class="seat seat-right" data-seat="12C">12C</div>
+                        </div>
+                        <div class="seat-row">
+                            <div class="seat seat-left" data-seat="1D">1D</div><div class="seat seat-left" data-seat="2D">2D</div><div class="seat seat-left" data-seat="3D">3D</div><div class="seat seat-left" data-seat="4D">4D</div><div class="seat seat-left" data-seat="5D">5D</div><div class="seat seat-left" data-seat="6D">6D</div>
+                            <div class="table-group">MESA</div>
+                            <div class="seat seat-right" data-seat="7D">7D</div><div class="seat seat-right" data-seat="8D">8D</div><div class="seat seat-right" data-seat="9D">9D</div><div class="seat seat-right" data-seat="10D">10D</div><div class="seat seat-right" data-seat="11D">11D</div><div class="seat seat-right" data-seat="12D">12D</div>
                         </div>
                     </div>
 
                 </div>
                 <div class="tail-indicator">Cola</div>
             </div>
-
+            
             <div class="booking-footer">
                 <div class="selection-info">
-                    Asiento: <strong id="displaySeat">Ninguno</strong>
-                    <br>Total: <strong id="displayPrice">0,00 €</strong>
+                    Asiento: <strong id="displaySeat">Ninguno</strong> <br>Total: <strong id="displayPrice">0,00 €</strong>
                 </div>
                 <button class="btn-next" id="btnToPayment" disabled onclick="irAPaso(3)">Continuar al Pago</button>
             </div>
@@ -283,42 +216,18 @@
                         <i class="fa-brands fa-cc-mastercard brand-mastercard"></i>
                     </div>
                 </div>
-
                 <form class="payment-form" onsubmit="event.preventDefault(); finalizarCompra();">
-                    <div class="form-group full-width">
-                        <label>Titular de la tarjeta</label>
-                        <input type="text" placeholder="Como aparece en la tarjeta" required>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label>Número de tarjeta</label>
-                        <div class="input-icon">
-                            <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" required>
-                            <i class="fa-solid fa-lock"></i>
-                        </div>
-                    </div>
-
+                    <div class="form-group full-width"><label>Titular</label><input type="text" required></div>
+                    <div class="form-group full-width"><label>Número</label><div class="input-icon"><input type="text" maxlength="19" required><i class="fa-solid fa-lock"></i></div></div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Caducidad</label>
-                            <input type="text" placeholder="MM/AA" maxlength="5" required>
-                        </div>
-                        <div class="form-group">
-                            <label>CVV</label>
-                            <input type="password" placeholder="123" maxlength="3" required>
-                        </div>
+                        <div class="form-group expand"><label>Caducidad</label><input type="text" required></div>
+                        <div class="form-group expand"><label>CVV</label><input type="password" required></div>
                     </div>
-
-                    <div class="summary-box">
-                        <p>Vas a pagar: <strong id="finalPrice">0,00 €</strong></p>
-                        <small>Transacción encriptada y segura.</small>
-                    </div>
-
+                    <div class="summary-box"><p>Total: <strong id="finalPrice">0,00 €</strong></p></div>
                     <button type="submit" class="btn-pay-confirm">Pagar</button>
                 </form>
             </div>
         </section>
-
     </main>
 
     <script src="js/compra.js"></script>
