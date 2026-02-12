@@ -102,7 +102,7 @@ CREATE TABLE ASIENTO (
 );
 
 -- ================================================
--- 9️ABONO / SUSCRIPCIÓN
+-- ABONO / SUSCRIPCIÓN
 -- ================================================
 CREATE TABLE ABONO (
     id_abono SERIAL PRIMARY KEY,
