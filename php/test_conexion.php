@@ -136,6 +136,4 @@ try {
     echo "✗ Error al obtener billete: " . $e->getMessage() . "\n\n";
 }
 
-echo "=== TEST COMPLETADO ===\n";
-
 ?>
