@@ -15,15 +15,16 @@ class UsuarioDAO {
     // INSERTAR
     public function insertar(Usuario $usuario) {
         try {
-            $sql = "INSERT INTO usuario (nombre, email, password, telefono, metodo_pago) 
-                    VALUES (:nombre, :email, :password, :telefono, :metodo_pago)";
+            $sql = "INSERT INTO usuario (nombre, apellido, email, password, telefono, tipo_usuario) 
+                    VALUES (:nombre, :apellido, :email, :password, :telefono, :tipo_usuario)";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':nombre', $usuario->getNombre());
-            $stmt->bindParam(':email', $usuario->getEmail());
-            $stmt->bindParam(':password', $usuario->getPassword());
-            $stmt->bindParam(':telefono', $usuario->getTelefono());
-            $stmt->bindParam(':metodo_pago', $usuario->getMetodoPago());
+            $stmt->bindValue(':nombre', $usuario->getNombre());
+            $stmt->bindValue(':apellido', $usuario->getApellido());
+            $stmt->bindValue(':email', $usuario->getEmail());
+            $stmt->bindValue(':password', $usuario->getPassword());
+            $stmt->bindValue(':telefono', $usuario->getTelefono());
+            $stmt->bindValue(':tipo_usuario', $usuario->getTipoUsuario());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -37,7 +38,7 @@ class UsuarioDAO {
         try {
             $sql = "SELECT * FROM usuario WHERE id_usuario = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
             
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -89,12 +90,12 @@ class UsuarioDAO {
                     telefono = :telefono, metodo_pago = :metodo_pago WHERE id_usuario = :id";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id', $usuario->getIdUsuario());
-            $stmt->bindParam(':nombre', $usuario->getNombre());
-            $stmt->bindParam(':email', $usuario->getEmail());
-            $stmt->bindParam(':password', $usuario->getPassword());
-            $stmt->bindParam(':telefono', $usuario->getTelefono());
-            $stmt->bindParam(':metodo_pago', $usuario->getMetodoPago());
+            $stmt->bindValue(':id', $usuario->getIdUsuario());
+            $stmt->bindValue(':nombre', $usuario->getNombre());
+            $stmt->bindValue(':email', $usuario->getEmail());
+            $stmt->bindValue(':password', $usuario->getPassword());
+            $stmt->bindValue(':telefono', $usuario->getTelefono());
+            $stmt->bindValue(':metodo_pago', $usuario->getMetodoPago());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -108,7 +109,7 @@ class UsuarioDAO {
         try {
             $sql = "DELETE FROM usuario WHERE id_usuario = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             
             return $stmt->execute();
         } catch (PDOException $e) {

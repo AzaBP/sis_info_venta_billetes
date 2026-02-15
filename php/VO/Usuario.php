@@ -3,18 +3,20 @@
 class Usuario {
     private $id_usuario;
     private $nombre;
+    private $apellido;
     private $email;
     private $password;
     private $telefono;
-    private $metodo_pago;
+    private $tipo_usuario;
 
-    public function __construct($id_usuario = null, $nombre = '', $email = '', $password = '', $telefono = '', $metodo_pago = '') {
+    public function __construct($id_usuario = null, $nombre = '', $apellido = '', $email = '', $password = '', $telefono = '', $tipo_usuario = null) {
         $this->id_usuario = $id_usuario;
         $this->nombre = $nombre;
+        $this->apellido = $apellido;
         $this->email = $email;
         $this->password = $password;
         $this->telefono = $telefono;
-        $this->metodo_pago = $metodo_pago;
+        $this->tipo_usuario = $tipo_usuario;
     }
 
     // Getters
@@ -24,6 +26,10 @@ class Usuario {
 
     public function getNombre() {
         return $this->nombre;
+    }
+
+    public function getApellido() {
+        return $this->apellido;
     }
 
     public function getEmail() {
@@ -38,8 +44,8 @@ class Usuario {
         return $this->telefono;
     }
 
-    public function getMetodoPago() {
-        return $this->metodo_pago;
+    public function getTipoUsuario() {
+        return $this->tipo_usuario;
     }
 
     // Setters
@@ -49,6 +55,10 @@ class Usuario {
 
     public function setNombre($nombre) {
         $this->nombre = $nombre;
+    }
+
+    public function setApellido($apellido) {
+        $this->apellido = $apellido;
     }
 
     public function setEmail($email) {
@@ -63,8 +73,8 @@ class Usuario {
         $this->telefono = $telefono;
     }
 
-    public function setMetodoPago($metodo_pago) {
-        $this->metodo_pago = $metodo_pago;
+    public function setTipoUsuario($tipo_usuario) {
+        $this->tipo_usuario = $tipo_usuario;
     }
 
     // Convert to Array
@@ -72,10 +82,11 @@ class Usuario {
         return [
             'id_usuario' => $this->id_usuario,
             'nombre' => $this->nombre,
+            'apellido' => $this->apellido,
             'email' => $this->email,
             'password' => $this->password,
             'telefono' => $this->telefono,
-            'metodo_pago' => $this->metodo_pago
+            'tipo_usuario' => $this->tipo_usuario
         ];
     }
 }

@@ -19,12 +19,12 @@ class AbonoDAO {
                     VALUES (:id_pasajero, :tipo, :fecha_inicio, :fecha_fin, :viajes_totales, :viajes_restantes)";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id_pasajero', $abono->getIdPasajero());
-            $stmt->bindParam(':tipo', $abono->getTipo());
-            $stmt->bindParam(':fecha_inicio', $abono->getFechaInicio());
-            $stmt->bindParam(':fecha_fin', $abono->getFechaFin());
-            $stmt->bindParam(':viajes_totales', $abono->getViajesTotales());
-            $stmt->bindParam(':viajes_restantes', $abono->getViajesRestantes());
+            $stmt->bindValue(':id_pasajero', $abono->getIdPasajero());
+            $stmt->bindValue(':tipo', $abono->getTipo());
+            $stmt->bindValue(':fecha_inicio', $abono->getFechaInicio());
+            $stmt->bindValue(':fecha_fin', $abono->getFechaFin());
+            $stmt->bindValue(':viajes_totales', $abono->getViajesTotales());
+            $stmt->bindValue(':viajes_restantes', $abono->getViajesRestantes());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -38,7 +38,7 @@ class AbonoDAO {
         try {
             $sql = "SELECT * FROM abono WHERE id_abono = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
             
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -90,7 +90,7 @@ class AbonoDAO {
         try {
             $sql = "SELECT * FROM abono WHERE id_pasajero = :id_pasajero";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id_pasajero', $id_pasajero);
+            $stmt->bindValue(':id_pasajero', $id_pasajero);
             $stmt->execute();
             
             $abonos = [];
@@ -121,13 +121,13 @@ class AbonoDAO {
                     WHERE id_abono = :id";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id', $abono->getIdAbono());
-            $stmt->bindParam(':id_pasajero', $abono->getIdPasajero());
-            $stmt->bindParam(':tipo', $abono->getTipo());
-            $stmt->bindParam(':fecha_inicio', $abono->getFechaInicio());
-            $stmt->bindParam(':fecha_fin', $abono->getFechaFin());
-            $stmt->bindParam(':viajes_totales', $abono->getViajesTotales());
-            $stmt->bindParam(':viajes_restantes', $abono->getViajesRestantes());
+            $stmt->bindValue(':id', $abono->getIdAbono());
+            $stmt->bindValue(':id_pasajero', $abono->getIdPasajero());
+            $stmt->bindValue(':tipo', $abono->getTipo());
+            $stmt->bindValue(':fecha_inicio', $abono->getFechaInicio());
+            $stmt->bindValue(':fecha_fin', $abono->getFechaFin());
+            $stmt->bindValue(':viajes_totales', $abono->getViajesTotales());
+            $stmt->bindValue(':viajes_restantes', $abono->getViajesRestantes());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -141,7 +141,7 @@ class AbonoDAO {
         try {
             $sql = "DELETE FROM abono WHERE id_abono = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             
             return $stmt->execute();
         } catch (PDOException $e) {

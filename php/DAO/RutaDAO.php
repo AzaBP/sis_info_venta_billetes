@@ -19,10 +19,10 @@ class RutaDAO {
                     VALUES (:origen, :destino, :duracion, :id_vendedor)";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':origen', $ruta->getOrigen());
-            $stmt->bindParam(':destino', $ruta->getDestino());
-            $stmt->bindParam(':duracion', $ruta->getDuracion());
-            $stmt->bindParam(':id_vendedor', $ruta->getIdVendedor());
+            $stmt->bindValue(':origen', $ruta->getOrigen());
+            $stmt->bindValue(':destino', $ruta->getDestino());
+            $stmt->bindValue(':duracion', $ruta->getDuracion());
+            $stmt->bindValue(':id_vendedor', $ruta->getIdVendedor());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -36,7 +36,7 @@ class RutaDAO {
         try {
             $sql = "SELECT * FROM ruta WHERE id_ruta = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
             
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -86,11 +86,11 @@ class RutaDAO {
                     duracion = :duracion, id_vendedor = :id_vendedor WHERE id_ruta = :id";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id', $ruta->getIdRuta());
-            $stmt->bindParam(':origen', $ruta->getOrigen());
-            $stmt->bindParam(':destino', $ruta->getDestino());
-            $stmt->bindParam(':duracion', $ruta->getDuracion());
-            $stmt->bindParam(':id_vendedor', $ruta->getIdVendedor());
+            $stmt->bindValue(':id', $ruta->getIdRuta());
+            $stmt->bindValue(':origen', $ruta->getOrigen());
+            $stmt->bindValue(':destino', $ruta->getDestino());
+            $stmt->bindValue(':duracion', $ruta->getDuracion());
+            $stmt->bindValue(':id_vendedor', $ruta->getIdVendedor());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -104,7 +104,7 @@ class RutaDAO {
         try {
             $sql = "DELETE FROM ruta WHERE id_ruta = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             
             return $stmt->execute();
         } catch (PDOException $e) {

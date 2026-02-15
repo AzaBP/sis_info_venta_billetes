@@ -19,10 +19,10 @@ class MantenimientoDAO {
                     VALUES (:id_empleado, :especialidad, :turno, :certificaciones)";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id_empleado', $mantenimiento->getIdEmpleado());
-            $stmt->bindParam(':especialidad', $mantenimiento->getEspecialidad());
-            $stmt->bindParam(':turno', $mantenimiento->getTurno());
-            $stmt->bindParam(':certificaciones', $mantenimiento->getCertificaciones());
+            $stmt->bindValue(':id_empleado', $mantenimiento->getIdEmpleado());
+            $stmt->bindValue(':especialidad', $mantenimiento->getEspecialidad());
+            $stmt->bindValue(':turno', $mantenimiento->getTurno());
+            $stmt->bindValue(':certificaciones', $mantenimiento->getCertificaciones());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -36,7 +36,7 @@ class MantenimientoDAO {
         try {
             $sql = "SELECT * FROM mantenimiento WHERE id_empleado = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
             
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -84,10 +84,10 @@ class MantenimientoDAO {
                     certificaciones = :certificaciones WHERE id_empleado = :id";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id', $mantenimiento->getIdEmpleado());
-            $stmt->bindParam(':especialidad', $mantenimiento->getEspecialidad());
-            $stmt->bindParam(':turno', $mantenimiento->getTurno());
-            $stmt->bindParam(':certificaciones', $mantenimiento->getCertificaciones());
+            $stmt->bindValue(':id', $mantenimiento->getIdEmpleado());
+            $stmt->bindValue(':especialidad', $mantenimiento->getEspecialidad());
+            $stmt->bindValue(':turno', $mantenimiento->getTurno());
+            $stmt->bindValue(':certificaciones', $mantenimiento->getCertificaciones());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -101,7 +101,7 @@ class MantenimientoDAO {
         try {
             $sql = "DELETE FROM mantenimiento WHERE id_empleado = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             
             return $stmt->execute();
         } catch (PDOException $e) {

@@ -19,10 +19,10 @@ class AsientoDAO {
                     VALUES (:numero_asiento, :id_tren, :clase, :estado)";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':numero_asiento', $asiento->getNumeroAsiento());
-            $stmt->bindParam(':id_tren', $asiento->getIdTren());
-            $stmt->bindParam(':clase', $asiento->getClase());
-            $stmt->bindParam(':estado', $asiento->getEstado());
+            $stmt->bindValue(':numero_asiento', $asiento->getNumeroAsiento());
+            $stmt->bindValue(':id_tren', $asiento->getIdTren());
+            $stmt->bindValue(':clase', $asiento->getClase());
+            $stmt->bindValue(':estado', $asiento->getEstado());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -36,7 +36,7 @@ class AsientoDAO {
         try {
             $sql = "SELECT * FROM asiento WHERE numero_asiento = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
             
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -82,7 +82,7 @@ class AsientoDAO {
         try {
             $sql = "SELECT * FROM asiento WHERE id_tren = :id_tren";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id_tren', $id_tren);
+            $stmt->bindValue(':id_tren', $id_tren);
             $stmt->execute();
             
             $asientos = [];
@@ -108,10 +108,10 @@ class AsientoDAO {
                     estado = :estado WHERE numero_asiento = :id";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id', $asiento->getNumeroAsiento());
-            $stmt->bindParam(':id_tren', $asiento->getIdTren());
-            $stmt->bindParam(':clase', $asiento->getClase());
-            $stmt->bindParam(':estado', $asiento->getEstado());
+            $stmt->bindValue(':id', $asiento->getNumeroAsiento());
+            $stmt->bindValue(':id_tren', $asiento->getIdTren());
+            $stmt->bindValue(':clase', $asiento->getClase());
+            $stmt->bindValue(':estado', $asiento->getEstado());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -125,7 +125,7 @@ class AsientoDAO {
         try {
             $sql = "DELETE FROM asiento WHERE numero_asiento = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             
             return $stmt->execute();
         } catch (PDOException $e) {
