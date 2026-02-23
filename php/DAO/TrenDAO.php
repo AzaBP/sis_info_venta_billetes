@@ -19,8 +19,8 @@ class TrenDAO {
                     VALUES (:modelo, :capacidad)";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':modelo', $tren->getModelo());
-            $stmt->bindParam(':capacidad', $tren->getCapacidad());
+            $stmt->bindValue(':modelo', $tren->getModelo());
+            $stmt->bindValue(':capacidad', $tren->getCapacidad());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -34,7 +34,7 @@ class TrenDAO {
         try {
             $sql = "SELECT * FROM tren WHERE id_tren = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
             
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -80,9 +80,9 @@ class TrenDAO {
                     WHERE id_tren = :id";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id', $tren->getIdTren());
-            $stmt->bindParam(':modelo', $tren->getModelo());
-            $stmt->bindParam(':capacidad', $tren->getCapacidad());
+            $stmt->bindValue(':id', $tren->getIdTren());
+            $stmt->bindValue(':modelo', $tren->getModelo());
+            $stmt->bindValue(':capacidad', $tren->getCapacidad());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -96,7 +96,7 @@ class TrenDAO {
         try {
             $sql = "DELETE FROM tren WHERE id_tren = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             
             return $stmt->execute();
         } catch (PDOException $e) {

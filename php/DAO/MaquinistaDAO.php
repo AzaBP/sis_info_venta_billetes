@@ -19,10 +19,10 @@ class MaquinistaDAO {
                     VALUES (:id_empleado, :licencia, :experiencia_años, :horario_preferido)";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id_empleado', $maquinista->getIdEmpleado());
-            $stmt->bindParam(':licencia', $maquinista->getLicencia());
-            $stmt->bindParam(':experiencia_años', $maquinista->getExperienciaAños());
-            $stmt->bindParam(':horario_preferido', $maquinista->getHorarioPreferido());
+            $stmt->bindValue(':id_empleado', $maquinista->getIdEmpleado());
+            $stmt->bindValue(':licencia', $maquinista->getLicencia());
+            $stmt->bindValue(':experiencia_años', $maquinista->getExperienciaAños());
+            $stmt->bindValue(':horario_preferido', $maquinista->getHorarioPreferido());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -36,7 +36,7 @@ class MaquinistaDAO {
         try {
             $sql = "SELECT * FROM maquinista WHERE id_empleado = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
             
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -84,10 +84,10 @@ class MaquinistaDAO {
                     horario_preferido = :horario_preferido WHERE id_empleado = :id";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id', $maquinista->getIdEmpleado());
-            $stmt->bindParam(':licencia', $maquinista->getLicencia());
-            $stmt->bindParam(':experiencia_años', $maquinista->getExperienciaAños());
-            $stmt->bindParam(':horario_preferido', $maquinista->getHorarioPreferido());
+            $stmt->bindValue(':id', $maquinista->getIdEmpleado());
+            $stmt->bindValue(':licencia', $maquinista->getLicencia());
+            $stmt->bindValue(':experiencia_años', $maquinista->getExperienciaAños());
+            $stmt->bindValue(':horario_preferido', $maquinista->getHorarioPreferido());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -101,7 +101,7 @@ class MaquinistaDAO {
         try {
             $sql = "DELETE FROM maquinista WHERE id_empleado = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             
             return $stmt->execute();
         } catch (PDOException $e) {

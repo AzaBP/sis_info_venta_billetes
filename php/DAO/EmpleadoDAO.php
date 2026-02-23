@@ -15,12 +15,12 @@ class EmpleadoDAO {
     // INSERTAR
     public function insertar(Empleado $empleado) {
         try {
-            $sql = "INSERT INTO empleado (id_usuario, email) 
-                    VALUES (:id_usuario, :email)";
+            $sql = "INSERT INTO empleado (id_usuario, tipo_empleado) 
+                    VALUES (:id_usuario, :tipo_empleado)";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id_usuario', $empleado->getIdUsuario());
-            $stmt->bindParam(':email', $empleado->getEmail());
+            $stmt->bindValue(':id_usuario', $empleado->getIdUsuario());
+            $stmt->bindValue(':tipo_empleado', $empleado->getTipoEmpleado());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -34,7 +34,7 @@ class EmpleadoDAO {
         try {
             $sql = "SELECT * FROM empleado WHERE id_empleado = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
             
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -76,13 +76,13 @@ class EmpleadoDAO {
     // ACTUALIZAR
     public function actualizar(Empleado $empleado) {
         try {
-            $sql = "UPDATE empleado SET id_usuario = :id_usuario, email = :email 
+            $sql = "UPDATE empleado SET id_usuario = :id_usuario, tipo_empleado = :tipo_empleado 
                     WHERE id_empleado = :id";
             $stmt = $this->pdo->prepare($sql);
             
-            $stmt->bindParam(':id', $empleado->getIdEmpleado());
-            $stmt->bindParam(':id_usuario', $empleado->getIdUsuario());
-            $stmt->bindParam(':email', $empleado->getEmail());
+            $stmt->bindValue(':id', $empleado->getIdEmpleado());
+            $stmt->bindValue(':id_usuario', $empleado->getIdUsuario());
+            $stmt->bindValue(':tipo_empleado', $empleado->getTipoEmpleado());
             
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -96,7 +96,7 @@ class EmpleadoDAO {
         try {
             $sql = "DELETE FROM empleado WHERE id_empleado = :id";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             
             return $stmt->execute();
         } catch (PDOException $e) {

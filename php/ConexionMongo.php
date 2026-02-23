@@ -1,7 +1,7 @@
 <?php
 
 class ConexionMongo {
-    private $uri = "mongodb://localhost:27017";
+    private $uri = "mongodb://admin:admin@localhost:27017";
     private $database = "trenesDB";
     private $client;
     private $db;

@@ -4,19 +4,21 @@
 CREATE TABLE USUARIO (
     id_usuario SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     telefono VARCHAR(20),
-    metodo_pago VARCHAR(50)
+    tipo_usuario VARCHAR(20) NOT NULL CHECK (tipo_usuario IN ('pasajero', 'empleado')),
+    CONSTRAINT ck_tipo_usuario CHECK (tipo_usuario IN ('pasajero', 'empleado'))
 );
 
 -- ================================================
 --  PASAJERO
 -- ================================================
+
 CREATE TABLE PASAJERO (
     id_pasajero INT PRIMARY KEY,
     id_usuario INT NOT NULL,
-    apellido VARCHAR(100) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
     genero VARCHAR(20) NOT NULL CHECK (genero IN ('masculino','femenino','otro','no_especificar')),
     tipo_documento VARCHAR(20) NOT NULL CHECK (tipo_documento IN ('dni','nie','pasaporte')),
@@ -24,6 +26,7 @@ CREATE TABLE PASAJERO (
     ciudad VARCHAR(100),
     codigo_postal VARCHAR(10),
     pais VARCHAR(50),
+    metodo_pago VARCHAR(50),
     acepta_terminos BOOLEAN DEFAULT FALSE,
     acepta_privacidad BOOLEAN DEFAULT FALSE,
     newsletter BOOLEAN DEFAULT FALSE,
@@ -36,7 +39,8 @@ CREATE TABLE PASAJERO (
 CREATE TABLE EMPLEADO (
     id_empleado SERIAL PRIMARY KEY,
     id_usuario INT NOT NULL,
-    email VARCHAR(100),
+    tipo_empleado VARCHAR(20) NOT NULL CHECK (tipo_empleado IN ('maquinista', 'mantenimiento', 'vendedor')),
+    CONSTRAINT ck_tipo_empleado CHECK (tipo_empleado IN ('maquinista', 'mantenimiento', 'vendedor')),
     FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario)
 );
 
@@ -113,4 +117,40 @@ CREATE TABLE ABONO (
     viajes_totales INT,
     viajes_restantes INT,
     FOREIGN KEY (id_pasajero) REFERENCES PASAJERO(id_pasajero)
+);
+
+-- ================================================
+-- VIAJE
+-- ================================================
+CREATE TABLE VIAJE (
+    id_viaje SERIAL PRIMARY KEY,
+    id_vendedor INT NOT NULL,
+    id_ruta INT NOT NULL,
+    id_tren INT NOT NULL,
+    id_maquinista INT NOT NULL,
+    fecha DATE NOT NULL,
+    hora_salida TIME NOT NULL,
+    hora_llegada TIME NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    estado VARCHAR(30) NOT NULL CHECK (estado IN ('programado', 'en_curso', 'completado', 'cancelado')),
+    FOREIGN KEY (id_vendedor) REFERENCES VENDEDOR(id_empleado),
+    FOREIGN KEY (id_ruta) REFERENCES RUTA(id_ruta),
+    FOREIGN KEY (id_tren) REFERENCES TREN(id_tren),
+    FOREIGN KEY (id_maquinista) REFERENCES MAQUINISTA(id_empleado)
+);
+
+-- ================================================
+-- INCIDENCIA
+-- ================================================
+CREATE TABLE INCIDENCIA (
+    id_incidencia SERIAL PRIMARY KEY,
+    id_viaje INT NOT NULL,
+    id_mantenimiento INT NOT NULL,
+    id_maquinista INT NOT NULL,
+    descripcion TEXT NOT NULL,
+    fecha_reporte TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(30) NOT NULL CHECK (estado IN ('reportado', 'en_proceso', 'resuelto')),
+    FOREIGN KEY (id_viaje) REFERENCES VIAJE(id_viaje),
+    FOREIGN KEY (id_mantenimiento) REFERENCES MANTENIMIENTO(id_empleado),
+    FOREIGN KEY (id_maquinista) REFERENCES MAQUINISTA(id_empleado)
 );

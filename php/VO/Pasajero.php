@@ -3,7 +3,6 @@
 class Pasajero {
     private $id_pasajero;
     private $id_usuario;
-    private $apellido;
     private $fecha_nacimiento;
     private $genero;
     private $tipo_documento;
@@ -11,16 +10,16 @@ class Pasajero {
     private $ciudad;
     private $codigo_postal;
     private $pais;
+    private $metodo_pago;
     private $acepta_terminos;
     private $acepta_privacidad;
     private $newsletter;
 
-    public function __construct($id_pasajero = null, $id_usuario = null, $apellido = '', $fecha_nacimiento = '', $genero = '', 
+    public function __construct($id_pasajero = null, $id_usuario = null, $fecha_nacimiento = '', $genero = '', 
                                 $tipo_documento = '', $calle = '', $ciudad = '', $codigo_postal = '', $pais = '', 
-                                $acepta_terminos = false, $acepta_privacidad = false, $newsletter = false) {
+                                $metodo_pago = '', $acepta_terminos = false, $acepta_privacidad = false, $newsletter = false) {
         $this->id_pasajero = $id_pasajero;
         $this->id_usuario = $id_usuario;
-        $this->apellido = $apellido;
         $this->fecha_nacimiento = $fecha_nacimiento;
         $this->genero = $genero;
         $this->tipo_documento = $tipo_documento;
@@ -28,6 +27,7 @@ class Pasajero {
         $this->ciudad = $ciudad;
         $this->codigo_postal = $codigo_postal;
         $this->pais = $pais;
+        $this->metodo_pago = $metodo_pago;
         $this->acepta_terminos = $acepta_terminos;
         $this->acepta_privacidad = $acepta_privacidad;
         $this->newsletter = $newsletter;
@@ -40,10 +40,6 @@ class Pasajero {
 
     public function getIdUsuario() {
         return $this->id_usuario;
-    }
-
-    public function getApellido() {
-        return $this->apellido;
     }
 
     public function getFechaNacimiento() {
@@ -74,6 +70,10 @@ class Pasajero {
         return $this->pais;
     }
 
+    public function getMetodoPago() {
+        return $this->metodo_pago;
+    }
+
     public function getAceptaTerminos() {
         return $this->acepta_terminos;
     }
@@ -93,10 +93,6 @@ class Pasajero {
 
     public function setIdUsuario($id_usuario) {
         $this->id_usuario = $id_usuario;
-    }
-
-    public function setApellido($apellido) {
-        $this->apellido = $apellido;
     }
 
     public function setFechaNacimiento($fecha_nacimiento) {
@@ -127,6 +123,10 @@ class Pasajero {
         $this->pais = $pais;
     }
 
+    public function setMetodoPago($metodo_pago) {
+        $this->metodo_pago = $metodo_pago;
+    }
+
     public function setAceptaTerminos($acepta_terminos) {
         $this->acepta_terminos = $acepta_terminos;
     }
@@ -144,7 +144,6 @@ class Pasajero {
         return [
             'id_pasajero' => $this->id_pasajero,
             'id_usuario' => $this->id_usuario,
-            'apellido' => $this->apellido,
             'fecha_nacimiento' => $this->fecha_nacimiento,
             'genero' => $this->genero,
             'tipo_documento' => $this->tipo_documento,
@@ -152,6 +151,7 @@ class Pasajero {
             'ciudad' => $this->ciudad,
             'codigo_postal' => $this->codigo_postal,
             'pais' => $this->pais,
+            'metodo_pago' => $this->metodo_pago,
             'acepta_terminos' => $this->acepta_terminos,
             'acepta_privacidad' => $this->acepta_privacidad,
             'newsletter' => $this->newsletter
