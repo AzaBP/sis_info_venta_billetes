@@ -31,7 +31,7 @@ function updateProgress() {
     if (currentStep === 4) {
         nextBtn.textContent = 'Crear Cuenta';
         nextBtn.innerHTML = 'Crear Cuenta';
-        nextBtn.type = 'submit';
+        nextBtn.type = 'button';
     } else {
         nextBtn.innerHTML = 'Siguiente <i class="fa-solid fa-chevron-right"></i>';
         nextBtn.type = 'button';
@@ -49,16 +49,37 @@ function showStep(n) {
 
 // Next button
 nextBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (validateStep(currentStep)) {
-        if (currentStep < 4) {
+
+    if (currentStep < 4) {
+        e.preventDefault();
+
+        if (validateStep(currentStep)) {
             currentStep++;
             showStep(currentStep);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-            submitForm();
         }
-    }
+
+    } else {
+
+        const password = document.getElementById('contrasena').value;
+        const confirmPassword = document.getElementById('confirmar_contraseña').value;
+
+        if (password !== confirmPassword) {
+            alert('Las contraseñas no coinciden');
+            return;
+        }
+
+        const terminos = document.querySelector('input[name="terminos"]').checked;
+        const privacidad = document.querySelector('input[name="privacidad"]').checked;
+
+        if (!terminos || !privacidad) {
+            alert('Debes aceptar los Términos y Condiciones y la Política de Privacidad');
+            return;
+        }
+
+        // Si todo está correcto → enviar al PHP
+        registerForm.submit();
+   }
 });
 
 // Previous button
@@ -110,7 +131,7 @@ togglePasswordButtons.forEach(btn => {
 });
 
 // Password strength indicator
-const passwordInput = document.getElementById('contraseña');
+const passwordInput = document.getElementById('contrasena');
 const strengthBar = document.querySelector('.strength-bar');
 const strengthText = document.querySelector('.strength-text strong');
 
@@ -203,7 +224,7 @@ function updateTips(tips) {
 
 // Form submission
 function submitForm() {
-    const password = document.getElementById('contraseña').value;
+    const password = document.getElementById('contrasena').value;
     const confirmPassword = document.getElementById('confirmar_contraseña').value;
 
     // Validate passwords match

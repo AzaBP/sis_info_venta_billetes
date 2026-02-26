@@ -22,6 +22,7 @@ CREATE TABLE PASAJERO (
     fecha_nacimiento DATE NOT NULL,
     genero VARCHAR(20) NOT NULL CHECK (genero IN ('masculino','femenino','otro','no_especificar')),
     tipo_documento VARCHAR(20) NOT NULL CHECK (tipo_documento IN ('dni','nie','pasaporte')),
+    numero_documento VARCHAR(20),
     calle VARCHAR(255),
     ciudad VARCHAR(100),
     codigo_postal VARCHAR(10),
