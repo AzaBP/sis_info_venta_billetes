@@ -533,3 +533,65 @@ body {
     .btn-next { flex: 1; }
     .nav { display: none; }
 }
+
+.error-msg{
+    color:#ff3b3b;
+    font-size:13px;
+    margin-top:5px;
+}
+
+input.error,
+select.error{
+    border-color:#ff3b3b !important;
+}
+
+.mensaje-error {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    display: none;
+}
+
+.mensaje-error.error {
+    background-color: #ffe5e5;
+    color: #b30000;
+    border: 1px solid #ff4d4d;
+}
+
+.strength-bar-container {
+    width: 100%;
+    height: 6px;
+    background: #eee;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.strength-bar.weak {
+    background: red;
+}
+
+.strength-bar.medium {
+    background: orange;
+}
+
+.strength-bar.strong {
+    background: green;
+}
+
+.password-requirements li {
+    color: #888;
+}
+
+.password-requirements li.valid {
+    color: green;
+}

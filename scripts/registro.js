@@ -1,4 +1,7 @@
-// Step navigation
+// ==========================
+// STEP NAVIGATION
+// ==========================
+
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const registerForm = document.getElementById('registerForm');
@@ -8,253 +11,367 @@ const progressFill = document.querySelector('.progress-fill');
 
 let currentStep = 1;
 
-// Update progress bar and steps
+// ==========================
+// PROGRESS BAR
+// ==========================
+
 function updateProgress() {
+
     const progress = (currentStep / 4) * 100;
     progressFill.style.width = progress + '%';
 
-    steps.forEach((step, index) => {
-        const stepNum = index + 1;
-        step.classList.remove('active', 'completed');
+    steps.forEach((step,index)=>{
+        step.classList.remove('active','completed');
 
-        if (stepNum < currentStep) {
-            step.classList.add('completed');
-        } else if (stepNum === currentStep) {
-            step.classList.add('active');
-        }
+        if(index+1 < currentStep) step.classList.add('completed');
+        if(index+1 === currentStep) step.classList.add('active');
     });
 
-    // Update button visibility
     prevBtn.style.display = currentStep === 1 ? 'none' : 'flex';
 
-    // Change next button text on last step
-    if (currentStep === 4) {
-        nextBtn.textContent = 'Crear Cuenta';
-        nextBtn.innerHTML = 'Crear Cuenta';
-        nextBtn.type = 'button';
-    } else {
+    if(currentStep === 4){
+        nextBtn.innerHTML = "Crear Cuenta";
+        nextBtn.type = "submit";
+    }else{
         nextBtn.innerHTML = 'Siguiente <i class="fa-solid fa-chevron-right"></i>';
-        nextBtn.type = 'button';
+        nextBtn.type = "button";
     }
 }
 
-// Show specific step
-function showStep(n) {
-    formSteps.forEach(step => step.classList.remove('active'));
-    if (formSteps[n - 1]) {
-        formSteps[n - 1].classList.add('active');
-    }
+function showStep(n){
+    formSteps.forEach(s=>s.classList.remove("active"));
+    if(formSteps[n-1]) formSteps[n-1].classList.add("active");
     updateProgress();
 }
 
-// Next button
-nextBtn.addEventListener('click', (e) => {
+// ==========================
+// VALIDACIONES
+// ==========================
 
-    if (currentStep < 4) {
-        e.preventDefault();
+const letrasDNI = "TRWAGMYFPDXBNJZSQVHLCKE";
 
-        if (validateStep(currentStep)) {
-            currentStep++;
-            showStep(currentStep);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+function validarDocumento(valor){
+
+    valor = valor.toUpperCase().trim();
+
+    const dni = /^[0-9]{8}[A-Z]$/;
+    const nie = /^[XYZ][0-9]{7}[A-Z]$/;
+
+    if(dni.test(valor)){
+        const num = parseInt(valor.substring(0,8));
+        return valor[8] === letrasDNI[num % 23];
+    }
+
+    if(nie.test(valor)){
+        valor = valor.replace("X","0")
+                     .replace("Y","1")
+                     .replace("Z","2");
+
+        const num = parseInt(valor.substring(0,8));
+        return valor[8] === letrasDNI[num % 23];
+    }
+
+    return false;
+}
+
+// ==========================
+// MOSTRAR ERRORES
+// ==========================
+
+function showError(input,msg){
+
+    let errorDiv = input.parentNode.querySelector(".error-msg");
+
+    if(!errorDiv){
+        errorDiv = document.createElement("div");
+        errorDiv.className = "error-msg";
+        input.parentNode.appendChild(errorDiv);
+    }
+
+    if(msg){
+        input.classList.add("error");
+        errorDiv.textContent = msg;
+    }else{
+        input.classList.remove("error");
+        errorDiv.textContent = "";
+    }
+}
+
+// ==========================
+// VALIDACIÓN TIEMPO REAL
+// ==========================
+
+const allInputs = document.querySelectorAll(
+    '.form-step input, .form-step select'
+);
+
+allInputs.forEach(input=>{
+
+    input.addEventListener("input",()=>{
+
+        const value = input.value.trim();
+        let error = "";
+
+        switch(input.id){
+
+            case "nombre":
+            case "apellido":
+                if(!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,}$/.test(value)){
+                    error = "Solo letras (mínimo 2)";
+                }
+            break;
+
+            case "nacimiento":
+                const fecha = new Date(value);
+                const hoy = new Date();
+
+                let edad = hoy.getFullYear() - fecha.getFullYear();
+                const m = hoy.getMonth() - fecha.getMonth();
+                if(m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) edad--;
+
+                if(edad < 14){
+                    error = "Debes tener mínimo 14 años";
+                }
+            break;
+
+            case "email":
+                if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)){
+                    error = "Email inválido";
+                }
+            break;
+
+            case "telefono":
+                if(!/^[0-9+\s]{7,15}$/.test(value)){
+                    error = "Teléfono inválido";
+                }
+            break;
+
+            case "codigo_postal":
+                if(!/^[0-9]{4,6}$/.test(value)){
+                    error = "Código postal inválido";
+                }
+            break;
+
+            case "ciudad":
+                if(!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,}$/.test(value)){
+                    error = "Ciudad inválida";
+                }
+            break;
+
+            case "numero_documento":
+                if(!validarDocumento(value)){
+                    error = "Documento inválido";
+                }
+            break;
+
+            case "contrasena":
+                if(value.length < 8){
+                    error = "Mínimo 8 caracteres";
+                }
+                else if(!/[A-Z]/.test(value)){
+                    error = "Debe tener mayúscula";
+                }
+                else if(!/[a-z]/.test(value)){
+                    error = "Debe tener minúscula";
+                }
+                else if(!/[0-9]/.test(value)){
+                    error = "Debe tener número";
+                }
+                else if(!/[!@#$%^&*]/.test(value)){
+                    error = "Debe tener carácter especial";
+                }
+            break;
+
+            case "confirmar_contraseña":
+                const pass = document.getElementById("contrasena").value;
+                if(value !== pass){
+                    error = "Las contraseñas no coinciden";
+                }
+            break;
+
         }
 
-    } else {
+        showError(input,error);
 
-        const password = document.getElementById('contrasena').value;
-        const confirmPassword = document.getElementById('confirmar_contraseña').value;
+    });
 
-        if (password !== confirmPassword) {
-            alert('Las contraseñas no coinciden');
-            return;
-        }
-
-        const terminos = document.querySelector('input[name="terminos"]').checked;
-        const privacidad = document.querySelector('input[name="privacidad"]').checked;
-
-        if (!terminos || !privacidad) {
-            alert('Debes aceptar los Términos y Condiciones y la Política de Privacidad');
-            return;
-        }
-
-        // Si todo está correcto → enviar al PHP
-        registerForm.submit();
-   }
 });
 
-// Previous button
-prevBtn.addEventListener('click', () => {
-    if (currentStep > 1) {
+// ==========================
+// BOTONES
+// ==========================
+
+nextBtn.addEventListener("click",(e)=>{
+
+    if(currentStep < 4){
+
+        e.preventDefault();
+
+        const stepInputs = formSteps[currentStep-1]
+            .querySelectorAll("input,select");
+
+        let valid = true;
+
+        stepInputs.forEach(input=>{
+            if(input.classList.contains("error") || !input.value.trim()){
+                valid = false;
+                showError(input,"Campo inválido");
+            }
+        });
+
+        if(!valid) return;
+
+        currentStep++;
+        showStep(currentStep);
+    }
+
+    else{
+
+        const pass = document.getElementById("contrasena").value;
+        const confirm = document.getElementById("confirmar_contraseña").value;
+
+        if(pass !== confirm){
+            alert("Las contraseñas no coinciden");
+            return;
+        }
+
+        registerForm.submit();
+    }
+
+});
+
+prevBtn.addEventListener("click",()=>{
+    if(currentStep > 1){
         currentStep--;
         showStep(currentStep);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 });
 
-// Validate step fields
-function validateStep(step) {
-    const stepElement = formSteps[step - 1];
-    const inputs = stepElement.querySelectorAll('input[required], select[required]');
-    let isValid = true;
+// ==========================
+// PASSWORD VISIBILITY TOGGLE
+// ==========================
 
-    inputs.forEach(input => {
-        if (!input.value.trim()) {
-            input.style.borderColor = '#ff6b6b';
-            isValid = false;
-        } else {
-            input.style.borderColor = '#e8ecf1';
-        }
-    });
-
-    return isValid;
-}
-
-// Password visibility toggle
 const togglePasswordButtons = document.querySelectorAll('.toggle-password');
 
 togglePasswordButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const input = btn.previousElementSibling;
-        const icon = btn.querySelector('i');
 
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
+    btn.addEventListener('click',(e)=>{
+        e.preventDefault();
+
+        const input = btn.parentNode.querySelector("input");
+        const icon = btn.querySelector("i");
+
+        if(input.type === "password"){
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
         }
+        else{
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+
     });
+
 });
 
-// Password strength indicator
-const passwordInput = document.getElementById('contrasena');
-const strengthBar = document.querySelector('.strength-bar');
-const strengthText = document.querySelector('.strength-text strong');
+const params = new URLSearchParams(window.location.search);
+const error = params.get("error");
+
+const mensajeDiv = document.getElementById("mensaje-error");
+
+if(error){
+
+    mensajeDiv.style.display = "block";
+    mensajeDiv.classList.add("error");
+
+    if(error === "usuario_existente"){
+        mensajeDiv.textContent = "⚠️ Este correo ya está registrado.";
+    }
+
+    if(error === "error_usuario"){
+        mensajeDiv.textContent = "⚠️ Error al crear el usuario.";
+    }
+
+    if(error === "error_pasajero"){
+        mensajeDiv.textContent = "⚠️ Error al crear el perfil del pasajero.";
+    }
+}
+
+// ==========================
+// PASSWORD STRENGTH
+// ==========================
+
+const passwordInput = document.getElementById("contrasena");
+const strengthBar = document.querySelector(".strength-bar");
+const strengthTextStrong = document.querySelector(".strength-text strong");
 
 if (passwordInput) {
-    passwordInput.addEventListener('input', () => {
-        const password = passwordInput.value;
+
+    passwordInput.addEventListener("input", function () {
+
+        const value = passwordInput.value;
+
         let strength = 0;
-        let strengthLabel = 'Débil';
 
-        // Check length
-        if (password.length >= 8) strength += 25;
-        if (password.length >= 12) strength += 15;
+        const hasLength = value.length >= 8;
+        const hasUpper = /[A-Z]/.test(value);
+        const hasLower = /[a-z]/.test(value);
+        const hasNumber = /[0-9]/.test(value);
+        const hasSpecial = /[!@#$%^&*]/.test(value);
 
-        // Check for uppercase
-        if (/[A-Z]/.test(password)) strength += 20;
+        if (hasLength) strength += 20;
+        if (hasUpper) strength += 20;
+        if (hasLower) strength += 20;
+        if (hasNumber) strength += 20;
+        if (hasSpecial) strength += 20;
 
-        // Check for lowercase
-        if (/[a-z]/.test(password)) strength += 20;
+        // 🔹 MOVER BARRA
+        strengthBar.style.width = strength + "%";
 
-        // Check for numbers
-        if (/[0-9]/.test(password)) strength += 15;
-
-        // Check for special characters
-        if (/[!@#$%^&*]/.test(password)) strength += 15;
-
-        // Determine strength level
-        if (strength < 33) {
-            strengthLabel = 'Débil';
-        } else if (strength < 66) {
-            strengthLabel = 'Media';
-        } else if (strength < 100) {
-            strengthLabel = 'Fuerte';
-        } else {
-            strengthLabel = 'Muy Fuerte';
+        // 🔹 COLOR + TEXTO
+        if (strength < 40) {
+            strengthBar.style.background = "#ff4d4d";
+            strengthTextStrong.textContent = "Débil";
+        }
+        else if (strength < 80) {
+            strengthBar.style.background = "#ffa500";
+            strengthTextStrong.textContent = "Media";
+        }
+        else {
+            strengthBar.style.background = "#28a745";
+            strengthTextStrong.textContent = "Fuerte";
         }
 
-        // Update bar width
-        const barAfter = strengthBar.style.cssText;
-        strengthBar.style.cssText = `width: ${strength}%;`;
-        
-        // Change bar color
-        if (strength < 33) {
-            strengthBar.style.background = '#ff6b6b';
-        } else if (strength < 66) {
-            strengthBar.style.background = '#ffa500';
-        } else if (strength < 100) {
-            strengthBar.style.background = '#4caf50';
-        } else {
-            strengthBar.style.background = '#2196f3';
-        }
-
-        strengthText.textContent = strengthLabel;
-
-        // Update password tips
-        const tips = {
-            length: strength >= 25,
-            upper: /[A-Z]/.test(password),
-            lower: /[a-z]/.test(password),
-            number: /[0-9]/.test(password),
-            special: /[!@#$%^&*]/.test(password)
-        };
-
-        updateTips(tips);
+        // 🔹 TICKS VERDES
+        actualizarTip("tip-length", hasLength);
+        actualizarTip("tip-upper", hasUpper);
+        actualizarTip("tip-lower", hasLower);
+        actualizarTip("tip-number", hasNumber);
+        actualizarTip("tip-special", hasSpecial);
     });
 }
 
-// Update password tips visual feedback
-function updateTips(tips) {
-    const tipIds = [
-        { id: 'tip-length', check: tips.length },
-        { id: 'tip-upper', check: tips.upper },
-        { id: 'tip-lower', check: tips.lower },
-        { id: 'tip-number', check: tips.number },
-        { id: 'tip-special', check: tips.special }
-    ];
+function actualizarTip(id, valido) {
 
-    tipIds.forEach(({ id, check }) => {
-        const tip = document.getElementById(id);
-        if (tip) {
-            if (check) {
-                tip.classList.add('completed');
-                tip.innerHTML = tip.innerHTML.replace('fa-circle-xmark', 'fa-circle-check');
-            } else {
-                tip.classList.remove('completed');
-                tip.innerHTML = tip.innerHTML.replace('fa-circle-check', 'fa-circle-xmark');
-            }
-        }
-    });
+    const tip = document.getElementById(id);
+    if (!tip) return;
+
+    const icon = tip.querySelector("i");
+
+    if (valido) {
+        tip.classList.add("completed");
+        icon.classList.remove("fa-circle-xmark");
+        icon.classList.add("fa-circle-check");
+        icon.style.color = "#28a745";
+    } else {
+        tip.classList.remove("completed");
+        icon.classList.remove("fa-circle-check");
+        icon.classList.add("fa-circle-xmark");
+        icon.style.color = "#ff4d4d";
+    }
 }
 
-// Form submission
-function submitForm() {
-    const password = document.getElementById('contrasena').value;
-    const confirmPassword = document.getElementById('confirmar_contraseña').value;
-
-    // Validate passwords match
-    if (password !== confirmPassword) {
-        alert('Las contraseñas no coinciden');
-        return;
-    }
-
-    // Validate terms
-    const terminos = document.querySelector('input[name="terminos"]').checked;
-    const privacidad = document.querySelector('input[name="privacidad"]').checked;
-
-    if (!terminos || !privacidad) {
-        alert('Debes aceptar los Términos y Condiciones y la Política de Privacidad');
-        return;
-    }
-
-    // Success
-    alert('¡Cuenta creada exitosamente! Serás redirigido al inicio de sesión');
-    window.location.href = 'inicio_sesion.html';
-}
-
-// Initialize
+// INIT
 showStep(1);
-
-// Real-time validation
-document.querySelectorAll('.form-step input, .form-step select').forEach(input => {
-    input.addEventListener('change', () => {
-        if (input.value.trim()) {
-            input.style.borderColor = '#e8ecf1';
-        }
-    });
-});

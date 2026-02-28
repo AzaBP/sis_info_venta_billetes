@@ -15,9 +15,8 @@ CREATE TABLE USUARIO (
 -- ================================================
 --  PASAJERO
 -- ================================================
-
 CREATE TABLE PASAJERO (
-    id_pasajero INT PRIMARY KEY,
+    id_pasajero SERIAL PRIMARY KEY,
     id_usuario INT NOT NULL,
     fecha_nacimiento DATE NOT NULL,
     genero VARCHAR(20) NOT NULL CHECK (genero IN ('masculino','femenino','otro','no_especificar')),
@@ -25,7 +24,7 @@ CREATE TABLE PASAJERO (
     numero_documento VARCHAR(20),
     calle VARCHAR(255),
     ciudad VARCHAR(100),
-    codigo_postal VARCHAR(10),
+    codigo_postal VARCHAR(40),
     pais VARCHAR(50),
     metodo_pago VARCHAR(50),
     acepta_terminos BOOLEAN DEFAULT FALSE,

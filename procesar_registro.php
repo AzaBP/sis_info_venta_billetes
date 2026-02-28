@@ -1,14 +1,13 @@
 <?php
 
-require_once 'DAO/UsuarioDAO.php';
-require_once 'DAO/PasajeroDAO.php';
-require_once 'VO/Usuario.php';
-require_once 'VO/Pasajero.php';
-
+require_once __DIR__ . '/php/DAO/UsuarioDAO.php';
+require_once __DIR__ . '/php/DAO/PasajeroDAO.php';
+require_once __DIR__ . '/php/VO/Usuario.php';
+require_once __DIR__ . '/php/VO/Pasajero.php';
+require_once __DIR__ . '/php/Conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // DATOS USUARIO
     $nombre = $_POST['nombre'];
     $apellido = $_POST['apellido'];
     $email = $_POST['email'];
@@ -16,7 +15,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $telefono = $_POST['telefono'];
     $tipoUsuario = "pasajero";
 
-    // DATOS PASAJERO
     $fechaNacimiento = $_POST['nacimiento'];
     $genero = $_POST['genero'];
     $tipoDocumento = $_POST['tipo_documento'];
@@ -25,11 +23,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ciudad = $_POST['ciudad'];
     $codigoPostal = $_POST['codigo_postal'];
     $pais = $_POST['pais'];
-    $aceptaTerminos = isset($_POST['terminos']);
-    $aceptaPrivacidad = isset($_POST['privacidad']);
-    $newsletter = isset($_POST['newsletter']);
 
-    // 1️⃣ Crear e insertar Usuario
+    $aceptaTerminos = true;
+    $aceptaPrivacidad = true;
+    $newsletter = true;
+
+    $usuarioDAO = new UsuarioDAO();
+
+    // 🔎 Verificar si el email ya existe
+    if ($usuarioDAO->existeEmail($email)) {
+        header("Location: registro.html?error=usuario_existente");
+        exit;
+    }
+
+    // 1️⃣ Insertar Usuario
     $usuario = new Usuario(
         null,
         $nombre,
@@ -40,15 +47,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tipoUsuario
     );
 
-    $usuarioDAO = new UsuarioDAO();
     $idUsuario = $usuarioDAO->insertar($usuario);
 
     if (!$idUsuario) {
-        echo "Error al crear el usuario";
+        header("Location: registro.html?error=error_usuario");
         exit;
     }
 
-    // Crear e insertar Pasajero
+    // 2️⃣ Insertar Pasajero
     $pasajero = new Pasajero(
         null,
         $idUsuario,
@@ -70,9 +76,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $resultado = $pasajeroDAO->insertar($pasajero);
 
     if ($resultado) {
-        echo "Registro completado correctamente";
+        header("Location: inicio_sesion.html?registro=ok");
+        exit;
     } else {
-        echo "Error al crear el pasajero";
+        header("Location: registro.html?error=error_pasajero");
+        exit;
     }
 }
 ?>

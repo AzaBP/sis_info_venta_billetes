@@ -139,5 +139,19 @@ class UsuarioDAO {
             return false;
         }
     }
+
+    public function existeEmail($email) {
+
+        try {
+            $sql = "SELECT id_usuario FROM usuario WHERE email = :email";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':email' => $email]);
+
+            return $stmt->rowCount() > 0;
+
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 }
 ?>

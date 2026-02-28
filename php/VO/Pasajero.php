@@ -10,16 +10,16 @@ class Pasajero {
     private $ciudad;
     private $codigo_postal;
     private $pais;
+    private $numero_documento;
     private $metodo_pago;
     private $acepta_terminos;
     private $acepta_privacidad;
     private $newsletter;
 
-    public function __construct($id_pasajero = null, $id_usuario = null, $fecha_nacimiento = '', $genero = '', 
-                                $tipo_documento = '', $calle = '', $ciudad = '', $codigo_postal = '', $pais = '', 
-                                $metodo_pago = '', $acepta_terminos = false, $acepta_privacidad = false, $newsletter = false) {
+    public function __construct($id_pasajero, $id_usuario, $apellido, $fecha_nacimiento, $genero, $tipo_documento, $calle, $ciudad, $codigo_postal, $pais, $numero_documento, $acepta_terminos, $acepta_privacidad, $newsletter) {
         $this->id_pasajero = $id_pasajero;
         $this->id_usuario = $id_usuario;
+        $this->apellido = $apellido;
         $this->fecha_nacimiento = $fecha_nacimiento;
         $this->genero = $genero;
         $this->tipo_documento = $tipo_documento;
@@ -27,7 +27,7 @@ class Pasajero {
         $this->ciudad = $ciudad;
         $this->codigo_postal = $codigo_postal;
         $this->pais = $pais;
-        $this->metodo_pago = $metodo_pago;
+        $this->numero_documento = $numero_documento;
         $this->acepta_terminos = $acepta_terminos;
         $this->acepta_privacidad = $acepta_privacidad;
         $this->newsletter = $newsletter;
@@ -137,6 +137,14 @@ class Pasajero {
 
     public function setNewsletter($newsletter) {
         $this->newsletter = $newsletter;
+    }
+
+    public function getNumeroDocumento() {
+        return $this->numero_documento;
+    }
+
+    public function setNumeroDocumento($numero) {
+        $this->numero_documento = $numero;
     }
 
     // Convert to Array
