@@ -26,7 +26,7 @@
             <a href="#">Ofertas</a>
             <a href="ayuda.html">Ayuda</a>
         </nav>
-        <div class="user-actions">
+        <div class="user-actions" id="userActions">
             <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</a>
         </div>
     </header>
@@ -209,6 +209,33 @@
         <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
 
+    <script>
+        (function () {
+            const userActions = document.getElementById('userActions');
+            if (!userActions) return;
+
+            fetch('estado_sesion.php', { credentials: 'same-origin' })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (!data || !data.logeado) return;
+
+                    userActions.innerHTML = `
+                        <div class="account-dropdown">
+                            <button type="button" class="account-toggle">
+                                <i class="fa-solid fa-user"></i> Mi cuenta <i class="fa-solid fa-caret-down"></i>
+                            </button>
+                            <div class="account-menu">
+                                <a href="perfil_pasajero.html">Mi cuenta</a>
+                                <a href="cerrar_sesion.php">Cerrar sesi&oacute;n</a>
+                            </div>
+                        </div>
+                    `;
+                })
+                .catch(() => {
+                    // Si falla la consulta de sesion se mantiene el boton de iniciar sesion.
+                });
+        })();
+    </script>
     <script>
         const tracks = document.querySelectorAll('.offers-track, .popular-track');
         const nextBtns = document.querySelectorAll('.next');

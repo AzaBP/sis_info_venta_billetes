@@ -99,6 +99,57 @@ body {
     background: rgba(255,255,255,0.2);
 }
 
+.user-actions {
+    position: relative;
+}
+
+.account-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.account-toggle {
+    color: white;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.5);
+    background: transparent;
+    cursor: pointer;
+}
+
+.account-toggle:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.account-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    min-width: 160px;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    display: none;
+    overflow: hidden;
+    z-index: 100;
+}
+
+.account-menu a {
+    display: block;
+    padding: 10px 12px;
+    color: #333;
+    text-decoration: none;
+}
+
+.account-menu a:hover {
+    background: #f1f4f8;
+}
+
+.account-dropdown:hover .account-menu {
+    display: block;
+}
+
 /* ================= MAIN ================= */
 
 .main {
