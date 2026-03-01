@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/session_menu.css">
     <link rel="stylesheet" href="css/compra.css">
 </head>
 <body>
@@ -17,10 +18,11 @@
             <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; margin-left: 10px; vertical-align: middle; position: relative; bottom: 2px;">| Área de Cliente</span>
         </div>
         <nav class="nav">
-            <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500; display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-circle-user" style="font-size: 1.2rem;"></i> Hola, Pasajero
+            <a href="index.php">Inicio</a>
+            <a href="ayuda.php">Ayuda</a>
+            <div class="user-actions" id="userActions">
+                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
             </div>
-            <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
         </nav>
     </header>
 
@@ -264,6 +266,8 @@
         </section>
     </main>
 
+    <script src="scripts/session_menu.js"></script>
     <script src="js/compra.js"></script>
 </body>
 </html>
+

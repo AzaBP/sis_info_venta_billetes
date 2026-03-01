@@ -1,0 +1,86 @@
+.user-actions {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.account-dropdown {
+    position: relative;
+}
+
+.account-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-radius: 999px;
+    padding: 7px 14px 7px 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.account-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.account-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #66a9ff, #2f6ed5);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.88rem;
+}
+
+.account-name {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.account-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    min-width: 210px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+    border: 1px solid #e6ebf2;
+    padding: 8px;
+    display: none;
+    z-index: 1200;
+}
+
+.account-dropdown.open .account-menu {
+    display: block;
+}
+
+.account-dropdown.open-on-hover:hover .account-menu {
+    display: block;
+}
+
+.account-menu a {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #243044;
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.93rem;
+}
+
+.account-menu a:hover {
+    background: #eef4ff;
+    color: #0a2a66;
+}

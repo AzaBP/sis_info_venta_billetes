@@ -1,8 +1,11 @@
-﻿<!DOCTYPE html>
+﻿<?php
+session_start();
+$usuarioSesion = $_SESSION['usuario'] ?? null;
+$nombreSesion = $usuarioSesion['nombre'] ?? '';
+?><!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=ayuda.php">
     <title>TrainWeb - Ayuda y contacto</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/session_menu.css">
@@ -27,10 +30,24 @@
                 </div>
             </div>
             <a href="#">Ofertas</a>
-            <a href="ayuda.html">Ayuda</a>
+            <a href="ayuda.php">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
-            <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</a>
+            <?php if ($usuarioSesion): ?>
+                <div class="account-dropdown open-on-hover">
+                    <button type="button" class="account-toggle">
+                        <span class="account-avatar"><?php echo strtoupper(substr($nombreSesion, 0, 1)); ?></span>
+                        <span class="account-name"><?php echo htmlspecialchars($nombreSesion, ENT_QUOTES, 'UTF-8'); ?></span>
+                        <i class="fa-solid fa-caret-down"></i>
+                    </button>
+                    <div class="account-menu">
+                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
+                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+            <?php endif; ?>
         </div>
     </header>
 

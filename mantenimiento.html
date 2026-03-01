@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrainWeb - Gestión de Mantenimiento</title>
+    <title>TrainWeb - GestiÃ³n de Mantenimiento</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
@@ -19,9 +19,9 @@
         </div>
         <nav class="nav">
             <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500; display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-helmet-safety" style="font-size: 1.2rem;"></i> Técnico: Juan Carlos NLB 
+                <i class="fa-solid fa-helmet-safety" style="font-size: 1.2rem;"></i> TÃ©cnico: Juan Carlos NLB 
             </div>
-            <a href="index.html"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
+            <a href="index.php"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
         </nav>
     </header>
 
@@ -29,7 +29,7 @@
         
         <div class="page-title">
             <h1><i class="fa-solid fa-wrench"></i> Centro de control de unidades</h1>
-            <p>Supervisión técnica de unidades y gestión de incidencias en tiempo real.</p>
+            <p>SupervisiÃ³n tÃ©cnica de unidades y gestiÃ³n de incidencias en tiempo real.</p>
         </div>
 
         <div class="maint-grid">
@@ -45,7 +45,7 @@
                 <div class="train-card status-warning">
                     <div class="train-id">ALVIA-405</div>
                     <div class="train-route">Zaragoza - Huesca</div>
-                    <div class="train-badge"><i class="fa-solid fa-triangle-exclamation"></i> Revisión A/C</div>
+                    <div class="train-badge"><i class="fa-solid fa-triangle-exclamation"></i> RevisiÃ³n A/C</div>
                 </div>
 
                 <div class="train-card status-critical">
@@ -81,7 +81,7 @@
                             <span class="issue-id">#INC-8901</span>
                             <span class="priority-tag">MEDIA</span>
                         </div>
-                        <p class="issue-desc">Asiento 4B atascado en vagón 2.</p>
+                        <p class="issue-desc">Asiento 4B atascado en vagÃ³n 2.</p>
                         <div class="issue-meta">
                             <span><i class="fa-solid fa-train"></i> ALVIA-405</span>
                             <button onclick="resolverIncidencia(this)" class="btn-resolve">Reparado</button>
@@ -105,15 +105,15 @@
                     <div class="form-group">
                         <label>Prioridad</label>
                         <select id="prioritySelect">
-                            <option value="low">Baja (Estética/Limpieza)</option>
+                            <option value="low">Baja (EstÃ©tica/Limpieza)</option>
                             <option value="medium">Media (Confort)</option>
-                            <option value="high">Alta (Seguridad/Mecánica)</option>
+                            <option value="high">Alta (Seguridad/MecÃ¡nica)</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label>Descripción del fallo</label>
-                        <textarea id="issueDesc" rows="4" placeholder="Describe la avería..."></textarea>
+                        <label>DescripciÃ³n del fallo</label>
+                        <textarea id="issueDesc" rows="4" placeholder="Describe la averÃ­a..."></textarea>
                     </div>
 
                     <button type="submit" class="btn-submit">Registrar Incidencia</button>
@@ -134,14 +134,14 @@
                 <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
                 <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
                 <a href="#"><i class="fa-solid fa-tags"></i> Ofertas</a>
-                <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
+                <a href="#"><i class="fa-solid fa-headset"></i> AtenciÃ³n al cliente</a>
             </div>
             <div class="footer-column">
-                <h4>Información legal</h4>
+                <h4>InformaciÃ³n legal</h4>
                 <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
                 <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
                 <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
-                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> TÃ©rminos y condiciones</a>
             </div>
             <div class="footer-column">
                 <h4>Redes sociales</h4>
@@ -153,7 +153,7 @@
         </div>
         
         <div class="footer-bottom">
-            © 2026 TrainWeb · Todos los derechos reservados
+            Â© 2026 TrainWeb Â· Todos los derechos reservados
         </div>
     </footer>
 

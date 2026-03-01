@@ -19,6 +19,6 @@ if (ini_get('session.use_cookies')) {
 session_destroy();
 setcookie('recordarme_email', '', time() - 3600, '/', '', false, true);
 
-header('Location: index.html');
+header('Location: index.php');
 exit;
 ?>

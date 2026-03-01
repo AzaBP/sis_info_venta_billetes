@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>TrainWeb - Registro</title>
     <link rel="stylesheet" href="css/registro.css">
+    <link rel="stylesheet" href="css/session_menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -12,7 +13,7 @@
     <header class="header">
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
-            <a href="index.html">Inicio</a>
+            <a href="index.php">Inicio</a>
             <a href="#">Billetes</a>
             <div class="dropdown">
                 <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
@@ -24,9 +25,9 @@
                 </div>
             </div>
             <a href="#">Ofertas</a>
-            <a href="ayuda.html">Ayuda</a>
+            <a href="ayuda.php">Ayuda</a>
         </nav>
-        <div class="user-actions">
+        <div class="user-actions" id="userActions">
             <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión</a>
         </div>
     </header>
@@ -287,6 +288,10 @@
         <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
 
+    <script src="scripts/session_menu.js"></script>
     <script src="scripts/registro.js"></script>
 </body>
 </html>
+
+
+

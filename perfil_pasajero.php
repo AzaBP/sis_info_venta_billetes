@@ -1,10 +1,79 @@
-﻿<!DOCTYPE html>
+﻿<?php
+session_start();
+require_once __DIR__ . '/php/Conexion.php';
+
+if (!isset($_SESSION['usuario'])) {
+    header('Location: inicio_sesion.html');
+    exit;
+}
+
+$usuarioSesion = $_SESSION['usuario'];
+$idUsuarioSesion = (int)($usuarioSesion['id_usuario'] ?? 0);
+
+$perfil = [
+    'nombre' => $usuarioSesion['nombre'] ?? 'Usuario',
+    'apellido' => $usuarioSesion['apellido'] ?? '',
+    'email' => $usuarioSesion['email'] ?? '',
+    'telefono' => '',
+    'numero_documento' => '',
+    'fecha_nacimiento' => '',
+    'calle' => '',
+    'ciudad' => '',
+    'codigo_postal' => '',
+    'pais' => ''
+];
+
+try {
+    $conexion = new Conexion();
+    $pdo = $conexion->conectar();
+
+    if ($pdo && $idUsuarioSesion > 0) {
+        $sql = "SELECT u.nombre, u.apellido, u.email, u.telefono,
+                       p.numero_documento, p.fecha_nacimiento, p.calle, p.ciudad, p.codigo_postal, p.pais
+                FROM usuario u
+                LEFT JOIN pasajero p ON p.id_usuario = u.id_usuario
+                WHERE u.id_usuario = :id_usuario
+                LIMIT 1";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':id_usuario' => $idUsuarioSesion]);
+        $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($fila) {
+            $perfil['nombre'] = $fila['nombre'] ?? $perfil['nombre'];
+            $perfil['apellido'] = $fila['apellido'] ?? $perfil['apellido'];
+            $perfil['email'] = $fila['email'] ?? $perfil['email'];
+            $perfil['telefono'] = $fila['telefono'] ?? '';
+            $perfil['numero_documento'] = $fila['numero_documento'] ?? '';
+            $perfil['fecha_nacimiento'] = $fila['fecha_nacimiento'] ?? '';
+            $perfil['calle'] = $fila['calle'] ?? '';
+            $perfil['ciudad'] = $fila['ciudad'] ?? '';
+            $perfil['codigo_postal'] = $fila['codigo_postal'] ?? '';
+            $perfil['pais'] = $fila['pais'] ?? '';
+        }
+    }
+} catch (Throwable $e) {
+    // Si falla la carga de perfil, se muestran los datos de sesión básicos.
+}
+
+$nombreSesion = $perfil['nombre'] ?: 'Usuario';
+$fechaNacimientoVista = '-';
+$fechaNacimientoInput = '';
+
+if (!empty($perfil['fecha_nacimiento'])) {
+    $ts = strtotime($perfil['fecha_nacimiento']);
+    if ($ts !== false) {
+        $fechaNacimientoVista = date('d/m/Y', $ts);
+        $fechaNacimientoInput = date('Y-m-d', $ts);
+    }
+}
+?><!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=perfil_pasajero.php">
-    <title>TrainWeb - PÃ¡gina Usuario</title>
+    <title>TrainWeb - Página Usuario</title>
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/session_menu.css">
     <link rel="stylesheet" href="css/perfil_pasajero.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
@@ -18,21 +87,28 @@
             <div class="dropdown">
                 <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
-                    <a href="#">EspaÃ±ol</a>
-                    <a href="#">InglÃ©s</a>
-                    <a href="#">FrancÃ©s</a>
-                    <a href="#">AlemÃ¡n</a>
+                    <a href="#">Español</a>
+                    <a href="#">Inglés</a>
+                    <a href="#">Francés</a>
+                    <a href="#">Alemán</a>
                 </div>
             </div>
             <a href="#">Ofertas</a>
-            <a href="ayuda.html">Ayuda</a>
+            <a href="ayuda.php">Ayuda</a>
         </nav>
-        <div class="user-actions">
-            <a href="perfil.html" class="btn-profile" aria-label="Mi Perfil">
-                <i class="fa-solid fa-user"></i>
-            </a>
+        <div class="user-actions" id="userActions">
+            <div class="account-dropdown open-on-hover">
+                <button type="button" class="account-toggle">
+                    <span class="account-avatar"><?php echo strtoupper(substr($nombreSesion, 0, 1)); ?></span>
+                    <span class="account-name"><?php echo htmlspecialchars($nombreSesion, ENT_QUOTES, 'UTF-8'); ?></span>
+                    <i class="fa-solid fa-caret-down"></i>
+                </button>
+                <div class="account-menu">
+                    <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
+                    <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+                </div>
+            </div>
         </div>
-        
     </header>
 
     <!-- CONTENIDO PERFIL -->
@@ -41,8 +117,8 @@
         <!--BIENVENIDA USUARIO-->
         <section class="welcome-section">
             <div class="welcome-text">
-                <h1>Hola Misamores</h1>
-                <p class="welcome-subtitle">AquÃ­ tienes el resumen de tu actividad y prÃ³ximos viajes.</p>
+                <h1>Hola <?php echo htmlspecialchars($nombreSesion, ENT_QUOTES, 'UTF-8'); ?></h1>
+                <p class="welcome-subtitle">Aquí tienes el resumen de tu actividad y próximos viajes.</p>
             </div>
                 
         </section>
@@ -56,7 +132,7 @@
                 <!--VIAJE ACTIVO-->
                 <div class="trip-item active-trip">
                     <div class="trip-header">
-                        <span class="trip-status status-upcoming">PrÃ³ximo viaje</span>
+                        <span class="trip-status status-upcoming">Próximo viaje</span>
                         <span class="trip-id">Ref: #TW-8923</span>
                     </div>
                     <div class="trip-body">
@@ -104,7 +180,7 @@
                             </div>
                             <div class="route-time">
                                 <span class="time">15:50</span>
-                                <span class="city">Madrid ChamartÃ­n</span>
+                                <span class="city">Madrid Chamartín</span>
                             </div>
                         </div>
                         <div class="trip-date">
@@ -181,7 +257,7 @@
                             </div>
                             <div class="route-line">
                                 <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                                <span class="duration">CercanÃ­as</span>
+                                <span class="duration">Cercanías</span>
                             </div>
                             <div class="route-city-only">
                                 <span class="city-large">Utrera</span>
@@ -217,7 +293,7 @@
                 <div class="accordion-item">
                     <div class="accordion-header">
                         <div class="header-title">
-                            <i class="fa-regular fa-id-card"></i> InformaciÃ³n Personal
+                            <i class="fa-regular fa-id-card"></i> Información Personal
                         </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
@@ -225,52 +301,52 @@
                         <div class="form-grid">
                             <div class="form-group read-only-group">
                                 <label>Nombre</label>
-                                <div class="static-value">Juan</div>
+                                <div class="static-value"><?php echo htmlspecialchars($perfil['nombre'], ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                             <div class="form-group read-only-group">
                                 <label>Apellidos</label>
-                                <div class="static-value">PÃ©rez GarcÃ­a</div>
+                                <div class="static-value"><?php echo htmlspecialchars($perfil['apellido'], ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                             <div class="form-group read-only-group">
                                 <label>Documento (DNI/NIE)</label>
-                                <div class="static-value">12345678Z</div>
+                                <div class="static-value"><?php echo htmlspecialchars($perfil['numero_documento'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                             <div class="form-group read-only-group">
                                 <label>Fecha de Nacimiento</label>
-                                <div class="static-value">15/05/1990</div>
+                                <div class="static-value"><?php echo htmlspecialchars($fechaNacimientoVista, ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                             <div class="form-group read-only-group">
                                 <label>Email</label>
-                                <div class="static-value">juan.perez@email.com</div>
+                                <div class="static-value"><?php echo htmlspecialchars($perfil['email'], ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                             <div class="form-group read-only-group">
-                                <label>TelÃ©fono MÃ³vil</label>
-                                <div class="static-value">+34 600 000 000</div>
+                                <label>Teléfono Móvil</label>
+                                <div class="static-value"><?php echo htmlspecialchars($perfil['telefono'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- DirecciÃ³n de facturaciÃ³n -->
+                <!-- Dirección de facturación -->
                 <div class="accordion-item">
                     <div class="accordion-header">
                         <div class="header-title">
-                            <i class="fa-solid fa-file-invoice-dollar"></i> DirecciÃ³n de FacturaciÃ³n
+                            <i class="fa-solid fa-file-invoice-dollar"></i> Dirección de Facturación
                         </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
                     <div class="accordion-content">
                         <div class="form-grid">
                             <div class="form-group full-width read-only-group">
-                                <label>DirecciÃ³n Postal</label>
-                                <div class="static-value">Calle Gran VÃ­a, 42, 4Âº Derecha</div>
+                                <label>Dirección Postal</label>
+                                <div class="static-value"><?php echo htmlspecialchars($perfil['calle'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                             <div class="form-group read-only-group">
-                                <label>CÃ³digo Postal</label>
-                                <div class="static-value">28013</div>
+                                <label>Código Postal</label>
+                                <div class="static-value"><?php echo htmlspecialchars($perfil['codigo_postal'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                             <div class="form-group read-only-group">
                                 <label>Localidad</label>
-                                <div class="static-value">Madrid</div>
+                                <div class="static-value"><?php echo htmlspecialchars($perfil['ciudad'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                         </div>
                     </div>
@@ -279,9 +355,9 @@
             </div>
         </div>
 
-        <!--CONFIGURACIÃ“N DE LA CUENTA-->
+        <!--CONFIGURACIÓN DE LA CUENTA-->
         <div class="profile-container" style="margin-top: 40px; margin-bottom: 60px;"> 
-            <h2 class="section-title">ConfiguraciÃ³n de Cuenta</h2>
+            <h2 class="section-title">Configuración de Cuenta</h2>
             <div class="profile-panel accordion-wrapper">
                 <!--notificaciones-->
                 <div class="accordion-item">
@@ -296,7 +372,7 @@
                             <div class="notification-option">
                                 <div class="notif-text">
                                     <strong>Avisos de viaje</strong>
-                                    <p>Retrasos, cambios de vÃ­a e incidencias.</p>
+                                    <p>Retrasos, cambios de vía e incidencias.</p>
                                 </div>
                                 <label class="switch">
                                     <input type="checkbox" checked>
@@ -330,27 +406,27 @@
                         <form class="form-grid">
                             <div class="form-group">
                                 <label>Nombre</label>
-                                <input type="text" value="Juan" class="form-input">
+                                <input type="text" value="<?php echo htmlspecialchars($perfil['nombre'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                             </div>
                             <div class="form-group">
                                 <label>Apellidos</label>
-                                <input type="text" value="PÃ©rez GarcÃ­a" class="form-input">
+                                <input type="text" value="<?php echo htmlspecialchars($perfil['apellido'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                             </div>
                             <div class="form-group">
                                 <label>Documento (DNI/NIE)</label>
-                                <input type="text" value="12345678Z" class="form-input" disabled style="background-color: #f0f0f0; cursor: not-allowed;">
+                                <input type="text" value="<?php echo htmlspecialchars($perfil['numero_documento'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" disabled style="background-color: #f0f0f0; cursor: not-allowed;">
                             </div>
                             <div class="form-group">
                                 <label>Fecha de Nacimiento</label>
-                                <input type="date" value="1990-05-15" class="form-input">
+                                <input type="date" value="<?php echo htmlspecialchars($fechaNacimientoInput, ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                             </div>
                             <div class="form-group">
                                 <label>Email de Contacto</label>
-                                <input type="email" value="juan.perez@email.com" class="form-input">
+                                <input type="email" value="<?php echo htmlspecialchars($perfil['email'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                             </div>
                             <div class="form-group">
-                                <label>TelÃ©fono MÃ³vil</label>
-                                <input type="tel" value="+34 600 000 000" class="form-input">
+                                <label>Teléfono Móvil</label>
+                                <input type="tel" value="<?php echo htmlspecialchars($perfil['telefono'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                             </div>
                             <div class="form-full">
                                 <button type="button" class="btn-primary">Guardar Cambios</button>
@@ -358,30 +434,30 @@
                         </form>
                     </div>
                 </div>
-                <!--cambio de contraseÃ±a-->
+                <!--cambio de contraseña-->
                 <div class="accordion-item">
                     <div class="accordion-header">
                         <div class="header-title">
-                            <i class="fa-solid fa-lock"></i> Seguridad y ContraseÃ±a
+                            <i class="fa-solid fa-lock"></i> Seguridad y Contraseña
                         </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
                     <div class="accordion-content">
                         <form class="form-grid">
                             <div class="form-group full-width">
-                                <label>ContraseÃ±a Actual</label>
-                                <input type="password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" class="form-input">
+                                <label>Contraseña Actual</label>
+                                <input type="password" placeholder="••••••••" class="form-input">
                             </div>
                             <div class="form-group">
-                                <label>Nueva ContraseÃ±a</label>
+                                <label>Nueva Contraseña</label>
                                 <input type="password" class="form-input">
                             </div>
                             <div class="form-group">
-                                <label>Repetir Nueva ContraseÃ±a</label>
+                                <label>Repetir Nueva Contraseña</label>
                                 <input type="password" class="form-input">
                             </div>
                             <div class="form-full">
-                                <button type="button" class="btn-primary">Cambiar ContraseÃ±a</button>
+                                <button type="button" class="btn-primary">Cambiar Contraseña</button>
                             </div>
                         </form>
                     </div>
@@ -396,7 +472,7 @@
                     </div>
                     <div class="accordion-content">
                         <div style="padding: 15px 0;">
-                            <p style="margin-bottom: 15px; color: #666;">Si eliminas tu cuenta, perderÃ¡s acceso a tus billetes y abonos activos.</p>
+                            <p style="margin-bottom: 15px; color: #666;">Si eliminas tu cuenta, perderás acceso a tus billetes y abonos activos.</p>
                             <button type="button" class="btn-danger">Eliminar mi cuenta</button>
                         </div>
                     </div>
@@ -425,21 +501,21 @@
         <div class="footer-container">
             <div class="footer-column">
                 <h3>TrainWeb</h3>
-                <p>Plataforma digital para la bÃºsqueda y compra de billetes de tren en todo el territorio nacional.</p>
+                <p>Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
             </div>
             <div class="footer-column">
                 <h4>Servicios</h4>
                 <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
                 <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
                 <a href="#"><i class="fa-solid fa-tags"></i> Ofertas</a>
-                <a href="#"><i class="fa-solid fa-headset"></i> AtenciÃ³n al cliente</a>
+                <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
             </div>
             <div class="footer-column">
-                <h4>InformaciÃ³n legal</h4>
+                <h4>Información legal</h4>
                 <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
                 <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
                 <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
-                <a href="#"><i class="fa-solid fa-file-contract"></i> TÃ©rminos y condiciones</a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
             </div>
             <div class="footer-column">
                 <h4>Redes sociales</h4>
@@ -449,10 +525,9 @@
                 <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
             </div>
         </div>
-        <div class="footer-bottom">Â© 2026 TrainWeb Â· Todos los derechos reservados</div>
+        <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
+    <script src="scripts/session_menu.js"></script>
 
 </body>
 </html>
-
-

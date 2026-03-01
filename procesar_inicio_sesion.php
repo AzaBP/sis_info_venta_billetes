@@ -56,9 +56,9 @@ try {
     }
 
     if ($usuario['tipo_usuario'] === 'pasajero') {
-        header('Location: perfil_pasajero.html');
+        header('Location: perfil_pasajero.php');
     } else {
-        header('Location: index.html');
+        header('Location: index.php');
     }
     exit;
 } catch (Throwable $e) {

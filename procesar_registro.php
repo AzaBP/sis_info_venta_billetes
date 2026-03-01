@@ -58,7 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $pasajero = new Pasajero(
         null,
         $idUsuario,
-        $apellido,
         $fechaNacimiento,
         $genero,
         $tipoDocumento,

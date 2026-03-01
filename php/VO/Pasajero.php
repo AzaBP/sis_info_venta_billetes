@@ -16,18 +16,17 @@ class Pasajero {
     private $acepta_privacidad;
     private $newsletter;
 
-    public function __construct($id_pasajero, $id_usuario, $apellido, $fecha_nacimiento, $genero, $tipo_documento, $calle, $ciudad, $codigo_postal, $pais, $numero_documento, $acepta_terminos, $acepta_privacidad, $newsletter) {
+    public function __construct($id_pasajero, $id_usuario, $fecha_nacimiento, $genero, $tipo_documento, $numero_documento, $calle, $ciudad, $codigo_postal, $pais, $acepta_terminos, $acepta_privacidad, $newsletter) {
         $this->id_pasajero = $id_pasajero;
         $this->id_usuario = $id_usuario;
-        $this->apellido = $apellido;
         $this->fecha_nacimiento = $fecha_nacimiento;
         $this->genero = $genero;
         $this->tipo_documento = $tipo_documento;
+        $this->numero_documento = $numero_documento;
         $this->calle = $calle;
         $this->ciudad = $ciudad;
         $this->codigo_postal = $codigo_postal;
         $this->pais = $pais;
-        $this->numero_documento = $numero_documento;
         $this->acepta_terminos = $acepta_terminos;
         $this->acepta_privacidad = $acepta_privacidad;
         $this->newsletter = $newsletter;
