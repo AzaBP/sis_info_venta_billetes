@@ -11,6 +11,35 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!data || !data.logeado || !data.usuario) return;
 
             const nombre = data.usuario.nombre ? data.usuario.nombre : "Mi cuenta";
+            const tipoUsuario = (data.usuario.tipo_usuario || "").toLowerCase();
+            const tipoEmpleado = (data.usuario.tipo_empleado || "").toLowerCase();
+
+            let enlacePanel = "perfil_pasajero.php";
+            let textoPanel = "Mi perfil";
+
+            const adminEmailsRaw = (window.TRAINWEB_ADMIN_EMAILS || "").toLowerCase();
+            const adminEmails = adminEmailsRaw
+                .split(",")
+                .map((v) => v.trim())
+                .filter(Boolean);
+            const email = (data.usuario.email || "").toLowerCase();
+            const esAdmin = adminEmails.length === 0 || adminEmails.includes(email);
+
+            if (esAdmin) {
+                enlacePanel = "registro_empleado.php";
+                textoPanel = "Panel admin";
+            } else if (tipoUsuario === "empleado") {
+                if (tipoEmpleado === "vendedor") {
+                    enlacePanel = "vendedor.php";
+                    textoPanel = "Panel vendedor";
+                } else if (tipoEmpleado === "mantenimiento") {
+                    enlacePanel = "mantenimiento.php";
+                    textoPanel = "Panel mantenimiento";
+                } else {
+                    enlacePanel = "index.php";
+                    textoPanel = "Panel";
+                }
+            }
 
             userActions.innerHTML = `
                 <div class="account-dropdown" id="accountDropdown">
@@ -20,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <i class="fa-solid fa-caret-down"></i>
                     </button>
                     <div class="account-menu" id="accountMenu">
-                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
+                        <a href="${enlacePanel}"><i class="fa-solid fa-user"></i> ${textoPanel}</a>
                         <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesion</a>
                     </div>
                 </div>

@@ -2,6 +2,7 @@
 session_start();
 
 require_once __DIR__ . '/php/Conexion.php';
+require_once __DIR__ . '/php/auth_helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: inicio_sesion.html?error=metodo');
@@ -26,9 +27,10 @@ try {
         exit;
     }
 
-    $sql = "SELECT id_usuario, nombre, apellido, email, password, tipo_usuario
-            FROM usuario
-            WHERE email = :identificador
+    $sql = "SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.password, u.tipo_usuario, e.tipo_empleado
+            FROM usuario u
+            LEFT JOIN empleado e ON e.id_usuario = u.id_usuario
+            WHERE u.email = :identificador
             LIMIT 1";
 
     $stmt = $pdo->prepare($sql);
@@ -46,7 +48,8 @@ try {
         'nombre' => $usuario['nombre'],
         'apellido' => $usuario['apellido'],
         'email' => $usuario['email'],
-        'tipo_usuario' => $usuario['tipo_usuario']
+        'tipo_usuario' => $usuario['tipo_usuario'],
+        'tipo_empleado' => $usuario['tipo_empleado'] ?? null
     ];
 
     if ($remember) {
@@ -55,11 +58,7 @@ try {
         setcookie('recordarme_email', '', time() - 3600, '/', '', false, true);
     }
 
-    if ($usuario['tipo_usuario'] === 'pasajero') {
-        header('Location: perfil_pasajero.php');
-    } else {
-        header('Location: index.php');
-    }
+    header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
     exit;
 } catch (Throwable $e) {
     header('Location: inicio_sesion.html?error=interno');

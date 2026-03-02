@@ -21,7 +21,8 @@ echo json_encode([
         'nombre' => $usuario['nombre'] ?? '',
         'apellido' => $usuario['apellido'] ?? '',
         'email' => $usuario['email'] ?? '',
-        'tipo_usuario' => $usuario['tipo_usuario'] ?? ''
+        'tipo_usuario' => $usuario['tipo_usuario'] ?? '',
+        'tipo_empleado' => $usuario['tipo_empleado'] ?? ''
     ]
 ]);
 ?>
