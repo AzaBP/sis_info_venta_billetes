@@ -466,3 +466,6 @@ input:checked + .slider:before {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
+.estado.activo { color: green; font-weight: bold; }
+.estado.vencido { color: red; font-weight: bold; }

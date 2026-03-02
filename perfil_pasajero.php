@@ -199,6 +199,10 @@ if (!empty($perfil['fecha_nacimiento'])) {
         <div class="profile-container" style="margin-top: 40px;">
             <h2 class="section-title">Mis Abonos</h2>
 
+            <div id="mis-abonos" class="profile-container abonos-section">
+                <h2>Mis Abonos</h2>
+                <div id="abonos-list">Cargando abonos...</div>
+            </div>
             <div class="profile-panel">
                 <!--ABONO ACTIVO-->
                 <div class="trip-item"> <div class="trip-header">
@@ -528,6 +532,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
         <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
     <script src="scripts/session_menu.js"></script>
+    <script src="scripts/carga_abonos_perfil.js"></script>
 
 </body>
 </html>
