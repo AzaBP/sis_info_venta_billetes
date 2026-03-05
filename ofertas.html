@@ -3,29 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ofertas y Abonos</title>
-    <link rel="stylesheet" href="../css/ofertas.css">
+    <title>TrainWeb - Ofertas y Abonos</title>
+    
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/ofertas.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>Descubre Nuestras Ofertas</h1>
-        <p>Ahorra en tus próximos viajes con nuestros abonos y promociones especiales.</p>
+
+    <header class="header">
+        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+        <nav class="nav">
+            <a href="index.php">Inicio</a>
+            <a href="compra.html">Billetes</a>
+            <a href="ofertas.html">Ofertas</a>
+            <a href="ayuda.html">Ayuda</a>
+        </nav>
     </header>
 
-    <main>
-        <section id="promociones-section">
-            <h2>Promociones Activas</h2>
+    <main class="offers-main">
+        <div class="page-header">
+            <h1>Descubre Nuestras Ofertas</h1>
+            <p>Ahorra en tus viajes con nuestros abonos y promociones.</p>
+        </div>
+
+        <section>
+            <h2 class="section-title"><i class="fa-solid fa-tags"></i> Promociones Activas</h2>
             <div id="promociones-container" class="grid-container">
                 </div>
         </section>
 
-        <section id="abonos-section">
-            <h2>Nuestros Abonos</h2>
+        <section>
+            <h2 class="section-title"><i class="fa-solid fa-ticket-alt"></i> Nuestros Abonos</h2>
             <div id="abonos-container" class="grid-container">
                 </div>
         </section>
     </main>
 
-    <script src="../js/ofertas.js"></script>
+    <footer class="footer">
+        <div class="footer-bottom">&copy; 2026 TrainWeb</div>
+    </footer>
+
+    <script src="js/ofertas.js"></script>
 </body>
 </html>
