@@ -511,7 +511,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
                 <h4>Servicios</h4>
                 <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
                 <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
-                <a href="#"><i class="fa-solid fa-tags"></i> Ofertas</a>
+                <a href="ofertas.html"><i class="fa-solid fa-tags"></i> Ofertas</a>
                 <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
             </div>
             <div class="footer-column">
