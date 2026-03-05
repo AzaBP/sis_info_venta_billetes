@@ -1,22 +1,22 @@
 <?php
+// 1. Iniciamos la sesión
 session_start();
 
-// 1. PRIMERO comprobamos si el usuario ha iniciado sesión. Si no, lo echamos.
-if (!isset($_SESSION['usuario'])) { 
-    header('Location: inicio_sesion.html'); 
-    exit; 
+// 2. Definimos las variables de sesión SIEMPRE, para que nunca den error
+$usuarioSesion = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : null;
+$nombreSesion = isset($usuarioSesion['nombre']) ? $usuarioSesion['nombre'] : '';
+
+// 3. Si el usuario no está logueado, lo mandamos a iniciar sesión y cortamos la ejecución
+if (!$usuarioSesion) {
+    header('Location: inicio_sesion.html');
+    exit;
 }
 
-// 2. AHORA es 100% seguro sacar sus datos sin que PHP nos dé ningún error o warning.
-$usuarioSesion = $_SESSION['usuario'];
-$nombreSesion = $usuarioSesion['nombre'] ?? '';
-
+// 4. Conexión a BD y lógica de abonos
 require_once __DIR__ . '/php/Conexion.php';
 
-// 3. Obtenemos el tipo de abono de la URL
 $tipo_abono = isset($_GET['tipo']) ? htmlspecialchars($_GET['tipo']) : 'mensual';
 
-// 4. Precios base según el tipo
 $precios = [
     'mensual' => '40.00',
     'trimestral' => '100.00',
@@ -25,7 +25,6 @@ $precios = [
     'viajes_limitados' => '20.00'
 ];
 
-// Nombre formateado para mostrar al usuario
 $nombre_mostrar = ucfirst(str_replace('_', ' ', $tipo_abono));
 $precio_final = isset($precios[$tipo_abono]) ? $precios[$tipo_abono] : '0.00';
 ?>
@@ -114,6 +113,5 @@ $precio_final = isset($precios[$tipo_abono]) ? $precios[$tipo_abono] : '0.00';
             </form>
         </section>
     </main>
-
 </body>
 </html>
