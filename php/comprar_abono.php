@@ -1,12 +1,22 @@
 <?php
 session_start();
-// Si el usuario no ha iniciado sesión, podrías redirigirlo:
-// if (!isset($_SESSION['usuario'])) { header('Location: inicio_sesion.html'); exit; }
 
-// Obtenemos el tipo de abono de la URL (por defecto 'mensual' si no viene nada)
+// 1. PRIMERO comprobamos si el usuario ha iniciado sesión. Si no, lo echamos.
+if (!isset($_SESSION['usuario'])) { 
+    header('Location: inicio_sesion.html'); 
+    exit; 
+}
+
+// 2. AHORA es 100% seguro sacar sus datos sin que PHP nos dé ningún error o warning.
+$usuarioSesion = $_SESSION['usuario'];
+$nombreSesion = $usuarioSesion['nombre'] ?? '';
+
+require_once __DIR__ . '/php/Conexion.php';
+
+// 3. Obtenemos el tipo de abono de la URL
 $tipo_abono = isset($_GET['tipo']) ? htmlspecialchars($_GET['tipo']) : 'mensual';
 
-// Definimos precios base simulados según el tipo
+// 4. Precios base según el tipo
 $precios = [
     'mensual' => '40.00',
     'trimestral' => '100.00',
@@ -31,17 +41,34 @@ $precio_final = isset($precios[$tipo_abono]) ? $precios[$tipo_abono] : '0.00';
 </head>
 <body>
     <header class="header">
-        <div class="logo">
-            <i class="fa-solid fa-train"></i> TrainWeb 
-        </div>
+        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
             <a href="index.php">Inicio</a>
-            <a href="ofertas.html">Ofertas y Abonos</a>
+            <a href="compra.html">Billetes</a>
+            <a href="ofertas.php">Ofertas</a>
+            <a href="ayuda.php">Ayuda</a>
         </nav>
+        <div class="user-actions" id="userActions">
+            <?php if ($usuarioSesion): ?>
+                <div class="account-dropdown open-on-hover">
+                    <button type="button" class="account-toggle">
+                        <span class="account-avatar"><?php echo strtoupper(substr($nombreSesion, 0, 1)); ?></span>
+                        <span class="account-name"><?php echo htmlspecialchars($nombreSesion, ENT_QUOTES, 'UTF-8'); ?></span>
+                        <i class="fa-solid fa-caret-down"></i>
+                    </button>
+                    <div class="account-menu">
+                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
+                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+            <?php endif; ?>
+        </div>
     </header>
 
     <main class="booking-container">
-        <section class="payment-container" style="margin-top: 40px;">
+        <section class="payment-container" style="margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
             <div class="payment-header">
                 <h2>Comprar Abono <?php echo $nombre_mostrar; ?></h2>
                 <div class="card-icons">
@@ -55,38 +82,38 @@ $precio_final = isset($precios[$tipo_abono]) ? $precios[$tipo_abono] : '0.00';
                 <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">El abono se activará inmediatamente después del pago.</p>
             </div>
 
-            <form id="formCompraAbono">
-                <input type="hidden" id="tipoAbono" value="<?php echo $tipo_abono; ?>">
-                <input type="hidden" id="precioAbono" value="<?php echo $precio_final; ?>">
+            <form action="procesar_compra_abono.php" method="POST">
+                
+                <input type="hidden" name="tipo_abono" value="<?php echo $tipo_abono; ?>">
+                <input type="hidden" name="precio" value="<?php echo $precio_final; ?>">
 
                 <div class="form-group">
                     <label>Titular de la tarjeta</label>
-                    <input type="text" required placeholder="Nombre como aparece en la tarjeta">
+                    <input type="text" name="titular" required placeholder="Nombre como aparece en la tarjeta">
                 </div>
+                
                 <div class="form-group">
                     <label>Número de tarjeta</label>
-                    <input type="text" required placeholder="XXXX XXXX XXXX XXXX" maxlength="19">
+                    <input type="text" name="tarjeta" required placeholder="XXXX XXXX XXXX XXXX" maxlength="19">
                 </div>
+                
                 <div style="display: flex; gap: 15px;">
                     <div class="form-group expand">
                         <label>Caducidad</label>
-                        <input type="text" required placeholder="MM/AA">
+                        <input type="text" name="caducidad" required placeholder="MM/AA" maxlength="5">
                     </div>
                     <div class="form-group expand">
                         <label>CVV</label>
-                        <input type="password" required placeholder="123" maxlength="3">
+                        <input type="password" name="cvv" required placeholder="123" maxlength="3">
                     </div>
                 </div>
 
-                <div id="mensajeCompra" style="margin-bottom: 15px; font-weight: bold;"></div>
-
-                <button type="submit" class="btn-pay-confirm" style="width: 100%; padding: 15px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1rem;">
-                    Confirmar Pago
+                <button type="submit" class="btn-pay-confirm" style="width: 100%; padding: 15px; margin-top: 10px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1rem; font-weight: bold;">
+                    Pagar <?php echo $precio_final; ?> €
                 </button>
             </form>
         </section>
     </main>
 
-    <script src="js/comprar_abono.js"></script>
 </body>
 </html>

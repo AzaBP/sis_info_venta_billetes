@@ -108,17 +108,19 @@ CREATE TABLE ASIENTO (
 -- ================================================
 -- ABONO / SUSCRIPCIÓN
 -- ================================================
+-- Creamos la tabla, vinculada al catálogo de abonos
 CREATE TABLE ABONO (
     id_abono SERIAL PRIMARY KEY,
     id_pasajero INT NOT NULL,
-    tipo VARCHAR(20) NOT NULL CHECK (tipo IN ('mensual','trimestral','anual','viajes_limitados','estudiante')),
+    tipo VARCHAR(50) NOT NULL, 
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
     viajes_totales INT,
     viajes_restantes INT,
-    FOREIGN KEY (id_pasajero) REFERENCES PASAJERO(id_pasajero)
+    
+    FOREIGN KEY (id_pasajero) REFERENCES PASAJERO(id_pasajero) ON DELETE CASCADE,
+    FOREIGN KEY (tipo) REFERENCES TIPO_ABONO(tipo_codigo) ON DELETE RESTRICT
 );
-
 -- ================================================
 -- VIAJE
 -- ================================================
@@ -166,4 +168,17 @@ CREATE TABLE PROMOCION (
     fecha_fin DATE NOT NULL,
     usos_maximos INT DEFAULT NULL,
     usos_actuales INT DEFAULT 0
+);
+
+-- ==========================================
+-- TIPOS DE ABONOS
+-- ==========================================
+-- Esta tabla guardará lo que se muestra en la web
+CREATE TABLE TIPO_ABONO (
+    tipo_codigo VARCHAR(50) PRIMARY KEY, -- Debe coincidir con el CHECK de tu tabla ABONO
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    icono VARCHAR(50) DEFAULT 'fa-ticket',
+    color VARCHAR(20) DEFAULT '#0a2a66'
 );

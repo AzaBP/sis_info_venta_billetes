@@ -93,7 +93,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
                     <a href="#">Alemán</a>
                 </div>
             </div>
-            <a href="#">Ofertas</a>
+            <a href="ofertas.php">Ofertas</a>
             <a href="ayuda.php">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
@@ -201,93 +201,9 @@ if (!empty($perfil['fecha_nacimiento'])) {
 
             <div id="mis-abonos" class="profile-container abonos-section">
                 <h2>Mis Abonos</h2>
-                <div id="abonos-list">Cargando abonos...</div>
+                <div id="abonos-list"></div>
             </div>
-            <div class="profile-panel">
-                <!--ABONO ACTIVO-->
-                <div class="trip-item"> <div class="trip-header">
-                        <span class="trip-status status-active">Activo</span>
-                        <span class="trip-id">Abono: #BONO-10-MD</span>
-                    </div>
-                    <!--DETALLES DEL ABONO-->
-                    <div class="trip-body">
-                        <div class="trip-route">
-                            <div class="route-city-only">
-                                <span class="city-large">Madrid</span>
-                            </div>
-                            <div class="route-line">
-                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                                <span class="duration">Media Distancia</span>
-                            </div>
-                            <div class="route-city-only">
-                                <span class="city-large">Toledo</span>
-                            </div>
-                        </div>
-
-                        <div class="pass-info">
-                            <p><strong>Caducidad:</strong> 31 Dic, 2026</p>
-                            <p><strong>Titular:</strong> Usuario Ejemplo</p>
-                        </div>
-                    </div>
-                    <!--BARRA DE PROGRESO DEL ABONO-->
-                    <div class="pass-progress-wrapper">
-                        <div class="progress-labels">
-                            <span>Gastados: <strong>4</strong></span>
-                            <span>Quedan: <strong>6 viajes</strong></span>
-                        </div>
-                        <div class="progress-track">
-                            <div class="progress-fill" style="width: 40%;"></div>
-                        </div>
-                    </div>
-                    <!--ACCIONES DEL ABONO-->
-                    <div class="trip-actions">
-                        <a href="#" class="btn-secondary">Ver usos</a>
-                        <a href="#" class="btn-primary">Formalizar viaje</a>
-                    </div>
-                </div>
-
-                <hr class="trip-separator">
-                <!--ABONO CADUCADO-->
-                <div class="trip-item past-trip">
-                    <div class="trip-header">
-                        <span class="trip-status status-completed">Agotado</span>
-                        <span class="trip-id">Abono: #RECURRENTE-25</span>
-                    </div>
-                    <!--DETALLES DEL ABONO-->
-                    <div class="trip-body">
-                        <div class="trip-route">
-                            <div class="route-city-only">
-                                <span class="city-large">Sevilla</span>
-                            </div>
-                            <div class="route-line">
-                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                                <span class="duration">Cercanías</span>
-                            </div>
-                            <div class="route-city-only">
-                                <span class="city-large">Utrera</span>
-                            </div>
-                        </div>
-                        <div class="pass-info">
-                            <p><strong>Caducidad:</strong> 30 Abr, 2026</p>
-                        </div>
-                    </div>
-                    <!--BARRA DE PROGRESO DEL ABONO-->
-                    <div class="pass-progress-wrapper">
-                        <div class="progress-labels">
-                            <span>Gastados: 10</span>
-                            <span>Quedan: 0 viajes</span>
-                        </div>
-                        <div class="progress-track">
-                            <div class="progress-fill" style="width: 100%; background-color: #aaa;"></div>
-                        </div>
-                    </div>
-                    <!--ACCIONES DEL ABONO-->
-                    <div class="trip-actions">
-                        <a href="#" class="btn-secondary">Renovar abono</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+            
 
         <!--DATOS DEL USUARIO-->
         <div class="profile-container" style="margin-top: 40px;"> 

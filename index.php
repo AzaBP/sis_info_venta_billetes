@@ -18,7 +18,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
     <header class="header">
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
-            <a href="#">Inicio</a>
+            <a href="index.php">Inicio</a>
             <a href="#">Billetes</a>
             <div class="dropdown">
                 <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
@@ -29,7 +29,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                     <a href="#">Alemán</a>
                 </div>
             </div>
-            <a href="#">Ofertas</a>
+            <a href="ofertas.php">Ofertas</a>
             <a href="ayuda.php">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
