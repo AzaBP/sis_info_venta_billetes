@@ -154,3 +154,16 @@ CREATE TABLE INCIDENCIA (
     FOREIGN KEY (id_mantenimiento) REFERENCES MANTENIMIENTO(id_empleado),
     FOREIGN KEY (id_maquinista) REFERENCES MAQUINISTA(id_empleado)
 );
+
+-- ================================================
+-- PROMOCION
+-- ================================================
+CREATE TABLE PROMOCION (
+    id_promocion SERIAL PRIMARY KEY,
+    codigo VARCHAR(20) UNIQUE NOT NULL,
+    descuento_porcentaje DECIMAL(5,2) DEFAULT 0,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
+    usos_maximos INT DEFAULT NULL,
+    usos_actuales INT DEFAULT 0
+);
