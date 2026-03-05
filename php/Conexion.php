@@ -5,7 +5,7 @@ class Conexion {
     private $puerto = 5432;
     private $bd = 'trenesDB';
     private $usuario = 'postgres';
-    private $password = 'yousra';
+    private $password = 'aza05dumask';
     private $pdo;
 
     public function conectar() {

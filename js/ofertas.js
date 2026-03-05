@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const res = await fetch('php/obtener_ofertas.php');
+        const res = await fetch('../php/obtener_ofertas.php');
         const data = await res.json();
 
         // Renderizar Promociones
