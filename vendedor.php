@@ -10,6 +10,7 @@ if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'empleado') {
     exit;
 }
 
+// Verificamos si es vendedor o administrador
 if (($usuario['tipo_empleado'] ?? '') !== 'vendedor' && !trainwebEsAdministrador($usuario)) {
     header('Location: index.php?error=acceso_denegado');
     exit;
@@ -33,12 +34,16 @@ try {
         $fila = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($fila) {
             $idEmpleado = $fila['id_empleado'] ?? null;
-            $region = $fila['region'] ?? $region;
-            $comision = $fila['comision_porcentaje'] ?? $comision;
+            $region = $fila['region'] ?? 'Sin asignar';
+            $comision = $fila['comision_porcentaje'] ?? '0.00';
         }
     }
-} catch (Throwable $e) {
+} catch (PDOException $e) {
+    // Manejo de error silencioso
 }
+
+$nombreCompleto = trim(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''));
+if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -46,46 +51,81 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrainWeb - Panel de Vendedor</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/vendedor.css">
+    <style>
+        /* Estilos adicionales para organizar las secciones de operaciones */
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #0a2a66;
+            margin: 20px 0 10px 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+        }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .admin-btn {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+        .admin-btn i { font-size: 1.8rem; color: #0a2a66; }
+        .admin-btn:hover { background: #e9ecef; border-color: #0a2a66; transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .badge-info { background: #17a2b8; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 10px; }
+    </style>
 </head>
 <body>
-<header class="header">
-    <div class="logo">
-        <i class="fa-solid fa-train"></i> TrainWeb
-        <span style="font-size: .8rem; opacity: .8; font-weight: normal; margin-left: 10px;">| Portal Vendedor</span>
-    </div>
-    <nav class="nav">
-        <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500;">
-            <i class="fa-solid fa-id-badge"></i>
-            <?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
-            <?php if ($idEmpleado): ?>
-                | ID #<?php echo (int)$idEmpleado; ?>
-            <?php endif; ?>
+
+    <header class="header">
+        <div class="logo">
+            <i class="fa-solid fa-train"></i> TrainWeb 
+            <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; margin-left: 10px; vertical-align: middle; position: relative; bottom: 2px;">| Portal Vendedor</span>
         </div>
-        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesion</a>
-    </nav>
-</header>
-
-<main class="dashboard-container">
-    <div class="dashboard-header">
-        <h1>Gestion comercial y venta asistida</h1>
-        <p>Sesion activa: <?php echo htmlspecialchars($usuario['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?> | Region: <?php echo htmlspecialchars((string)$region, ENT_QUOTES, 'UTF-8'); ?> | Comision: <?php echo htmlspecialchars((string)$comision, ENT_QUOTES, 'UTF-8'); ?>%</p>
-    </div>
-
-    <div class="dashboard-grid">
-        <section class="card search-section-panel">
-            <h2><i class="fa-solid fa-magnifying-glass"></i> Identificacion cliente</h2>
-            <div class="search-box">
-                <input type="text" id="dniInput" placeholder="DNI / NIE del pasajero" maxlength="9">
-                <button id="btnBuscar" class="btn-primary">Buscar</button>
+        <nav class="nav">
+            <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-id-badge" style="font-size: 1.2rem;"></i> 
+                <?= htmlspecialchars($nombreCompleto) ?> 
+                <span class="badge-info"><?= htmlspecialchars($region) ?></span>
             </div>
-            <div id="clientInfo" class="client-details hidden">
-                <div class="status-badge active">Cliente verificado</div>
-                <h3><span id="clientName">---</span></h3>
-                <p><strong>Email:</strong> <span id="clientEmail">---</span></p>
-                <p><strong>Telefono:</strong> <span id="clientPhone">---</span></p>
+            <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        
+        <section class="card search-section">
+            <h2><i class="fa-solid fa-users"></i> Buscar Cliente</h2>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="DNI, Nombre o ID Reserva...">
+                <button class="btn-search" onclick="searchClient()"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            
+            <div id="clientProfile" class="client-profile hidden">
+                <div class="profile-header">
+                    <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                    <div>
+                        <h3 id="clientName">---</h3>
+                        <p class="text-muted" id="clientDni">DNI: ---</p>
+                    </div>
+                </div>
+                <hr>
+                <p><i class="fa-solid fa-envelope"></i> <span id="clientEmail">---</span></p>
+                <p><i class="fa-solid fa-phone"></i> <span id="clientPhone">---</span></p>
                 <hr>
                 <p class="payment-method"><i class="fa-brands fa-cc-visa"></i> VISA terminada en <span id="clientCard">****</span></p>
             </div>
@@ -94,23 +134,105 @@ try {
             </div>
         </section>
 
-        <section class="card operations-section disabled" id="operationsPanel">
-            <h2><i class="fa-solid fa-ticket"></i> Consola de operaciones</h2>
-            <div class="actions-grid">
+        <section class="card operations-section" id="operationsPanel">
+            <h2><i class="fa-solid fa-desktop"></i> Consola de Control</h2>
+            
+            <h3 class="section-subtitle"><i class="fa-solid fa-cogs"></i> Administración del Sistema</h3>
+            <div class="admin-grid">
+                <button class="admin-btn" onclick="window.location.href='/php/gestionar_rutas.php'">
+                    <i class="fa-solid fa-route"></i>
+                    <span>Gestionar Rutas</span>
+                </button>
+                <button class="admin-btn" onclick="window.location.href='/php/gestionar_viajes.php'">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Gestionar Viajes</span>
+                </button>
+                <button class="admin-btn" onclick="window.location.href='/php/gestionar_ofertas.php'">
+                    <i class="fa-solid fa-tags"></i>
+                    <span>Ofertas y Abonos</span>
+                </button>
+            </div>
+
+            <h3 class="section-subtitle"><i class="fa-solid fa-headset"></i> Atención al Cliente (Requiere buscar cliente)</h3>
+            <div class="actions-grid disabled" id="clientActionsBox">
                 <button class="action-btn" onclick="openModal('venta')"><i class="fa-solid fa-cart-plus"></i><span>Nueva venta</span></button>
                 <button class="action-btn" onclick="openModal('cambio')"><i class="fa-solid fa-repeat"></i><span>Cambio billete</span></button>
                 <button class="action-btn" onclick="alert('Funcionalidad en construccion')"><i class="fa-solid fa-ban"></i><span>Cancelar reserva</span></button>
                 <button class="action-btn" onclick="alert('Factura enviada')"><i class="fa-solid fa-file-invoice"></i><span>Reenviar factura</span></button>
             </div>
-            <div class="mini-list-container">
-                <h4>Ultimos viajes del cliente</h4>
+            
+            <div class="mini-list-container disabled" id="recentTripsBox">
+                <h4>Últimos viajes del cliente</h4>
                 <ul class="mini-list" id="recentTrips"></ul>
             </div>
         </section>
     </div>
-</main>
 
-<script src="js/vendedor.js"></script>
+    <div id="actionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">Título Modal</h3>
+            <p style="margin: 20px 0; color: #666;">Formulario en construcción...</p>
+            <button class="btn-search" style="width: 100%;" onclick="closeModal()">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        // Simulador de búsqueda
+        function searchClient() {
+            const val = document.getElementById('searchInput').value;
+            const profile = document.getElementById('clientProfile');
+            const error = document.getElementById('clientError');
+            const clientActions = document.getElementById('clientActionsBox');
+            const recentTrips = document.getElementById('recentTripsBox');
+
+            if(val.trim().length > 2) {
+                error.classList.add('hidden');
+                profile.classList.remove('hidden');
+                
+                // Rellenamos datos simulados
+                document.getElementById('clientName').innerText = 'Carlos García';
+                document.getElementById('clientDni').innerText = 'DNI: ' + val.toUpperCase();
+                document.getElementById('clientEmail').innerText = 'carlos@example.com';
+                document.getElementById('clientPhone').innerText = '+34 600 123 456';
+                document.getElementById('clientCard').innerText = '4092';
+                
+                // Habilitamos las acciones que requieren cliente
+                clientActions.classList.remove('disabled');
+                recentTrips.classList.remove('disabled');
+                
+                document.getElementById('recentTrips').innerHTML = `
+                    <li><span>MAD - BCN</span> <span style="color:#28a745">Completado</span></li>
+                    <li><span>BCN - VAL</span> <span style="color:#f39c12">Pendiente</span></li>
+                `;
+            } else {
+                profile.classList.add('hidden');
+                error.classList.remove('hidden');
+                
+                // Deshabilitamos las acciones si no hay cliente válido
+                clientActions.classList.add('disabled');
+                recentTrips.classList.add('disabled');
+            }
+        }
+
+        function openModal(type) {
+            const modal = document.getElementById('actionModal');
+            const title = document.getElementById('modalTitle');
+            if(type === 'venta') title.innerText = 'Nueva Venta en Taquilla';
+            if(type === 'cambio') title.innerText = 'Cambio o Devolución de Billete';
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('actionModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('actionModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
-
