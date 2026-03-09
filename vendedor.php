@@ -5,26 +5,24 @@ require_once __DIR__ . '/php/Conexion.php';
 require_once __DIR__ . '/php/auth_helpers.php';
 
 $usuario = $_SESSION['usuario'] ?? null;
+
+// 1. Verificamos que sea empleado a nivel general (esto viene de la tabla USUARIO)
 if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'empleado') {
     header('Location: inicio_sesion.html?error=no_autorizado');
-    exit;
-}
-
-// Verificamos si es vendedor o administrador
-if (($usuario['tipo_empleado'] ?? '') !== 'vendedor' && !trainwebEsAdministrador($usuario)) {
-    header('Location: index.php?error=acceso_denegado');
     exit;
 }
 
 $idEmpleado = null;
 $region = 'Sin asignar';
 $comision = '0.00';
+$esVendedor = false;
 
 try {
     $pdo = (new Conexion())->conectar();
     if ($pdo) {
+        // 2. Buscamos sus datos específicos en la tabla EMPLEADO y VENDEDOR
         $stmt = $pdo->prepare(
-            "SELECT e.id_empleado, v.region, v.comision_porcentaje
+            "SELECT e.id_empleado, e.tipo_empleado, v.region, v.comision_porcentaje
              FROM empleado e
              LEFT JOIN vendedor v ON v.id_empleado = e.id_empleado
              WHERE e.id_usuario = :id_usuario
@@ -32,14 +30,26 @@ try {
         );
         $stmt->execute([':id_usuario' => (int)$usuario['id_usuario']]);
         $fila = $stmt->fetch(PDO::FETCH_ASSOC);
+        
         if ($fila) {
             $idEmpleado = $fila['id_empleado'] ?? null;
             $region = $fila['region'] ?? 'Sin asignar';
             $comision = $fila['comision_porcentaje'] ?? '0.00';
+            
+            // Comprobamos si en la base de datos realmente figura como vendedor
+            if (($fila['tipo_empleado'] ?? '') === 'vendedor') {
+                $esVendedor = true;
+            }
         }
     }
 } catch (PDOException $e) {
-    // Manejo de error silencioso
+    // Si hay error de BD, el script continuará y echará al usuario por seguridad
+}
+
+// 3. Expulsar si NO es vendedor y NO es administrador
+if (!$esVendedor && !trainwebEsAdministrador($usuario)) {
+    header('Location: index.php?error=acceso_denegado');
+    exit;
 }
 
 $nombreCompleto = trim(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''));
@@ -139,15 +149,15 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
             
             <h3 class="section-subtitle"><i class="fa-solid fa-cogs"></i> Administración del Sistema</h3>
             <div class="admin-grid">
-                <button class="admin-btn" onclick="window.location.href='/php/gestionar_rutas.php'">
+                <button class="admin-btn" onclick="window.location.href='php/gestionar_rutas.php'">
                     <i class="fa-solid fa-route"></i>
                     <span>Gestionar Rutas</span>
                 </button>
-                <button class="admin-btn" onclick="window.location.href='/php/gestionar_viajes.php'">
+                <button class="admin-btn" onclick="window.location.href='php/gestionar_viajes.php'">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>Gestionar Viajes</span>
                 </button>
-                <button class="admin-btn" onclick="window.location.href='/php/gestionar_ofertas.php'">
+                <button class="admin-btn" onclick="window.location.href='php/gestionar_ofertas.php'">
                     <i class="fa-solid fa-tags"></i>
                     <span>Ofertas y Abonos</span>
                 </button>

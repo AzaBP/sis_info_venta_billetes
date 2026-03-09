@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/php/Conexion.php';
+require_once 'Conexion.php';
 
 // 1. SEGURIDAD: Comprobar que es un empleado logueado
 $usuario = $_SESSION['usuario'] ?? null;
