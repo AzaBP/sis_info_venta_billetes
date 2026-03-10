@@ -21,17 +21,24 @@
 /* TICKET CARD (GRID) */
 .ticket-card { background: white; padding: 20px 30px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 5px solid transparent; transition: transform 0.2s; display: grid; grid-template-columns: 20% 55% 25%; align-items: center; gap: 10px; }
 .ticket-card:hover:not(.full-train) { transform: translateY(-3px); border-left-color: #0a2a66; }
-.col-train-info, .col-schedule, .col-price { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.col-train-info { display: grid; grid-template-columns: 1fr 80px 1fr; align-items: center; width: 100%; margin-left: 20px; }
+.col-train-info .amenities { justify-self: start; }
+.col-train-info .train-id { justify-self: center; }
+.col-train-info .train-type { justify-self: end; }
+.col-schedule, .col-price { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.col-price { margin-right: 20px; }
 .col-schedule { flex-direction: row; justify-content: center; gap: 40px; }
 
-.train-type { font-weight: bold; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; }
+.train-type { font-weight: bold; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; min-width: 70px; max-width: 70px; text-align: center; display: inline-block; }
 .type-ave { background: #6f2c91; color: white; } .type-avlo { background: #a6237c; color: white; } .type-md { background: #666; color: white; }
-.train-id { color: #666; font-size: 0.85rem; font-family: monospace; }
-.amenities { color: #888; display: flex; gap: 8px; font-size: 0.9rem; margin-top: 5px; }
+.train-id { color: #666; font-size: 0.85rem; font-family: monospace; margin-left: 6px; margin-right: 6px; }
+.amenities { color: #888; display: flex; gap: 8px; font-size: 0.9rem; margin-top: 0; }
 
 /* FIX HORARIO */
 .hour { font-size: 1.6rem; font-weight: bold; color: #333; display: block; }
-.city { font-size: 0.9rem; color: #777; font-weight: normal; }
+.city { font-size: 0.9rem; color: #777; font-weight: normal; display: block; }
+.city.departure { text-align: right; }
+.city.arrival { text-align: left; }
 .duration-line { text-align: center; width: 140px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .duration-text { font-size: 0.8rem; color: #888; margin-bottom: 8px; z-index: 2; position: relative; }
 .line { height: 2px; background: #ddd; width: 100%; position: relative; }
@@ -45,11 +52,27 @@
 .btn-select { background: #0a2a66; color: white; border: none; padding: 10px 30px; border-radius: 5px; cursor: pointer; width: 100%; max-width: 150px; }
 .btn-select:disabled { background: #ccc; }
 .full-train { opacity: 0.8; background: #fafafa; cursor: default; }
-.price-full { color: #d9534f; font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; text-align: center; width: 100%; }
+.price-full { color: #0a2a66; font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; text-align: center; background: #eaf2ff; border-radius: 6px; padding: 6px 0; letter-spacing: 1px; width: 150px; max-width: 100%; margin-left: auto; margin-right: auto; }
 
 /* MAPA ASIENTOS */
 .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.wagon-navigator { display: flex; align-items: center; gap: 15px; background: white; padding: 5px 15px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.wagon-navigator {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.wagon-title {
+    width: 60px;
+    text-align: center;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .nav-arrow { background: none; border: none; cursor: pointer; color: #0a2a66; font-size: 1rem; }
 .nav-arrow:disabled { opacity: 0.3; cursor: default; }
 
@@ -59,19 +82,24 @@
 .wagon-frame { background: #eef; border: 3px solid #ccc; border-radius: 10px; padding: 15px; min-width: 950px; position: relative; min-height: 250px; display: flex; align-items: center; justify-content: center; }
 .wagon-body { width: 100%; }
 .info-message, .info-message-premium { text-align: center; margin-bottom: 15px; color: #666; font-size: 0.9rem; font-weight: bold; background: rgba(255,255,255,0.5); padding: 5px; border-radius: 5px; }
-.info-message-premium { color: #5d4037; background: #fff8e1; border: 1px solid #d4a017; }
+.info-message-premium {
+    color: #5d4037;
+    background: #fff8e1;
+    border: none;
+}
 
 /* ESTRUCTURA DE BLOQUES (FILAS UNIDAS) */
 .wagon-super-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 40px; /* Separación central */
+    gap: 5px; /* Igual que silla-silla */
     margin-bottom: 10px;
 }
 .seat-block { display: flex; flex-direction: column; gap: 5px; }
 .seat-row-tight { display: flex; gap: 5px; } /* Asientos pegados en turista */
-.premium-row .seat-row-tight { gap: 20px; } /* Asientos separados en premium */
+/* Primera clase: gap ajustado para igualar anchura con segunda clase */
+.seat-row-tight.premium-row { gap: 10px !important; }
 
 .aisle-horizontal { height: 30px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 0.7rem; }
 
@@ -81,10 +109,20 @@
 .seat-right::after { content: ''; position: absolute; left: -3px; top: 5px; bottom: 5px; width: 3px; background: #bbb; border-radius: 2px; }
 
 /* PREMIUM (COLOR DIFERENTE) */
-.seat-premium { background-color: #fdf5e6; border-color: #d2b48c; }
-.seat-premium.seat-left::after, .seat-premium.seat-right::after { background-color: #d2b48c; }
-.seat-premium.selected { background: #5d4037; border-color: #5d4037; } 
-.seat-premium.selected::after { background: #3e2723; }
+.seat-premium {
+    background-color: #f4f6f8; /* tono claro, igual que fondo general */
+    border-color: #bbb; /* igual que otros asientos */
+}
+.seat-premium.seat-left::after, .seat-premium.seat-right::after {
+    background-color: #bbb;
+}
+.seat-premium.selected {
+    background: #0a2a66;
+    border-color: #0a2a66;
+}
+.seat-premium.selected::after {
+    background: #004494;
+}
 
 .seat.occupied { background: #e0e0e0; color: #a0a0a0; border-color: #d0d0d0; cursor: not-allowed; pointer-events: none; font-size: 1rem; }
 .seat.occupied::after { display: none; }
@@ -101,9 +139,9 @@
 }
 /* Mesa Ancha Cuadrada (Premium) */
 .long-table-wide {
-    width: 80px; height: 80px; 
-    background: #fff8e1; border: 2px solid #d4a017; border-radius: 6px; 
-    display: flex; align-items: center; justify-content: center; 
+    width: 80px; height: 80px;
+    background: #e0e0e0; border: 2px solid #d4a017; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
     font-size: 0.7rem; color: #d4a017; font-weight: bold; writing-mode: vertical-rl;
 }
 

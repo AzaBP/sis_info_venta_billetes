@@ -28,4 +28,10 @@ class Conexion {
     }
 }
 
+// BLOQUE DE PRUEBA
+$test = new Conexion();
+if($test->conectar()) {
+    echo "¡Conexión exitosa a PostgreSQL!";
+}
+
 ?>

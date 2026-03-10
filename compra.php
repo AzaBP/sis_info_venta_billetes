@@ -1,4 +1,24 @@
-﻿<!DOCTYPE html>
+﻿<?php
+require_once 'php/Conexion.php';
+
+$conexion = new Conexion();
+$pdo = $conexion->conectar();
+
+// Consulta adaptada a tus tablas (VIAJE, RUTA, TREN)
+$sql = "SELECT 
+            v.id_viaje, v.fecha, v.hora_salida, v.hora_llegada, v.precio as precio_base, v.estado as estado_viaje,
+            t.modelo as tipo_tren, t.id_tren as codigo_tren,
+            r.origen, 
+            r.destino
+        FROM VIAJE v
+        JOIN TREN t ON v.id_tren = t.id_tren
+        JOIN RUTA r ON v.id_ruta = r.id_ruta
+        ORDER BY v.hora_salida ASC";
+
+$stmt = $pdo->query($sql);
+$trayectos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -52,89 +72,64 @@
 
         <section id="sectionTrains" class="booking-section">
             
-            <div class="ticket-card">
-                <div class="col-train-info">
-                    <span class="train-type type-ave">AVE</span>
-                    <span class="train-id">0730</span>
-                    <div class="amenities"><i class="fa-solid fa-wifi"></i></div>
-                </div>
-                <div class="col-schedule">
-                    <div class="time-group"><span class="hour">07:30</span><span class="city departure">MAD</span></div>
-                    <div class="duration-line"><span class="duration-text">2h 30min</span><div class="line"><i class="fa-solid fa-train"></i></div></div>
-                    <div class="time-group"><span class="hour">10:00</span><span class="city arrival">BCN</span></div>
-                </div>
-                <div class="col-price">
-                    <div class="price"><span style="font-size:0.8rem;color:#888;margin-right:6px;vertical-align:middle;">Desde</span>45,50 €</div>
-                    <button class="btn-select" onclick="seleccionarTren('AVE-0730', 45.50)">Elegir</button>
-                </div>
-            </div>
+    <?php foreach ($trayectos as $trayecto): 
+        // Formatear horas
+        $hora_salida = date('H:i', strtotime($trayecto['hora_salida']));
+        $hora_llegada = date('H:i', strtotime($trayecto['hora_llegada']));
+        
+        // Calcular duración
+        $dteStart = new DateTime($trayecto['hora_salida']);
+        $dteEnd   = new DateTime($trayecto['hora_llegada']);
+        $dteDiff  = $dteStart->diff($dteEnd);
+        $duracion = $dteDiff->format('%hh %Imin');
 
-            <div class="ticket-card">
-                <div class="col-train-info">
-                    <span class="train-type type-avlo">AVLO</span>
-                    <span class="train-id">0915</span>
-                    <div class="amenities"><i class="fa-solid fa-plug"></i></div>
-                </div>
-                <div class="col-schedule">
-                    <div class="time-group"><span class="hour">09:15</span><span class="city departure">MAD</span></div>
-                    <div class="duration-line"><span class="duration-text">2h 45min</span><div class="line"><i class="fa-solid fa-train"></i></div></div>
-                    <div class="time-group"><span class="hour">12:00</span><span class="city arrival">BCN</span></div>
-                </div>
-                <div class="col-price">
-                    <div class="price"><span style="font-size:0.8rem;color:#888;margin-right:6px;vertical-align:middle;">Desde</span>19,00 €</div>
-                    <button class="btn-select" onclick="seleccionarTren('AVLO-0915', 19.00)">Elegir</button>
-                </div>
-            </div>
+        // Formatear precio (sustituyendo el punto por la coma para Europa)
+        $precio = number_format($trayecto['precio_base'], 2, ',', '');
 
-            <div class="ticket-card">
-                <div class="col-train-info">
-                    <span class="train-type type-md">ALVIA</span>
-                    <span class="train-id">1030</span>
-                    <div class="amenities"><i class="fa-solid fa-person-walking-luggage"></i></div>
-                </div>
-                <div class="col-schedule">
-                    <div class="time-group"><span class="hour">10:30</span><span class="city departure">MAD</span></div>
-                    <div class="duration-line"><span class="duration-text">3h 05min</span><div class="line"><i class="fa-solid fa-train"></i></div></div>
-                    <div class="time-group"><span class="hour">13:35</span><span class="city arrival">BCN</span></div>
-                </div>
-                <div class="col-price">
-                    <div class="price"><span style="font-size:0.8rem;color:#888;margin-right:6px;vertical-align:middle;">Desde</span>32,10 €</div>
-                    <button class="btn-select" onclick="seleccionarTren('ALVIA-1030', 32.10)">Elegir</button>
-                </div>
-            </div>
+        // Lógica de iconos
+        $icono_amenity = 'fa-train'; 
+        if (strtolower($trayecto['tipo_tren']) == 'ave') $icono_amenity = 'fa-wifi';
+        if (strtolower($trayecto['tipo_tren']) == 'avlo') $icono_amenity = 'fa-plug';
+        if (strtolower($trayecto['tipo_tren']) == 'alvia') $icono_amenity = 'fa-person-walking-luggage';
 
-            <div class="ticket-card">
-                <div class="col-train-info">
-                    <span class="train-type type-ave">AVE</span>
-                    <span class="train-id">1200</span>
-                    <div class="amenities"><i class="fa-solid fa-wifi"></i></div>
-                </div>
-                <div class="col-schedule">
-                    <div class="time-group"><span class="hour">12:00</span><span class="city departure">MAD</span></div>
-                    <div class="duration-line"><span class="duration-text">2h 30min</span><div class="line"><i class="fa-solid fa-train"></i></div></div>
-                    <div class="time-group"><span class="hour">14:30</span><span class="city arrival">BCN</span></div>
-                </div>
-                <div class="col-price">
-                    <div class="price"><span style="font-size:0.8rem;color:#888;margin-right:6px;vertical-align:middle;">Desde</span>55,90 €</div>
-                    <button class="btn-select" onclick="seleccionarTren('AVE-1200', 55.90)">Elegir</button>
-                </div>
-            </div>
+        // Lógica de tren lleno (en tu BD pusimos estado "completado" o "en_curso")
+        $isFull = ($trayecto['estado_viaje'] === 'completado');
+        $cardClass = $isFull ? "ticket-card full-train" : "ticket-card";
+    ?>
 
-            <div class="ticket-card full-train">
-                <div class="col-train-info">
-                    <span class="train-type type-md">MD</span>
-                    <span class="train-id">1400</span>
-                </div>
-                <div class="col-schedule">
-                    <div class="time-group"><span class="hour">14:00</span><span class="city departure">MAD</span></div>
-                    <div class="duration-line"><span class="duration-text">3h 10min</span><div class="line"><i class="fa-solid fa-train"></i></div></div>
-                    <div class="time-group"><span class="hour">17:10</span><span class="city arrival">BCN</span></div>
-                </div>
-                <div class="col-price">
-                    <div class="price-full">COMPLETO</div>
-                    <button class="btn-select" disabled>Agotado</button>
-                </div>
+    <div class="<?= $cardClass ?>">
+        <div class="col-train-info">
+            <span class="train-type type-<?= strtolower($trayecto['tipo_tren']) ?>">
+                <?= strtoupper($trayecto['tipo_tren']) ?>
+            </span> 
+            <span class="train-id"><?= htmlspecialchars(str_pad($trayecto['codigo_tren'], 4, '0', STR_PAD_LEFT)) ?></span>
+            <div class="amenities"><i class="fa-solid <?= $icono_amenity ?>"></i></div>
+        </div>
+        <div class="col-schedule">
+            <div class="time-group">
+                <span class="hour"><?= $hora_salida ?></span>
+                <span class="city">MAD</span> </div>
+            <div class="duration-line">
+                <span class="duration-text"><?= $duracion ?></span>
+                <div class="line"><i class="fa-solid fa-train"></i></div>
             </div>
+            <div class="time-group">
+                <span class="hour"><?= $hora_llegada ?></span>
+                <span class="city">BCN</span>
+            </div>
+        </div>
+        <div class="col-price">
+            <?php if ($isFull): ?>
+                <div class="price-full">Tren Completo</div>
+                <button class="btn-select" disabled>Agotado</button>
+            <?php else: ?>
+                <div class="price"><?= $precio ?> €</div>
+                <button class="btn-select" onclick="seleccionarTren(<?= $trayecto['id_viaje'] ?>, '<?= $trayecto['tipo_tren'] ?>', <?= $trayecto['precio_base'] ?>)">Elegir</button>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+    <?php endforeach; ?>
         </section>
 
         <section id="sectionSeats" class="booking-section hidden">
@@ -316,6 +311,11 @@
                     </div>
                     <div class="summary-box"><p>Total: <strong id="finalPrice">0,00 €</strong></p></div>
                     <div class="promo-section">
+                <div class="booking-actions" style="margin-top: 20px; text-align: center;">
+                    <button id="btnComprar" class="btn-primary" disabled onclick="confirmarReserva()">
+                        Confirmar Reserva
+                    </button>
+                </div>
                         <label for="codigoPromo">Código promocional</label>
                         <input type="text" id="codigoPromo" name="codigoPromo" placeholder="Introduce tu código">
                         <button type="button">Aplicar</button>
@@ -331,7 +331,7 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="btn-pay-confirm">Pagar</button>
+                    <button type="button" class="btn-pay-confirm" onclick="confirmarReserva()">Pagar</button>
                 </form>
             </div>
         </section>

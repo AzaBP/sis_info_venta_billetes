@@ -1,3 +1,124 @@
+// Al principio del archivo js/compra.js
+let viajeSeleccionado = null;
+let asientoSeleccionadoNum = null;
+function confirmarReserva() {
+    // 1. Validar que tenemos los datos
+    if (!viajeSeleccionado || !asientoSeleccionadoNum) {
+        alert("Por favor, selecciona un asiento antes de pagar.");
+        return;
+    }
+
+    // 2. Cambiar visualmente el botón para que el usuario sepa que está cargando
+    const btnPagar = document.querySelector('.btn-pay-confirm');
+    if (btnPagar) {
+        btnPagar.innerText = "Procesando pago...";
+        btnPagar.disabled = true;
+    }
+
+    // 3. Enviar la petición a nuestro backend (MongoDB)
+    fetch('php/api_reservar.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            id_viaje: viajeSeleccionado,
+            numero_asiento: asientoSeleccionadoNum
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.exito) {
+            alert("¡Pago exitoso! Billete Reservado con ID: " + data.id_mongo);
+            // 4. AHORA SÍ, recargamos la página o mandamos al inicio
+            window.location.href = "compra.php"; // Te devuelve al inicio de compra para ver el asiento gris
+        } else {
+            alert("Error en la reserva: " + data.error);
+            if(btnPagar) {
+                btnPagar.innerText = "Pagar";
+                btnPagar.disabled = false;
+            }
+        }
+    })
+    .catch(error => {
+        console.error("Error Fetch:", error);
+        alert("Hubo un error de conexión con el servidor.");
+        if(btnPagar) {
+            btnPagar.innerText = "Pagar";
+            btnPagar.disabled = false;
+        }
+    });
+}
+// Interceptar el envío del formulario de pago
+document.querySelector('.payment-form').addEventListener('submit', function(e) {
+    e.preventDefault(); // Detiene el envío normal del formulario
+    if (!asientoSeleccionadoNum) {
+        alert("Por favor, selecciona un asiento.");
+        return;
+    }
+    confirmarReserva(); // Llama a la función que guarda en MongoDB
+});
+
+// Nueva función robusta para confirmar la reserva y refrescar
+function confirmarReserva() {
+    const btnPagar = document.querySelector('.btn-pay-confirm');
+    btnPagar.innerText = "Procesando...";
+    btnPagar.disabled = true;
+
+    fetch('php/api_reservar.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            id_viaje: viajeSeleccionado,
+            numero_asiento: asientoSeleccionadoNum
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.exito) {
+            alert("¡Compra realizada con éxito!");
+            window.location.reload(); // Refresca para ver el asiento ocupado
+        } else {
+            alert("Error: " + data.error);
+            btnPagar.disabled = false;
+            btnPagar.innerText = "Pagar";
+        }
+    })
+    .catch(error => {
+        console.error("Error en Fetch:", error);
+        alert("No se pudo conectar con el servidor de reserva.");
+    });
+}
+// Variables globales para asiento y precio
+// SOLO AL PRINCIPIO DEL ARCHIVO
+let viajeSeleccionado = null;
+let asientoSeleccionadoNum = null;
+let precioBaseViaje = 0;
+
+// 1. Modificar seleccionarAsiento para habilitar el botón
+function seleccionarAsiento(elementoHtml, numero_asiento) {
+    // 1. Gestionar lo visual
+    const todosSeleccionados = document.querySelectorAll('.seat.selected');
+    todosSeleccionados.forEach(asiento => asiento.classList.remove('selected'));
+    elementoHtml.classList.add('selected');
+
+    // 2. Guardar el dato en AMBAS variables (¡Aquí estaba el fallo!)
+    asientoSeleccionadoNum = numero_asiento;
+    estado.asientoSeleccionado = elementoHtml; // <-- AÑADE ESTA LÍNEA
+
+    // 3. ACTUALIZAR PRECIOS EN LA UI (Para evitar los 0.00€)
+    const precioAsientoElemento = document.getElementById('precioAsiento');
+    const totalPagoElemento = document.getElementById('totalPago');
+
+    if (precioAsientoElemento) precioAsientoElemento.innerText = precioBaseViaje.toFixed(2) + ' €';
+    if (totalPagoElemento) totalPagoElemento.innerText = precioBaseViaje.toFixed(2) + ' €';
+
+    // 4. Habilitar tu botón de "Pagar"
+    const btnPagar = document.querySelector('.btn-pay-confirm');
+    if (btnPagar) {
+        btnPagar.disabled = false;
+        btnPagar.style.opacity = "1";
+    }
+}
+
 // VARIABLES DE ESTADO
 let estado = {
     pasoActual: 1,
@@ -26,6 +147,8 @@ function irAPaso(numeroPaso) {
     } else if (numeroPaso === 2) {
         document.getElementById('sectionSeats').classList.remove('hidden');
         actualizarEstadoFlechas();
+        // Corregir el texto del panel de vagón al cargar el primer vagón
+        document.getElementById('currentWagonNum').textContent = '1';
     } else if (numeroPaso === 3) {
         document.getElementById('sectionPayment').classList.remove('hidden');
     }
@@ -41,31 +164,34 @@ function irAPaso(numeroPaso) {
 }
 
 // ================= PASO 1: SELECCIÓN DE TREN =================
-function seleccionarTren(id, precio) {
-    estado.trenSeleccionado = id;
-    estado.precioBase = precio;
-    document.getElementById('lblTrenSeleccionado').textContent = id;
-    irAPaso(2);
+function seleccionarTren(id_viaje, tipo_tren, precio) {
+    // Si PHP envía los datos, los capturamos aquí
+    viajeSeleccionado = id_viaje;
+    precioBaseViaje = parseFloat(precio) || 0;
+
+    // Actualizamos el estado interno de tu objeto 'estado' si lo usas
+    if (typeof estado !== 'undefined') {
+        estado.trenSeleccionado = id_viaje;
+        estado.precioBase = precioBaseViaje;
+    }
+
+    const lblTren = document.getElementById('lblTrenSeleccionado');
+    if (lblTren) lblTren.textContent = id_viaje;
+
+    irAPaso(2); // Esto debería moverte a la pantalla de asientos
 }
 
 // ================= PASO 2: SELECCIÓN DE ASIENTO =================
 function cambiarVagon(direccion) {
     let nuevoVagon = estado.vagonActual + direccion;
-    
     if (nuevoVagon < 1) return;
     if (nuevoVagon > estado.maxVagones) return;
 
     document.getElementById(`wagon${estado.vagonActual}`).classList.add('hidden');
     document.getElementById(`wagon${nuevoVagon}`).classList.remove('hidden');
-    
-    let nombreVagon = "";
-    if(nuevoVagon === 1) nombreVagon = "1 (Primera Clase)";
-    else if(nuevoVagon === 2) nombreVagon = "2 (Turista)";
-    else nombreVagon = "3 (Silencio)";
 
-    document.getElementById('currentWagonNum').textContent = nombreVagon;
+    document.getElementById('currentWagonNum').textContent = `${nuevoVagon}`;
     estado.vagonActual = nuevoVagon;
-    
     actualizarEstadoFlechas();
 }
 
@@ -80,30 +206,34 @@ function actualizarEstadoFlechas() {
     else btnNext.disabled = false;
 }
 
-// Lógica de click en asiento
-document.querySelectorAll('.seat').forEach(asiento => {
-    asiento.addEventListener('click', function() {
-        if (this.classList.contains('occupied')) return;
+    // Lógica de click en asiento
+    document.querySelectorAll('.seat').forEach(asiento => {
+        asiento.addEventListener('click', function() {
+            if (this.classList.contains('occupied')) return;
 
-        if (estado.asientoSeleccionado) {
-            estado.asientoSeleccionado.classList.remove('selected');
-        }
+            // Usar nueva función para seleccionar asiento
+            const numero_asiento = this.getAttribute('data-seat');
+            seleccionarAsiento(this, numero_asiento);
 
-        this.classList.add('selected');
-        estado.asientoSeleccionado = this;
+            // PRECIO: Suplemento Primera Clase (Vagon 1)
+            let precioFinal = parseFloat(estado.precioBase) || 0;
+            if(estado.vagonActual === 1) precioFinal += 15; 
 
-        // PRECIO: Suplemento Primera Clase (Vagon 1)
-        let precioFinal = estado.precioBase;
-        if(estado.vagonActual === 1) precioFinal += 15; 
+            // Actualizamos la interfaz
+            document.getElementById('displaySeat').textContent = `Vagón ${estado.vagonActual} - ${numero_asiento}`;
+            document.getElementById('displayPrice').textContent = precioFinal.toFixed(2) + " €";
+            const txtFinal = document.getElementById('finalPrice');
+            if (txtFinal) txtFinal.textContent = precioFinal.toFixed(2) + " €";
 
-        const nombreAsiento = this.getAttribute('data-seat');
-        document.getElementById('displaySeat').textContent = `Vagón ${estado.vagonActual} - ${nombreAsiento}`;
-        document.getElementById('displayPrice').textContent = precioFinal.toFixed(2) + " €";
-        document.getElementById('finalPrice').textContent = precioFinal.toFixed(2) + " €";
-
-        document.getElementById('btnToPayment').disabled = false;
+            document.getElementById('btnToPayment').disabled = false;
+        });
     });
-});
+
+    // Eliminar texto de pasillo premium en primera clase
+    const premiumAisle = document.querySelector('.aisle-horizontal.premium');
+    if (premiumAisle && estado.vagonActual === 1) {
+        premiumAisle.textContent = '';
+    }
 
 // ================= PASO 3: FINALIZAR =================
 function finalizarCompra() {
