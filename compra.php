@@ -120,7 +120,7 @@ $trayectos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class="col-price">
             <?php if ($isFull): ?>
-                <div class="price-full">Tren Completo</div>
+                <div class="price-full">Completo</div>
                 <button class="btn-select" disabled>Agotado</button>
             <?php else: ?>
                 <div class="price"><?= $precio ?> €</div>
@@ -143,145 +143,93 @@ $trayectos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="train-horizontal-container">
-                <div class="locomotive-indicator"><i class="fa-solid fa-train"></i> Cabina</div>
-                
-                <div class="wagon-frame">
-                    
-                    <div class="wagon-body active wagon-premium" id="wagon1">
-                        <div class="info-message-premium">PRIMERA CLASE (Filas 1-10)</div>
-                        
-                        <div class="wagon-super-row">
-                            <div class="seat-block">
-                                <div class="seat-row-tight premium-row">
-                                    <div class="seat seat-premium seat-left" data-seat="1A">1A</div>
-                                    <div class="seat seat-premium seat-left" data-seat="2A">2A</div>
-                                    <div class="seat seat-premium seat-left" data-seat="3A">3A</div>
-                                    <div class="seat seat-premium seat-left" data-seat="4A">4A</div>
-                                    <div class="seat seat-premium seat-left" data-seat="5A">5A</div>
-                                </div>
-                                <div class="seat-row-tight premium-row">
-                                    <div class="seat seat-premium seat-left" data-seat="1B">1B</div>
-                                    <div class="seat seat-premium seat-left" data-seat="2B">2B</div>
-                                    <div class="seat seat-premium seat-left" data-seat="3B">3B</div>
-                                    <div class="seat seat-premium seat-left" data-seat="4B">4B</div>
-                                    <div class="seat seat-premium seat-left" data-seat="5B">5B</div>
-                                </div>
-                            </div>
-                            <div class="long-table-wide">MESA</div>
-                            <div class="seat-block">
-                                <div class="seat-row-tight premium-row">
-                                    <div class="seat seat-premium seat-right" data-seat="6A">6A</div>
-                                    <div class="seat seat-premium seat-right" data-seat="7A">7A</div>
-                                    <div class="seat seat-premium seat-right" data-seat="8A">8A</div>
-                                    <div class="seat seat-premium seat-right" data-seat="9A">9A</div>
-                                    <div class="seat seat-premium seat-right" data-seat="10A">10A</div>
-                                </div>
-                                <div class="seat-row-tight premium-row">
-                                    <div class="seat seat-premium seat-right" data-seat="6B">6B</div>
-                                    <div class="seat seat-premium seat-right" data-seat="7B">7B</div>
-                                    <div class="seat seat-premium seat-right" data-seat="8B">8B</div>
-                                    <div class="seat seat-premium seat-right" data-seat="9B">9B</div>
-                                    <div class="seat seat-premium seat-right" data-seat="10B">10B</div>
-                                </div>
-                            </div>
-                        </div>
+                <?php
+                // Contador global que no se reinicia entre vagones
+                $numero_asiento_global = 1;
 
-                            <div class="aisle-horizontal" style="width: 40px;"></div>
+                for ($w = 1; $w <= 3; $w++) {
+                    $isPremium = ($w == 1);
+                    // Configuración dinámica según la clase
+                    $wagonClass = $isPremium ? "wagon-premium" : "wagon-standard";
+                    $wagonTitle = $isPremium ? "Primera Clase" : "Segunda Clase";
+                    $displayClass = ($w == 1) ? "" : "hidden";
+                    // 1ª Clase: 5 asientos por bloque (10 por fila). 2ª Clase: 6 asientos (12 por fila).
+                    $asientosPorBloque = $isPremium ? 5 : 6;
+                    $claseMesa = $isPremium ? "long-table-wide" : "long-table";
+                    $clasePasillo = $isPremium ? "aisle-horizontal-wide" : "aisle-horizontal";
 
-                        <div class="wagon-super-row">
-                            <div class="seat-block">
-                                <div class="seat-row-tight premium-row">
-                                    <div class="seat seat-premium seat-left" data-seat="1C">1C</div>
-                                    <div class="seat seat-premium seat-left" data-seat="2C">2C</div>
-                                    <div class="seat seat-premium seat-left" data-seat="3C">3C</div>
-                                    <div class="seat seat-premium seat-left" data-seat="4C">4C</div>
-                                    <div class="seat seat-premium seat-left" data-seat="5C">5C</div>
-                                </div>
-                                <div class="seat-row-tight premium-row">
-                                    <div class="seat seat-premium seat-left" data-seat="1D">1D</div>
-                                    <div class="seat seat-premium seat-left" data-seat="2D">2D</div>
-                                    <div class="seat seat-premium seat-left" data-seat="3D">3D</div>
-                                    <div class="seat seat-premium seat-left" data-seat="4D">4D</div>
-                                    <div class="seat seat-premium seat-left" data-seat="5D">5D</div>
-                                </div>
-                            </div>
-                            <div class="long-table-wide">MESA</div>
-                            <div class="seat-block">
-                                <div class="seat-row-tight premium-row">
-                                    <div class="seat seat-premium seat-right" data-seat="6C">6C</div>
-                                    <div class="seat seat-premium seat-right" data-seat="7C">7C</div>
-                                    <div class="seat seat-premium seat-right" data-seat="8C">8C</div>
-                                    <div class="seat seat-premium seat-right" data-seat="9C">9C</div>
-                                    <div class="seat seat-premium seat-right" data-seat="10C">10C</div>
-                                </div>
-                                <div class="seat-row-tight premium-row">
-                                    <div class="seat seat-premium seat-right" data-seat="6D">6D</div>
-                                    <div class="seat seat-premium seat-right" data-seat="7D">7D</div>
-                                    <div class="seat seat-premium seat-right" data-seat="8D">8D</div>
-                                    <div class="seat seat-premium seat-right" data-seat="9D">9D</div>
-                                    <div class="seat seat-premium seat-right" data-seat="10D">10D</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    echo "<div id='wagon$w' class='wagon-body $wagonClass $displayClass'>";
+                    echo "<div class='info-message'>$wagonTitle</div>";
+                    echo "<div class='wagon-layout'>";
 
-                    <div class="wagon-body hidden" id="wagon2">
-                        <div class="info-message">CLASE TURISTA (Filas 11-22)</div>
-                        
-                        <div class="wagon-super-row">
-                            <div class="seat-block"> <div class="seat-row-tight"><div class="seat seat-left" data-seat="11A">11A</div><div class="seat seat-left" data-seat="12A">12A</div><div class="seat seat-left" data-seat="13A">13A</div><div class="seat seat-left" data-seat="14A">14A</div><div class="seat seat-left" data-seat="15A">15A</div><div class="seat seat-left" data-seat="16A">16A</div></div>
-                                <div class="seat-row-tight"><div class="seat seat-left" data-seat="11B">11B</div><div class="seat seat-left" data-seat="12B">12B</div><div class="seat seat-left" data-seat="13B">13B</div><div class="seat seat-left" data-seat="14B">14B</div><div class="seat seat-left" data-seat="15B">15B</div><div class="seat seat-left" data-seat="16B">16B</div></div>
-                            </div>
+                    // --- PARTE SUPERIOR (Filas A y B) ---
+                    echo "<div class='wagon-super-row'>";
+                        // Bloque Izquierdo (Antes de la mesa)
+                        echo "<div class='seat-block'>";
+                            foreach (['A', 'B'] as $letra) {
+                                echo "<div class='seat-row-tight " . ($isPremium ? "premium-row" : "") . "'>";
+                                for ($i = 0; $i < $asientosPorBloque; $i++) {
+                                    $id = sprintf("%03d", $numero_asiento_global++);
+                                    $p = $isPremium ? "seat-premium" : "";
+                                    echo "<div class='seat $p seat-left' data-seat='$id'>$id</div>";
+                                }
+                                echo "</div>";
+                            }
+                        echo "</div>";
 
-                            <div class="long-table">MESA</div> <div class="seat-block"> <div class="seat-row-tight"><div class="seat seat-right" data-seat="17A">17A</div><div class="seat seat-right" data-seat="18A">18A</div><div class="seat seat-right" data-seat="19A">19A</div><div class="seat seat-right" data-seat="20A">20A</div><div class="seat seat-right" data-seat="21A">21A</div><div class="seat seat-right" data-seat="22A">22A</div></div>
-                                <div class="seat-row-tight"><div class="seat seat-right" data-seat="17B">17B</div><div class="seat seat-right" data-seat="18B">18B</div><div class="seat seat-right" data-seat="19B">19B</div><div class="seat seat-right" data-seat="20B">20B</div><div class="seat seat-right" data-seat="21B">21B</div><div class="seat seat-right" data-seat="22B">22B</div></div>
-                            </div>
-                        </div>
-                        
-                        <div class="aisle-horizontal"></div>
-                        
-                        <div class="wagon-super-row">
-                             <div class="seat-block"> <div class="seat-row-tight"><div class="seat seat-left" data-seat="11C">11C</div><div class="seat seat-left" data-seat="12C">12C</div><div class="seat seat-left" data-seat="13C">13C</div><div class="seat seat-left" data-seat="14C">14C</div><div class="seat seat-left" data-seat="15C">15C</div><div class="seat seat-left" data-seat="16C">16C</div></div>
-                                <div class="seat-row-tight"><div class="seat seat-left" data-seat="11D">11D</div><div class="seat seat-left" data-seat="12D">12D</div><div class="seat seat-left" data-seat="13D">13D</div><div class="seat seat-left" data-seat="14D">14D</div><div class="seat seat-left" data-seat="15D">15D</div><div class="seat seat-left" data-seat="16D">16D</div></div>
-                            </div>
+                        echo "<div class='$claseMesa'>MESA</div>";
 
-                            <div class="long-table">MESA</div> <div class="seat-block"> <div class="seat-row-tight"><div class="seat seat-right" data-seat="17C">17C</div><div class="seat seat-right" data-seat="18C">18C</div><div class="seat seat-right" data-seat="19C">19C</div><div class="seat seat-right" data-seat="20C">20C</div><div class="seat seat-right" data-seat="21C">21C</div><div class="seat seat-right" data-seat="22C">22C</div></div>
-                                <div class="seat-row-tight"><div class="seat seat-right" data-seat="17D">17D</div><div class="seat seat-right" data-seat="18D">18D</div><div class="seat seat-right" data-seat="19D">19D</div><div class="seat seat-right" data-seat="20D">20D</div><div class="seat seat-right" data-seat="21D">21D</div><div class="seat seat-right" data-seat="22D">22D</div></div>
-                            </div>
-                        </div>
-                    </div>
+                        // Bloque Derecho (Después de la mesa)
+                        echo "<div class='seat-block'>";
+                            foreach (['A', 'B'] as $letra) {
+                                echo "<div class='seat-row-tight " . ($isPremium ? "premium-row" : "") . "'>";
+                                for ($i = 0; $i < $asientosPorBloque; $i++) {
+                                    $id = sprintf("%03d", $numero_asiento_global++);
+                                    $p = $isPremium ? "seat-premium" : "";
+                                    echo "<div class='seat $p seat-right' data-seat='$id'>$id</div>";
+                                }
+                                echo "</div>";
+                            }
+                        echo "</div>";
+                    echo "</div>";
 
-                    <div class="wagon-body hidden" id="wagon3">
-                        <div class="info-message">CLASE TURISTA (Filas 23-34)</div>
-                        
-                        <div class="wagon-super-row">
-                            <div class="seat-block"> 
-                                <div class="seat-row-tight"><div class="seat seat-left" data-seat="23A">23A</div><div class="seat seat-left" data-seat="24A">24A</div><div class="seat seat-left" data-seat="25A">25A</div><div class="seat seat-left" data-seat="26A">26A</div><div class="seat seat-left" data-seat="27A">27A</div><div class="seat seat-left" data-seat="28A">28A</div></div>
-                                <div class="seat-row-tight"><div class="seat seat-left" data-seat="23B">23B</div><div class="seat seat-left" data-seat="24B">24B</div><div class="seat seat-left" data-seat="25B">25B</div><div class="seat seat-left" data-seat="26B">26B</div><div class="seat seat-left" data-seat="27B">27B</div><div class="seat seat-left" data-seat="28B">28B</div></div>
-                            </div>
-                            <div class="long-table">MESA</div>
-                            <div class="seat-block">
-                                <div class="seat-row-tight"><div class="seat seat-right" data-seat="29A">29A</div><div class="seat seat-right" data-seat="30A">30A</div><div class="seat seat-right" data-seat="31A">31A</div><div class="seat seat-right" data-seat="32A">32A</div><div class="seat seat-right" data-seat="33A">33A</div><div class="seat seat-right" data-seat="34A">34A</div></div>
-                                <div class="seat-row-tight"><div class="seat seat-right" data-seat="29B">29B</div><div class="seat seat-right" data-seat="30B">30B</div><div class="seat seat-right" data-seat="31B">31B</div><div class="seat seat-right" data-seat="32B">32B</div><div class="seat seat-right" data-seat="33B">33B</div><div class="seat seat-right" data-seat="34B">34B</div></div>
-                            </div>
-                        </div>
-                        
-                        <div class="aisle-horizontal"></div>
-                        
-                        <div class="wagon-super-row">
-                             <div class="seat-block"> 
-                                <div class="seat-row-tight"><div class="seat seat-left" data-seat="23C">23C</div><div class="seat seat-left" data-seat="24C">24C</div><div class="seat seat-left" data-seat="25C">25C</div><div class="seat seat-left" data-seat="26C">26C</div><div class="seat seat-left" data-seat="27C">27C</div><div class="seat seat-left" data-seat="28C">28C</div></div>
-                                <div class="seat-row-tight"><div class="seat seat-left" data-seat="23D">23D</div><div class="seat seat-left" data-seat="24D">24D</div><div class="seat seat-left" data-seat="25D">25D</div><div class="seat seat-left" data-seat="26D">26D</div><div class="seat seat-left" data-seat="27D">27D</div><div class="seat seat-left" data-seat="28D">28D</div></div>
-                            </div>
-                            <div class="long-table">MESA</div>
-                            <div class="seat-block">
-                                <div class="seat-row-tight"><div class="seat seat-right" data-seat="29C">29C</div><div class="seat seat-right" data-seat="30C">30C</div><div class="seat seat-right" data-seat="31C">31C</div><div class="seat seat-right" data-seat="32C">32C</div><div class="seat seat-right" data-seat="33C">33C</div><div class="seat seat-right" data-seat="34C">34C</div></div>
-                                <div class="seat-row-tight"><div class="seat seat-right" data-seat="29D">29D</div><div class="seat seat-right" data-seat="30D">30D</div><div class="seat seat-right" data-seat="31D">31D</div><div class="seat seat-right" data-seat="32D">32D</div><div class="seat seat-right" data-seat="33D">33D</div><div class="seat seat-right" data-seat="34D">34D</div></div>
-                            </div>
-                        </div>
-                    </div>
+                    // --- PASILLO ---
+                    echo "<div class='$clasePasillo'></div>";
 
-                </div>
+                    // --- PARTE INFERIOR (Filas C y D) ---
+                    echo "<div class='wagon-super-row'>";
+                        // Bloque Izquierdo
+                        echo "<div class='seat-block'>";
+                            foreach (['C', 'D'] as $letra) {
+                                echo "<div class='seat-row-tight " . ($isPremium ? "premium-row" : "") . "'>";
+                                for ($i = 0; $i < $asientosPorBloque; $i++) {
+                                    $id = sprintf("%03d", $numero_asiento_global++);
+                                    $p = $isPremium ? "seat-premium" : "";
+                                    echo "<div class='seat $p seat-left' data-seat='$id'>$id</div>";
+                                }
+                                echo "</div>";
+                            }
+                        echo "</div>";
+
+                        echo "<div class='$claseMesa'>MESA</div>";
+
+                        // Bloque Derecho
+                        echo "<div class='seat-block'>";
+                            foreach (['C', 'D'] as $letra) {
+                                echo "<div class='seat-row-tight " . ($isPremium ? "premium-row" : "") . "'>";
+                                for ($i = 0; $i < $asientosPorBloque; $i++) {
+                                    $id = sprintf("%03d", $numero_asiento_global++);
+                                    $p = $isPremium ? "seat-premium" : "";
+                                    echo "<div class='seat $p seat-right' data-seat='$id'>$id</div>";
+                                }
+                                echo "</div>";
+                            }
+                        echo "</div>";
+                    echo "</div>";
+
+                    echo "</div></div>"; // Fin wagon-layout y wagon-body
+                }
+                ?>
                 <div class="tail-indicator">Cola</div>
             </div>
             
@@ -303,19 +251,14 @@ $trayectos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
                 <form class="payment-form" onsubmit="event.preventDefault(); finalizarCompra();">
-                    <div class="form-group full-width"><label>Titular</label><input type="text" required></div>
-                    <div class="form-group full-width"><label>Número</label><div class="input-icon"><input type="text" maxlength="19" required><i class="fa-solid fa-lock"></i></div></div>
+                    <div class="form-group full-width"><label>Titular</label><input type="text" required placeholder="Ej: Juan Pérez"></div>
+                    <div class="form-group full-width"><label>Número</label><div class="input-icon"><input type="text" maxlength="19" required placeholder="Ej: 1234 5678 9012 3456"><i class="fa-solid fa-lock"></i></div></div>
                     <div class="form-row">
-                        <div class="form-group expand"><label>Caducidad</label><input type="text" required></div>
-                        <div class="form-group expand"><label>CVV</label><input type="password" required></div>
+                        <div class="form-group expand"><label>Caducidad</label><input type="text" required placeholder="MM/AA"></div>
+                        <div class="form-group expand"><label>CVV</label><input type="password" required placeholder="Ej: 123"></div>
                     </div>
                     <div class="summary-box"><p>Total: <strong id="finalPrice">0,00 €</strong></p></div>
                     <div class="promo-section">
-                <div class="booking-actions" style="margin-top: 20px; text-align: center;">
-                    <button id="btnComprar" class="btn-primary" disabled onclick="confirmarReserva()">
-                        Confirmar Reserva
-                    </button>
-                </div>
                         <label for="codigoPromo">Código promocional</label>
                         <input type="text" id="codigoPromo" name="codigoPromo" placeholder="Introduce tu código">
                         <button type="button">Aplicar</button>

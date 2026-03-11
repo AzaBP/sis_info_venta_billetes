@@ -1,7 +1,6 @@
 <?php
 // C:\...\php\ConexionMongo.php
 
-// 1. IMPORTANTE: Asegúrate de que la ruta al autoload de Composer sea correcta
 require_once __DIR__ . '/../vendor/autoload.php'; 
 
 class ConexionMongo {
