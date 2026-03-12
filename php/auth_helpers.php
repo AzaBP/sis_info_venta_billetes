@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 function trainwebAdminEmails(): array
 {
@@ -20,8 +20,8 @@ function trainwebEsAdministrador(array $usuario): bool
 
     $admins = trainwebAdminEmails();
     if (count($admins) === 0) {
-        // Entorno local: sin configurar admins, cualquier usuario logueado puede administrar.
-        return true;
+        // Sin lista explicita de admins, nadie obtiene rol admin por defecto.
+        return false;
     }
 
     return in_array($email, $admins, true);

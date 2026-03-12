@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+﻿document.addEventListener("DOMContentLoaded", function () {
     const userActions = document.getElementById("userActions");
     if (!userActions) return;
 
@@ -17,18 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let enlacePanel = "perfil_pasajero.php";
             let textoPanel = "Mi perfil";
 
-            const adminEmailsRaw = (window.TRAINWEB_ADMIN_EMAILS || "").toLowerCase();
-            const adminEmails = adminEmailsRaw
-                .split(",")
-                .map((v) => v.trim())
-                .filter(Boolean);
-            const email = (data.usuario.email || "").toLowerCase();
-            const esAdmin = adminEmails.length === 0 || adminEmails.includes(email);
-
-            if (esAdmin) {
-                enlacePanel = "registro_empleado.php";
-                textoPanel = "Panel admin";
-            } else if (tipoUsuario === "empleado") {
+            if (tipoUsuario === "empleado") {
                 if (tipoEmpleado === "vendedor") {
                     enlacePanel = "vendedor.php";
                     textoPanel = "Panel vendedor";
@@ -78,3 +67,5 @@ document.addEventListener("DOMContentLoaded", function () {
             // Si falla, se mantiene el boton de iniciar sesion.
         });
 });
+
+
