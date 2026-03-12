@@ -1,0 +1,73 @@
+-- 1. Crear Usuario y Empleado Vendedor
+INSERT INTO USUARIO (nombre, apellido, email, password, telefono, tipo_usuario) 
+VALUES ('Vendedor', 'Web', 'ventas@trenweb.com', '1234', '111222333', 'empleado');
+
+INSERT INTO EMPLEADO (id_usuario, tipo_empleado) 
+VALUES ((SELECT id_usuario FROM USUARIO WHERE email = 'ventas@trenweb.com'), 'vendedor');
+
+INSERT INTO VENDEDOR (id_empleado, comision_porcentaje, region) 
+VALUES ((SELECT id_empleado FROM EMPLEADO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'ventas@trenweb.com')), 5.0, 'Nacional');
+
+-- 2. Crear Usuario y Empleado Maquinista
+INSERT INTO USUARIO (nombre, apellido, email, password, telefono, tipo_usuario) 
+VALUES ('Maquinista', 'Jefe', 'maquinista@trenweb.com', '1234', '333222111', 'empleado');
+
+INSERT INTO EMPLEADO (id_usuario, tipo_empleado) 
+VALUES ((SELECT id_usuario FROM USUARIO WHERE email = 'maquinista@trenweb.com'), 'maquinista');
+
+INSERT INTO MAQUINISTA (id_empleado, licencia, experiencia_años, horario_preferido) 
+VALUES ((SELECT id_empleado FROM EMPLEADO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'maquinista@trenweb.com')), 'A1', 10, 'Diurno');
+
+-- 3. Crear la Ruta
+INSERT INTO RUTA (origen, destino, duracion, id_vendedor) 
+VALUES ('Madrid Puerta de Atocha', 'Barcelona Sants', '02:30:00', (SELECT id_empleado FROM EMPLEADO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'ventas@trenweb.com')));
+
+-- 4. Crear los Trenes
+INSERT INTO TREN (modelo, capacidad) VALUES ('AVE', 300);
+INSERT INTO TREN (modelo, capacidad) VALUES ('AVLO', 400);
+INSERT INTO TREN (modelo, capacidad) VALUES ('ALVIA', 250);
+
+-- 5. Crear los Viajes (Lo que antes llamamos Trayectos)
+INSERT INTO VIAJE (id_vendedor, id_ruta, id_tren, id_maquinista, fecha, hora_salida, hora_llegada, precio, estado) 
+VALUES 
+(
+  (SELECT id_empleado FROM VENDEDOR LIMIT 1),
+  (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' LIMIT 1),
+  (SELECT id_tren FROM TREN WHERE modelo = 'AVE' LIMIT 1),
+  (SELECT id_empleado FROM MAQUINISTA LIMIT 1),
+  '2026-02-12', '07:30:00', '10:00:00', 45.50, 'programado'
+),
+(
+  (SELECT id_empleado FROM VENDEDOR LIMIT 1),
+  (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' LIMIT 1),
+  (SELECT id_tren FROM TREN WHERE modelo = 'AVLO' LIMIT 1),
+  (SELECT id_empleado FROM MAQUINISTA LIMIT 1),
+  '2026-02-12', '09:15:00', '12:00:00', 19.00, 'programado'
+),
+(
+  (SELECT id_empleado FROM VENDEDOR LIMIT 1),
+  (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' LIMIT 1),
+  (SELECT id_tren FROM TREN WHERE modelo = 'ALVIA' LIMIT 1),
+  (SELECT id_empleado FROM MAQUINISTA LIMIT 1),
+  '2026-02-12', '10:30:00', '13:35:00', 32.10, 'programado'
+),
+(
+  (SELECT id_empleado FROM VENDEDOR LIMIT 1),
+  (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' LIMIT 1),
+  (SELECT id_tren FROM TREN WHERE modelo = 'AVE' LIMIT 1 OFFSET 0), 
+  (SELECT id_empleado FROM MAQUINISTA LIMIT 1),
+  '2026-02-12', '12:00:00', '14:30:00', 50.00, 'completado' 
+);
+
+
+-----------------------------------------------------------------------------------------
+
+
+INSERT INTO ASIENTO (id_tren, numero_asiento, clase, estado)
+SELECT 
+    1,                                             -- id_tren
+    serie.n,                                       -- numero_asiento
+    CASE WHEN serie.n <= 10 THEN 'primera' ELSE 'segunda' END, -- clase
+    'disponible'                                   -- estado
+FROM generate_series(1, 40) AS serie(n);
+
