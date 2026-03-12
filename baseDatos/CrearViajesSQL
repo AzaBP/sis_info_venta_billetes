@@ -70,4 +70,3 @@ SELECT
     CASE WHEN serie.n <= 10 THEN 'primera' ELSE 'segunda' END, -- clase
     'disponible'                                   -- estado
 FROM generate_series(1, 40) AS serie(n);
-

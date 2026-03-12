@@ -284,4 +284,3 @@ $trayectos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="js/compra.js"></script>
 </body>
 </html>
-
