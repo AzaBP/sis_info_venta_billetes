@@ -49,7 +49,7 @@ try {
         if ($nombre === '' || $apellido === '' || $email === '' || $telefono === '' || $passwordPlano === '' || $tipoEmpleado === '') {
             redirigirAdmin('campos_obligatorios');
         }
-        if (!in_array($tipoEmpleado, ['vendedor', 'mantenimiento'], true)) {
+        if (!in_array($tipoEmpleado, ['vendedor', 'mantenimiento', 'maquinista'], true)) {
             redirigirAdmin('tipo_empleado_no_permitido');
         }
 
@@ -95,7 +95,7 @@ try {
                 ':comision' => $comision,
                 ':region' => $region
             ]);
-        } else {
+        } else if ($tipoEmpleado === 'mantenimiento') {
             $especialidad = valor('especialidad', 'General');
             $turno = valor('turno', 'manana');
             $certificaciones = valor('certificaciones');
@@ -108,6 +108,27 @@ try {
                 ':turno' => $turno,
                 ':certificaciones' => $certificaciones
             ]);
+        } else {
+            $licencia = valor('licencia');
+            $experiencia = (int)($_POST['experiencia_anos'] ?? 0);
+            $horario = valor('horario_preferido', 'diurno');
+            $stmtRol = $pdo->prepare(
+                'INSERT INTO maquinista (id_empleado, licencia, experiencia_años, horario_preferido) VALUES (:id_empleado, :licencia, :experiencia, :horario)'
+            );
+            $stmtRol->execute([
+                ':id_empleado' => $idEmpleado,
+                ':licencia' => $licencia,
+                ':experiencia' => $experiencia,
+                ':horario' => $horario
+            ]);
+            $asignarViaje = (int)($_POST['asignar_viaje'] ?? 0);
+            if ($asignarViaje > 0) {
+                $stmtViaje = $pdo->prepare('UPDATE viaje SET id_maquinista = :id_maquinista WHERE id_viaje = :id_viaje');
+                $stmtViaje->execute([
+                    ':id_maquinista' => $idEmpleado,
+                    ':id_viaje' => $asignarViaje
+                ]);
+            }
         }
 
         $pdo->commit();
@@ -252,6 +273,24 @@ try {
                     ':certificaciones' => valor('certificaciones'),
                     ':id_empleado' => $idEmpleado
                 ]);
+            } elseif ($idEmpleado > 0 && $tipoEmpleado === 'maquinista') {
+                $stmtMaq = $pdo->prepare(
+                    'UPDATE maquinista SET licencia = :licencia, experiencia_años = :experiencia, horario_preferido = :horario WHERE id_empleado = :id_empleado'
+                );
+                $stmtMaq->execute([
+                    ':licencia' => valor('licencia'),
+                    ':experiencia' => (int)($_POST['experiencia_anos'] ?? 0),
+                    ':horario' => valor('horario_preferido'),
+                    ':id_empleado' => $idEmpleado
+                ]);
+                $asignarViaje = (int)($_POST['asignar_viaje'] ?? 0);
+                if ($asignarViaje > 0) {
+                    $stmtViaje = $pdo->prepare('UPDATE viaje SET id_maquinista = :id_maquinista WHERE id_viaje = :id_viaje');
+                    $stmtViaje->execute([
+                        ':id_maquinista' => $idEmpleado,
+                        ':id_viaje' => $asignarViaje
+                    ]);
+                }
             }
         }
 

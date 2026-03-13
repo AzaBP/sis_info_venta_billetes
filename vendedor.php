@@ -8,7 +8,7 @@ $usuario = $_SESSION['usuario'] ?? null;
 
 // 1. Verificamos que sea empleado a nivel general (esto viene de la tabla USUARIO)
 if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'empleado') {
-    header('Location: inicio_sesion.html?error=no_autorizado');
+    header('Location: employee_login.php?error=no_autorizado');
     exit;
 }
 
@@ -48,7 +48,7 @@ try {
 
 // 3. Expulsar si NO es vendedor y NO es administrador
 if (!$esVendedor && !trainwebEsAdministrador($usuario)) {
-    header('Location: index.php?error=acceso_denegado');
+    header('Location: ' . trainwebRutaPorRol($usuario));
     exit;
 }
 

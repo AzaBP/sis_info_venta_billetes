@@ -1,9 +1,29 @@
-/* CONFIGURACIÓN GENERAL DEL DASHBOARD */
+﻿/* CONFIGURACION GENERAL DEL DASHBOARD */
+body {
+    font-family: "Sora", "Segoe UI", sans-serif;
+    background-color: #ffffff;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
 .maint-container {
     padding: 30px 50px;
     max-width: 1400px;
     margin: 0 auto;
     min-height: 80vh;
+}
+
+.maint-container::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 15% 15%, rgba(56,189,248,0.14), transparent 45%),
+        radial-gradient(circle at 85% 20%, rgba(34,197,94,0.12), transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(250,204,21,0.12), transparent 45%);
+    z-index: -1;
 }
 
 .page-title h1 {
@@ -12,97 +32,297 @@
 }
 .page-title p {
     color: #666;
-    margin-bottom: 30px;
+    margin-bottom: 16px;
 }
 
-/* GRID LAYOUT: 3 COLUMNAS */
+/* GRID LAYOUT */
 .maint-grid {
     display: grid;
-    grid-template-columns: 1fr 1.5fr 1fr; /* La columna central es más ancha */
+    grid-template-columns: 2.2fr 0.8fr;
     gap: 25px;
 }
 
-/* ESTILOS COMUNES DE PANELES */
 .panel {
     background: white;
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
     border: 1px solid #eee;
 }
 
 .panel h2 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     color: #0a2a66;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     border-bottom: 2px solid #f0f0f0;
     padding-bottom: 10px;
 }
 
-/* === PANEL 1: ESTADO FLOTA === */
-.train-card {
-    display: grid; /* Usamos Grid en lugar de Flex */
-    /* Definimos 3 columnas: 
-       1. ID (fijo 100px)
-       2. Ruta (el espacio sobrante)
-       3. Estado (fijo 110px para que se alineen a la derecha) 
-    */
-    grid-template-columns: 90px 1fr 110px; 
+/* PERFIL */
+.profile-panel {
+    grid-column: 1 / -1;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+.profile-panel::after {
+    content: "";
+    position: absolute;
+    inset: -40% -20% auto auto;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(14,165,233,0.25), transparent 65%);
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.profile-toggle {
+    width: 100%;
+    background: linear-gradient(135deg, #1d4ed8, #60a5fa);
+    border: none;
+    display: flex;
     align-items: center;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    border-left: 5px solid #ccc; /* Color por defecto */
-    background-color: #f9f9f9;
-    gap: 15px; /* Espacio entre las columnas */
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 12px;
+    box-shadow: 0 12px 22px rgba(10,42,102,0.25);
 }
 
-.train-id { 
-    font-weight: bold; 
-    color: #333; 
+.profile-toggle-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
-.train-route { 
-    font-size: 0.85rem; 
-    color: #666; 
-    text-align: center;  /* Opcional: centrar el texto de la ruta  */
+.profile-toggle-title {
+    font-weight: 800;
+    color: #ffffff;
+    font-size: 1.05rem;
 }
 
-.train-badge { 
-    font-size: 0.8rem; 
-    font-weight: 600; 
-    text-align: right; /* Alineamos el badge a la derecha de su columna */
+.profile-toggle-sub {
+    font-size: 0.85rem;
+    color: #dbeafe;
+    margin-top: 4px;
 }
 
-/* Estados específicos */
-.status-ok { border-left-color: #28a745; background-color: #e6ffeb; }
-.status-ok .train-badge { color: #28a745; }
+.profile-toggle i {
+    transition: transform 0.2s ease;
+    color: #ffffff;
+}
 
-.status-warning { border-left-color: #ffc107; background-color: #fff8e1; }
-.status-warning .train-badge { color: #d39e00; }
+.profile-panel.collapsed .profile-toggle i {
+    transform: rotate(-90deg);
+}
 
-.status-critical { border-left-color: #dc3545; background-color: #ffeef0; }
-.status-critical .train-badge { color: #dc3545; }
+.profile-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    color: #1d4ed8;
+    background: #ffffff;
+    border: 1px solid rgba(29,78,216,0.2);
+    box-shadow: 0 12px 22px rgba(29,78,216,0.25);
+}
 
+.profile-avatar i {
+    color: #1d4ed8;
+}
 
-/* === PANEL 2: INCIDENCIAS === */
+.profile-body {
+    margin-top: 14px;
+    background: #ffffff;
+    border: 1px solid rgba(10,42,102,0.18);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 12px 20px rgba(10,42,102,0.08);
+}
+
+.profile-panel.collapsed .profile-body {
+    display: none;
+}
+
+.profile-form {
+    display: grid;
+    gap: 12px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.profile-form label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #0a2a66;
+    display: grid;
+    gap: 6px;
+}
+
+.profile-form input,
+.profile-form select,
+.profile-form textarea {
+    border: 1px solid #94a3b8;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #fff;
+    font-size: 0.9rem;
+}
+
+.profile-full {
+    grid-column: 1 / -1;
+}
+
+.profile-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-save {
+    border: none;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    box-shadow: 0 12px 20px rgba(14,165,233,0.35);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.btn-save:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 14px rgba(14,165,233,0.6);
+}
+
+.profile-status {
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.profile-status.ok { color: #16a34a; }
+.profile-status.err { color: #dc2626; }
+
+/* OPERATIVA */
+.ops-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    grid-column: 2 / 3;
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.filter-btn {
+    border: 1px solid #d0d7e2;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #f8fafc;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: #0a2a66;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(10,42,102,0.35);
+    transform: translateY(-1px);
+}
+
+.carousel-box {
+    border: 1px solid rgba(10,42,102,0.12);
+    border-radius: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(10,42,102,0.06), rgba(56,189,248,0.12));
+    overflow: hidden;
+    height: 110px;
+}
+
+.carousel-track {
+    display: grid;
+    gap: 8px;
+    animation: slideTips 10s infinite;
+}
+
+.carousel-item {
+    font-weight: 600;
+    color: #0a2a66;
+}
+
+@keyframes slideTips {
+    0% { transform: translateY(0); }
+    25% { transform: translateY(-26px); }
+    50% { transform: translateY(-52px); }
+    75% { transform: translateY(-78px); }
+    100% { transform: translateY(0); }
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.quick-btn {
+    background: #0a2a66;
+    color: #fff;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.quick-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 12px rgba(56,189,248,0.4);
+}
+
+/* INCIDENCIAS */
 .issues-list {
-    max-height: 600px;
+    max-height: 65vh;
     overflow-y: auto;
+    padding-right: 8px;
+    grid-column: 1 / 2;
 }
 
 .issue-item {
     background: white;
     border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
+    border-radius: 12px;
+    padding: 16px;
     margin-bottom: 15px;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
 }
 
 .issue-item:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 18px rgba(0,0,0,0.08);
+}
+
+.issue-item.selected {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 2px rgba(14,165,233,0.2), 0 12px 22px rgba(14,165,233,0.18);
 }
 
 .issue-header {
@@ -125,56 +345,249 @@
 .medium-priority .priority-tag { background: #ffc107; color: #333; }
 .low-priority .priority-tag { background: #17a2b8; color: white; }
 
-.issue-desc { font-weight: 500; margin-bottom: 10px; }
+.issue-desc { font-weight: 600; margin-bottom: 10px; }
 
 .issue-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
     font-size: 0.85rem;
-    color: #666;
+    color: #4b5563;
+}
+
+.issue-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    justify-content: center;
+}
+
+.status-pill {
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.status-reportado {
+    background: #fee2e2;
+    border-color: #fecaca;
+    color: #b91c1c;
+}
+
+.status-en_proceso {
+    background: #fef3c7;
+    border-color: #fde68a;
+    color: #92400e;
+}
+
+.status-resuelto {
+    background: #dcfce7;
+    border-color: #bbf7d0;
+    color: #166534;
+}
+
+.issue-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.btn-detail {
+    background: linear-gradient(135deg, #ffffff, #e2e8f0);
+    color: #0a2a66;
+    border: 1px solid rgba(10,42,102,0.2);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
+}
+
+.btn-detail:hover {
+    background: linear-gradient(135deg, #0a2a66, #2563eb);
+    color: #fff;
+    box-shadow: 0 0 16px rgba(37,99,235,0.45);
+    transform: translateY(-1px);
 }
 
 .btn-resolve {
-    background: #28a745;
+    background: linear-gradient(135deg, #0a2a66, #1d4ed8);
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 8px 12px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 0.8rem;
-}
-.btn-resolve:hover { background: #218838; }
-
-
-/* === PANEL 3: FORMULARIO === */
-.form-group { margin-bottom: 15px; }
-.form-group label { display: block; font-size: 0.9rem; margin-bottom: 5px; font-weight: 600; }
-
-.form-group select, 
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 0.9rem;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.2s ease;
 }
 
-.btn-submit {
-    width: 100%;
-    background: #0a2a66;
-    color: white;
-    padding: 12px;
+.btn-resolve:hover {
+    background: linear-gradient(135deg, #061b42, #1e40af);
+    box-shadow: 0 0 16px rgba(37,99,235,0.5);
+    transform: translateY(-1px);
+}
+
+.btn-confirm {
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+}
+
+.btn-confirm:hover {
+    background: linear-gradient(135deg, #0284c7, #1d4ed8);
+    box-shadow: 0 0 16px rgba(37,99,235,0.45);
+}
+
+.btn-final {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.btn-final:hover {
+    background: linear-gradient(135deg, #15803d, #16a34a);
+    box-shadow: 0 0 16px rgba(34,197,94,0.45);
+}
+
+/* DETALLE MODAL */
+.detail-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(2,6,23,0.55);
+    display: none;
+    place-items: center;
+    z-index: 70;
+}
+
+.detail-modal.active {
+    display: grid;
+}
+
+.detail-modal[hidden] {
+    display: none;
+}
+
+.detail-modal-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 22px;
+    width: min(920px, 92vw);
+    max-height: 86vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 24px 40px rgba(15,23,42,0.28);
+}
+
+.detail-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
     border: none;
-    border-radius: 6px;
+    background: #f3f4f6;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
     cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s;
 }
 
-.btn-submit:hover { background: #061b42; }
+.detail-modal-body {
+    display: grid;
+    gap: 12px;
+}
 
-/* Responsive */
-@media (max-width: 900px) {
-    .maint-grid { grid-template-columns: 1fr; }
+.detail-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+}
+
+.detail-id {
+    font-weight: 800;
+    color: #0a2a66;
+    font-size: 1.05rem;
+}
+
+.detail-sub {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.detail-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px 14px;
+    box-shadow: 0 6px 16px rgba(15,23,42,0.06);
+}
+
+.detail-card h3 {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #0a2a66;
+    margin-bottom: 10px;
+}
+
+.detail-full {
+    grid-column: 1 / -1;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.detail-label {
+    font-weight: 700;
+    color: #0a2a66;
+}
+
+.detail-text {
+    margin-bottom: 10px;
+    line-height: 1.4;
+    color: #374151;
+}
+
+.history-panel {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 1100px) {
+    .maint-grid {
+        grid-template-columns: 1fr;
+    }
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+    .issue-meta {
+        grid-template-columns: 1fr;
+    }
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+    .profile-actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

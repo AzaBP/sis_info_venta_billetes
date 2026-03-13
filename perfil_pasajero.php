@@ -1,5 +1,10 @@
 ﻿<?php
 session_start();
+require_once __DIR__ . '/php/auth_helpers.php';
+if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') === 'empleado') {
+    header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
+    exit;
+}
 require_once __DIR__ . '/php/Conexion.php';
 
 if (!isset($_SESSION['usuario'])) {
@@ -193,6 +198,11 @@ if (!empty($perfil['fecha_nacimiento'])) {
                 </div>
 
             </div>
+        </div>
+
+        <div class="profile-container" style="margin-top: 20px;">
+            <h2 class="section-title">Avisos de tus viajes</h2>
+            <div id="incidencias-viaje" class="profile-panel"></div>
         </div>
 
         <!--ABONOS COMPRADOS POR EL USUARIO-->
@@ -449,6 +459,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
     </footer>
     <script src="scripts/session_menu.js"></script>
     <script src="scripts/carga_abonos_perfil.js"></script>
+    <script src="scripts/carga_incidencias_pasajero.js"></script>
 
 </body>
 </html>

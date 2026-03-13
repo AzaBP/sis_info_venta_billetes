@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 session_start();
 
 require_once __DIR__ . '/php/Conexion.php';
 require_once __DIR__ . '/php/auth_helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: inicio_sesion.html?error=metodo');
+    header('Location: employee_login.php?error=metodo&attempt=1');
     exit;
 }
 
@@ -14,16 +14,14 @@ $password = $_POST['password'] ?? '';
 $remember = isset($_POST['remember']);
 
 if ($identificador === '' || $password === '') {
-    header('Location: inicio_sesion.html?error=campos_vacios');
+    header('Location: employee_login.php?error=campos_vacios&attempt=1');
     exit;
 }
 
 try {
-    $conexion = new Conexion();
-    $pdo = $conexion->conectar();
-
+    $pdo = (new Conexion())->conectar();
     if (!$pdo) {
-        header('Location: inicio_sesion.html?error=conexion');
+        header('Location: employee_login.php?error=conexion&attempt=1');
         exit;
     }
 
@@ -38,12 +36,12 @@ try {
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$usuario || !password_verify($password, $usuario['password'])) {
-        header('Location: inicio_sesion.html?error=credenciales');
+        header('Location: employee_login.php?error=credenciales&attempt=1');
         exit;
     }
 
-    if (($usuario['tipo_usuario'] ?? '') !== 'pasajero') {
-        header('Location: employee_login.php?error=solo_empleados');
+    if (($usuario['tipo_usuario'] ?? '') !== 'empleado') {
+        header('Location: employee_login.php?error=solo_empleados&attempt=1');
         exit;
     }
 
@@ -66,7 +64,8 @@ try {
     header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
     exit;
 } catch (Throwable $e) {
-    header('Location: inicio_sesion.html?error=interno');
+    header('Location: employee_login.php?error=interno&attempt=1');
     exit;
 }
 ?>
+

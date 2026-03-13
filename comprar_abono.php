@@ -1,5 +1,10 @@
 <?php
 session_start();
+require_once __DIR__ . '/php/auth_helpers.php';
+if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') === 'empleado') {
+    header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
+    exit;
+}
 require_once __DIR__ . '/php/Conexion.php';
 
 // 1. Recoger el tipo de abono de la URL (por defecto 'mensual' si alguien entra sin hacer clic)

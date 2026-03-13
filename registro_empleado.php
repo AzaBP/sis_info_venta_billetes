@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 
 require_once __DIR__ . '/php/auth_helpers.php';
@@ -38,6 +38,8 @@ $editId = (int)($_GET['edit_id'] ?? 0);
 
 $usuarios = [];
 $usuarioEdit = null;
+$viajesDisponibles = [];
+$viajeAsignadoId = null;
 
 try {
     $pdo = (new Conexion())->conectar();
@@ -62,23 +64,45 @@ try {
         }
         $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
+        $stmtViajes = $pdo->query(
+            "SELECT id_viaje, fecha, hora_salida, id_tren, id_maquinista
+             FROM viaje
+             ORDER BY fecha DESC, hora_salida DESC
+             LIMIT 100"
+        );
+        $viajesDisponibles = $stmtViajes ? $stmtViajes->fetchAll(PDO::FETCH_ASSOC) : [];
+
         if ($editId > 0) {
             $stmtEdit = $pdo->prepare(
                 "SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.telefono, u.tipo_usuario,
                         e.id_empleado, e.tipo_empleado,
                         p.fecha_nacimiento, p.genero, p.tipo_documento, p.numero_documento, p.calle, p.ciudad, p.codigo_postal, p.pais,
                         v.comision_porcentaje, v.region,
+                        q.licencia, q.\"experiencia_aÃ±os\" AS experiencia_anos, q.horario_preferido,
                         m.especialidad, m.turno, m.certificaciones
                  FROM usuario u
                  LEFT JOIN empleado e ON e.id_usuario = u.id_usuario
                  LEFT JOIN pasajero p ON p.id_usuario = u.id_usuario
                  LEFT JOIN vendedor v ON v.id_empleado = e.id_empleado
+                 LEFT JOIN maquinista q ON q.id_empleado = e.id_empleado
                  LEFT JOIN mantenimiento m ON m.id_empleado = e.id_empleado
                  WHERE u.id_usuario = :id_usuario
                  LIMIT 1"
             );
             $stmtEdit->execute([':id_usuario' => $editId]);
             $usuarioEdit = $stmtEdit->fetch(PDO::FETCH_ASSOC) ?: null;
+
+            if ($usuarioEdit && ($usuarioEdit['tipo_empleado'] ?? '') === 'maquinista') {
+                $stmtViajeAsignado = $pdo->prepare(
+                    "SELECT id_viaje
+                     FROM viaje
+                     WHERE id_maquinista = :id_maquinista
+                     ORDER BY fecha DESC, hora_salida DESC
+                     LIMIT 1"
+                );
+                $stmtViajeAsignado->execute([':id_maquinista' => (int)($usuarioEdit['id_empleado'] ?? 0)]);
+                $viajeAsignadoId = (int)$stmtViajeAsignado->fetchColumn();
+            }
         }
     }
 } catch (Throwable $e) {
@@ -158,6 +182,7 @@ try {
                         <select name="tipo_empleado" required>
                             <option value="vendedor">Vendedor</option>
                             <option value="mantenimiento">Mantenimiento</option>
+                            <option value="maquinista">Maquinista</option>
                         </select>
                     </div>
                     <div><label>Comision (%)</label><input name="comision_porcentaje" type="number" min="0" max="100" step="0.01" value="0"></div>
@@ -165,6 +190,20 @@ try {
                     <div><label>Especialidad</label><input name="especialidad" value="General"></div>
                     <div><label>Turno</label><input name="turno" value="manana"></div>
                     <div class="full"><label>Certificaciones</label><input name="certificaciones"></div>
+                    <div><label>Licencia</label><input name="licencia" value=""></div>
+                    <div><label>Experiencia (anos)</label><input name="experiencia_anos" type="number" min="0" value="0"></div>
+                    <div><label>Horario preferido</label><input name="horario_preferido" value="diurno"></div>
+                    <div class="full">
+                        <label>Asignar viaje (solo maquinista)</label>
+                        <select name="asignar_viaje">
+                            <option value="">No asignar</option>
+                            <?php foreach ($viajesDisponibles as $v): ?>
+                                <option value="<?php echo (int)$v['id_viaje']; ?>">
+                                    #<?php echo (int)$v['id_viaje']; ?> | Tren <?php echo (int)$v['id_tren']; ?> | <?php echo h((string)$v['fecha'] . ' ' . (string)$v['hora_salida']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
                 <div class="actions"><button class="btn btn-primary" type="submit">Crear empleado</button></div>
             </form>
@@ -310,6 +349,23 @@ try {
                         <div><label>Turno</label><input name="turno" value="<?php echo h((string)($usuarioEdit['turno'] ?? '')); ?>"></div>
                         <div class="full"><label>Certificaciones</label><input name="certificaciones" value="<?php echo h((string)($usuarioEdit['certificaciones'] ?? '')); ?>"></div>
                     </div>
+                <?php elseif (($usuarioEdit['tipo_empleado'] ?? '') === 'maquinista'): ?>
+                    <div class="grid-3" style="margin-top:10px;">
+                        <div><label>Licencia</label><input name="licencia" value="<?php echo h((string)($usuarioEdit['licencia'] ?? '')); ?>"></div>
+                        <div><label>Experiencia (anos)</label><input name="experiencia_anos" type="number" min="0" value="<?php echo h((string)($usuarioEdit['experiencia_anos'] ?? '0')); ?>"></div>
+                        <div><label>Horario preferido</label><input name="horario_preferido" value="<?php echo h((string)($usuarioEdit['horario_preferido'] ?? '')); ?>"></div>
+                        <div class="full">
+                            <label>Asignar viaje</label>
+                            <select name="asignar_viaje">
+                                <option value="">No cambiar</option>
+                                <?php foreach ($viajesDisponibles as $v): ?>
+                                    <option value="<?php echo (int)$v['id_viaje']; ?>" <?php echo $viajeAsignadoId === (int)$v['id_viaje'] ? 'selected' : ''; ?>>
+                                        #<?php echo (int)$v['id_viaje']; ?> | Tren <?php echo (int)$v['id_tren']; ?> | <?php echo h((string)$v['fecha'] . ' ' . (string)$v['hora_salida']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
                 <?php endif; ?>
 
                 <div class="actions"><button class="btn btn-primary" type="submit">Guardar cambios</button></div>
@@ -319,3 +375,6 @@ try {
 </main>
 </body>
 </html>
+
+
+
