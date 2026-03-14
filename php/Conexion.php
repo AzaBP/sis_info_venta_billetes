@@ -18,7 +18,7 @@ class Conexion {
             );
             return $this->pdo;
         } catch (PDOException $e) {
-            error_log("Error de conexion: " . $e->getMessage());
+            echo "Error de conexión: " . $e->getMessage();
             return null;
         }
     }
@@ -27,6 +27,11 @@ class Conexion {
         return $this->pdo;
     }
 }
-?>
 
+// BLOQUE DE PRUEBA
+// $test = new Conexion();
+// if($test->conectar()) {
+//    echo "¡Conexión exitosa a PostgreSQL!";
+// }
 
+?>
