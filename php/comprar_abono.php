@@ -1,5 +1,10 @@
 <?php
 session_start();
+require_once __DIR__ . '/auth_helpers.php';
+if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') === 'empleado') {
+    header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
+    exit;
+}
 
 require_once __DIR__ . '/auth_helpers.php';
 if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') === 'empleado') {
@@ -12,13 +17,13 @@ if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') 
 $usuarioSesion = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : null;
 $nombreSesion = isset($usuarioSesion['nombre']) ? $usuarioSesion['nombre'] : '';
 
-// 3. Si el usuario no está logueado, lo mandamos a iniciar sesión y cortamos la ejecución
+// 3. Si el usuario no estÃ¡ logueado, lo mandamos a iniciar sesiÃ³n y cortamos la ejecuciÃ³n
 if (!$usuarioSesion) {
     header('Location: inicio_sesion.html');
     exit;
 }
 
-// 4. Conexión a BD y lógica de abonos
+// 4. ConexiÃ³n a BD y lÃ³gica de abonos
 require_once __DIR__ . '/php/Conexion.php';
 
 $tipo_abono = isset($_GET['tipo']) ? htmlspecialchars($_GET['tipo']) : 'mensual';
@@ -63,11 +68,11 @@ $precio_final = isset($precios[$tipo_abono]) ? $precios[$tipo_abono] : '0.00';
                     </button>
                     <div class="account-menu">
                         <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
-                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesiÃ³n</a>
                     </div>
                 </div>
             <?php else: ?>
-                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesiÃ³n</a>
             <?php endif; ?>
         </div>
     </header>
@@ -83,8 +88,8 @@ $precio_final = isset($precios[$tipo_abono]) ? $precios[$tipo_abono] : '0.00';
             </div>
 
             <div class="summary-box" style="background: #f4f6f8; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
-                <p style="margin: 0; font-size: 1.2rem;">Total a pagar: <strong><?php echo $precio_final; ?> €</strong></p>
-                <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">El abono se activará inmediatamente después del pago.</p>
+                <p style="margin: 0; font-size: 1.2rem;">Total a pagar: <strong><?php echo $precio_final; ?> â‚¬</strong></p>
+                <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #666;">El abono se activarÃ¡ inmediatamente despuÃ©s del pago.</p>
             </div>
 
             <form action="procesar_compra_abono.php" method="POST">
@@ -98,7 +103,7 @@ $precio_final = isset($precios[$tipo_abono]) ? $precios[$tipo_abono] : '0.00';
                 </div>
                 
                 <div class="form-group">
-                    <label>Número de tarjeta</label>
+                    <label>NÃºmero de tarjeta</label>
                     <input type="text" name="tarjeta" required placeholder="XXXX XXXX XXXX XXXX" maxlength="19">
                 </div>
                 
@@ -114,10 +119,11 @@ $precio_final = isset($precios[$tipo_abono]) ? $precios[$tipo_abono] : '0.00';
                 </div>
 
                 <button type="submit" class="btn-pay-confirm" style="width: 100%; padding: 15px; margin-top: 10px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1rem; font-weight: bold;">
-                    Pagar <?php echo $precio_final; ?> €
+                    Pagar <?php echo $precio_final; ?> â‚¬
                 </button>
             </form>
         </section>
     </main>
 </body>
 </html>
+

@@ -9,9 +9,10 @@ require_once __DIR__ . '/auth_helpers.php';
 // =========================================================================
 $usuario = $_SESSION['usuario'] ?? null;
 if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'empleado') {
-     header('Location: ../employee_login.php?error=no_autorizado');
+    header('Location: employee_login.php?error=no_autorizado');
     exit;
 }
+
 if (($usuario['tipo_empleado'] ?? '') !== 'vendedor' && !trainwebEsAdministrador($usuario)) {
     header('Location: ../index.php?error=acceso_denegado');
     exit;

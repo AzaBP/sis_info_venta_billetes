@@ -1,4 +1,4 @@
--- Migracion opcional para incidencias
+﻿-- Migracion opcional para incidencias
 ALTER TABLE INCIDENCIA ADD COLUMN IF NOT EXISTS tipo_incidencia VARCHAR(50) NOT NULL DEFAULT 'otro';
 ALTER TABLE INCIDENCIA ADD COLUMN IF NOT EXISTS origen VARCHAR(20) NOT NULL DEFAULT 'maquinista';
 ALTER TABLE INCIDENCIA ADD CONSTRAINT incidencia_origen_chk CHECK (origen IN ('maquinista', 'iot'));
