@@ -178,15 +178,6 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
         </section>
     </div>
 
-    <div id="actionModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3 id="modalTitle">Título Modal</h3>
-            <p style="margin: 20px 0; color: #666;">Formulario en construcción...</p>
-            <button class="btn-search" style="width: 100%;" onclick="closeModal()">Cerrar</button>
-        </div>
-    </div>
-
     <script>
         // Simulador de búsqueda
         function searchClient() {
