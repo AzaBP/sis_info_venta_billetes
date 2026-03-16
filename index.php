@@ -24,7 +24,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
             <a href="index.php">Inicio</a>
-            <a href="#">Billetes</a>
+            <a href="billetes_web.php">Billetes</a>
             <div class="dropdown">
                 <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
@@ -115,7 +115,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="popular-content">
                             <h3>Madrid</h3>
                             <p>Capital vibrante con conexiones a todo el país.</p>
-                            <a href="#" class="btn-popular">Ver rutas</a>
+                            <a href="rutas_destino.php?destino=Madrid" class="btn-popular">Ver rutas</a>
                         </div>
                     </div>
 
@@ -124,7 +124,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="popular-content">
                             <h3>Barcelona</h3>
                             <p>Rutas rápidas y vistas espectaculares al Mediterráneo.</p>
-                            <a href="#" class="btn-popular">Ver rutas</a>
+                            <a href="rutas_destino.php?destino=Barcelona" class="btn-popular">Ver rutas</a>
                         </div>
                     </div>
 
@@ -133,7 +133,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="popular-content">
                             <h3>Sevilla</h3>
                             <p>Cultura, historia y gastronomía en cada estación.</p>
-                            <a href="#" class="btn-popular">Ver rutas</a>
+                            <a href="rutas_destino.php?destino=Sevilla" class="btn-popular">Ver rutas</a>
                         </div>
                     </div>
 
@@ -142,7 +142,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="popular-content">
                             <h3>Valencia</h3>
                             <p>Costa mediterránea y ciudades modernas conectadas por tren.</p>
-                            <a href="#" class="btn-popular">Ver rutas</a>
+                            <a href="rutas_destino.php?destino=Valencia" class="btn-popular">Ver rutas</a>
                         </div>
                     </div>
                 </div>
@@ -164,7 +164,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="offer-content">
                             <h3>Descuento AVE</h3>
                             <p>20% en billetes AVE si reservas con 7 días de antelación.</p>
-                            <a href="ofertas.php" class="btn-oferta">Ver oferta</a>
+                            <a href="ofertas.php" class="btn-popular">Ver oferta</a>
                         </div>
                     </div>
 
@@ -175,7 +175,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="offer-content">
                             <h3>Abono Mensual</h3>
                             <p>15% en rutas regionales durante 30 días completos.</p>
-                            <a href="comprar_abono.php?tipo=mensual" class="btn-oferta">Comprar ahora</a>
+                            <a href="comprar_abono.php?tipo=mensual" class="btn-popular">Comprar ahora</a>
                         </div>
                     </div>
 
@@ -186,7 +186,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="offer-content">
                             <h3>Billetes Anticipados</h3>
                             <p>Desde 29,99€ para compras con antelación.</p>
-                            <a href="ofertas.php" class="btn-oferta">Ver oferta</a>
+                            <a href="ofertas.php" class="btn-popular">Ver oferta</a>
                         </div>
                     </div>
 
@@ -197,7 +197,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="offer-content">
                             <h3>Descuento en familia</h3>
                             <p>Viaja con los más pequeños de la casa y ahorra un 10% en rutas ilimitadas nacionales.</p>
-                            <a href="ofertas.php" class="btn-oferta">Ver oferta</a>
+                            <a href="ofertas.php" class="btn-popular">Ver oferta</a>
                         </div>
                     </div>
 
