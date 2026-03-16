@@ -48,6 +48,10 @@ function trainwebRutaPorRol(array $usuario): string
         if ($tipoEmpleado === 'mantenimiento') {
             return 'mantenimiento.php';
         }
+
+        if ($tipoEmpleado === 'maquinista') {
+            return 'maquinista.php';
+        }
     }
 
     return 'index.php';

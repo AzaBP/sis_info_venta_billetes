@@ -1,13 +1,19 @@
 <?php
 session_start();
 require_once 'Conexion.php';
+require_once __DIR__ . '/auth_helpers.php';
 
 // 1. SEGURIDAD: Comprobar que es un empleado logueado
 $usuario = $_SESSION['usuario'] ?? null;
 if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'empleado') {
-    header('Location: inicio_sesion.html?error=no_autorizado');
+    header('Location: employee_login.php?error=no_autorizado');
     exit;
 }
+if (($usuario['tipo_empleado'] ?? '') !== 'vendedor' && !trainwebEsAdministrador($usuario)) {
+    header('Location: index.php?error=acceso_denegado');
+    exit;
+}
+
 
 $pdo = (new Conexion())->conectar();
 $mensaje_exito = '';

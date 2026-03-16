@@ -5,7 +5,7 @@ class Conexion {
     private $puerto = 5432;
     private $bd = 'trenesDB';
     private $usuario = 'postgres';
-    private $password = 'yousra';
+    private $password = 'aza05dumask';
     private $pdo;
 
     public function conectar() {
@@ -18,7 +18,7 @@ class Conexion {
             );
             return $this->pdo;
         } catch (PDOException $e) {
-            echo "Error de conexión: " . $e->getMessage();
+            error_log("Error de conexion: " . $e->getMessage());
             return null;
         }
     }
@@ -28,10 +28,5 @@ class Conexion {
     }
 }
 
-// BLOQUE DE PRUEBA
-// $test = new Conexion();
-// if($test->conectar()) {
-//    echo "¡Conexión exitosa a PostgreSQL!";
-// }
-
 ?>
+

@@ -6,16 +6,19 @@ require_once __DIR__ . '/php/auth_helpers.php';
 
 $usuario = $_SESSION['usuario'] ?? null;
 if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'empleado') {
-    header('Location: inicio_sesion.html?error=no_autorizado');
+    header('Location: employee_login.php?error=no_autorizado');
     exit;
 }
 
 if (($usuario['tipo_empleado'] ?? '') !== 'mantenimiento' && !trainwebEsAdministrador($usuario)) {
-    header('Location: index.php?error=acceso_denegado');
+    header('Location: ' . trainwebRutaPorRol($usuario));
     exit;
 }
 
 $idEmpleado = null;
+$incidencias = [];
+$incidenciasPendientes = [];
+$incidenciasHistorico = [];
 $especialidad = 'General';
 $turno = 'No asignado';
 $certificaciones = '';
@@ -38,6 +41,25 @@ try {
             $turno = $fila['turno'] ?? $turno;
             $certificaciones = $fila['certificaciones'] ?? '';
         }
+
+        if ($idEmpleado) {
+            $stmtInc = $pdo->prepare(
+                "SELECT id_incidencia, id_viaje, id_mantenimiento, id_maquinista, tipo_incidencia, origen, descripcion,
+                        fecha_reporte, estado, afecta_pasajero, resolucion, fecha_resolucion
+                 FROM incidencia
+                 WHERE id_mantenimiento = :id_mantenimiento
+                 ORDER BY CASE estado WHEN 'reportado' THEN 1 WHEN 'en_proceso' THEN 2 ELSE 3 END, fecha_reporte DESC"
+            );
+            $stmtInc->execute([':id_mantenimiento' => (int)$idEmpleado]);
+            $incidencias = $stmtInc->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            foreach ($incidencias as $inc) {
+                if (($inc['estado'] ?? '') === 'resuelto') {
+                    $incidenciasHistorico[] = $inc;
+                } else {
+                    $incidenciasPendientes[] = $inc;
+                }
+            }
+        }
     }
 } catch (Throwable $e) {
 }
@@ -49,8 +71,9 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrainWeb - Gestion de Mantenimiento</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/mantenimiento.css">
+    <link rel="stylesheet" href="css/mantenimiento.css?v=20260314k">
 </head>
 <body>
 <header class="header">
@@ -70,7 +93,7 @@ try {
     </nav>
 </header>
 
-<main class="maint-container">
+<main class="maint-container" data-maint-id="<?php echo $idEmpleado ? (int)$idEmpleado : 0; ?>">
     <div class="page-title">
         <h1><i class="fa-solid fa-wrench"></i> Centro de control de unidades</h1>
         <p>Sesion activa: <?php echo htmlspecialchars($usuario['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?> | Especialidad: <?php echo htmlspecialchars((string)$especialidad, ENT_QUOTES, 'UTF-8'); ?> | Turno: <?php echo htmlspecialchars((string)$turno, ENT_QUOTES, 'UTF-8'); ?></p>
@@ -80,53 +103,172 @@ try {
     </div>
 
     <div class="maint-grid">
+        <section class="panel profile-panel collapsed">
+    <button type="button" id="profileToggle" class="profile-toggle">
+        <div class="profile-toggle-left">
+            <div class="profile-avatar">
+                <i class="fa-solid fa-helmet-safety"></i>
+            </div>
+            <div>
+                <div class="profile-toggle-title">Informacion personal</div>
+                <div class="profile-toggle-sub">
+                    <?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
+                    | ID #<?php echo $idEmpleado ? (int)$idEmpleado : 0; ?>
+                    | Asignadas: <?php echo count($incidencias); ?>
+                </div>
+            </div>
+        </div>
+        <i class="fa-solid fa-chevron-down"></i>
+    </button>
+    <div class="profile-body">
+        <form id="profileForm" class="profile-form">
+            <div class="profile-grid">
+                <label>
+                    Nombre
+                    <input type="text" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
+                </label>
+                <label>
+                    Apellido
+                    <input type="text" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
+                </label>
+                <label>
+                    Email
+                    <input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
+                </label>
+                <label>
+                    Telefono
+                    <input type="text" name="telefono" value="<?php echo htmlspecialchars($usuario['telefono'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                </label>
+                <label>
+                    Especialidad
+                    <input type="text" name="especialidad" value="<?php echo htmlspecialchars((string)$especialidad, ENT_QUOTES, 'UTF-8'); ?>">
+                </label>
+                <label>
+                    Turno
+                    <?php
+                        $turnoLower = strtolower((string)$turno);
+                        if ($turnoLower === 'maÃ±ana') {
+                            $turnoLower = 'manana';
+                        }
+                    ?>
+                    <select name="turno">
+                        <option value="manana" <?php echo $turnoLower === 'manana' ? 'selected' : ''; ?>>Manana</option>
+                        <option value="tarde" <?php echo $turnoLower === 'tarde' ? 'selected' : ''; ?>>Tarde</option>
+                        <option value="noche" <?php echo $turnoLower === 'noche' ? 'selected' : ''; ?>>Noche</option>
+                        <option value="rotativo" <?php echo $turnoLower === 'rotativo' ? 'selected' : ''; ?>>Rotativo</option>
+                    </select>
+                </label>
+            </div>
+            <label class="profile-full">
+                Certificaciones
+                <textarea name="certificaciones" rows="2"><?php echo htmlspecialchars((string)$certificaciones, ENT_QUOTES, 'UTF-8'); ?></textarea>
+            </label>
+            <div class="profile-actions">
+                <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
+                <span id="profileStatus" class="profile-status"></span>
+            </div>
+        </form>
+    </div>
+</section>
+
         <section class="panel issues-list">
             <h2>Incidencias pendientes</h2>
-            <div id="incidenciasContainer">
-                <div class="issue-item high-priority">
-                    <div class="issue-header">
-                        <span class="issue-id">#INC-8892</span>
-                        <span class="priority-tag">URGENTE</span>
+            <div id="incidenciasPendientes">
+                <?php if (count($incidenciasPendientes) === 0): ?>
+                    <div class="issue-item low-priority">
+                        <p class="issue-desc">No hay incidencias registradas.</p>
                     </div>
-                    <p class="issue-desc">Fallo en sistema de frenado auxiliar.</p>
-                    <div class="issue-meta">
-                        <span><i class="fa-solid fa-train"></i> AVE-208</span>
-                        <button onclick="resolverIncidencia(this)" class="btn-resolve">Reparado</button>
-                    </div>
-                </div>
+                <?php else: ?>
+                    <?php foreach ($incidenciasPendientes as $inc): ?>
+                        <?php
+                            $estado = $inc['estado'] ?? '';
+                            $estadoClase = $estado === 'reportado' ? 'high-priority' : ($estado === 'en_proceso' ? 'medium-priority' : 'low-priority');
+                            $estadoEtiqueta = $estado === 'reportado' ? 'REPORTADO' : ($estado === 'en_proceso' ? 'EN PROCESO' : 'RESUELTO');
+                            $afecta = !empty($inc['afecta_pasajero']) ? 'Afecta pasajeros' : 'No afecta pasajeros';
+                            $origenInc = strtoupper((string)($inc['origen'] ?? ''));
+                        ?>
+                        <div class="issue-item <?php echo $estadoClase; ?>" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>" data-estado="<?php echo htmlspecialchars((string)$estado, ENT_QUOTES, 'UTF-8'); ?>">
+                            <div class="issue-header">
+                                <span class="issue-id">#INC-<?php echo (int)$inc['id_incidencia']; ?></span>
+                                <span class="priority-tag"><?php echo $estadoEtiqueta; ?></span>
+                            </div>
+                            <p class="issue-desc"><?php echo htmlspecialchars((string)$inc['descripcion'], ENT_QUOTES, 'UTF-8'); ?></p>
+                            <div class="issue-meta">
+                                <span><i class="fa-solid fa-train"></i> Viaje <?php echo (int)$inc['id_viaje']; ?></span>
+                                <span><?php echo $origenInc; ?></span>
+                                <span>Estado: <?php echo $estadoEtiqueta; ?></span>
+                            </div>
+                            <div class="issue-actions">
+                                <button class="btn-detail" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>">Ver detalles</button>
+                                <?php if ($estado === 'reportado'): ?>
+                                    <button class="btn-resolve btn-confirm" data-action="confirmar" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>">Confirmar</button>
+                                <?php elseif ($estado === 'en_proceso'): ?>
+                                    <button class="btn-resolve btn-final" data-action="resolver" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>">Resuelto</button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </section>
 
-        <section class="panel report-form">
-            <h2><i class="fa-solid fa-pen-to-square"></i> Nueva incidencia</h2>
-            <form id="formMantenimiento">
-                <div class="form-group">
-                    <label>ID Tren</label>
-                    <select id="trainSelect">
-                        <option value="AVE-102">AVE-102</option>
-                        <option value="ALVIA-405">ALVIA-405</option>
-                        <option value="AVE-208">AVE-208</option>
-                    </select>
+        <section class="panel ops-panel">
+            <h2>Filtrado de incidencias</h2>
+            <div class="filter-row">
+                <button class="filter-btn active" data-filter="all">Todas</button>
+                <button class="filter-btn" data-filter="reportado">Reportado</button>
+                <button class="filter-btn" data-filter="en_proceso">En proceso</button>
+                <button class="filter-btn" data-filter="resuelto">Resuelto</button>
+            </div>
+            <div class="carousel-box">
+                <div class="carousel-track">
+                    <div class="carousel-item">Prioriza incidencias de frenos y puertas.</div>
+                    <div class="carousel-item">Confirma para asignar en proceso.</div>
+                    <div class="carousel-item">Anade resolucion para trazabilidad.</div>
+                    <div class="carousel-item">Revisa alertas de senalizacion.</div>
                 </div>
-                <div class="form-group">
-                    <label>Prioridad</label>
-                    <select id="prioritySelect">
-                        <option value="low">Baja</option>
-                        <option value="medium">Media</option>
-                        <option value="high">Alta</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Descripcion</label>
-                    <textarea id="issueDesc" rows="4" placeholder="Describe la averia..."></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Registrar incidencia</button>
-            </form>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn" id="refreshNow"><i class="fa-solid fa-rotate"></i> Refrescar</button>
+                <button class="quick-btn" id="scrollTop"><i class="fa-solid fa-arrow-up"></i> Arriba</button>
+            </div>
+        </section>
+
+        <section class="panel history-panel">
+            <h2>Historico de incidencias</h2>
+            <div id="incidenciasHistorico">
+                <?php if (count($incidenciasHistorico) === 0): ?>
+                    <div class="issue-item low-priority">
+                        <p class="issue-desc">No hay incidencias resueltas.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($incidenciasHistorico as $inc): ?>
+                        <div class="issue-item low-priority" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>" data-estado="resuelto">
+                            <div class="issue-header">
+                                <span class="issue-id">#INC-<?php echo (int)$inc['id_incidencia']; ?></span>
+                                <span class="priority-tag">RESUELTO</span>
+                            </div>
+                            <p class="issue-desc"><?php echo htmlspecialchars((string)$inc['descripcion'], ENT_QUOTES, 'UTF-8'); ?></p>
+                            <div class="issue-actions">
+                                <button class="btn-detail" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>">Ver detalles</button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </section>
     </div>
 </main>
 
-<script src="js/mantenimiento.js"></script>
+<div id="detailModal" class="detail-modal" hidden>
+    <div class="detail-modal-card">
+        <button class="detail-close" id="detailClose" aria-label="Cerrar detalle">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div id="detailModalBody" class="detail-modal-body"></div>
+    </div>
+</div>
+
+<script src="js/mantenimiento.js?v=20260314h"></script>
 </body>
 </html>
-

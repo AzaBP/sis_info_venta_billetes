@@ -1,8 +1,14 @@
 <?php
-// 1. Iniciamos la sesión
 session_start();
 
+require_once __DIR__ . '/auth_helpers.php';
+if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') === 'empleado') {
+    header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
+    exit;
+}
+
 // 2. Definimos las variables de sesión SIEMPRE, para que nunca den error
+
 $usuarioSesion = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : null;
 $nombreSesion = isset($usuarioSesion['nombre']) ? $usuarioSesion['nombre'] : '';
 

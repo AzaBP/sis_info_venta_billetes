@@ -14,7 +14,7 @@ $id_usuario = $_SESSION['usuario']['id_usuario'];
 try {
     $pdo = (new Conexion())->conectar();
     
-    // Primero, sacamos el id_pasajero de este usuario
+    // 1. Sacamos el id_pasajero de este usuario
     $stmtPasajero = $pdo->prepare("SELECT id_pasajero FROM PASAJERO WHERE id_usuario = :id_usuario");
     $stmtPasajero->execute([':id_usuario' => $id_usuario]);
     $pasajero = $stmtPasajero->fetch(PDO::FETCH_ASSOC);
@@ -24,8 +24,8 @@ try {
         exit;
     }
 
-    // Ahora buscamos sus abonos reales ordenados por fecha de fin (los activos primero)
-    $sql = "SELECT tipo, fecha_inicio, fecha_fin, viajes_totales, viajes_restantes 
+    // 2. AHORA SÍ: Pedimos los abonos (OJO: Sin la columna 'estado' que daba error)
+    $sql = "SELECT id_abono, tipo, fecha_inicio, fecha_fin, viajes_totales, viajes_restantes 
             FROM ABONO 
             WHERE id_pasajero = :id_pasajero 
             ORDER BY fecha_fin DESC";
@@ -35,11 +35,12 @@ try {
     
     $abonos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // Devolvemos los datos en JSON para que el JS genere las tarjetas
+    // Devolvemos los abonos en formato JSON
     echo json_encode($abonos);
 
 } catch (PDOException $e) {
-    // Si hay error (ej: la tabla no existe aún), devolvemos array vacío para no romper la web
-    echo json_encode([]);
+    // Si hay un error SQL, lo devolvemos para poder verlo en la consola
+    http_response_code(500);
+    echo json_encode(["error_sql" => $e->getMessage()]);
 }
 ?>

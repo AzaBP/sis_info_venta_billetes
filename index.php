@@ -1,6 +1,11 @@
 ﻿<?php
 session_start();
+require_once __DIR__ . '/php/auth_helpers.php';
 $usuarioSesion = $_SESSION['usuario'] ?? null;
+if ($usuarioSesion && ($usuarioSesion['tipo_usuario'] ?? '') === 'empleado') {
+    header('Location: ' . trainwebRutaPorRol($usuarioSesion));
+    exit;
+}
 $nombreSesion = $usuarioSesion['nombre'] ?? '';
 ?>
 <!DOCTYPE html>
@@ -151,6 +156,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
             <div class="carousel">
                 <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="offers-track">
+                    
                     <div class="offer-card">
                         <div class="offer-image">
                             <img src="imagenes/promo1.jpg" alt="Promo 1">
@@ -158,6 +164,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="offer-content">
                             <h3>Descuento AVE</h3>
                             <p>20% en billetes AVE si reservas con 7 días de antelación.</p>
+                            <a href="ofertas.php" class="btn-oferta">Ver oferta</a>
                         </div>
                     </div>
 
@@ -168,6 +175,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="offer-content">
                             <h3>Abono Mensual</h3>
                             <p>15% en rutas regionales durante 30 días completos.</p>
+                            <a href="comprar_abono.php?tipo=mensual" class="btn-oferta">Comprar ahora</a>
                         </div>
                     </div>
 
@@ -178,6 +186,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="offer-content">
                             <h3>Billetes Anticipados</h3>
                             <p>Desde 29,99€ para compras con antelación.</p>
+                            <a href="ofertas.php" class="btn-oferta">Ver oferta</a>
                         </div>
                     </div>
 
@@ -188,8 +197,10 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                         <div class="offer-content">
                             <h3>Descuento en familia</h3>
                             <p>Viaja con los más pequeños de la casa y ahorra un 10% en rutas ilimitadas nacionales.</p>
+                            <a href="ofertas.php" class="btn-oferta">Ver oferta</a>
                         </div>
                     </div>
+
                 </div>
                 <button class="next"><i class="fa-solid fa-chevron-right"></i></button>
             </div>

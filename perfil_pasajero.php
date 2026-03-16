@@ -1,14 +1,11 @@
 ﻿<?php
 session_start();
-require_once __DIR__ . '/php/Conexion.php';
-
-if (!isset($_SESSION['usuario'])) {
-    header('Location: inicio_sesion.html');
+require_once __DIR__ . '/php/auth_helpers.php';
+if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') === 'empleado') {
+    header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
     exit;
 }
-
-$usuarioSesion = $_SESSION['usuario'];
-$idUsuarioSesion = (int)($usuarioSesion['id_usuario'] ?? 0);
+require_once __DIR__ . '/php/Conexion.php';
 
 $perfil = [
     'nombre' => $usuarioSesion['nombre'] ?? 'Usuario',
@@ -22,6 +19,8 @@ $perfil = [
     'codigo_postal' => '',
     'pais' => ''
 ];
+
+$idUsuarioSesion = $_SESSION['usuario']['id_usuario'] ?? 0;
 
 try {
     $conexion = new Conexion();
@@ -124,85 +123,16 @@ if (!empty($perfil['fecha_nacimiento'])) {
         </section>
 
         <!--VIAJES COMPRADOS POR EL USUARIO-->
-        <div class="profile-container">
-            <h2 class="section-title">Mis Viajes</h2>
-
-            <div class="profile-panel">
-                
-                <!--VIAJE ACTIVO-->
-                <div class="trip-item active-trip">
-                    <div class="trip-header">
-                        <span class="trip-status status-upcoming">Próximo viaje</span>
-                        <span class="trip-id">Ref: #TW-8923</span>
-                    </div>
-                    <div class="trip-body">
-                        <div class="trip-route">
-                            <div class="route-time">
-                                <span class="time">08:30</span>
-                                <span class="city">Madrid P. Atocha</span>
-                            </div>
-                            <div class="route-line">
-                                <i class="fa-solid fa-arrow-right-long"></i>
-                                <span class="duration">2h 30m</span>
-                            </div>
-                            <div class="route-time">
-                                <span class="time">11:00</span>
-                                <span class="city">Barcelona Sants</span>
-                            </div>
-                        </div>
-                        <div class="trip-date">
-                            <i class="fa-regular fa-calendar"></i> 15 Oct, 2026
-                        </div>
-                    </div>
-                    <div class="trip-actions">
-                        <a href="#" class="btn-secondary">Ver detalles</a>
-                        <a href="#" class="btn-primary"><i class="fa-solid fa-file-pdf"></i> Descargar billete</a>
-                    </div>
-                </div>
-
-                <hr class="trip-separator">
-
-                <!--VIAJE PASADO-->
-                <div class="trip-item past-trip">
-                    <div class="trip-header">
-                        <span class="trip-status status-completed">Finalizado</span>
-                        <span class="trip-id">Ref: #TW-1044</span>
-                    </div>
-                    <div class="trip-body">
-                        <div class="trip-route">
-                            <div class="route-time">
-                                <span class="time">14:00</span>
-                                <span class="city">Valencia J. Sorolla</span>
-                            </div>
-                            <div class="route-line">
-                                <i class="fa-solid fa-arrow-right-long"></i>
-                                <span class="duration">1h 50m</span>
-                            </div>
-                            <div class="route-time">
-                                <span class="time">15:50</span>
-                                <span class="city">Madrid Chamartín</span>
-                            </div>
-                        </div>
-                        <div class="trip-date">
-                            <i class="fa-regular fa-calendar"></i> 02 Sep, 2026
-                        </div>
-                    </div>
-                    <div class="trip-actions">
-                        <a href="#" class="btn-secondary">Volver a comprar</a>
-                    </div>
-                </div>
-
-            </div>
+         <div class="profile-container" style="margin-top: 20px;">
+            <h2 class="section-title">Avisos de tus viajes</h2>
+            <div id="incidencias-viaje" class="profile-panel"></div>
         </div>
 
         <!--ABONOS COMPRADOS POR EL USUARIO-->
         <div class="profile-container" style="margin-top: 40px;">
             <h2 class="section-title">Mis Abonos</h2>
-
-            <div id="mis-abonos" class="profile-container abonos-section">
-                <h2>Mis Abonos</h2>
-                <div id="abonos-list"></div>
-            </div>
+            <div id="abonos-list"></div>
+        </div>
             
 
         <!--DATOS DEL USUARIO-->
@@ -449,6 +379,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
     </footer>
     <script src="scripts/session_menu.js"></script>
     <script src="scripts/carga_abonos_perfil.js"></script>
+    <script src="scripts/carga_incidencias_pasajero.js"></script>
 
 </body>
 </html>
