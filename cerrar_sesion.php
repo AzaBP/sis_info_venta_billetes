@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+$usuario = $_SESSION['usuario'] ?? null;
+$redir = ($usuario && ($usuario['tipo_usuario'] ?? '') === 'empleado')
+    ? 'employee_login.php'
+    : 'index.php';
+
 $_SESSION = [];
 
 if (ini_get('session.use_cookies')) {
@@ -19,6 +24,6 @@ if (ini_get('session.use_cookies')) {
 session_destroy();
 setcookie('recordarme_email', '', time() - 3600, '/', '', false, true);
 
-header('Location: index.php');
+header('Location: ' . $redir);
 exit;
 ?>

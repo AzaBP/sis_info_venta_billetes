@@ -32,14 +32,15 @@ try {
         $idEmpleado = (int)$stmt->fetchColumn();
 
         if ($idEmpleado > 0) {
+            $hoy = (new DateTimeImmutable('today', new DateTimeZone('Europe/Madrid')))->format('Y-m-d');
             $stmt = $pdo->prepare(
                 "SELECT v.id_viaje, v.fecha, v.hora_salida, v.hora_llegada, v.id_tren, r.origen, r.destino
                  FROM viaje v
                  LEFT JOIN ruta r ON r.id_ruta = v.id_ruta
-                 WHERE v.id_maquinista = :id_maquinista AND v.fecha >= CURRENT_DATE
+                 WHERE v.id_maquinista = :id_maquinista AND v.fecha::date >= :hoy
                  ORDER BY v.fecha ASC, v.hora_salida ASC"
             );
-            $stmt->execute([':id_maquinista' => $idEmpleado]);
+            $stmt->execute([':id_maquinista' => $idEmpleado, ':hoy' => $hoy]);
             $viajes = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
             if (count($viajes) > 0) {
                 $viajeActivo = $viajes[0];
@@ -47,6 +48,7 @@ try {
         }
     }
 } catch (Throwable $e) {
+    error_log('Error cargando viajes de maquinista: ' . $e->getMessage());
 }
 ?>
 <!DOCTYPE html>

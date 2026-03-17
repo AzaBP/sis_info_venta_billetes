@@ -55,6 +55,8 @@ try {
          RETURNING id_incidencia"
     );
 
+    $afecta_pasajero_db = $afecta_pasajero ? 1 : 0;
+
     $stmt->execute([
         ':id_viaje' => $id_viaje,
         ':id_mantenimiento' => $id_mantenimiento,
@@ -64,7 +66,7 @@ try {
         ':descripcion' => $descripcion,
         ':fecha_reporte' => date('Y-m-d H:i:s'),
         ':estado' => 'reportado',
-        ':afecta_pasajero' => $afecta_pasajero
+        ':afecta_pasajero' => $afecta_pasajero_db
     ]);
 
     $id_incidencia = (int)$stmt->fetchColumn();

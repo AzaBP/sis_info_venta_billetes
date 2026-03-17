@@ -28,14 +28,36 @@ try {
     $sql = "SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.password, u.tipo_usuario, e.tipo_empleado
             FROM usuario u
             LEFT JOIN empleado e ON e.id_usuario = u.id_usuario
-            WHERE u.email = :identificador
+            WHERE LOWER(u.email) = LOWER(:identificador)
             LIMIT 1";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':identificador' => $identificador]);
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$usuario || !password_verify($password, $usuario['password'])) {
+    $passwordOk = false;
+    if ($usuario && password_verify($password, $usuario['password'])) {
+        $passwordOk = true;
+        if (password_needs_rehash($usuario['password'], PASSWORD_DEFAULT)) {
+            $nuevoHash = password_hash($password, PASSWORD_DEFAULT);
+            $stmtUpdate = $pdo->prepare('UPDATE usuario SET password = :password WHERE id_usuario = :id_usuario');
+            $stmtUpdate->execute([
+                ':password' => $nuevoHash,
+                ':id_usuario' => (int)$usuario['id_usuario']
+            ]);
+        }
+    } elseif ($usuario && hash_equals((string)$usuario['password'], (string)$password)) {
+        // Soporta contrasenas en texto plano en BD y las migra a hash.
+        $nuevoHash = password_hash($password, PASSWORD_DEFAULT);
+        $stmtUpdate = $pdo->prepare('UPDATE usuario SET password = :password WHERE id_usuario = :id_usuario');
+        $stmtUpdate->execute([
+            ':password' => $nuevoHash,
+            ':id_usuario' => (int)$usuario['id_usuario']
+        ]);
+        $passwordOk = true;
+    }
+
+    if (!$usuario || !$passwordOk) {
         header('Location: employee_login.php?error=credenciales&attempt=1');
         exit;
     }

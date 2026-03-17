@@ -34,15 +34,25 @@ try {
     }
 
     if ($accion === 'confirmar') {
-        $stmt = $pdo->prepare("UPDATE incidencia SET estado = 'en_proceso' WHERE id_incidencia = :id");
+        $stmt = $pdo->prepare("UPDATE incidencia SET estado = 'en_proceso' WHERE id_incidencia = :id AND estado = 'reportado'");
         $stmt->execute([':id' => $id_incidencia]);
+        if ($stmt->rowCount() === 0) {
+            http_response_code(409);
+            echo json_encode(['error' => 'La incidencia no esta en estado reportado']);
+            exit;
+        }
     } else {
-        $stmt = $pdo->prepare("UPDATE incidencia SET estado = 'resuelto', resolucion = :resolucion, fecha_resolucion = :fecha_resolucion WHERE id_incidencia = :id");
+        $stmt = $pdo->prepare("UPDATE incidencia SET estado = 'resuelto', resolucion = :resolucion, fecha_resolucion = :fecha_resolucion WHERE id_incidencia = :id AND estado = 'en_proceso'");
         $stmt->execute([
             ':id' => $id_incidencia,
             ':resolucion' => $resolucion !== '' ? $resolucion : 'Resuelto por mantenimiento',
             ':fecha_resolucion' => date('Y-m-d H:i:s')
         ]);
+        if ($stmt->rowCount() === 0) {
+            http_response_code(409);
+            echo json_encode(['error' => 'La incidencia debe estar confirmada antes de resolver']);
+            exit;
+        }
     }
 
     echo json_encode(['ok' => true]);

@@ -18,6 +18,8 @@ if (($usuario['tipo_empleado'] ?? '') !== 'mantenimiento' && !trainwebEsAdminist
 $idEmpleado = null;
 $incidencias = [];
 $incidenciasPendientes = [];
+$incidenciasPendientesManual = [];
+$incidenciasPendientesIot = [];
 $incidenciasHistorico = [];
 $especialidad = 'General';
 $turno = 'No asignado';
@@ -43,20 +45,26 @@ try {
         }
 
         if ($idEmpleado) {
+            $pdo->exec("DELETE FROM incidencia WHERE origen = 'iot' AND estado = 'reportado' AND fecha_reporte < (NOW() - INTERVAL '24 hours')");
             $stmtInc = $pdo->prepare(
                 "SELECT id_incidencia, id_viaje, id_mantenimiento, id_maquinista, tipo_incidencia, origen, descripcion,
                         fecha_reporte, estado, afecta_pasajero, resolucion, fecha_resolucion
                  FROM incidencia
-                 WHERE id_mantenimiento = :id_mantenimiento
                  ORDER BY CASE estado WHEN 'reportado' THEN 1 WHEN 'en_proceso' THEN 2 ELSE 3 END, fecha_reporte DESC"
             );
-            $stmtInc->execute([':id_mantenimiento' => (int)$idEmpleado]);
+            $stmtInc->execute();
             $incidencias = $stmtInc->fetchAll(PDO::FETCH_ASSOC) ?: [];
             foreach ($incidencias as $inc) {
                 if (($inc['estado'] ?? '') === 'resuelto') {
                     $incidenciasHistorico[] = $inc;
                 } else {
                     $incidenciasPendientes[] = $inc;
+                    $origen = strtolower((string)($inc['origen'] ?? ''));
+                    if ($origen === 'iot') {
+                        $incidenciasPendientesIot[] = $inc;
+                    } else {
+                        $incidenciasPendientesManual[] = $inc;
+                    }
                 }
             }
         }
@@ -174,16 +182,57 @@ try {
         <section class="panel issues-list">
             <h2>Incidencias pendientes</h2>
             <div id="incidenciasPendientes">
-                <?php if (count($incidenciasPendientes) === 0): ?>
+                <?php if (count($incidenciasPendientesManual) === 0): ?>
                     <div class="issue-item low-priority">
                         <p class="issue-desc">No hay incidencias registradas.</p>
                     </div>
                 <?php else: ?>
-                    <?php foreach ($incidenciasPendientes as $inc): ?>
+                    <?php foreach ($incidenciasPendientesManual as $inc): ?>
                         <?php
                             $estado = $inc['estado'] ?? '';
                             $estadoClase = $estado === 'reportado' ? 'high-priority' : ($estado === 'en_proceso' ? 'medium-priority' : 'low-priority');
-                            $estadoEtiqueta = $estado === 'reportado' ? 'REPORTADO' : ($estado === 'en_proceso' ? 'EN PROCESO' : 'RESUELTO');
+                            $estadoEtiqueta = $estado === 'reportado' ? 'REPORTADO' : ($estado === 'en_proceso' ? 'CONFIRMADO' : 'RESUELTO');
+                            $afecta = !empty($inc['afecta_pasajero']) ? 'Afecta pasajeros' : 'No afecta pasajeros';
+                            $origenInc = strtoupper((string)($inc['origen'] ?? ''));
+                        ?>
+                        <div class="issue-item <?php echo $estadoClase; ?>" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>" data-estado="<?php echo htmlspecialchars((string)$estado, ENT_QUOTES, 'UTF-8'); ?>">
+                            <div class="issue-header">
+                                <span class="issue-id">#INC-<?php echo (int)$inc['id_incidencia']; ?></span>
+                                <span class="priority-tag"><?php echo $estadoEtiqueta; ?></span>
+                            </div>
+                            <p class="issue-desc"><?php echo htmlspecialchars((string)$inc['descripcion'], ENT_QUOTES, 'UTF-8'); ?></p>
+                            <div class="issue-meta">
+                                <span><i class="fa-solid fa-train"></i> Viaje <?php echo (int)$inc['id_viaje']; ?></span>
+                                <span><?php echo $origenInc; ?></span>
+                                <span>Estado: <?php echo $estadoEtiqueta; ?></span>
+                            </div>
+                            <div class="issue-actions">
+                                <button class="btn-detail" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>">Ver detalles</button>
+                                <?php if ($estado === 'reportado'): ?>
+                                    <button class="btn-resolve btn-confirm" data-action="confirmar" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>">Confirmar</button>
+                                <?php elseif ($estado === 'en_proceso'): ?>
+                                    <button class="btn-resolve btn-final" data-action="resolver" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>">Resuelto</button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </section>
+
+        <section class="panel issues-list">
+            <h2>Incidencias automaticas (IOT)</h2>
+            <div id="incidenciasPendientesIot">
+                <?php if (count($incidenciasPendientesIot) === 0): ?>
+                    <div class="issue-item low-priority">
+                        <p class="issue-desc">No hay incidencias automaticas.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($incidenciasPendientesIot as $inc): ?>
+                        <?php
+                            $estado = $inc['estado'] ?? '';
+                            $estadoClase = $estado === 'reportado' ? 'high-priority' : ($estado === 'en_proceso' ? 'medium-priority' : 'low-priority');
+                            $estadoEtiqueta = $estado === 'reportado' ? 'REPORTADO' : ($estado === 'en_proceso' ? 'CONFIRMADO' : 'RESUELTO');
                             $afecta = !empty($inc['afecta_pasajero']) ? 'Afecta pasajeros' : 'No afecta pasajeros';
                             $origenInc = strtoupper((string)($inc['origen'] ?? ''));
                         ?>
@@ -217,13 +266,13 @@ try {
             <div class="filter-row">
                 <button class="filter-btn active" data-filter="all">Todas</button>
                 <button class="filter-btn" data-filter="reportado">Reportado</button>
-                <button class="filter-btn" data-filter="en_proceso">En proceso</button>
+                <button class="filter-btn" data-filter="en_proceso">Confirmado</button>
                 <button class="filter-btn" data-filter="resuelto">Resuelto</button>
             </div>
             <div class="carousel-box">
                 <div class="carousel-track">
                     <div class="carousel-item">Prioriza incidencias de frenos y puertas.</div>
-                    <div class="carousel-item">Confirma para asignar en proceso.</div>
+                    <div class="carousel-item">Confirma para marcar como confirmado.</div>
                     <div class="carousel-item">Anade resolucion para trazabilidad.</div>
                     <div class="carousel-item">Revisa alertas de senalizacion.</div>
                 </div>

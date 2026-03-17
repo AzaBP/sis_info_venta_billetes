@@ -23,6 +23,8 @@ try {
         throw new RuntimeException('Conexion no disponible');
     }
 
+    $pdo->exec("DELETE FROM incidencia WHERE origen = 'iot' AND estado = 'reportado' AND fecha_reporte < (NOW() - INTERVAL '24 hours')");
+
     $sql = "SELECT id_incidencia, id_viaje, id_mantenimiento, id_maquinista, tipo_incidencia, origen, descripcion,
                    fecha_reporte, estado, afecta_pasajero, resolucion, fecha_resolucion
             FROM incidencia

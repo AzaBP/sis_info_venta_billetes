@@ -72,6 +72,8 @@ try {
          RETURNING id_incidencia"
     );
 
+    $afecta_pasajero = $tipos[$tipo]['afecta'] ? 1 : 0;
+
     $stmt->execute([
         ':id_viaje' => $id_viaje,
         ':id_mantenimiento' => $id_mantenimiento,
@@ -80,8 +82,8 @@ try {
         ':origen' => 'maquinista',
         ':descripcion' => $tipos[$tipo]['desc'],
         ':fecha_reporte' => date('Y-m-d H:i:s'),
-        ':estado' => 'en_proceso',
-        ':afecta_pasajero' => $tipos[$tipo]['afecta']
+        ':estado' => 'reportado',
+        ':afecta_pasajero' => $afecta_pasajero
     ]);
 
     $id_incidencia = (int)$stmt->fetchColumn();

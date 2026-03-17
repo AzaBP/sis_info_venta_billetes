@@ -1,5 +1,6 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     const pendingContainer = document.getElementById('incidenciasPendientes');
+    const pendingIotContainer = document.getElementById('incidenciasPendientesIot');
     const historyContainer = document.getElementById('incidenciasHistorico');
     const refreshBtn = document.getElementById('refreshNow');
     const scrollTopBtn = document.getElementById('scrollTop');
@@ -13,7 +14,8 @@
     const detailClose = document.getElementById('detailClose');
 
     let allData = [];
-    let pendingData = [];
+    let pendingManual = [];
+    let pendingIot = [];
     let historyData = [];
     let currentFilter = 'all';
     let currentId = null;
@@ -61,7 +63,7 @@
 
     function estadoEtiqueta(estado) {
         if (estado === 'reportado') return 'REPORTADO';
-        if (estado === 'en_proceso') return 'EN PROCESO';
+        if (estado === 'en_proceso') return 'CONFIRMADO';
         return 'RESUELTO';
     }
 
@@ -138,14 +140,14 @@
         return card;
     }
 
-    function renderPending(list) {
-        if (!pendingContainer) return;
-        pendingContainer.innerHTML = '';
+    function renderPendingList(container, list, emptyMessage) {
+        if (!container) return;
+        container.innerHTML = '';
         if (!list || list.length === 0) {
-            renderEmpty(pendingContainer, 'No hay incidencias pendientes.');
+            renderEmpty(container, emptyMessage);
             return;
         }
-        list.forEach(inc => pendingContainer.appendChild(buildCard(inc, false)));
+        list.forEach(inc => container.appendChild(buildCard(inc, false)));
     }
 
     function renderHistory(list) {
@@ -160,15 +162,19 @@
 
     function aplicarFiltro() {
         if (currentFilter === 'all') {
-            renderPending(pendingData);
+            renderPendingList(pendingContainer, pendingManual, 'No hay incidencias pendientes.');
+            renderPendingList(pendingIotContainer, pendingIot, 'No hay incidencias automaticas.');
             return;
         }
         if (currentFilter === 'resuelto') {
             renderEmpty(pendingContainer, 'El historico se muestra abajo.');
+            renderEmpty(pendingIotContainer, 'El historico se muestra abajo.');
             return;
         }
-        const filtradas = pendingData.filter(i => i.estado === currentFilter);
-        renderPending(filtradas);
+        const filtradasManual = pendingManual.filter(i => i.estado === currentFilter);
+        const filtradasIot = pendingIot.filter(i => i.estado === currentFilter);
+        renderPendingList(pendingContainer, filtradasManual, 'No hay incidencias pendientes.');
+        renderPendingList(pendingIotContainer, filtradasIot, 'No hay incidencias automaticas.');
     }
 
     function selectCard(id) {
@@ -189,16 +195,24 @@
                 data = JSON.parse(raw.replace(/^\uFEFF/, ''));
             } catch (_) {
                 renderEmpty(pendingContainer, `Respuesta invalida: ${raw.slice(0, 120)}`);
+                renderEmpty(pendingIotContainer, 'No se pudieron cargar incidencias automaticas.');
                 return;
             }
             if (!resp.ok) {
                 renderEmpty(pendingContainer, data.error || 'No autorizado');
+                renderEmpty(pendingIotContainer, data.error || 'No autorizado');
                 return;
             }
             const maintId = getMaintId();
             const list = Array.isArray(data) ? data : [];
-            allData = maintId > 0 ? list.filter(i => (parseInt(i.id_mantenimiento, 10) || 0) === maintId) : list;
-            pendingData = allData.filter(i => i.estado !== 'resuelto');
+            allData = Array.isArray(list) ? list : [];
+            const esIot = (i) => String(i.origen || '').toLowerCase() === 'iot';
+
+            const manualAsignadas = allData.filter(i => !esIot(i));
+            const iotTodas = allData.filter(i => esIot(i));
+
+            pendingManual = manualAsignadas.filter(i => i.estado !== 'resuelto');
+            pendingIot = iotTodas.filter(i => i.estado !== 'resuelto');
             historyData = allData.filter(i => i.estado === 'resuelto');
             renderHistory(historyData);
             aplicarFiltro();
@@ -207,6 +221,7 @@
             }
         } catch (e) {
             renderEmpty(pendingContainer, 'Error al cargar incidencias.');
+            renderEmpty(pendingIotContainer, 'Error al cargar incidencias automaticas.');
         }
     }
 
@@ -349,6 +364,7 @@
     }
 
     if (pendingContainer) pendingContainer.addEventListener('click', handleListClick);
+    if (pendingIotContainer) pendingIotContainer.addEventListener('click', handleListClick);
     if (historyContainer) historyContainer.addEventListener('click', handleListClick);
 
     if (refreshBtn) refreshBtn.addEventListener('click', () => cargar());
