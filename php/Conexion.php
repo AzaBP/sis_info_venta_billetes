@@ -1,7 +1,9 @@
 <?php
 
 class Conexion {
-    private $host = 'localhost';
+    //private $host = 'localhost';
+    //en docker
+    private $host = 'trenes_postgres';
     private $puerto = 5432;
     private $bd = 'trenesDB';
     private $usuario = 'postgres';

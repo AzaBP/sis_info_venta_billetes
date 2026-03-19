@@ -44,3 +44,14 @@ services:
 volumes:
   datos_postgres:
   datos_mongo:
+
+# Servidor Web (Apache + PHP)
+  web:
+    build: .  # Esto le dice a Docker que busque el Dockerfile en la misma carpeta
+    container_name: trenes_web
+    restart: always
+    ports:
+      - "80:80"  # Expone tu web en el puerto 80
+    depends_on:
+      - postgres
+      - mongo
