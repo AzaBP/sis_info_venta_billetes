@@ -12,7 +12,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>TrainWeb - Páginaaaaaaaaaaaa de Trenes</title>
+    <title>TrainWeb - Página de Trenes</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/session_menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -21,10 +21,10 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
 
     <!-- HEADER -->
     <header class="header">
-        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+        <div class="logo"><i class="fa-solid fa-train"></i> TrainWjnkkjnkeb</div>
         <nav class="nav">
             <a href="index.php">Inicio</a>
-            <a href="billetes_web.php">Billetes</a>
+            <a href="billetes_web.php">Billeteees</a>
             <div class="dropdown">
                 <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
