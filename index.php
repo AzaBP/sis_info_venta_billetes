@@ -21,10 +21,10 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
 
     <!-- HEADER -->
     <header class="header">
-        <div class="logo"><i class="fa-solid fa-train"></i> TrainWjnkkjnkeb</div>
+        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
             <a href="index.php">Inicio</a>
-            <a href="billetes_web.php">Billeteees</a>
+            <a href="billetes_web.php">Billetes</a>
             <div class="dropdown">
                 <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
