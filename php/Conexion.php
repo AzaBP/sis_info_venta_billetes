@@ -1,11 +1,13 @@
 <?php
 
 class Conexion {
-    private $host = 'localhost';
+    //private $host = 'localhost';
+    //en docker
+    private $host = 'trenes_postgres';
     private $puerto = 5432;
-    private $bd = 'trenesDB';
-    private $usuario = 'postgres';
-    private $password = 'yousra';
+    private $bd = 'sis_info_venta_billetes_bd';
+    private $usuario = 'admin';
+    private $password = 'password123';
     private $pdo;
 
     public function conectar() {
@@ -29,4 +31,3 @@ class Conexion {
 }
 
 ?>
-
