@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 $usuario = $_SESSION['usuario'] ?? null;
 if ($usuario && ($usuario['tipo_usuario'] ?? '') === 'empleado') {

@@ -4,8 +4,8 @@
 require_once __DIR__ . '/../vendor/autoload.php'; 
 
 class ConexionMongo {
-    private $uri = "mongodb://admin:admin@127.0.0.1:27017/?authSource=admin";
-    private $database = "gestion_ferroviaria";
+    private $uri = "mongodb://admin:password123@trenes_mongo:27017";
+    private $database = "trenes_mongo";
     private $client;
     private $db;
 
