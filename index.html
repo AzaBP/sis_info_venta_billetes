@@ -220,7 +220,6 @@
                 .then((data) => {
                     if (!data || !data.logeado) return;
                     const nombre = data.usuario && data.usuario.nombre ? data.usuario.nombre : 'Mi cuenta';
-
                     userActions.innerHTML = `
                         <div class="account-dropdown">
                             <button type="button" class="account-toggle">

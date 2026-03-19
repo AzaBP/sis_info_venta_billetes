@@ -12,7 +12,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>TrainWeb - Página de Trenes</title>
+    <title>TrainWeb - Páginaaaaaaaaaaaa de Trenes</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/session_menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
