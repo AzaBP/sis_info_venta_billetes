@@ -61,7 +61,7 @@ try {
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/maquinista.css">
 </head>
-<body>
+<body class="maquinista-page">
 <header class="header">
     <div class="logo">
         <i class="fa-solid fa-train"></i> TrainWeb

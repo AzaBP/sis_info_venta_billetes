@@ -34,7 +34,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                     <a href="#">Alemán</a>
                 </div>
             </div>
-            <a href="ofertas.php">Ofertas</a>
+            <a href="ofertas.php">Ofessrtas</a>
             <a href="ayuda.php">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
