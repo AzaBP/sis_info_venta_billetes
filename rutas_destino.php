@@ -12,12 +12,12 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
 try {
     $pdo = (new Conexion())->conectar();
     
-    // 2. Consulta dinámica: Filtramos por el destino recibido
+    // 2. Consulta dinámica: Filtramos por el destino recibido (Mejorado con ILIKE)
     $sql = "SELECT v.*, r.origen, r.destino, t.modelo as tren 
             FROM VIAJE v
             JOIN RUTA r ON v.id_ruta = r.id_ruta
             JOIN TREN t ON v.id_tren = t.id_tren
-            WHERE r.destino = :destino
+            WHERE r.destino ILIKE :destino
             ORDER BY v.fecha ASC, v.hora_salida ASC";
             
     $stmt = $pdo->prepare($sql);
