@@ -119,7 +119,7 @@ try {
     <style>
         :root {
             --primary-color: #0a2a66;
-            --secondary-color: #f39c12;
+            --secondary-color: #3c2dc6;
             --bg-color: #f4f7fb;
             --text-color: #333;
             --card-bg: #ffffff;
