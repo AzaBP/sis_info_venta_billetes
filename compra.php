@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 
 $usuarioSesion = $_SESSION['usuario'] ?? null;
@@ -13,7 +13,28 @@ require_once 'php/Conexion.php';
 $conexion = new Conexion();
 $pdo = $conexion->conectar();
 
-// 1. Obtener todos los trayectos programados
+
+// 1. Obtener trayectos filtrados por parámetros GET
+$origen = isset($_GET['origen']) ? trim($_GET['origen']) : '';
+$destino = isset($_GET['destino']) ? trim($_GET['destino']) : '';
+$fecha = isset($_GET['fecha']) ? trim($_GET['fecha']) : '';
+$pasajeros = isset($_GET['pasajeros']) ? intval($_GET['pasajeros']) : 1;
+
+$where = [];
+$params = [];
+if ($origen !== '') {
+    $where[] = 'r.origen ILIKE :origen';
+    $params[':origen'] = $origen;
+}
+if ($destino !== '') {
+    $where[] = 'r.destino ILIKE :destino';
+    $params[':destino'] = $destino;
+}
+if ($fecha !== '') {
+    $where[] = 'v.fecha = :fecha';
+    $params[':fecha'] = $fecha;
+}
+
 $sql = "SELECT 
             v.id_viaje, v.fecha, v.hora_salida, v.hora_llegada, v.precio as precio_base, v.estado as estado_viaje,
             t.modelo as tipo_tren, t.id_tren as codigo_tren,
@@ -21,13 +42,50 @@ $sql = "SELECT
             r.destino
         FROM VIAJE v
         JOIN TREN t ON v.id_tren = t.id_tren
-        JOIN RUTA r ON v.id_ruta = r.id_ruta
-        ORDER BY v.hora_salida ASC";
+        JOIN RUTA r ON v.id_ruta = r.id_ruta";
+if (!empty($where)) {
+    $sql .= ' WHERE ' . implode(' AND ', $where);
+}
+$sql .= ' ORDER BY v.hora_salida ASC';
 
-$stmt = $pdo->query($sql);
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 $trayectos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // 2. Obtener las promociones activas
+
+// --- INICIO CÓDIGO CARRUSEL DE FECHAS ---
+// 1. Determinar la fecha base (la que buscó el usuario, o la actual si viene vacía)
+$fecha_base = !empty($fecha) ? $fecha : date('Y-m-d');
+$fechas_carrusel = [];
+
+// 2. Generar un array con los 5 días (-2, -1, 0, +1, +2)
+for ($i = -2; $i <= 2; $i++) {
+    $fechas_carrusel[] = date('Y-m-d', strtotime("$fecha_base $i days"));
+}
+
+// 3. Consultar el precio mínimo para cada una de esas fechas
+$precios_por_fecha = [];
+$stmt_min_precio = $pdo->prepare("
+    SELECT v.fecha, MIN(v.precio) as precio_min 
+    FROM VIAJE v
+    JOIN RUTA r ON v.id_ruta = r.id_ruta
+    WHERE r.origen ILIKE :origen AND r.destino ILIKE :destino AND v.fecha = :fecha
+    GROUP BY v.fecha
+");
+
+foreach ($fechas_carrusel as $f) {
+    // Reutilizamos $origen y $destino de tu código principal
+    $stmt_min_precio->execute([
+        ':origen' => '%' . $origen . '%', 
+        ':destino' => '%' . $destino . '%', 
+        ':fecha' => $f
+    ]);
+    $res = $stmt_min_precio->fetch(PDO::FETCH_ASSOC);
+    $precios_por_fecha[$f] = $res ? $res['precio_min'] : null;
+}
+// --- FIN CÓDIGO CARRUSEL DE FECHAS ---
+
 $sql_promos = "SELECT codigo, descuento_porcentaje FROM PROMOCION WHERE fecha_fin >= CURRENT_DATE"; 
 $stmt_promos = $pdo->query($sql_promos);
 $promociones = $stmt_promos->fetchAll(PDO::FETCH_ASSOC);
@@ -114,61 +172,113 @@ if (isset($_SESSION['usuario']['id_usuario'])) {
     <main class="booking-container">
         
         <div class="progress-bar-container">
-            <div class="step active" id="step1"><span class="step-num">1</span> Trenes disponibles</div>
-            <div class="step" id="step2"><span class="step-num">2</span> Selección de asientos</div>
-            <div class="step" id="step3"><span class="step-num">3</span> Resumen y Descuentos</div>
-            <div class="step" id="step4"><span class="step-num">4</span> Pago seguro</div>
+            <div class="step active" id="step1" onclick="irAPaso(1)" style="cursor: pointer;"><span class="step-num">1</span> Trenes disponibles</div>
+            <div class="step" id="step2" onclick="irAPaso(2)" style="cursor: pointer;"><span class="step-num">2</span> Selección de asientos</div>
+            <div class="step" id="step3" onclick="irAPaso(3)" style="cursor: pointer;"><span class="step-num">3</span> Resumen y Descuentos</div>
+            <div class="step" id="step4" onclick="irAPaso(4)" style="cursor: pointer;"><span class="step-num">4</span> Pago seguro</div>
         </div>
+
 
         <div class="search-summary">
             <div class="summary-text">
-                <h2>Madrid (Todas) <i class="fa-solid fa-arrow-right"></i> Barcelona Sants</h2>
-                <p>Jueves, 12 de Febrero | 1 Pasajero</p>
+                <h2>
+                    <?php echo $origen ? htmlspecialchars($origen) : 'Origen'; ?> 
+                    <i class="fa-solid fa-arrow-right"></i> 
+                    <?php echo $destino ? htmlspecialchars($destino) : 'Destino'; ?>
+                </h2>
+                <p>
+                    <?php 
+                        if ($fecha) {
+                            $fechaObj = DateTime::createFromFormat('Y-m-d', $fecha);
+                            echo $fechaObj ? $fechaObj->format('l, d \d\e F') : htmlspecialchars($fecha);
+                        } else {
+                            echo 'Fecha no seleccionada';
+                        }
+                    ?>
+                    | <?php echo $pasajeros; ?> <?php echo ($pasajeros == 1) ? 'Pasajero' : 'Pasajeros'; ?>
+                </p>
             </div>
-            <button class="btn-modify" onclick="irAPaso(1)">
-                <i class="fa-solid fa-train"></i> Cambiar de tren
+            <button class="btn-modify" onclick="window.location.href='index.php'">
+                <i class="fa-solid fa-pen-to-square"></i> Modificar datos
             </button>
         </div>
 
-        <section id="sectionTrains" class="booking-section">
-            <?php foreach ($trayectos as $trayecto): 
-                $hora_salida = date('H:i', strtotime($trayecto['hora_salida']));
-                $hora_llegada = date('H:i', strtotime($trayecto['hora_llegada']));
-                $dteStart = new DateTime($trayecto['hora_salida']);
-                $dteEnd   = new DateTime($trayecto['hora_llegada']);
-                $duracion = $dteStart->diff($dteEnd)->format('%hh %Imin');
-                $precio = number_format($trayecto['precio_base'], 2, ',', '');
-
-                $icono_amenity = 'fa-train'; 
-                if (strtolower($trayecto['tipo_tren']) == 'ave') $icono_amenity = 'fa-wifi';
-                if (strtolower($trayecto['tipo_tren']) == 'avlo') $icono_amenity = 'fa-plug';
-                if (strtolower($trayecto['tipo_tren']) == 'alvia') $icono_amenity = 'fa-person-walking-luggage';
-
-                $isFull = ($trayecto['estado_viaje'] === 'completado');
-                $cardClass = $isFull ? "ticket-card full-train" : "ticket-card";
+        <!-- Carrusel de fechas debajo del resumen de búsqueda -->
+        <div class="date-carousel" style="display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; justify-content: space-between;">
+            <?php foreach ($fechas_carrusel as $f): 
+                $es_activa = ($f === $fecha_base);
+                $precio_dia = $precios_por_fecha[$f];
+                // Nombres de los días en español para darle un toque pro
+                $dias_es = ['Sun'=>'Dom', 'Mon'=>'Lun', 'Tue'=>'Mar', 'Wed'=>'Mié', 'Thu'=>'Jue', 'Fri'=>'Vie', 'Sat'=>'Sáb'];
+                $dia_semana = $dias_es[date('D', strtotime($f))];
+                $dia_mes = date('d/m', strtotime($f));
+                // Construimos la URL para recargar la página con esa nueva fecha manteniendo el resto de datos
+                $url_dia = "?origen=" . urlencode($origen) . "&destino=" . urlencode($destino) . "&pasajeros=" . $pasajeros . "&fecha=" . $f;
             ?>
-            <div class="<?= $cardClass ?>">
-                <div class="col-train-info">
-                    <span class="train-type type-<?= strtolower($trayecto['tipo_tren']) ?>"><?= strtoupper($trayecto['tipo_tren']) ?></span> 
-                    <span class="train-id"><?= htmlspecialchars(str_pad($trayecto['codigo_tren'], 4, '0', STR_PAD_LEFT)) ?></span>
-                    <div class="amenities"><i class="fa-solid <?= $icono_amenity ?>"></i></div>
-                </div>
-                <div class="col-schedule">
-                    <div class="time-group"><span class="hour"><?= $hora_salida ?></span><span class="city">MAD</span></div>
-                    <div class="duration-line"><span class="duration-text"><?= $duracion ?></span><div class="line"><i class="fa-solid fa-train"></i></div></div>
-                    <div class="time-group"><span class="hour"><?= $hora_llegada ?></span><span class="city">BCN</span></div>
-                </div>
-                <div class="col-price">
-                    <?php if ($isFull): ?>
-                        <div class="price-full">Completo</div>
-                        <button class="btn-select" disabled>Agotado</button>
+                <a href="<?= $url_dia ?>" style="flex: 1; min-width: 90px; text-align: center; padding: 12px 5px; border-radius: 8px; text-decoration: none; border: 2px solid <?= $es_activa ? '#0a2a66' : '#e0e0e0' ?>; background-color: <?= $es_activa ? '#f4f6f8' : 'white' ?>; color: #333; transition: all 0.2s;">
+                    <div style="font-size: 0.85rem; color: #666; margin-bottom: 5px;"><?= $dia_semana ?> <?= $dia_mes ?></div>
+                    <?php if ($precio_dia): ?>
+                        <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 4px; min-width: 0;">
+                            <span style="font-size: 0.8rem; color: #888; line-height: 1; white-space: nowrap;">Desde</span>
+                            <span style="font-size: 1.1rem; font-weight: bold; color: <?= $es_activa ? '#0a2a66' : '#333' ?>; line-height: 1; white-space: nowrap;"><?= number_format($precio_dia, 2, ',', '') . ' €' ?></span>
+                        </div>
                     <?php else: ?>
-                        <div class="price"><?= $precio ?> €</div>
-                        <button class="btn-select" onclick="seleccionarTren(<?= $trayecto['id_viaje'] ?>, '<?= $trayecto['tipo_tren'] ?>', <?= $trayecto['precio_base'] ?>)">Elegir</button>
+                        <div style="font-size: 1.1rem; font-weight: bold; color: #bbb;">---</div>
                     <?php endif; ?>
-                </div>
-            </div>
+                </a>
             <?php endforeach; ?>
+        </div>
+
+        <section id="sectionTrains" class="booking-section">
+            <div class="train-list">
+            <?php if (empty($trayectos)): ?>
+                <div class="no-trains-message" style="text-align: center; padding: 50px; background: #fff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="fa-solid fa-train-track" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
+                    <h3 style="color: #0a2a66;">Lo sentimos, no hay trenes disponibles</h3>
+                    <p style="color: #666;">No hemos encontrado ningún viaje programado para la ruta y fecha seleccionadas.</p>
+                    <a href="index.php" class="btn-primary" style="display: inline-block; margin-top: 15px; text-decoration: none;">Volver al buscador</a>
+                </div>
+            <?php else: ?>
+                <?php foreach ($trayectos as $trayecto): 
+                    $hora_salida = date('H:i', strtotime($trayecto['hora_salida']));
+                    $hora_llegada = date('H:i', strtotime($trayecto['hora_llegada']));
+                    $dteStart = new DateTime($trayecto['hora_salida']);
+                    $dteEnd   = new DateTime($trayecto['hora_llegada']);
+                    $duracion = $dteStart->diff($dteEnd)->format('%hh %Imin');
+                    $precio = number_format($trayecto['precio_base'], 2, ',', '');
+
+                    $icono_amenity = 'fa-train'; 
+                    if (strtolower($trayecto['tipo_tren']) == 'ave') $icono_amenity = 'fa-wifi';
+                    if (strtolower($trayecto['tipo_tren']) == 'avlo') $icono_amenity = 'fa-plug';
+                    if (strtolower($trayecto['tipo_tren']) == 'alvia') $icono_amenity = 'fa-person-walking-luggage';
+
+                    $isFull = ($trayecto['estado_viaje'] === 'completado');
+                    $cardClass = $isFull ? "ticket-card full-train" : "ticket-card";
+                ?>
+                <div class="<?= $cardClass ?>">
+                    <div class="col-train-info">
+                        <span class="train-type type-<?= strtolower($trayecto['tipo_tren']) ?>"><?= strtoupper($trayecto['tipo_tren']) ?></span> 
+                        <span class="train-id"><?= htmlspecialchars(str_pad($trayecto['codigo_tren'], 4, '0', STR_PAD_LEFT)) ?></span>
+                        <div class="amenities"><i class="fa-solid <?= $icono_amenity ?>"></i></div>
+                    </div>
+                    <div class="col-schedule">
+                        <div class="time-group"><span class="hour"><?= $hora_salida ?></span><span class="city">MAD</span></div>
+                        <div class="duration-line"><span class="duration-text"><?= $duracion ?></span><div class="line"><i class="fa-solid fa-train"></i></div></div>
+                        <div class="time-group"><span class="hour"><?= $hora_llegada ?></span><span class="city">BCN</span></div>
+                    </div>
+                    <div class="col-price">
+                        <?php if ($isFull): ?>
+                            <div class="price-full">Completo</div>
+                            <button class="btn-select" disabled>Agotado</button>
+                        <?php else: ?>
+                            <div class="price"><?= $precio ?> €</div>
+                            <button class="btn-select" onclick="seleccionarTren(<?= $trayecto['id_viaje'] ?>, '<?= $trayecto['tipo_tren'] ?>', <?= $trayecto['precio_base'] ?>)">Elegir</button>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            </div>
         </section>
 
         <section id="sectionSeats" class="booking-section hidden">
@@ -271,7 +381,7 @@ if (isset($_SESSION['usuario']['id_usuario'])) {
         <section id="sectionSummary" class="booking-section hidden">
             <div class="payment-container" style="max-width: 600px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
                 <div class="payment-header" style="border-bottom: none; margin-bottom: 10px;">
-                    <h3><i class="fa-solid fa-list-check"></i> 3. Resumen y Descuentos</h3>
+                    <h3><i class="fa-solid fa-list-check"></i> Resumen y Descuentos</h3>
                 </div>
                 
                 <div class="trip-details" style="margin-bottom: 25px; padding: 15px; background: #f4f6f8; border-radius: 8px; font-size: 1.1rem;">
@@ -341,40 +451,42 @@ if (isset($_SESSION['usuario']['id_usuario'])) {
         <section id="sectionPayment" class="booking-section hidden">
             <div class="payment-container" style="max-width: 500px; margin: 0 auto;">
                 <div class="payment-header">
-                    <h3><i class="fa-regular fa-credit-card"></i> 4. Datos de Pago</h3>
+                    <h3><i class="fa-regular fa-credit-card"></i> Datos de Pago</h3>
                     <div class="card-icons">
                         <i class="fa-brands fa-cc-visa"></i>
                         <i class="fa-brands fa-cc-mastercard"></i>
                     </div>
                 </div>
                 
-                <form class="payment-form" onsubmit="event.preventDefault(); confirmarReserva();">
+                <form class="payment-form" onsubmit="event.preventDefault(); confirmarReserva();" autocomplete="off">
                     <div class="form-group full-width">
-                        <label>Titular</label>
-                        <input type="text" required placeholder="Ej: Juan Pérez">
+                        <label for="cardHolder">Titular</label>
+                        <input type="text" id="cardHolder" required placeholder="Ej: Juan Pérez">
+                        <span class="input-error" id="errCardHolder" style="display:none;"></span>
                     </div>
                     <div class="form-group full-width">
-                        <label>Número de Tarjeta</label>
+                        <label for="cardNumber">Número de Tarjeta</label>
                         <div class="input-icon">
-                            <input type="text" maxlength="19" required placeholder="1234 5678 9012 3456">
+                            <input type="text" id="cardNumber" maxlength="19" required placeholder="1234 5678 9012 3456" inputmode="numeric">
                             <i class="fa-solid fa-lock" style="position: absolute; right: 10px; top: 12px; color: #ccc;"></i>
                         </div>
+                        <span class="input-error" id="errCardNumber" style="display:none;"></span>
                     </div>
                     <div class="form-row" style="display: flex; gap: 15px;">
                         <div class="form-group expand">
-                            <label>Caducidad</label>
-                            <input type="text" required placeholder="MM/AA">
+                            <label for="cardExpiry">Caducidad</label>
+                            <input type="text" id="cardExpiry" required placeholder="MM/AA" maxlength="5" inputmode="numeric">
+                            <span class="input-error" id="errCardExpiry" style="display:none;"></span>
                         </div>
                         <div class="form-group expand">
-                            <label>CVV</label>
-                            <input type="password" required placeholder="Ej: 123" maxlength="3">
+                            <label for="cardCVV">CVV</label>
+                            <input type="password" id="cardCVV" required placeholder="Ej: 123" maxlength="3" inputmode="numeric">
+                            <span class="input-error" id="errCardCVV" style="display:none;"></span>
                         </div>
                     </div>
-                    
                     <div class="summary-box" style="text-align: center; margin-top: 20px;">
                         <p style="margin: 0; font-size: 1.2rem;">Importe final a cargar: <strong id="finalPaymentPrice" style="color: #28a745;">0,00 €</strong></p>
                     </div>
-
                     <button type="submit" class="btn-pay-confirm" style="margin-top: 15px; width: 100%;">Procesar Pago y Reservar</button>
                 </form>
             </div>
@@ -383,5 +495,162 @@ if (isset($_SESSION['usuario']['id_usuario'])) {
     </main>
 
     <script src="js/compra.js"></script>
+    <script>
+    // --- Formato y validación de pago seguro ---
+    document.addEventListener('DOMContentLoaded', function() {
+        const cardNumber = document.getElementById('cardNumber');
+        const cardExpiry = document.getElementById('cardExpiry');
+        const cardCVV = document.getElementById('cardCVV');
+        const cardHolder = document.getElementById('cardHolder');
+        const errCardNumber = document.getElementById('errCardNumber');
+        const errCardExpiry = document.getElementById('errCardExpiry');
+        const errCardCVV = document.getElementById('errCardCVV');
+        const errCardHolder = document.getElementById('errCardHolder');
+        const paymentForm = document.querySelector('.payment-form');
+
+        // Formato número de tarjeta
+        cardNumber.addEventListener('input', function(e) {
+            let value = cardNumber.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.slice(0, 16);
+            let formatted = value.replace(/(.{4})/g, '$1 ').trim();
+            cardNumber.value = formatted;
+        });
+
+        // Formato caducidad MM/AA
+        cardExpiry.addEventListener('input', function(e) {
+            let value = cardExpiry.value.replace(/[^\d]/g, '');
+            if (value.length > 4) value = value.slice(0, 4);
+            if (value.length > 2) {
+                value = value.slice(0,2) + '/' + value.slice(2);
+            }
+            cardExpiry.value = value;
+        });
+
+        // Solo números en CVV
+        cardCVV.addEventListener('input', function(e) {
+            let value = cardCVV.value.replace(/\D/g, '');
+            if (value.length > 3) value = value.slice(0, 3);
+            cardCVV.value = value;
+        });
+
+        // Validación visual
+
+        function validateCardNumber() {
+            const value = cardNumber.value.replace(/\s/g, '');
+            if (value === '') {
+                errCardNumber.style.display = 'none';
+                cardNumber.classList.add('input-invalid');
+                return false;
+            }
+            if (!/^\d{16}$/.test(value)) {
+                errCardNumber.textContent = 'Introduce 16 dígitos válidos.';
+                errCardNumber.style.display = 'block';
+                cardNumber.classList.add('input-invalid');
+                return false;
+            }
+            errCardNumber.style.display = 'none';
+            cardNumber.classList.remove('input-invalid');
+            return true;
+        }
+        function validateCardExpiry() {
+            const value = cardExpiry.value;
+            if (value === '') {
+                errCardExpiry.style.display = 'none';
+                cardExpiry.classList.add('input-invalid');
+                return false;
+            }
+            if (!/^\d{2}\/\d{2}$/.test(value)) {
+                errCardExpiry.textContent = 'Formato MM/AA.';
+                errCardExpiry.style.display = 'block';
+                cardExpiry.classList.add('input-invalid');
+                return false;
+            }
+            // Validar mes y año
+            const [mes, anio] = value.split('/').map(Number);
+            if (mes < 1 || mes > 12) {
+                errCardExpiry.textContent = 'Mes inválido.';
+                errCardExpiry.style.display = 'block';
+                cardExpiry.classList.add('input-invalid');
+                return false;
+            }
+            // Validar que no sea pasado
+            const hoy = new Date();
+            const expYear = 2000 + anio;
+            const expDate = new Date(expYear, mes - 1, 1);
+            if (expDate < new Date(hoy.getFullYear(), hoy.getMonth(), 1)) {
+                errCardExpiry.textContent = 'Tarjeta caducada.';
+                errCardExpiry.style.display = 'block';
+                cardExpiry.classList.add('input-invalid');
+                return false;
+            }
+            errCardExpiry.style.display = 'none';
+            cardExpiry.classList.remove('input-invalid');
+            return true;
+        }
+        function validateCardCVV() {
+            const value = cardCVV.value;
+            if (value === '') {
+                errCardCVV.style.display = 'none';
+                cardCVV.classList.add('input-invalid');
+                return false;
+            }
+            if (!/^\d{3}$/.test(value)) {
+                errCardCVV.textContent = 'CVV de 3 dígitos.';
+                errCardCVV.style.display = 'block';
+                cardCVV.classList.add('input-invalid');
+                return false;
+            }
+            errCardCVV.style.display = 'none';
+            cardCVV.classList.remove('input-invalid');
+            return true;
+        }
+        function validateCardHolder() {
+            const value = cardHolder.value.trim();
+            if (value === '') {
+                errCardHolder.style.display = 'none';
+                cardHolder.classList.add('input-invalid');
+                return false;
+            }
+            if (value.length < 3) {
+                errCardHolder.textContent = 'Introduce el nombre y apellidos del titular.';
+                errCardHolder.style.display = 'block';
+                cardHolder.classList.add('input-invalid');
+                return false;
+            }
+            errCardHolder.style.display = 'none';
+            cardHolder.classList.remove('input-invalid');
+            return true;
+        }
+
+        cardNumber.addEventListener('blur', validateCardNumber);
+        cardExpiry.addEventListener('blur', validateCardExpiry);
+        cardCVV.addEventListener('blur', validateCardCVV);
+        cardHolder.addEventListener('blur', validateCardHolder);
+
+        paymentForm.addEventListener('submit', function(e) {
+            let valid = true;
+            if (!validateCardHolder()) valid = false;
+            if (!validateCardNumber()) valid = false;
+            if (!validateCardExpiry()) valid = false;
+            if (!validateCardCVV()) valid = false;
+            if (!valid) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+    </script>
+    <style>
+    .input-invalid {
+        border-color: #e74c3c !important;
+        background: #fff6f6 !important;
+    }
+    .input-error {
+        color: #e74c3c;
+        font-size: 0.9em;
+        margin-top: 2px;
+        display: block;
+    }
+    </style>
 </body>
 </html>

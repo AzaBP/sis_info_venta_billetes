@@ -63,45 +63,44 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
         <section class="search-section">
             <div class="search-bg"></div>
             <h1>Busca tu tren</h1>
-            <form class="search-form">
+            <form action="compra.php" method="GET" class="search-form">
+                <!-- Tipo de viaje -->
+                <div class="trip-type">
+                    <label>
+                        <input type="radio" name="trip" value="oneway" checked>
+                        Solo ida
+                    </label>
+                    <label>
+                        <input type="radio" name="trip" value="roundtrip">
+                        Ida y vuelta
+                    </label>
+                </div>
 
-            <!-- Tipo de viaje -->
-            <div class="trip-type">
-                <label>
-                    <input type="radio" name="trip" value="oneway" checked>
-                    Solo ida
-                </label>
-                <label>
-                    <input type="radio" name="trip" value="roundtrip">
-                    Ida y vuelta
-                </label>
-            </div>
+                <!-- Origen -->
+                <div class="input-group">
+                    <input type="text" id="origen" name="origen" placeholder="Origen" autocomplete="off">
+                    <div class="suggestions" id="suggestions-origen"></div>
+                </div>
 
-            <!-- Origen -->
-            <div class="input-group">
-                <input type="text" id="origen" placeholder="Origen" autocomplete="off">
-                <div class="suggestions" id="suggestions-origen"></div>
-            </div>
+                <!-- Destino -->
+                <div class="input-group">
+                    <input type="text" id="destino" name="destino" placeholder="Destino" autocomplete="off">
+                    <div class="suggestions" id="suggestions-destino"></div>
+                </div>
 
-            <!-- Destino -->
-            <div class="input-group">
-                <input type="text" id="destino" placeholder="Destino" autocomplete="off">
-                <div class="suggestions" id="suggestions-destino"></div>
-            </div>
+                <!-- Fechas dinámicas -->
+                <div class="date-type" id="date-container">
+                    <input type="date" id="fecha-ida" name="fecha" required>
+                </div>
 
-            <!-- Fechas dinámicas -->
-            <div class="date-type" id="date-container">
-                <input type="date" id="fecha-ida">
-            </div>
-
-            <select>
-                <option value="1">1 pasajero</option>
-                <option value="2">2 pasajeros</option>
-                <option value="3">3 pasajeros</option>
-                <option value="4">4 pasajeros</option>
-            </select>
-            <button type="submit">Buscar</button>
-        </form>
+                <select name="pasajeros">
+                    <option value="1">1 pasajero</option>
+                    <option value="2">2 pasajeros</option>
+                    <option value="3">3 pasajeros</option>
+                    <option value="4">4 pasajeros</option>
+                </select>
+                <button type="submit">Buscar billetes</button>
+            </form>
         </section>
 
         <!-- DESTINOS POPULARES -->

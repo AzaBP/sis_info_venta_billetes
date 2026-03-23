@@ -48,6 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const fechaIda = document.createElement("input");
         fechaIda.type = "date";
         fechaIda.id = "fecha-ida";
+        fechaIda.name = "fecha";
+        fechaIda.required = true;
         dateContainer.appendChild(fechaIda);
 
         if (tipoViaje === "roundtrip") {
@@ -60,74 +62,227 @@ document.addEventListener("DOMContentLoaded", function () {
         activarValidacionFechas();
     }
 
-    tripRadios.forEach(function (radio) {
-        radio.addEventListener("change", function () {
-            crearInputsFecha(this.value);
-        });
-    });
-
-    // Activar validación al cargar
-    activarValidacionFechas();
-
-
-
-    /* =========================
-       AUTOCOMPLETE LUGARES
-    ========================= */
-
-    const lugares = [
-        "Madrid",
-        "Barcelona",
-        "Sevilla",
-        "Valencia",
-        "Bilbao",
-        "Zaragoza",
-        "Málaga",
-        "Granada",
-        "Alicante",
-        "Córdoba"
-    ];
-
-    function activarAutocomplete(inputId, suggestionsId) {
-
-        const input = document.getElementById(inputId);
-        const suggestionsBox = document.getElementById(suggestionsId);
-
-        if (!input || !suggestionsBox) return;
-
-        input.addEventListener("input", function () {
-
-            const valor = this.value.toLowerCase();
-            suggestionsBox.innerHTML = "";
-
-            if (!valor) return;
-
-            const filtrados = lugares.filter(function (lugar) {
-                return lugar.toLowerCase().includes(valor);
-            });
-
-            filtrados.forEach(function (lugar) {
-
-                const div = document.createElement("div");
-                div.textContent = lugar;
-
-                div.addEventListener("click", function () {
-                    input.value = lugar;
-                    suggestionsBox.innerHTML = "";
-                });
-
-                suggestionsBox.appendChild(div);
-            });
-        });
-
-        document.addEventListener("click", function (e) {
-            if (!input.contains(e.target)) {
-                suggestionsBox.innerHTML = "";
+    // Forzar que "Solo ida" esté marcado por defecto al cargar
+    if (tripRadios.length) {
+        tripRadios.forEach(radio => {
+            if (radio.value === 'oneway') {
+                radio.checked = true;
+            } else {
+                radio.checked = false;
             }
         });
     }
 
-    activarAutocomplete("origen", "suggestions-origen");
-    activarAutocomplete("destino", "suggestions-destino");
+    // Crear inputs de fecha según el valor por defecto (solo ida)
+    crearInputsFecha('oneway');
+
+    // Añadir eventos para cambiar inputs de fecha según el tipo de viaje
+    tripRadios.forEach(function (radio) {
+        radio.addEventListener("change", function () {
+            crearInputsFecha(this.value);
+            // No mostrar error al cambiar tipo de viaje si el usuario no ha interactuado
+            if (typeof usuarioHaInteractuado !== 'undefined') usuarioHaInteractuado = false;
+        });
+    });
+
+
+
+    /* =========================
+       AUTOCOMPLETE LUGARES (API)
+    ========================= */
+
+    const inputOrigen = document.getElementById('origen');
+    const suggOrigen = document.getElementById('suggestions-origen');
+    const inputDestino = document.getElementById('destino');
+    const suggDestino = document.getElementById('suggestions-destino');
+
+    if (!inputOrigen || !inputDestino) return;
+
+    let origenesDb = [];
+    let destinosDb = [];
+
+    // 1. Pedir los datos a PostgreSQL
+    fetch('./php/api_origenes_destinos.php')
+        .then(res => res.json())
+        .then(data => {
+            if (data.exito) {
+                origenesDb = data.origenes;
+                destinosDb = data.destinos;
+                console.log('origenesDb:', origenesDb);
+            }
+        })
+        .catch(err => console.error("Error cargando ciudades:", err));
+
+    // 2. Función para mostrar sugerencias
+    function mostrarSugerencias(input, container, lista, mostrarTodas = false) {
+        const valor = input.value.toLowerCase();
+        container.innerHTML = '';
+        let filtrados;
+        if (mostrarTodas || (input === document.activeElement && valor === '')) {
+            filtrados = lista;
+        } else {
+            filtrados = lista.filter(ciudad => ciudad.toLowerCase().includes(valor));
+        }
+        if (filtrados.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        filtrados.forEach(ciudad => {
+            const div = document.createElement('div');
+            div.textContent = ciudad;
+            div.style.padding = '10px';
+            div.style.cursor = 'pointer';
+            div.style.borderBottom = '1px solid #eee';
+            div.addEventListener('click', () => {
+                input.value = ciudad;
+                container.style.display = 'none';
+            });
+            div.addEventListener('mouseenter', () => div.style.backgroundColor = '#f4f6f8');
+            div.addEventListener('mouseleave', () => div.style.backgroundColor = 'white');
+            container.appendChild(div);
+        });
+        container.style.display = 'block';
+        container.style.position = 'absolute';
+        container.style.backgroundColor = 'white';
+        container.style.border = '1px solid #ccc';
+        container.style.width = input.offsetWidth + 'px';
+        container.style.zIndex = '1000';
+        container.style.maxHeight = '200px';
+        container.style.overflowY = 'auto';
+    }
+
+    // 3. Eventos para Origen
+    inputOrigen.addEventListener('input', () => mostrarSugerencias(inputOrigen, suggOrigen, origenesDb));
+    inputOrigen.addEventListener('focus', () => mostrarSugerencias(inputOrigen, suggOrigen, origenesDb, true));
+
+    // 4. Eventos para Destino
+    inputDestino.addEventListener('input', () => mostrarSugerencias(inputDestino, suggDestino, destinosDb));
+    inputDestino.addEventListener('focus', () => mostrarSugerencias(inputDestino, suggDestino, destinosDb, true));
+
+    // 5. Ocultar sugerencias si haces clic fuera
+    document.addEventListener('click', function(e) {
+        if (e.target !== inputOrigen) suggOrigen.style.display = 'none';
+        if (e.target !== inputDestino) suggDestino.style.display = 'none';
+    });
+
+    // =========================
+    // VALIDACIÓN DE FORMULARIO DE BÚSQUEDA
+    // =========================
+
+    const form = document.querySelector('form.search-form');
+    if (form) {
+        // Crear contenedor de error visual si no existe
+        let errorDiv = document.getElementById('form-error-msg');
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.id = 'form-error-msg';
+            errorDiv.style.color = '#b30000';
+            errorDiv.style.background = '#fff0f0';
+            errorDiv.style.padding = '8px 12px';
+            errorDiv.style.margin = '10px 0 0 0';
+            errorDiv.style.borderRadius = '6px';
+            errorDiv.style.fontWeight = 'bold';
+            errorDiv.style.display = 'none';
+            form.appendChild(errorDiv);
+        }
+
+        const btnBuscar = form.querySelector('button[type="submit"]');
+        if (btnBuscar) {
+            btnBuscar.disabled = true;
+            btnBuscar.style.background = '#cccccc';
+            btnBuscar.style.cursor = 'not-allowed';
+            btnBuscar.style.color = '#888';
+        }
+
+        // Variable global para evitar mostrar error tras cambiar tipo de viaje
+        window.usuarioHaInteractuado = false;
+
+        function validarFormulario() {
+            const origen = inputOrigen.value.trim();
+            const destino = inputDestino.value.trim();
+            const fechaIda = document.getElementById('fecha-ida') || document.getElementById('fecha');
+            const fechaVuelta = document.getElementById('fecha-vuelta');
+            const pasajeros = form.querySelector('select[name="pasajeros"]')?.value;
+
+            let errorMsg = '';
+            if (!origen) errorMsg = 'Selecciona un origen.';
+            else if (!destino) errorMsg = 'Selecciona un destino.';
+            else if (!fechaIda || !fechaIda.value) errorMsg = 'Selecciona una fecha de ida.';
+            else if (fechaVuelta && !fechaVuelta.value && document.querySelector('input[name="trip"]:checked')?.value === 'roundtrip') errorMsg = 'Selecciona una fecha de vuelta.';
+            else if (!pasajeros || isNaN(parseInt(pasajeros))) errorMsg = 'Selecciona el número de pasajeros.';
+
+            if (!errorMsg && fechaIda) {
+                const hoy = new Date();
+                const fIda = new Date(fechaIda.value);
+                hoy.setHours(0,0,0,0);
+                if (fIda < hoy) errorMsg = 'La fecha de ida no puede ser anterior a hoy.';
+                if (fechaVuelta && fechaVuelta.value) {
+                    const fVuelta = new Date(fechaVuelta.value);
+                    if (fVuelta < fIda) errorMsg = 'La fecha de vuelta no puede ser anterior a la de ida.';
+                }
+            }
+
+            if (btnBuscar) {
+                if (errorMsg) {
+                    btnBuscar.disabled = true;
+                    btnBuscar.style.background = '#cccccc';
+                    btnBuscar.style.cursor = 'not-allowed';
+                    btnBuscar.style.color = '#888';
+                } else {
+                    btnBuscar.disabled = false;
+                    btnBuscar.style.background = '';
+                    btnBuscar.style.cursor = '';
+                    btnBuscar.style.color = '';
+                }
+            }
+
+            // Solo mostrar error si el usuario ha interactuado
+            if (window.usuarioHaInteractuado && errorMsg) {
+                errorDiv.textContent = errorMsg;
+                errorDiv.style.display = 'block';
+            } else {
+                errorDiv.textContent = '';
+                errorDiv.style.display = 'none';
+            }
+            return !errorMsg;
+        }
+
+        // Validar en cada cambio de campo relevante
+        [inputOrigen, inputDestino].forEach(input => {
+            input.addEventListener('input', function() {
+                window.usuarioHaInteractuado = true;
+                validarFormulario();
+            });
+        });
+        form.querySelector('select[name="pasajeros"]').addEventListener('change', function() {
+            window.usuarioHaInteractuado = true;
+            validarFormulario();
+        });
+        // Solo marcar interacción de usuario si el cambio no es en los radios de tipo de viaje
+        form.addEventListener('change', function(e) {
+            if (!e.target.name || e.target.name !== 'trip') {
+                window.usuarioHaInteractuado = true;
+            }
+            validarFormulario();
+        });
+        form.addEventListener('input', function(e) {
+            if (!e.target.name || e.target.name !== 'trip') {
+                window.usuarioHaInteractuado = true;
+            }
+            validarFormulario();
+        });
+
+        // Validar al intentar enviar
+        form.addEventListener('submit', function(e) {
+            window.usuarioHaInteractuado = true;
+            if (!validarFormulario()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Validar al cargar (sin mostrar error)
+        validarFormulario();
+    }
 
 });

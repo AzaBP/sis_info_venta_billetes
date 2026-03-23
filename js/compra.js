@@ -246,7 +246,37 @@ function calcularPrecioFinal() {
 
 // ================= PASO 4: PAGO FINAL =================
 function confirmarReserva() {
-    alert(`¡Procesando reserva final de ${precioFinalConDescuento.toFixed(2)} €!\n\nTren: ${viajeSeleccionado}\nAsiento: ${asientoSeleccionadoNum}`);
-    
-    // Aquí puedes llamar a fetch('php/api_reservar.php', ...) enviando el id_viaje, numero_asiento y precioFinalConDescuento.
+    // Validación básica antes de enviar
+    if (!viajeSeleccionado || !asientoSeleccionadoNum) {
+        alert('Faltan datos para la reserva.');
+        return;
+    }
+
+    // Deshabilitar botón para evitar dobles envíos
+    const btn = document.querySelector('.btn-pay-confirm');
+    if (btn) btn.disabled = true;
+
+    fetch('php/api_reservar.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            id_viaje: viajeSeleccionado,
+            numero_asiento: asientoSeleccionadoNum,
+            precio: precioFinalConDescuento
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.exito) {
+            alert('¡Reserva realizada con éxito!\nID de reserva: ' + data.id_mongo);
+            window.location.href = 'index.php';
+        } else {
+            alert('Error al reservar: ' + (data.error || 'Error desconocido.'));
+            if (btn) btn.disabled = false;
+        }
+    })
+    .catch(err => {
+        alert('Error de red al reservar.');
+        if (btn) btn.disabled = false;
+    });
 }

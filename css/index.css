@@ -167,7 +167,8 @@ body {
     text-align: center;
     box-shadow: 0 12px 30px rgba(0,0,0,0.18);
     max-width: 1200px;
-    overflow: hidden;
+    /* overflow: visible; */
+    overflow: visible;
 }
 
 .search-bg {
@@ -176,6 +177,7 @@ body {
     background: url('../imagenes/tren.jpg') center/cover no-repeat;
     opacity: 0.22;
     z-index: 0;
+    pointer-events: none;
 }
 
 .search-section h1 {
@@ -406,9 +408,10 @@ body {
     background: white;
     border: 1px solid #ccc;
     border-radius: 6px;
-    max-height: 150px;
+    max-height: 220px;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 2001;
+    box-shadow: 0 8px 24px rgba(10,42,102,0.12);
 }
 
 .suggestions div {
