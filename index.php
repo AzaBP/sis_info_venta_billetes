@@ -170,54 +170,49 @@ try {
             </div>
         </section>
 
-        <!-- OFERTAS / PROMOCIONES -->
-        <section class="offers-section">
-            <h2>Abonos y Promociones</h2>
-            <div class="carousel">
-                <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
+        <!-- ABONOS Y PROMOCIONES -->
+        <section class="offers-container">
+            <h2 class="section-title">Abonos y Promociones</h2>
+            
+            <div class="carousel-wrapper">
+                <button class="carousel-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+                
                 <div class="offers-track">
-
                     <?php foreach ($abonos_index as $abono): ?>
-                        <div class="offer-card" style="background: #fff; border-top: 5px solid #0a2a66; padding: 20px; min-width: 250px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                            <i class="<?= htmlspecialchars($abono['icono'] ?? 'fa-solid fa-ticket') ?>" style="font-size: 2rem; color: #0a2a66; margin-bottom: 10px;"></i>
-                            <h3 style="margin: 5px 0;"><?= htmlspecialchars($abono['nombre']) ?></h3>
-                            <p style="font-size: 0.9rem; color: #555; height: 40px; overflow: hidden;"><?= htmlspecialchars($abono['descripcion']) ?></p>
-                            <div style="font-size: 1.5rem; font-weight: bold; color: #28a745; margin: 10px 0;">
-                                <?= number_format($abono['precio'], 2, ',', '.') ?> €
+                        <div class="offer-card abono-card">
+                            <div class="card-icon">
+                                <i class="<?= htmlspecialchars($abono['icono'] ?? 'fa-solid fa-ticket') ?>"></i>
                             </div>
-                            <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-popular" style="display: block; width: 100%; box-sizing: border-box;">Comprar</a>
+                            <h3 class="card-title"><?= htmlspecialchars($abono['nombre']) ?></h3>
+                            <p class="card-desc"><?= htmlspecialchars($abono['descripcion']) ?></p>
+                            <div class="card-price">
+                                <?= number_format($abono['precio'], 2, ',', '.') ?><span>€</span>
+                            </div>
+                            <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-buy">Comprar ahora</a>
                         </div>
                     <?php endforeach; ?>
 
-                    <?php if (empty($promociones_index) && empty($abonos_index)): ?>
-                        <p style="padding: 20px;">Actualmente no hay ofertas disponibles. ¡Vuelve pronto!</p>
-                    <?php endif; ?>
-
-                </div>
-                <button class="next"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
-        </section>
-
-        <section class="offers-section">
-            <div class="carousel">
-                <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
-                <div class="offers-track">
-                    
                     <?php foreach ($promociones_index as $promo): ?>
-                        <div class="offer-card" style="background: #fdf5e6; border-left: 5px solid #f39c12; padding: 20px; min-width: 250px; border-radius: 8px; text-align: center;">
-                            <i class="fa-solid fa-tag" style="font-size: 2rem; color: #f39c12; margin-bottom: 10px;"></i>
-                            <h3 style="margin: 5px 0;">-<?= floatval($promo['descuento_porcentaje']) ?>% Dto.</h3>
-                            <p style="font-size: 0.9rem;">Usa el código:<br><strong style="font-size: 1.2rem; background: #fff; padding: 5px; border-radius: 4px; border: 1px dashed #f39c12; display: inline-block; margin-top: 5px;"><?= htmlspecialchars($promo['codigo']) ?></strong></p>
-                            <p style="font-size: 0.8rem; color: #666; margin-bottom: 0;">Válido hasta: <?= date('d/m/Y', strtotime($promo['fecha_fin'])) ?></p>
+                        <div class="offer-card promo-card">
+                            <div class="card-icon">
+                                <i class="fa-solid fa-tag"></i>
+                            </div>
+                            <div class="promo-badge">-<?= floatval($promo['descuento_porcentaje']) ?>%</div>
+                            <p class="promo-code-label">Usa el código:</p>
+                            <div class="promo-code"><?= htmlspecialchars($promo['codigo']) ?></div>
+                            <p class="promo-expiry">Válido hasta: <span><?= date('d/m/Y', strtotime($promo['fecha_fin'])) ?></span></p>
                         </div>
                     <?php endforeach; ?>
 
                     <?php if (empty($promociones_index) && empty($abonos_index)): ?>
-                        <p style="padding: 20px;">Actualmente no hay ofertas disponibles. ¡Vuelve pronto!</p>
+                        <div class="empty-msg">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <p>Actualmente no hay ofertas disponibles. ¡Vuelve pronto!</p>
+                        </div>
                     <?php endif; ?>
-
                 </div>
-                <button class="next"><i class="fa-solid fa-chevron-right"></i></button>
+
+                <button class="carousel-btn next"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
         </section>
 

@@ -423,3 +423,112 @@ body {
 .suggestions div:hover {
     background: #f0f0f0;
 }
+
+/* ================= ABONOS Y PROMOCIONES ================= */
+/* Contenedor Principal */
+.offers-container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    color: #0a2a66;
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+}
+
+/* Estructura del Carousel */
+.carousel-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 15px;
+}
+
+.offers-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 15px 5px;
+    scroll-behavior: smooth;
+}
+
+.offers-track::-webkit-scrollbar { display: none; } /* Ocultar scroll */
+
+/* Tarjeta Base */
+.offer-card {
+    min-width: 280px;
+    background: #fff;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.offer-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+}
+
+/* Estilo Abonos */
+.abono-card { border-top: 6px solid #0a2a66; }
+.abono-card .card-icon { color: #0a2a66; font-size: 2.5rem; margin-bottom: 15px; }
+
+/* Estilo Promos */
+.promo-card { 
+    background: linear-gradient(135deg, #fffcf5 0%, #fdf5e6 100%);
+    border: 2px dashed #f39c12;
+}
+.promo-badge {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #f39c12;
+    margin: 10px 0;
+}
+.promo-code {
+    background: #fff;
+    border: 1px solid #f39c12;
+    padding: 8px;
+    font-family: monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+
+/* Tipografía y Botones */
+.card-title { font-size: 1.25rem; margin-bottom: 10px; color: #333; }
+.card-desc { font-size: 0.9rem; color: #666; margin-bottom: 15px; line-height: 1.4; }
+.card-price { font-size: 1.8rem; color: #28a745; font-weight: bold; margin-bottom: 15px; }
+.card-price span { font-size: 1rem; margin-left: 4px; }
+
+.btn-buy {
+    background: #0a2a66;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.btn-buy:hover { background: #081d4a; }
+
+/* Botones Navegación */
+.carousel-btn {
+    background: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    cursor: pointer;
+    color: #0a2a66;
+    transition: all 0.2s;
+}
+.carousel-btn:hover { background: #0a2a66; color: #fff; }
