@@ -77,7 +77,7 @@ try {
         .abono-desc { color: #555; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
         
         .abono-price-box { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px solid #e1e5eb; }
-        .abono-price { font-size: 2rem; font-weight: bold; color: #28a745; }
+        .abono-price { font-size: 2rem; font-weight: bold; color: #02002f; }
         
         /* BOTONES COMUNES */
         .btn-action { display: block; width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.3s; text-align: center; text-decoration: none; box-sizing: border-box; }
