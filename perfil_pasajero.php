@@ -128,11 +128,6 @@ if (!empty($perfil['fecha_nacimiento'])) {
             <div id="incidencias-viaje" class="profile-panel"></div>
         </div>
 
-        <div class="profile-container" style="margin-top: 20px;">
-            <h2 class="section-title">Avisos de tus viajes</h2>
-            <div id="incidencias-viaje" class="profile-panel"></div>
-        </div>
-
         <!--ABONOS COMPRADOS POR EL USUARIO-->
         <div class="profile-container" style="margin-top: 40px;">
             <h2 class="section-title">Mis Abonos</h2>
