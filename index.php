@@ -199,7 +199,6 @@ try {
         </section>
 
         <section class="offers-section">
-            <h2>Abonos y Promociones</h2>
             <div class="carousel">
                 <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="offers-track">
