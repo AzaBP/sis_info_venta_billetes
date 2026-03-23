@@ -79,7 +79,7 @@ function obtenerDisenoAbono(tipo) {
         'mensual': { icon: 'fa-calendar-alt', color: '#0a2a66', nombre: 'Abono Mensual' },
         'trimestral': { icon: 'fa-calendar-days', color: '#17a2b8', nombre: 'Abono Trimestral' },
         'anual': { icon: 'fa-infinity', color: '#f39c12', nombre: 'Abono Anual' },
-        'viajes_limitados': { icon: 'fa-ticket', color: '#e83e8c', nombre: 'Bono Viajes' },
+        'viajes_limitados': { icon: 'fa-ticket', color: '#3156fc', nombre: 'Bono Viajes' },
         'estudiante': { icon: 'fa-user-graduate', color: '#28a745', nombre: 'Abono Estudiante' }
     };
     

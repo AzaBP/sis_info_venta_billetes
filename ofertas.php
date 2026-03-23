@@ -56,13 +56,13 @@ try {
         .page-header h1 { color: #0a2a66; font-size: 2.5rem; margin-bottom: 10px; }
         .page-header p { color: #666; font-size: 1.1rem; }
 
-        .section-title { color: #0a2a66; border-bottom: 3px solid #f39c12; display: inline-block; padding-bottom: 5px; margin-bottom: 30px; }
+        .section-title { color: #0a2a66; border-bottom: 3px solid #1252f3; display: inline-block; padding-bottom: 5px; margin-bottom: 30px; }
         
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-bottom: 60px; }
         
         /* TARJETAS DE PROMOCIONES */
-        .promo-card { background: white; border-radius: 12px; padding: 25px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-top: 5px solid #e83e8c; position: relative; overflow: hidden; }
-        .promo-card .descuento { font-size: 3rem; font-weight: bold; color: #e83e8c; margin: 10px 0; }
+        .promo-card { background: white; border-radius: 12px; padding: 25px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-top: 5px solid #3156fc; position: relative; overflow: hidden; }
+        .promo-card .descuento { font-size: 3rem; font-weight: bold; color: #3156fc; margin: 10px 0; }
         .promo-card .codigo { display: inline-block; background: #f8f9fa; border: 2px dashed #ccc; padding: 10px 20px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; color: #333; margin-bottom: 15px; border-radius: 5px; }
         .promo-card .info-extra { font-size: 0.85rem; color: #666; margin-bottom: 20px; display: flex; flex-direction: column; gap: 5px; }
         
@@ -81,10 +81,10 @@ try {
         
         /* BOTONES COMUNES */
         .btn-action { display: block; width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.3s; text-align: center; text-decoration: none; box-sizing: border-box; }
-        .btn-copy { background: #e83e8c; color: white; }
+        .btn-copy { background: #3156fc; color: white; }
         .btn-copy:hover { background: #c82333; }
-        .btn-buy { background: #f39c12; color: white; }
-        .btn-buy:hover { background: #d68910; }
+        .btn-buy { background: #1602fc; color: white; }
+        .btn-buy:hover { background: #1010d6c5; }
     </style>
 </head>
 <body>
@@ -101,7 +101,7 @@ try {
                     <a href="#">Inglés</a>
                 </div>
             </div>
-            <a href="ofertas.php" style="font-weight:bold; color:#f39c12;">Ofertas</a>
+            <a href="ofertas.php" style="font-weight:bold; color:#1252f3;">Ofertas</a>
             <a href="ayuda.php">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
