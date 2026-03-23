@@ -252,40 +252,6 @@ if ($usuarioSesion && ($usuarioSesion['tipo_usuario'] ?? '') === 'pasajero') {
         </div>
     </header>
 
-    <div class="search-hero">
-        <h1>¿A dónde quieres ir hoy?</h1>
-        <p>Encuentra billetes al mejor precio en cientos de rutas</p>
-        
-        <form action="rutas_destino.php" method="GET" class="search-box">
-            <div class="search-group">
-                <label for="origen"><i class="fa-solid fa-location-dot"></i> Origen</label>
-                <select name="origen" id="origen" required>
-                    <option value="">Selecciona origen...</option>
-                    <?php foreach($origenes as $ori): ?>
-                        <option value="<?= htmlspecialchars($ori) ?>"><?= htmlspecialchars($ori) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            
-            <div class="search-group">
-                <label for="destino"><i class="fa-solid fa-flag-checkered"></i> Destino</label>
-                <select name="destino" id="destino" required>
-                    <option value="">Selecciona destino...</option>
-                    <?php foreach($destinos as $des): ?>
-                        <option value="<?= htmlspecialchars($des) ?>"><?= htmlspecialchars($des) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="search-group" style="flex: 0.5;">
-                <label for="fecha"><i class="fa-solid fa-calendar-days"></i> Fecha Ida</label>
-                <input type="date" name="fecha" id="fecha" min="<?= date('Y-m-d') ?>">
-            </div>
-
-            <button type="submit" class="btn-search"><i class="fa-solid fa-magnifying-glass"></i> Buscar Billetes</button>
-        </form>
-    </div>
-
     <main class="section-tickets">
         <h2 class="section-title"><i class="fa-solid fa-ticket"></i> Mis Próximos Viajes</h2>
         
