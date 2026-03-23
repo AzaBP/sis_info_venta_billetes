@@ -116,7 +116,7 @@ $abonos = $pdo->query("SELECT * FROM TIPO_ABONO ORDER BY precio ASC")->fetchAll(
     <style>
         :root {
             --primary-color: #0a2a66;
-            --secondary-color: #f39c12;
+            --secondary-color: #2e2ec2;
             --bg-color: #f4f7fb;
             --text-color: #333;
             --card-bg: #ffffff;
