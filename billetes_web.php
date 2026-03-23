@@ -213,7 +213,7 @@ if ($usuarioSesion && ($usuarioSesion['tipo_usuario'] ?? '') === 'pasajero') {
             background: white; padding: 20px; border-radius: 8px;
             text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        .info-card i { color: #f39c12; margin-bottom: 15px; }
+        .info-card i { color: #0900bc; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -222,7 +222,7 @@ if ($usuarioSesion && ($usuarioSesion['tipo_usuario'] ?? '') === 'pasajero') {
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
             <a href="index.php">Inicio</a>
-            <a href="billetes.php" style="font-weight:bold; color:#f39c12;">Billetes</a>
+            <a href="billetes.php">Billetes</a>
             <div class="dropdown">
                 <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
