@@ -101,7 +101,7 @@ try {
                     <a href="#">Inglés</a>
                 </div>
             </div>
-            <a href="ofertas.php" style="font-weight:bold; color:#1252f3;">Ofertas</a>
+            <a href="ofertas.php">Ofertas</a>
             <a href="ayuda.php">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
