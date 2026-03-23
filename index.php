@@ -7,6 +7,26 @@ if ($usuarioSesion && ($usuarioSesion['tipo_usuario'] ?? '') === 'empleado') {
     exit;
 }
 $nombreSesion = $usuarioSesion['nombre'] ?? '';
+
+// --- NUEVO CÓDIGO: OBTENER ABONOS Y PROMOCIONES ---
+$abonos_index = [];
+$promociones_index = [];
+
+try {
+    $pdo = (new Conexion())->conectar();
+    if ($pdo) {
+        // 1. Obtener Abonos
+        $stmtAbonos = $pdo->query("SELECT * FROM TIPO_ABONO ORDER BY precio ASC");
+        $abonos_index = $stmtAbonos->fetchAll(PDO::FETCH_ASSOC);
+
+        // 2. Obtener Promociones activas
+        $stmtPromos = $pdo->query("SELECT codigo, descuento_porcentaje, fecha_fin FROM PROMOCION WHERE fecha_fin >= CURRENT_DATE");
+        $promociones_index = $stmtPromos->fetchAll(PDO::FETCH_ASSOC);
+    }
+} catch (PDOException $e) {
+    // Si hay error, los arrays se quedan vacíos y el carrusel no se rompe
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -150,54 +170,35 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
 
         <!-- OFERTAS / PROMOCIONES -->
         <section class="offers-section">
-            <h2>Promociones y Abonos</h2>
+            <h2>Abonos y Promociones</h2>
             <div class="carousel">
                 <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="offers-track">
                     
-                    <div class="offer-card">
-                        <div class="offer-image">
-                            <img src="imagenes/promo1.jpg" alt="Promo 1">
+                    <?php foreach ($promociones_index as $promo): ?>
+                        <div class="offer-card" style="background: #fdf5e6; border-left: 5px solid #f39c12; padding: 20px; min-width: 250px; border-radius: 8px; text-align: center;">
+                            <i class="fa-solid fa-tag" style="font-size: 2rem; color: #f39c12; margin-bottom: 10px;"></i>
+                            <h3 style="margin: 5px 0;">-<?= floatval($promo['descuento_porcentaje']) ?>% Dto.</h3>
+                            <p style="font-size: 0.9rem;">Usa el código:<br><strong style="font-size: 1.2rem; background: #fff; padding: 5px; border-radius: 4px; border: 1px dashed #f39c12; display: inline-block; margin-top: 5px;"><?= htmlspecialchars($promo['codigo']) ?></strong></p>
+                            <p style="font-size: 0.8rem; color: #666; margin-bottom: 0;">Válido hasta: <?= date('d/m/Y', strtotime($promo['fecha_fin'])) ?></p>
                         </div>
-                        <div class="offer-content">
-                            <h3>Descuento AVE</h3>
-                            <p>20% en billetes AVE si reservas con 7 días de antelación.</p>
-                            <a href="ofertas.php" class="btn-popular">Ver oferta</a>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
 
-                    <div class="offer-card">
-                        <div class="offer-image">
-                            <img src="imagenes/promo2.jpg" alt="Promo 2">
+                    <?php foreach ($abonos_index as $abono): ?>
+                        <div class="offer-card" style="background: #fff; border-top: 5px solid #0a2a66; padding: 20px; min-width: 250px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                            <i class="<?= htmlspecialchars($abono['icono'] ?? 'fa-solid fa-ticket') ?>" style="font-size: 2rem; color: #0a2a66; margin-bottom: 10px;"></i>
+                            <h3 style="margin: 5px 0;"><?= htmlspecialchars($abono['nombre']) ?></h3>
+                            <p style="font-size: 0.9rem; color: #555; height: 40px; overflow: hidden;"><?= htmlspecialchars($abono['descripcion']) ?></p>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #28a745; margin: 10px 0;">
+                                <?= number_format($abono['precio'], 2, ',', '.') ?> €
+                            </div>
+                            <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-popular" style="display: block; width: 100%; box-sizing: border-box;">Comprar</a>
                         </div>
-                        <div class="offer-content">
-                            <h3>Abono Mensual</h3>
-                            <p>15% en rutas regionales durante 30 días completos.</p>
-                            <a href="comprar_abono.php?tipo=mensual" class="btn-popular">Comprar ahora</a>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
 
-                    <div class="offer-card">
-                        <div class="offer-image">
-                            <img src="imagenes/promo3.avif" alt="Promo 3">
-                        </div>
-                        <div class="offer-content">
-                            <h3>Billetes Anticipados</h3>
-                            <p>Desde 29,99€ para compras con antelación.</p>
-                            <a href="ofertas.php" class="btn-popular">Ver oferta</a>
-                        </div>
-                    </div>
-
-                    <div class="offer-card">
-                        <div class="offer-image">
-                            <img src="imagenes/promo4.jpeg" alt="Promo 4">
-                        </div>
-                        <div class="offer-content">
-                            <h3>Descuento en familia</h3>
-                            <p>Viaja con los más pequeños de la casa y ahorra un 10% en rutas ilimitadas nacionales.</p>
-                            <a href="ofertas.php" class="btn-popular">Ver oferta</a>
-                        </div>
-                    </div>
+                    <?php if (empty($promociones_index) && empty($abonos_index)): ?>
+                        <p style="padding: 20px;">Actualmente no hay ofertas disponibles. ¡Vuelve pronto!</p>
+                    <?php endif; ?>
 
                 </div>
                 <button class="next"><i class="fa-solid fa-chevron-right"></i></button>
