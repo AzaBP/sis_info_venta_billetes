@@ -21,49 +21,16 @@
 }
 
 .profile-container {
-    max-width: 900px;
-    margin: 0 auto 50px auto;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    overflow: hidden;
+    max-width: 900px; /* Ancho máximo para que no se estire demasiado */
+    margin: 0 auto;   /* Centrado horizontal */
 }
 
-.profile-tabs {
-    display: flex;
-    background-color: #f8f9fa;
-    border-bottom: 2px solid #e9ecef;
+.section-title {
+    font-size: 1.8rem;
+    color: #0a2a66;
+    margin-bottom: 20px;
+    font-weight: 700;
 }
-
-.tab-link {
-    background-color: inherit;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 16px 20px;
-    transition: 0.3s;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #555;
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.tab-link:hover { background-color: #e9ecef; color: #0a2a66; }
-.tab-link.active { background-color: #ffffff; border-bottom: 3px solid #0a2a66; color: #0a2a66; }
-
-.tab-content { display: none; padding: 30px; animation: fadeEffect 0.4s; }
-.tab-content.active { display: block; }
-
-@keyframes fadeEffect {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.section-title { color: #0a2a66; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; font-size: 1.5rem; }
 
 /* El panel blanco central (Estilo Renfe) */
 .profile-panel {
@@ -282,9 +249,14 @@
 /* ================= ACORDEÓN DE DATOS (Desplegables) ================= */
 
 /* Ajuste del contenedor principal para quitar padding extra si se desea */
-.accordion-wrapper { display: flex; flex-direction: column; gap: 15px; }
+.accordion-wrapper {
+    padding: 0; /* Quitamos padding del padre para que los bordes lleguen al final */
+    overflow: hidden; /* Para redondear esquinas */
+}
 
-.accordion-item { border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; }
+.accordion-item {
+    border-bottom: 1px solid #eee;
+}
 
 .accordion-item:last-child {
     border-bottom: none;
@@ -292,8 +264,13 @@
 
 /* Cabecera (Título + Flecha) */
 .accordion-header {
-    background: #fdfdfd; padding: 15px 20px; display: flex; justify-content: space-between;
-    align-items: center; cursor: pointer; transition: background 0.3s;
+    padding: 20px 30px;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
 }
 
 .accordion-header:hover {
@@ -322,15 +299,18 @@
 
 /* Contenido oculto por defecto */
 .accordion-content {
-    background: #fff; padding: 0 20px;
-    max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background-color: white;
 }
 
 /* Cuando se activa la clase mediante JS */
 .accordion-item.active .accordion-content {
-    padding: 20px; max-height: 1000px; /* Un valor alto para que se expanda */
-    border-top: 1px solid #e0e0e0;
+    max-height: 1000px; /* Un valor alto suficiente para que quepa todo */
+    padding: 0 30px 30px 30px; /* Padding solo cuando está abierto */
 }
+
 /* ================= FORMULARIOS INTERNOS ================= */
 
 .form-grid {

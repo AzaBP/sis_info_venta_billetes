@@ -82,7 +82,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
             <a href="index.php">Inicio</a>
-            <a href="billetes_web.php">Billetes</a>
+            <a href="#">Billetes</a>
             <div class="dropdown">
                 <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
@@ -113,37 +113,38 @@ if (!empty($perfil['fecha_nacimiento'])) {
     <!-- CONTENIDO PERFIL -->
     <main class="perfil-main">
 
-    <section class="welcome-section" style="text-align: center; margin: 30px 0;">
-        <div class="welcome-text">
-            <h1 style="color: #0a2a66;">Hola, <?php echo htmlspecialchars($nombreSesion ?? $perfil['nombre'], ENT_QUOTES, 'UTF-8'); ?></h1>
-            <p class="welcome-subtitle" style="color: #666;">Aquí tienes el resumen de tu actividad y la gestión de tu cuenta.</p>
-        </div>
-    </section>
+        <!--BIENVENIDA USUARIO-->
+        <section class="welcome-section">
+            <div class="welcome-text">
+                <h1>Hola <?php echo htmlspecialchars($nombreSesion, ENT_QUOTES, 'UTF-8'); ?></h1>
+                <p class="welcome-subtitle">Aquí tienes el resumen de tu actividad y próximos viajes.</p>
+            </div>
+                
+        </section>
 
-    <div class="profile-container">
-        
-        <div class="profile-tabs">
-            <button class="tab-link active" onclick="openTab(event, 'MisDatos')">
-                <i class="fa-solid fa-user"></i> Mis Datos
-            </button>
-            <button class="tab-link" onclick="openTab(event, 'MisAbonos')">
-                <i class="fa-solid fa-ticket"></i> Mis Abonos
-            </button>
-            <button class="tab-link" onclick="openTab(event, 'Incidencias')">
-                <i class="fa-solid fa-triangle-exclamation"></i> Avisos de Viajes
-            </button>
-            <button class="tab-link" onclick="openTab(event, 'Configuracion')">
-                <i class="fa-solid fa-gear"></i> Configuración
-            </button>
+        <!--VIAJES COMPRADOS POR EL USUARIO-->
+         <div class="profile-container" style="margin-top: 20px;">
+            <h2 class="section-title">Avisos de tus viajes</h2>
+            <div id="incidencias-viaje" class="profile-panel"></div>
         </div>
 
-        <div id="MisDatos" class="tab-content active">
+        <!--ABONOS COMPRADOS POR EL USUARIO-->
+        <div class="profile-container" style="margin-top: 40px;">
+            <h2 class="section-title">Mis Abonos</h2>
+            <div id="abonos-list"></div>
+        </div>
+            
+
+        <!--DATOS DEL USUARIO-->
+        <div class="profile-container" style="margin-top: 40px;"> 
             <h2 class="section-title">Mis Datos</h2>
             <div class="profile-panel accordion-wrapper">
-                
+                <!-- Datos del usuario-->
                 <div class="accordion-item">
                     <div class="accordion-header">
-                        <div class="header-title"><i class="fa-regular fa-id-card"></i> Información Personal</div>
+                        <div class="header-title">
+                            <i class="fa-regular fa-id-card"></i> Información Personal
+                        </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
                     <div class="accordion-content">
@@ -162,7 +163,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
                             </div>
                             <div class="form-group read-only-group">
                                 <label>Fecha de Nacimiento</label>
-                                <div class="static-value"><?php echo htmlspecialchars($fechaNacimientoVista ?? '-', ENT_QUOTES, 'UTF-8'); ?></div>
+                                <div class="static-value"><?php echo htmlspecialchars($fechaNacimientoVista, ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                             <div class="form-group read-only-group">
                                 <label>Email</label>
@@ -175,10 +176,12 @@ if (!empty($perfil['fecha_nacimiento'])) {
                         </div>
                     </div>
                 </div>
-
+                <!-- Dirección de facturación -->
                 <div class="accordion-item">
                     <div class="accordion-header">
-                        <div class="header-title"><i class="fa-solid fa-file-invoice-dollar"></i> Dirección de Facturación</div>
+                        <div class="header-title">
+                            <i class="fa-solid fa-file-invoice-dollar"></i> Dirección de Facturación
+                        </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
                     <div class="accordion-content">
@@ -202,27 +205,16 @@ if (!empty($perfil['fecha_nacimiento'])) {
             </div>
         </div>
 
-        <div id="MisAbonos" class="tab-content">
-            <h2 class="section-title">Mis Abonos</h2>
-            <div id="abonos-list" class="profile-panel">
-                <p>Cargando abonos...</p>
-            </div>
-        </div>
-
-        <div id="Incidencias" class="tab-content">
-            <h2 class="section-title">Avisos de tus viajes</h2>
-            <div id="incidencias-viaje" class="profile-panel">
-                 <p>No hay avisos recientes para tus próximos viajes.</p>
-            </div>
-        </div>
-
-        <div id="Configuracion" class="tab-content">
+        <!--CONFIGURACIÓN DE LA CUENTA-->
+        <div class="profile-container" style="margin-top: 40px; margin-bottom: 60px;"> 
             <h2 class="section-title">Configuración de Cuenta</h2>
             <div class="profile-panel accordion-wrapper">
-                
+                <!--notificaciones-->
                 <div class="accordion-item">
                     <div class="accordion-header">
-                        <div class="header-title"><i class="fa-regular fa-bell"></i> Preferencias de Avisos</div>
+                        <div class="header-title">
+                            <i class="fa-regular fa-bell"></i> Preferencias de Avisos
+                        </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
                     <div class="accordion-content">
@@ -237,7 +229,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
                                     <span class="slider round"></span>
                                 </label>
                             </div>
-                            <hr class="trip-separator" style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+                            <hr class="trip-separator">
                             <div class="notification-option">
                                 <div class="notif-text">
                                     <strong>Ofertas comerciales</strong>
@@ -252,9 +244,12 @@ if (!empty($perfil['fecha_nacimiento'])) {
                     </div>
                 </div>
 
+                <!--modificar datos personales-->
                 <div class="accordion-item">
                     <div class="accordion-header">
-                        <div class="header-title"><i class="fa-solid fa-user-pen"></i> Modificar Datos Personales</div>
+                        <div class="header-title">
+                            <i class="fa-solid fa-user-pen"></i> Modificar Datos Personales
+                        </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
                     <div class="accordion-content">
@@ -269,11 +264,11 @@ if (!empty($perfil['fecha_nacimiento'])) {
                             </div>
                             <div class="form-group">
                                 <label>Documento (DNI/NIE)</label>
-                                <input type="text" value="<?php echo htmlspecialchars($perfil['numero_documento'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" class="form-input" disabled style="background-color: #f0f0f0; cursor: not-allowed;">
+                                <input type="text" value="<?php echo htmlspecialchars($perfil['numero_documento'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" disabled style="background-color: #f0f0f0; cursor: not-allowed;">
                             </div>
                             <div class="form-group">
                                 <label>Fecha de Nacimiento</label>
-                                <input type="date" value="<?php echo htmlspecialchars($fechaNacimientoInput ?? '', ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                <input type="date" value="<?php echo htmlspecialchars($fechaNacimientoInput, ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                             </div>
                             <div class="form-group">
                                 <label>Email de Contacto</label>
@@ -281,23 +276,25 @@ if (!empty($perfil['fecha_nacimiento'])) {
                             </div>
                             <div class="form-group">
                                 <label>Teléfono Móvil</label>
-                                <input type="tel" value="<?php echo htmlspecialchars($perfil['telefono'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                <input type="tel" value="<?php echo htmlspecialchars($perfil['telefono'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                             </div>
-                            <div class="form-full" style="grid-column: 1 / -1; margin-top: 15px;">
+                            <div class="form-full">
                                 <button type="button" class="btn-primary">Guardar Cambios</button>
                             </div>
                         </form>
                     </div>
                 </div>
-
+                <!--cambio de contraseña-->
                 <div class="accordion-item">
                     <div class="accordion-header">
-                        <div class="header-title"><i class="fa-solid fa-lock"></i> Seguridad y Contraseña</div>
+                        <div class="header-title">
+                            <i class="fa-solid fa-lock"></i> Seguridad y Contraseña
+                        </div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
                     </div>
                     <div class="accordion-content">
                         <form class="form-grid">
-                            <div class="form-group full-width" style="grid-column: 1 / -1;">
+                            <div class="form-group full-width">
                                 <label>Contraseña Actual</label>
                                 <input type="password" placeholder="••••••••" class="form-input">
                             </div>
@@ -309,13 +306,13 @@ if (!empty($perfil['fecha_nacimiento'])) {
                                 <label>Repetir Nueva Contraseña</label>
                                 <input type="password" class="form-input">
                             </div>
-                            <div class="form-full" style="grid-column: 1 / -1; margin-top: 15px;">
+                            <div class="form-full">
                                 <button type="button" class="btn-primary">Cambiar Contraseña</button>
                             </div>
                         </form>
                     </div>
                 </div>
-
+                <!--eliminar cuenta-->
                 <div class="accordion-item">
                     <div class="accordion-header">
                         <div class="header-title" style="color: #d9534f;">
@@ -334,41 +331,20 @@ if (!empty($perfil['fecha_nacimiento'])) {
             </div>
         </div>
 
-    </div>
+        <!--SCRIPT ACORDEON -->
+        <script>
+            const accordions = document.querySelectorAll('.accordion-header');
 
-    <script>
-        // Lógica para cambiar de pestaña
-        function openTab(evt, tabName) {
-            let tabContent = document.getElementsByClassName("tab-content");
-            for (let i = 0; i < tabContent.length; i++) {
-                tabContent[i].classList.remove("active");
-            }
-            let tabLinks = document.getElementsByClassName("tab-link");
-            for (let i = 0; i < tabLinks.length; i++) {
-                tabLinks[i].classList.remove("active");
-            }
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
-        }
-
-        // Lógica para los acordeones
-        const accordions = document.querySelectorAll('.accordion-header');
-        accordions.forEach(header => {
-            header.addEventListener('click', () => {
-                const item = header.parentElement;
-                item.classList.toggle('active');
-                
-                // Animación opcional para la flechita
-                const arrow = header.querySelector('.arrow-icon');
-                if (item.classList.contains('active')) {
-                    arrow.style.transform = 'rotate(180deg)';
-                } else {
-                    arrow.style.transform = 'rotate(0deg)';
-                }
+            accordions.forEach(header => {
+                header.addEventListener('click', () => {
+                    const item = header.parentElement;
+                    // Alternar la clase 'active' para abrir/cerrar
+                    item.classList.toggle('active');
+                });
             });
-        });
-    </script>
-</main>
+        </script>
+
+    </main>
 
     <!-- FOOTER -->
     <footer class="footer">
