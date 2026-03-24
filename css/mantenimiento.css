@@ -220,7 +220,7 @@ body.modal-open {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    grid-column: 2 / 3;
+    grid-column: 1 / -1;
 }
 
 .filter-row {
@@ -303,6 +303,10 @@ body.modal-open {
     overflow-y: auto;
     padding-right: 8px;
     grid-column: 1 / 2;
+}
+
+.issues-list.iot-panel {
+    grid-column: 2 / 3;
 }
 
 .issue-item {
@@ -589,5 +593,9 @@ body.modal-open {
     .profile-actions {
         flex-direction: column;
         align-items: flex-start;
+    }
+    .issues-list.iot-panel,
+    .ops-panel {
+        grid-column: 1 / -1;
     }
 }

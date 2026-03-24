@@ -179,7 +179,7 @@ try {
     </div>
 </section>
 
-        <section class="panel issues-list">
+        <section class="panel issues-list iot-panel">
             <h2>Incidencias pendientes</h2>
             <div id="incidenciasPendientes">
                 <?php if (count($incidenciasPendientesManual) === 0): ?>
