@@ -217,7 +217,7 @@ try {
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            </div>hh
+            </div>
         </section>
 
         <section class="panel issues-list">
