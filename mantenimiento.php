@@ -77,7 +77,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrainWeb - Gestionnn de Mantenimiento</title>
+    <title>TrainWeb - Gestion de Mantenimiento</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="css/index.css">
@@ -103,7 +103,7 @@ try {
 
 <main class="maint-container" data-maint-id="<?php echo $idEmpleado ? (int)$idEmpleado : 0; ?>">
     <div class="page-title">
-        <h1><i class="fa-solid fa-wrench"></i> Centroo de control de unidades</h1>
+        <h1><i class="fa-solid fa-wrench"></i> Centro de control de unidades</h1>
         <p>Sesion activa: <?php echo htmlspecialchars($usuario['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?> | Especialidad: <?php echo htmlspecialchars((string)$especialidad, ENT_QUOTES, 'UTF-8'); ?> | Turno: <?php echo htmlspecialchars((string)$turno, ENT_QUOTES, 'UTF-8'); ?></p>
         <?php if ($certificaciones !== ''): ?>
             <p>Certificaciones: <?php echo htmlspecialchars((string)$certificaciones, ENT_QUOTES, 'UTF-8'); ?></p>
@@ -217,7 +217,7 @@ try {
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            </div>
+            </div>hh
         </section>
 
         <section class="panel issues-list">
