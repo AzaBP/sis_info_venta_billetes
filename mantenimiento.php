@@ -103,7 +103,7 @@ try {
 
 <main class="maint-container" data-maint-id="<?php echo $idEmpleado ? (int)$idEmpleado : 0; ?>">
     <div class="page-title">
-        <h1><i class="fa-solid fa-wrench"></i> Centrooode control de unidades</h1>
+        <h1><i class="fa-solid fa-wrench"></i> Centro de control de unidades</h1>
         <p>Sesion activa: <?php echo htmlspecialchars($usuario['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?> | Especialidad: <?php echo htmlspecialchars((string)$especialidad, ENT_QUOTES, 'UTF-8'); ?> | Turno: <?php echo htmlspecialchars((string)$turno, ENT_QUOTES, 'UTF-8'); ?></p>
         <?php if ($certificaciones !== ''): ?>
             <p>Certificaciones: <?php echo htmlspecialchars((string)$certificaciones, ENT_QUOTES, 'UTF-8'); ?></p>
