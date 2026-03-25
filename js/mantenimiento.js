@@ -4,7 +4,9 @@
     const historyContainer = document.getElementById('incidenciasHistorico');
     const refreshBtn = document.getElementById('refreshNow');
     const scrollTopBtn = document.getElementById('scrollTop');
-    const filterBtns = document.querySelectorAll('.filter-btn');
+    const filterOptions = document.querySelectorAll('.filter-option');
+    const filterToggle = document.getElementById('filterToggle');
+    const filterMenu = document.getElementById('filterMenu');
     const profileForm = document.getElementById('profileForm');
     const profileStatus = document.getElementById('profileStatus');
     const profileToggle = document.getElementById('profileToggle');
@@ -12,6 +14,7 @@
     const detailModal = document.getElementById('detailModal');
     const detailModalBody = document.getElementById('detailModalBody');
     const detailClose = document.getElementById('detailClose');
+    const profileNavBtn = document.getElementById('profileNavBtn');
 
     let allData = [];
     let pendingManual = [];
@@ -386,14 +389,29 @@
         }
     });
 
-    filterBtns.forEach(btn => {
+    filterOptions.forEach(btn => {
         btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
+            filterOptions.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentFilter = btn.dataset.filter || 'all';
             aplicarFiltro();
+            if (filterMenu) filterMenu.classList.add('hidden');
         });
     });
+
+    if (filterToggle && filterMenu) {
+        filterToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            filterMenu.classList.toggle('hidden');
+        });
+
+        // Cerrar el menú si se hace clic fuera
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.filter-dropdown')) {
+                filterMenu.classList.add('hidden');
+            }
+        });
+    }
 
     if (profileForm) {
         profileForm.addEventListener('submit', async (e) => {
@@ -428,6 +446,13 @@
     if (profileToggle && profilePanel) {
         profileToggle.addEventListener('click', () => {
             profilePanel.classList.toggle('collapsed');
+        });
+    }
+
+    if (profileNavBtn && profilePanel) {
+        profileNavBtn.addEventListener('click', () => {
+            profilePanel.classList.remove('collapsed');
+            profilePanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     }
 

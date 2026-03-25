@@ -90,6 +90,10 @@ try {
         <span style="font-size: .8rem; opacity: .8; font-weight: normal; margin-left: 10px;">| Mantenimiento</span>
     </div>
     <nav class="nav">
+        <button id="profileNavBtn" class="profile-nav-btn" title="Ver datos personales">
+            <i class="fa-solid fa-user-circle"></i>
+            <span class="profile-nav-name"><?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
+        </button>
         <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500;">
             <i class="fa-solid fa-helmet-safety"></i>
             <?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
@@ -111,6 +115,26 @@ try {
     </div>
 
     <div class="maint-grid">
+        <div class="filter-dropdown">
+            <button id="filterToggle" class="filter-toggle-btn">
+                <i class="fa-solid fa-filter"></i> Filtrar
+            </button>
+            <div id="filterMenu" class="filter-menu hidden">
+                <button class="filter-option active" data-filter="all">
+                    <i class="fa-solid fa-check"></i> Todas
+                </button>
+                <button class="filter-option" data-filter="reportado">
+                    <i class="fa-solid fa-exclamation-circle"></i> Reportado
+                </button>
+                <button class="filter-option" data-filter="en_proceso">
+                    <i class="fa-solid fa-hourglass-half"></i> Confirmado
+                </button>
+                <button class="filter-option" data-filter="resuelto">
+                    <i class="fa-solid fa-check-circle"></i> Resuelto
+                </button>
+            </div>
+        </div>
+
         <section class="panel profile-panel collapsed">
     <button type="button" id="profileToggle" class="profile-toggle">
         <div class="profile-toggle-left">
@@ -262,13 +286,7 @@ try {
         </section>
 
         <section class="panel ops-panel">
-            <h2>Filtrado de incidencias</h2>
-            <div class="filter-row">
-                <button class="filter-btn active" data-filter="all">Todas</button>
-                <button class="filter-btn" data-filter="reportado">Reportado</button>
-                <button class="filter-btn" data-filter="en_proceso">Confirmado</button>
-                <button class="filter-btn" data-filter="resuelto">Resuelto</button>
-            </div>
+            <h2>Opciones y consejos</h2>
             <div class="carousel-box">
                 <div class="carousel-track">
                     <div class="carousel-item">Prioriza incidencias de frenos y puertas.</div>
@@ -319,5 +337,6 @@ try {
 </div>
 
 <script src="js/mantenimiento.js?v=20260314h"></script>
+<script src="js/iot_simulador.js?v=20260325a"></script>
 </body>
 </html>
