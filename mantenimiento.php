@@ -93,7 +93,7 @@ try {
         <div class="profile-dropdown">
             <button id="profileNavBtn" class="profile-nav-btn" title="Ver datos personales">
                 <i class="fa-solid fa-user-circle"></i>
-                <span class="profile-nav-name"><?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="profile-nav-name"><?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?> | ID #<?php echo $idEmpleado ? (int)$idEmpleado : 0; ?></span>
             </button>
             <div id="profileMenuNav" class="profile-menu-nav hidden">
                 <div class="profile-menu-header">
@@ -127,13 +127,6 @@ try {
                     <button type="submit" class="profile-save-btn">Guardar</button>
                 </form>
             </div>
-        </div>
-        <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500;">
-            <i class="fa-solid fa-helmet-safety"></i>
-            <?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
-            <?php if ($idEmpleado): ?>
-                | ID #<?php echo (int)$idEmpleado; ?>
-            <?php endif; ?>
         </div>
         <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
     </nav>

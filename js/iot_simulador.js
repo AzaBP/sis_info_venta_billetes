@@ -6,7 +6,7 @@
 class IoTSimulador {
     constructor(tokenIoT = null) {
         this.tokenIoT = tokenIoT || 'trainweb_iot_test_token_2026';
-        this.intervalo = 30000; // 30 segundos entre simulaciones
+        this.intervalo = 10000; // 10 segundos entre simulaciones (acelerar testing)
         this.running = false;
         this.ultimaSimulacion = 0;
         this.contador = 0;
