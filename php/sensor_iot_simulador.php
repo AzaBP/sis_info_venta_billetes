@@ -14,30 +14,39 @@ try {
     // SETUP: Crear datos básicos si no existen
     $c = (int)$pdo->query("SELECT COUNT(*) FROM mantenimiento")->fetchColumn();
     if ($c === 0) {
-        $pdo->exec("INSERT INTO usuario (email, password, tipo_usuario) VALUES ('mant@test', 'test', 'empleado')");
+        // Insert user for maintenance
+        $stmt = $pdo->prepare("INSERT INTO usuario (email, password, tipo_usuario) VALUES (?, ?, ?)");
+        $stmt->execute(['mant_iot_test@test', 'test', 'empleado']);
         $uid = $pdo->lastInsertId();
-        $pdo->exec("INSERT INTO empleado (id_usuario, tipo_empleado, nombre, apellido) VALUES ($uid, 'mantenimiento', 'Maint', 'Test')");
+        $stmt = $pdo->prepare("INSERT INTO empleado (id_usuario, tipo_empleado, nombre, apellido) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$uid, 'mantenimiento', 'Maint', 'IoT']);
         $eid = $pdo->lastInsertId();
-        $pdo->exec("INSERT INTO mantenimiento (id_empleado, especialidad, turno) VALUES ($eid, 'Gen', 'manana')");
+        $stmt = $pdo->prepare("INSERT INTO mantenimiento (id_empleado, especialidad, turno) VALUES (?, ?, ?)");
+        $stmt->execute([$eid, 'General', 'manana']);
     }
 
     $c = (int)$pdo->query("SELECT COUNT(*) FROM maquinista")->fetchColumn();
     if ($c === 0) {
-        $pdo->exec("INSERT INTO usuario (email, password, tipo_usuario) VALUES ('maq@test', 'test', 'empleado')");
+        $stmt = $pdo->prepare("INSERT INTO usuario (email, password, tipo_usuario) VALUES (?, ?, ?)");
+        $stmt->execute(['maq_iot_test@test', 'test', 'empleado']);
         $uid = $pdo->lastInsertId();
-        $pdo->exec("INSERT INTO empleado (id_usuario, tipo_empleado, nombre, apellido) VALUES ($uid, 'maquinista', 'Maq', 'Test')");
+        $stmt = $pdo->prepare("INSERT INTO empleado (id_usuario, tipo_empleado, nombre, apellido) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$uid, 'maquinista', 'Maq', 'IoT']);
         $eid = $pdo->lastInsertId();
-        $pdo->exec("INSERT INTO maquinista (id_empleado, numero_licencia, fecha_expedicion) VALUES ($eid, 'LIC1', NOW())");
+        $stmt = $pdo->prepare("INSERT INTO maquinista (id_empleado, numero_licencia, fecha_expedicion) VALUES (?, ?, NOW())");
+        $stmt->execute([$eid, 'LIC_IOT_001']);
     }
 
     $c = (int)$pdo->query("SELECT COUNT(*) FROM tren")->fetchColumn();
     if ($c === 0) {
-        $pdo->exec("INSERT INTO tren (modelo, asientos, velocidad_maxima, año_fabricacion) VALUES ('T1', 300, 200, 2024)");
+        $stmt = $pdo->prepare("INSERT INTO tren (modelo, asientos, velocidad_maxima, año_fabricacion) VALUES (?, ?, ?, ?)");
+        $stmt->execute(['T_IoT_001', 300, 200, 2024]);
     }
 
     $c = (int)$pdo->query("SELECT COUNT(*) FROM ruta")->fetchColumn();
     if ($c === 0) {
-        $pdo->exec("INSERT INTO ruta (origen, destino, distancia, duracion_estimada) VALUES ('A', 'B', 100, 60)");
+        $stmt = $pdo->prepare("INSERT INTO ruta (origen, destino, distancia, duracion_estimada) VALUES (?, ?, ?, ?)");
+        $stmt->execute(['Station A', 'Station B', 100, 60]);
     }
 
     $c = (int)$pdo->query("SELECT COUNT(*) FROM viaje")->fetchColumn();
@@ -45,13 +54,16 @@ try {
         $maq = $pdo->query("SELECT id_maquinista FROM maquinista LIMIT 1")->fetchColumn();
         $tren = $pdo->query("SELECT id_tren FROM tren LIMIT 1")->fetchColumn();
         $ruta = $pdo->query("SELECT id_ruta FROM ruta LIMIT 1")->fetchColumn();
-        for ($i = 0; $i < 5; $i++) {
-            $pdo->exec("INSERT INTO viaje (id_maquinista, id_tren, id_ruta, estado, fecha_salida, hora_salida, hora_llegada, numero_asientos_disponibles) VALUES ($maq, $tren, $ruta, 'proximo', NOW(), '08:00', '11:00', 150)");
+        if ($maq && $tren && $ruta) {
+            $stmt = $pdo->prepare("INSERT INTO viaje (id_maquinista, id_tren, id_ruta, estado, fecha_salida, hora_salida, hora_llegada, numero_asientos_disponibles) VALUES (?, ?, ?, ?, NOW(), ?, ?, ?)");
+            for ($i = 0; $i < 5; $i++) {
+                $stmt->execute([$maq, $tren, $ruta, 'proximo', '08:00', '11:00', 150]);
+            }
         }
     }
 
     // Limpiar incidencias viejas
-    $pdo->exec("DELETE FROM incidencia WHERE origen = 'iot' AND estado = 'reportado' AND fecha_reporte < (NOW() - INTERVAL 24 HOUR)");
+    $pdo->exec("DELETE FROM incidencia WHERE origen = 'iot' AND estado = 'reportado' AND fecha_reporte < (NOW() - INTERVAL '24 hours')");
 
     // Obtener viajes
     $viajes = $pdo->query("SELECT id_viaje, id_maquinista FROM viaje LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
@@ -81,14 +93,15 @@ try {
             $desc = $mensajes[mt_rand(0, count($mensajes) - 1)];
 
             // Verificar no duplicada RECIENTE
-            $check = $pdo->prepare("SELECT COUNT(*) FROM incidencia WHERE id_viaje = ? AND tipo_incidencia = ? AND fecha_reporte > DATE_SUB(NOW(), INTERVAL 2 MINUTE)");
+            $check = $pdo->prepare("SELECT COUNT(*) FROM incidencia WHERE id_viaje = ? AND tipo_incidencia = ? AND fecha_reporte > (NOW() - INTERVAL '2 minutes')");
             $check->execute([$v['id_viaje'], $tipo]);
             if ($check->fetchColumn() > 0) continue;
 
             // INSERTAR
             $ins = $pdo->prepare("INSERT INTO incidencia (id_viaje, id_mantenimiento, id_maquinista, tipo_incidencia, origen, descripcion, fecha_reporte, estado, afecta_pasajero) VALUES (?, ?, ?, ?, 'iot', ?, NOW(), 'reportado', 1)");
-            @$ins->execute([$v['id_viaje'], $maint, $v['id_maquinista'], $tipo, $desc]);
-            $gen++;
+            if ($ins->execute([$v['id_viaje'], $maint, $v['id_maquinista'], $tipo, $desc])) {
+                $gen++;
+            }
         }
     }
 

@@ -47,10 +47,11 @@ class IoTSimulador {
             });
 
             const data = await response.json();
+            console.log(`🚂 [IoT #${this.contador}] respuesta:`, data);
 
             if (data.ok) {
                 const gen = data.incidencias_generadas || data.gen || 0;
-                console.log(`🚂 [IoT #${this.contador}] Generadas: ${gen} incidencias`);
+                console.log(`🚂 [IoT #${this.contador}] Generadas: ${gen} incidencias, viajes procesados: ${data.viajes || 0}`);
 
                 // SIEMPRE refrescar el panel
                 this.refrescarIncidencias();
@@ -68,19 +69,37 @@ class IoTSimulador {
 
     refrescarIncidencias() {
         const contenedor = document.getElementById('incidenciasPendientesIot');
-        if (!contenedor) return;
+        if (!contenedor) {
+            console.warn('[IoT] No contenedor encontrado');
+            return;
+        }
 
         // Forzar recarga completa de la página de incidencias
         fetch('php/api_incidencias_listar_mantenimiento.php', { credentials: 'same-origin' })
-            .then(r => r.json())
+            .then(r => {
+                console.log('[IoT] API response status:', r.status);
+                return r.json();
+            })
             .then(data => {
-                if (!Array.isArray(data)) return;
+                console.log('[IoT] API data (todas incidencias):', data);
+                if (!Array.isArray(data)) {
+                    console.warn('[IoT] Data no es array:', typeof data);
+                    return;
+                }
+
+                console.log(`[IoT] Total de incidencias: ${data.length}`);
 
                 // Filtrar SOLO incidencias IoT no resueltas
-                const iotIncidencias = data.filter(inc =>
-                    String(inc.origen || '').toLowerCase() === 'iot' &&
-                    inc.estado !== 'resuelto'
-                );
+                const iotIncidencias = data.filter(inc => {
+                    const esIot = String(inc.origen || '').toLowerCase() === 'iot';
+                    const noResuelto = inc.estado !== 'resuelto';
+                    if (data.length < 20) { // Solo log detallado si pocos registros
+                        console.log(`[IoT] Inc #${inc.id_incidencia}: origen="${inc.origen}" (esIot=${esIot}), estado="${inc.estado}" (noResuelto=${noResuelto})`);
+                    }
+                    return esIot && noResuelto;
+                });
+
+                console.log(`[IoT] Filtradas de IoT no resueltas: ${iotIncidencias.length}`);
 
                 if (iotIncidencias.length === 0) {
                     contenedor.innerHTML = '<div class="issue-item low-priority"><p class="issue-desc">No hay incidencias automáticas.</p></div>';
