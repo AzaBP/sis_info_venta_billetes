@@ -45,7 +45,7 @@ try {
         }
 
         if ($idEmpleado) {
-            $pdo->exec("DELETE FROM incidencia WHERE origen = 'iot' AND estado = 'reportado' AND fecha_reporte < (NOW() - INTERVAL '24 hours')");
+            $pdo->exec("DELETE FROM incidencia WHERE origen = 'iot' AND estado != 'resuelto' AND fecha_reporte < (NOW() - INTERVAL '24 hours')");
             $stmtInc = $pdo->prepare(
                 "SELECT id_incidencia, id_viaje, id_mantenimiento, id_maquinista, tipo_incidencia, origen, descripcion,
                         fecha_reporte, estado, afecta_pasajero, resolucion, fecha_resolucion
@@ -81,7 +81,7 @@ try {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/mantenimiento.css?v=20260325b">
+    <link rel="stylesheet" href="css/mantenimiento.css?v=20260325c">
 </head>
 <body>
 <header class="header">
@@ -256,6 +256,6 @@ try {
 </div>
 
 <script src="js/mantenimiento.js?v=20260314h"></script>
-<script src="js/iot_simulador.js?v=20260325a"></script>
+<script src="js/iot_simulador.js?v=20260325b"></script>
 </body>
 </html>

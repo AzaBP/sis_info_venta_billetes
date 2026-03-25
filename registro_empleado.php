@@ -69,7 +69,7 @@ try {
                         e.id_empleado, e.tipo_empleado,
                         p.fecha_nacimiento, p.genero, p.tipo_documento, p.numero_documento, p.calle, p.ciudad, p.codigo_postal, p.pais,
                         v.comision_porcentaje, v.region,
-                        q.licencia, q.\"experiencia_aÃ±os\" AS experiencia_anos, q.horario_preferido,
+                        q.licencia, q.experiencia_anos, q.horario_preferido,
                         m.especialidad, m.turno, m.certificaciones
                  FROM usuario u
                  LEFT JOIN empleado e ON e.id_usuario = u.id_usuario

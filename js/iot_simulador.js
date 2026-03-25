@@ -1,12 +1,12 @@
 /**
  * IoT Sensor Simulator - Gestor de Incidencias Automáticas
- * Se ejecuta automáticamente cada 30 segundos en el panel de mantenimiento
+ * Se ejecuta automáticamente cada 1 minuto en el panel de mantenimiento
  */
 
 class IoTSimulador {
     constructor(tokenIoT = null) {
         this.tokenIoT = tokenIoT || 'trainweb_iot_test_token_2026';
-        this.intervalo = 5000; // 5 segundos PARA TESTING
+        this.intervalo = 60000; // 1 minuto (60 segundos)
         this.running = false;
         this.ultimaSimulacion = 0;
         this.contador = 0;

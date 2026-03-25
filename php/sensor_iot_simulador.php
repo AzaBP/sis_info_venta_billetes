@@ -62,8 +62,8 @@ try {
         }
     }
 
-    // Limpiar incidencias viejas
-    $pdo->exec("DELETE FROM incidencia WHERE origen = 'iot' AND estado = 'reportado' AND fecha_reporte < (NOW() - INTERVAL '24 hours')");
+    // Limpiar incidencias viejas - ELIMINAR TODAS las iOT no resueltas después de 24h
+    $pdo->exec("DELETE FROM incidencia WHERE origen = 'iot' AND estado != 'resuelto' AND fecha_reporte < (NOW() - INTERVAL '24 hours')");
 
     // Obtener viajes
     $viajes = $pdo->query("SELECT id_viaje, id_maquinista FROM viaje LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
