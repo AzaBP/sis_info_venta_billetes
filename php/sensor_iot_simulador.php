@@ -98,7 +98,7 @@ try {
             if ($check->fetchColumn() > 0) continue;
 
             // INSERTAR
-            $ins = $pdo->prepare("INSERT INTO incidencia (id_viaje, id_mantenimiento, id_maquinista, tipo_incidencia, origen, descripcion, fecha_reporte, estado, afecta_pasajero) VALUES (?, ?, ?, ?, 'iot', ?, NOW(), 'reportado', 1)");
+            $ins = $pdo->prepare("INSERT INTO incidencia (id_viaje, id_mantenimiento, id_maquinista, tipo_incidencia, origen, descripcion, fecha_reporte, estado, afecta_pasajero) VALUES (?, ?, ?, ?, 'iot', ?, NOW(), 'reportado', true)");
             if ($ins->execute([$v['id_viaje'], $maint, $v['id_maquinista'], $tipo, $desc])) {
                 $gen++;
             }
