@@ -186,6 +186,97 @@ try {
         <?php if ($error !== ''): ?><div class="msg-error"><?php echo h($error); ?></div><?php endif; ?>
     </div>
 
+    <!-- ESTADÍSTICAS RÁPIDAS -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 18px;">
+        <div style="background: #fff; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align: center; border-left: 4px solid #0d6efd;">
+            <div style="font-size: 1.8rem; font-weight: 800; color: #0d6efd;"><?php echo count($usuarios); ?></div>
+            <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">Total Usuarios</div>
+        </div>
+        <div style="background: #fff; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align: center; border-left: 4px solid #198754;">
+            <div style="font-size: 1.8rem; font-weight: 800; color: #198754;"><?php echo count(array_filter($usuarios, fn($u) => ($u['tipo_usuario'] ?? '') === 'empleado')); ?></div>
+            <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">Empleados</div>
+        </div>
+        <div style="background: #fff; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align: center; border-left: 4px solid #0dcaf0;">
+            <div style="font-size: 1.8rem; font-weight: 800; color: #0dcaf0;"><?php echo count(array_filter($usuarios, fn($u) => ($u['tipo_usuario'] ?? '') === 'pasajero')); ?></div>
+            <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">Pasajeros</div>
+        </div>
+        <div style="background: #fff; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align: center; border-left: 4px solid #fd7e14;">
+            <div style="font-size: 1.8rem; font-weight: 800; color: #fd7e14;"><?php echo count(array_filter($usuarios, fn($u) => trim(($u['tipo_empleado'] ?? '')) !== '')); ?></div>
+            <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">Roles Especiales</div>
+        </div>
+    </div>
+
+    <!-- FORMULARIO DE EDICIÓN - ARRIBA -->
+    <?php if ($usuarioEdit): ?>
+        <section class="card" style="background: #fef3c7; border-left: 4px solid #fbbf24;">
+            <h2>✎ Editando usuario #<?php echo (int)$usuarioEdit['id_usuario']; ?></h2>
+            <form method="POST" action="procesar_admin_usuario.php">
+                <input type="hidden" name="accion" value="actualizar_usuario">
+                <input type="hidden" name="id_usuario" value="<?php echo (int)$usuarioEdit['id_usuario']; ?>">
+                <div class="grid-3">
+                    <div><label>Nombre</label><input name="nombre" value="<?php echo h((string)$usuarioEdit['nombre']); ?>" required></div>
+                    <div><label>Apellido</label><input name="apellido" value="<?php echo h((string)$usuarioEdit['apellido']); ?>" required></div>
+                    <div><label>Email</label><input type="email" name="email" value="<?php echo h((string)$usuarioEdit['email']); ?>" required></div>
+                    <div><label>Telefono</label><input name="telefono" value="<?php echo h((string)($usuarioEdit['telefono'] ?? '')); ?>"></div>
+                    <div><label>Tipo usuario</label><input value="<?php echo h((string)$usuarioEdit['tipo_usuario']); ?>" disabled></div>
+                    <div><label>Tipo empleado</label><input value="<?php echo h((string)($usuarioEdit['tipo_empleado'] ?? '')); ?>" disabled></div>
+                </div>
+
+                <?php if (($usuarioEdit['tipo_usuario'] ?? '') === 'pasajero'): ?>
+                    <div class="grid-3" style="margin-top:10px;">
+                        <div><label>Fecha nacimiento</label><input type="date" name="fecha_nacimiento" value="<?php echo h((string)($usuarioEdit['fecha_nacimiento'] ?? '')); ?>"></div>
+                        <div>
+                            <label>Genero</label>
+                            <select name="genero">
+                                <?php $g = (string)($usuarioEdit['genero'] ?? ''); ?>
+                                <option value="masculino" <?php echo $g === 'masculino' ? 'selected' : ''; ?>>Masculino</option>
+                                <option value="femenino" <?php echo $g === 'femenino' ? 'selected' : ''; ?>>Femenino</option>
+                                <option value="otro" <?php echo $g === 'otro' ? 'selected' : ''; ?>>Otro</option>
+                                <option value="no_especificar" <?php echo $g === 'no_especificar' ? 'selected' : ''; ?>>No especificar</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Tipo documento</label>
+                            <?php $td = (string)($usuarioEdit['tipo_documento'] ?? ''); ?>
+                            <select name="tipo_documento">
+                                <option value="dni" <?php echo $td === 'dni' ? 'selected' : ''; ?>>DNI</option>
+                                <option value="nie" <?php echo $td === 'nie' ? 'selected' : ''; ?>>NIE</option>
+                                <option value="pasaporte" <?php echo $td === 'pasaporte' ? 'selected' : ''; ?>>Pasaporte</option>
+                            </select>
+                        </div>
+                        <div><label>Numero documento</label><input name="numero_documento" value="<?php echo h((string)($usuarioEdit['numero_documento'] ?? '')); ?>"></div>
+                        <div><label>Calle</label><input name="calle" value="<?php echo h((string)($usuarioEdit['calle'] ?? '')); ?>"></div>
+                        <div><label>Ciudad</label><input name="ciudad" value="<?php echo h((string)($usuarioEdit['ciudad'] ?? '')); ?>"></div>
+                        <div><label>Codigo postal</label><input name="codigo_postal" value="<?php echo h((string)($usuarioEdit['codigo_postal'] ?? '')); ?>"></div>
+                        <div><label>Pais</label><input name="pais" value="<?php echo h((string)($usuarioEdit['pais'] ?? '')); ?>"></div>
+                    </div>
+                <?php elseif (($usuarioEdit['tipo_empleado'] ?? '') === 'vendedor'): ?>
+                    <div class="grid-3" style="margin-top:10px;">
+                        <div><label>Comision (%)</label><input name="comision_porcentaje" type="number" min="0" max="100" step="0.01" value="<?php echo h((string)($usuarioEdit['comision_porcentaje'] ?? '0')); ?>"></div>
+                        <div><label>Region</label><input name="region" value="<?php echo h((string)($usuarioEdit['region'] ?? '')); ?>"></div>
+                    </div>
+                <?php elseif (($usuarioEdit['tipo_empleado'] ?? '') === 'mantenimiento'): ?>
+                    <div class="grid-3" style="margin-top:10px;">
+                        <div><label>Especialidad</label><input name="especialidad" value="<?php echo h((string)($usuarioEdit['especialidad'] ?? '')); ?>"></div>
+                        <div><label>Turno</label><input name="turno" value="<?php echo h((string)($usuarioEdit['turno'] ?? '')); ?>"></div>
+                        <div class="full"><label>Certificaciones</label><input name="certificaciones" value="<?php echo h((string)($usuarioEdit['certificaciones'] ?? '')); ?>"></div>
+                    </div>
+                <?php elseif (($usuarioEdit['tipo_empleado'] ?? '') === 'maquinista'): ?>
+                    <div class="grid-3" style="margin-top:10px;">
+                        <div><label>Licencia</label><input name="licencia" value="<?php echo h((string)($usuarioEdit['licencia'] ?? '')); ?>"></div>
+                        <div><label>Experiencia (anos)</label><input name="experiencia_anos" type="number" min="0" value="<?php echo h((string)($usuarioEdit['experiencia_anos'] ?? '0')); ?>"></div>
+                        <div><label>Horario preferido</label><input name="horario_preferido" value="<?php echo h((string)($usuarioEdit['horario_preferido'] ?? '')); ?>"></div>
+                    </div>
+                <?php endif; ?>
+
+                <div class="actions">
+                    <button class="btn btn-primary" type="submit">Guardar cambios</button>
+                    <a class="btn btn-secondary" href="panel_administrador.php">Cancelar edición</a>
+                </div>
+            </form>
+        </section>
+    <?php endif; ?>
+
     <div class="grid-2">
         <section class="card">
             <h2>Crear empleado</h2>
@@ -260,7 +351,7 @@ try {
     <section class="card">
         <h2>Consulta de usuarios</h2>
         <form method="GET" class="actions">
-            <input type="text" name="q" value="<?php echo h($q); ?>" placeholder="Buscar por ID, nombre, apellido o email">
+            <input type="text" name="q" value="<?php echo h($q); ?>" placeholder="Buscar por ID, nombre, apellido o email" style="flex: 1;">
             <button class="btn btn-secondary" type="submit">Buscar</button>
             <a class="btn btn-secondary" href="panel_administrador.php">Limpiar</a>
         </form>
@@ -303,73 +394,6 @@ try {
             </table>
         </div>
     </section>
-
-    <?php if ($usuarioEdit): ?>
-        <section class="card">
-            <h2>Editar usuario #<?php echo (int)$usuarioEdit['id_usuario']; ?></h2>
-            <form method="POST" action="procesar_admin_usuario.php">
-                <input type="hidden" name="accion" value="actualizar_usuario">
-                <input type="hidden" name="id_usuario" value="<?php echo (int)$usuarioEdit['id_usuario']; ?>">
-                <div class="grid-3">
-                    <div><label>Nombre</label><input name="nombre" value="<?php echo h((string)$usuarioEdit['nombre']); ?>" required></div>
-                    <div><label>Apellido</label><input name="apellido" value="<?php echo h((string)$usuarioEdit['apellido']); ?>" required></div>
-                    <div><label>Email</label><input type="email" name="email" value="<?php echo h((string)$usuarioEdit['email']); ?>" required></div>
-                    <div><label>Telefono</label><input name="telefono" value="<?php echo h((string)($usuarioEdit['telefono'] ?? '')); ?>"></div>
-                    <div><label>Tipo usuario</label><input value="<?php echo h((string)$usuarioEdit['tipo_usuario']); ?>" disabled></div>
-                    <div><label>Tipo empleado</label><input value="<?php echo h((string)($usuarioEdit['tipo_empleado'] ?? '')); ?>" disabled></div>
-                </div>
-
-                <?php if (($usuarioEdit['tipo_usuario'] ?? '') === 'pasajero'): ?>
-                    <div class="grid-3" style="margin-top:10px;">
-                        <div><label>Fecha nacimiento</label><input type="date" name="fecha_nacimiento" value="<?php echo h((string)($usuarioEdit['fecha_nacimiento'] ?? '')); ?>"></div>
-                        <div>
-                            <label>Genero</label>
-                            <select name="genero">
-                                <?php $g = (string)($usuarioEdit['genero'] ?? ''); ?>
-                                <option value="masculino" <?php echo $g === 'masculino' ? 'selected' : ''; ?>>Masculino</option>
-                                <option value="femenino" <?php echo $g === 'femenino' ? 'selected' : ''; ?>>Femenino</option>
-                                <option value="otro" <?php echo $g === 'otro' ? 'selected' : ''; ?>>Otro</option>
-                                <option value="no_especificar" <?php echo $g === 'no_especificar' ? 'selected' : ''; ?>>No especificar</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Tipo documento</label>
-                            <?php $td = (string)($usuarioEdit['tipo_documento'] ?? ''); ?>
-                            <select name="tipo_documento">
-                                <option value="dni" <?php echo $td === 'dni' ? 'selected' : ''; ?>>DNI</option>
-                                <option value="nie" <?php echo $td === 'nie' ? 'selected' : ''; ?>>NIE</option>
-                                <option value="pasaporte" <?php echo $td === 'pasaporte' ? 'selected' : ''; ?>>Pasaporte</option>
-                            </select>
-                        </div>
-                        <div><label>Numero documento</label><input name="numero_documento" value="<?php echo h((string)($usuarioEdit['numero_documento'] ?? '')); ?>"></div>
-                        <div><label>Calle</label><input name="calle" value="<?php echo h((string)($usuarioEdit['calle'] ?? '')); ?>"></div>
-                        <div><label>Ciudad</label><input name="ciudad" value="<?php echo h((string)($usuarioEdit['ciudad'] ?? '')); ?>"></div>
-                        <div><label>Codigo postal</label><input name="codigo_postal" value="<?php echo h((string)($usuarioEdit['codigo_postal'] ?? '')); ?>"></div>
-                        <div><label>Pais</label><input name="pais" value="<?php echo h((string)($usuarioEdit['pais'] ?? '')); ?>"></div>
-                    </div>
-                <?php elseif (($usuarioEdit['tipo_empleado'] ?? '') === 'vendedor'): ?>
-                    <div class="grid-3" style="margin-top:10px;">
-                        <div><label>Comision (%)</label><input name="comision_porcentaje" type="number" min="0" max="100" step="0.01" value="<?php echo h((string)($usuarioEdit['comision_porcentaje'] ?? '0')); ?>"></div>
-                        <div><label>Region</label><input name="region" value="<?php echo h((string)($usuarioEdit['region'] ?? '')); ?>"></div>
-                    </div>
-                <?php elseif (($usuarioEdit['tipo_empleado'] ?? '') === 'mantenimiento'): ?>
-                    <div class="grid-3" style="margin-top:10px;">
-                        <div><label>Especialidad</label><input name="especialidad" value="<?php echo h((string)($usuarioEdit['especialidad'] ?? '')); ?>"></div>
-                        <div><label>Turno</label><input name="turno" value="<?php echo h((string)($usuarioEdit['turno'] ?? '')); ?>"></div>
-                        <div class="full"><label>Certificaciones</label><input name="certificaciones" value="<?php echo h((string)($usuarioEdit['certificaciones'] ?? '')); ?>"></div>
-                    </div>
-                <?php elseif (($usuarioEdit['tipo_empleado'] ?? '') === 'maquinista'): ?>
-                    <div class="grid-3" style="margin-top:10px;">
-                        <div><label>Licencia</label><input name="licencia" value="<?php echo h((string)($usuarioEdit['licencia'] ?? '')); ?>"></div>
-                        <div><label>Experiencia (anos)</label><input name="experiencia_anos" type="number" min="0" value="<?php echo h((string)($usuarioEdit['experiencia_anos'] ?? '0')); ?>"></div>
-                        <div><label>Horario preferido</label><input name="horario_preferido" value="<?php echo h((string)($usuarioEdit['horario_preferido'] ?? '')); ?>"></div>
-                    </div>
-                <?php endif; ?>
-
-                <div class="actions"><button class="btn btn-primary" type="submit">Guardar cambios</button></div>
-            </form>
-        </section>
-    <?php endif; ?>
 </main>
 </body>
 </html>
