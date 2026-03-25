@@ -5,7 +5,7 @@ require_once __DIR__ . '/php/Conexion.php';
 require_once __DIR__ . '/php/auth_helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: registro_empleado.php?error=metodo_invalido');
+    header('Location: panel_administrador.php?error=metodo_invalido');
     exit;
 }
 
@@ -21,7 +21,7 @@ if (!$adminSimple && !$adminPorUsuario) {
 function redirigirAdmin(string $mensaje, bool $ok = false): void
 {
     $key = $ok ? 'ok' : 'error';
-    header('Location: registro_empleado.php?' . $key . '=' . urlencode($mensaje));
+    header('Location: panel_administrador.php?' . $key . '=' . urlencode($mensaje));
     exit;
 }
 

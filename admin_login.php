@@ -2,7 +2,7 @@
 session_start();
 
 if (!empty($_SESSION['admin_simple_auth']) && $_SESSION['admin_simple_auth'] === true) {
-    header('Location: registro_empleado.php');
+    header('Location: panel_administrador.php');
     exit;
 }
 

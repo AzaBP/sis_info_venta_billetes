@@ -38,7 +38,7 @@ function trainwebRutaPorRol(array $usuario): string
 
     if ($tipoUsuario === 'empleado') {
         if (trainwebEsAdministrador($usuario)) {
-            return 'registro_empleado.php';
+            return 'panel_administrador.php';
         }
 
         if ($tipoEmpleado === 'vendedor') {

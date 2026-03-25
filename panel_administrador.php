@@ -64,28 +64,71 @@ try {
         $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         if ($editId > 0) {
+            // Simplificar: solo obtener datos básicos del usuario
             $stmtEdit = $pdo->prepare(
                 "SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.telefono, u.tipo_usuario,
-                        e.id_empleado, e.tipo_empleado,
-                        p.fecha_nacimiento, p.genero, p.tipo_documento, p.numero_documento, p.calle, p.ciudad, p.codigo_postal, p.pais,
-                        v.comision_porcentaje, v.region,
-                        q.licencia, q.experiencia_anos, q.horario_preferido,
-                        m.especialidad, m.turno, m.certificaciones
+                        e.id_empleado, e.tipo_empleado
                  FROM usuario u
                  LEFT JOIN empleado e ON e.id_usuario = u.id_usuario
-                 LEFT JOIN pasajero p ON p.id_usuario = u.id_usuario
-                 LEFT JOIN vendedor v ON v.id_empleado = e.id_empleado
-                 LEFT JOIN maquinista q ON q.id_empleado = e.id_empleado
-                 LEFT JOIN mantenimiento m ON m.id_empleado = e.id_empleado
                  WHERE u.id_usuario = :id_usuario
                  LIMIT 1"
             );
             $stmtEdit->execute([':id_usuario' => $editId]);
             $usuarioEdit = $stmtEdit->fetch(PDO::FETCH_ASSOC) ?: null;
+
+            // Si es pasajero, obtener datos adicionales
+            if ($usuarioEdit && ($usuarioEdit['tipo_usuario'] ?? '') === 'pasajero') {
+                $stmtPasajero = $pdo->prepare(
+                    "SELECT fecha_nacimiento, genero, tipo_documento, numero_documento, calle, ciudad, codigo_postal, pais
+                     FROM pasajero WHERE id_usuario = :id_usuario LIMIT 1"
+                );
+                $stmtPasajero->execute([':id_usuario' => $editId]);
+                $pasajeroData = $stmtPasajero->fetch(PDO::FETCH_ASSOC);
+                if ($pasajeroData) {
+                    $usuarioEdit = array_merge($usuarioEdit, $pasajeroData);
+                }
+            }
+
+            // Si es vendedor, obtener datos adicionales
+            if ($usuarioEdit && ($usuarioEdit['tipo_empleado'] ?? '') === 'vendedor') {
+                $stmtVendedor = $pdo->prepare(
+                    "SELECT comision_porcentaje, region FROM vendedor WHERE id_empleado = :id_empleado LIMIT 1"
+                );
+                $stmtVendedor->execute([':id_empleado' => (int)($usuarioEdit['id_empleado'] ?? 0)]);
+                $vendedorData = $stmtVendedor->fetch(PDO::FETCH_ASSOC);
+                if ($vendedorData) {
+                    $usuarioEdit = array_merge($usuarioEdit, $vendedorData);
+                }
+            }
+
+            // Si es maquinista, obtener datos adicionales
+            if ($usuarioEdit && ($usuarioEdit['tipo_empleado'] ?? '') === 'maquinista') {
+                $stmtMaquinista = $pdo->prepare(
+                    "SELECT licencia, experiencia_anos, horario_preferido FROM maquinista WHERE id_empleado = :id_empleado LIMIT 1"
+                );
+                $stmtMaquinista->execute([':id_empleado' => (int)($usuarioEdit['id_empleado'] ?? 0)]);
+                $maquinistaData = $stmtMaquinista->fetch(PDO::FETCH_ASSOC);
+                if ($maquinistaData) {
+                    $usuarioEdit = array_merge($usuarioEdit, $maquinistaData);
+                }
+            }
+
+            // Si es mantenimiento, obtener datos adicionales
+            if ($usuarioEdit && ($usuarioEdit['tipo_empleado'] ?? '') === 'mantenimiento') {
+                $stmtMant = $pdo->prepare(
+                    "SELECT especialidad, turno, certificaciones FROM mantenimiento WHERE id_empleado = :id_empleado LIMIT 1"
+                );
+                $stmtMant->execute([':id_empleado' => (int)($usuarioEdit['id_empleado'] ?? 0)]);
+                $mantData = $stmtMant->fetch(PDO::FETCH_ASSOC);
+                if ($mantData) {
+                    $usuarioEdit = array_merge($usuarioEdit, $mantData);
+                }
+            }
         }
     }
 } catch (Throwable $e) {
-    $error = 'error_cargando_datos';
+    error_log("Error en panel_administrador.php: " . $e->getMessage());
+    $error = 'error_cargando_datos: ' . $e->getMessage();
 }
 ?>
 <!DOCTYPE html>
@@ -219,7 +262,7 @@ try {
         <form method="GET" class="actions">
             <input type="text" name="q" value="<?php echo h($q); ?>" placeholder="Buscar por ID, nombre, apellido o email">
             <button class="btn btn-secondary" type="submit">Buscar</button>
-            <a class="btn btn-secondary" href="registro_empleado.php">Limpiar</a>
+            <a class="btn btn-secondary" href="panel_administrador.php">Limpiar</a>
         </form>
         <p>Vista limitada a datos operativos. No se muestran contrasenas ni metodos de pago.</p>
         <div class="table-wrap">
@@ -247,7 +290,7 @@ try {
                         <td><?php echo h(maskDocumento((string)($u['numero_documento'] ?? ''))); ?></td>
                         <td><?php echo h(trim((string)($u['ciudad'] ?? '') . ' / ' . (string)($u['pais'] ?? ''))); ?></td>
                         <td>
-                            <a class="btn btn-secondary" href="registro_empleado.php?edit_id=<?php echo (int)$u['id_usuario']; ?>&q=<?php echo urlencode($q); ?>">Editar</a>
+                            <a class="btn btn-secondary" href="panel_administrador.php?edit_id=<?php echo (int)$u['id_usuario']; ?>&q=<?php echo urlencode($q); ?>">Editar</a>
                             <form method="POST" action="procesar_admin_usuario.php" style="display:inline-block;" onsubmit="return confirm('Se eliminara el usuario. Continuar?');">
                                 <input type="hidden" name="accion" value="eliminar_usuario">
                                 <input type="hidden" name="id_usuario" value="<?php echo (int)$u['id_usuario']; ?>">
