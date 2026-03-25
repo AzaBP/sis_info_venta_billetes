@@ -38,7 +38,6 @@ $editId = (int)($_GET['edit_id'] ?? 0);
 
 $usuarios = [];
 $usuarioEdit = null;
-$viajesDisponibles = [];
 $viajeAsignadoId = null;
 
 try {
@@ -64,14 +63,6 @@ try {
         }
         $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-        $stmtViajes = $pdo->query(
-            "SELECT id_viaje, fecha, hora_salida, id_tren, id_maquinista
-             FROM viaje
-             ORDER BY fecha DESC, hora_salida DESC
-             LIMIT 100"
-        );
-        $viajesDisponibles = $stmtViajes ? $stmtViajes->fetchAll(PDO::FETCH_ASSOC) : [];
-
         if ($editId > 0) {
             $stmtEdit = $pdo->prepare(
                 "SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.telefono, u.tipo_usuario,
@@ -91,18 +82,6 @@ try {
             );
             $stmtEdit->execute([':id_usuario' => $editId]);
             $usuarioEdit = $stmtEdit->fetch(PDO::FETCH_ASSOC) ?: null;
-
-            if ($usuarioEdit && ($usuarioEdit['tipo_empleado'] ?? '') === 'maquinista') {
-                $stmtViajeAsignado = $pdo->prepare(
-                    "SELECT id_viaje
-                     FROM viaje
-                     WHERE id_maquinista = :id_maquinista
-                     ORDER BY fecha DESC, hora_salida DESC
-                     LIMIT 1"
-                );
-                $stmtViajeAsignado->execute([':id_maquinista' => (int)($usuarioEdit['id_empleado'] ?? 0)]);
-                $viajeAsignadoId = (int)$stmtViajeAsignado->fetchColumn();
-            }
         }
     }
 } catch (Throwable $e) {
@@ -148,10 +127,8 @@ try {
 <header class="header">
     <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
     <nav class="nav">
-        <a href="index.php">Inicio</a>
-        <a href="registro_empleado.php">Panel admin</a>
         <?php if ($adminSimple): ?>
-            <a href="admin_logout.php">Cerrar sesion admin</a>
+            <a href="admin_logout.php">Cerrar sesion</a>
         <?php else: ?>
             <a href="cerrar_sesion.php">Cerrar sesion</a>
         <?php endif; ?>
@@ -193,17 +170,6 @@ try {
                     <div><label>Licencia</label><input name="licencia" value=""></div>
                     <div><label>Experiencia (anos)</label><input name="experiencia_anos" type="number" min="0" value="0"></div>
                     <div><label>Horario preferido</label><input name="horario_preferido" value="diurno"></div>
-                    <div class="full">
-                        <label>Asignar viaje (solo maquinista)</label>
-                        <select name="asignar_viaje">
-                            <option value="">No asignar</option>
-                            <?php foreach ($viajesDisponibles as $v): ?>
-                                <option value="<?php echo (int)$v['id_viaje']; ?>">
-                                    #<?php echo (int)$v['id_viaje']; ?> | Tren <?php echo (int)$v['id_tren']; ?> | <?php echo h((string)$v['fecha'] . ' ' . (string)$v['hora_salida']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
                 </div>
                 <div class="actions"><button class="btn btn-primary" type="submit">Crear empleado</button></div>
             </form>
@@ -354,17 +320,6 @@ try {
                         <div><label>Licencia</label><input name="licencia" value="<?php echo h((string)($usuarioEdit['licencia'] ?? '')); ?>"></div>
                         <div><label>Experiencia (anos)</label><input name="experiencia_anos" type="number" min="0" value="<?php echo h((string)($usuarioEdit['experiencia_anos'] ?? '0')); ?>"></div>
                         <div><label>Horario preferido</label><input name="horario_preferido" value="<?php echo h((string)($usuarioEdit['horario_preferido'] ?? '')); ?>"></div>
-                        <div class="full">
-                            <label>Asignar viaje</label>
-                            <select name="asignar_viaje">
-                                <option value="">No cambiar</option>
-                                <?php foreach ($viajesDisponibles as $v): ?>
-                                    <option value="<?php echo (int)$v['id_viaje']; ?>" <?php echo $viajeAsignadoId === (int)$v['id_viaje'] ? 'selected' : ''; ?>>
-                                        #<?php echo (int)$v['id_viaje']; ?> | Tren <?php echo (int)$v['id_tren']; ?> | <?php echo h((string)$v['fecha'] . ' ' . (string)$v['hora_salida']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
                     </div>
                 <?php endif; ?>
 

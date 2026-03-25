@@ -114,7 +114,7 @@ class IoTSimulador {
                     const etiqueta = estado === 'reportado' ? 'REPORTADO' : (estado === 'en_proceso' ? 'CONFIRMADO' : 'RESUELTO');
 
                     html += `
-                        <div class="issue-item ${clase}" data-incidencia-id="${inc.id_incidencia}" data-estado="${estado}">
+                        <div class="issue-item iot ${clase}" data-incidencia-id="${inc.id_incidencia}" data-estado="${estado}">
                             <div class="issue-header">
                                 <span class="issue-id">#INC-${inc.id_incidencia}</span>
                                 <span class="priority-tag">${etiqueta}</span>

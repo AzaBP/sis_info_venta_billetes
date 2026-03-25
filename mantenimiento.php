@@ -81,7 +81,7 @@ try {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/mantenimiento.css?v=20260314k">
+    <link rel="stylesheet" href="css/mantenimiento.css?v=20260325b">
 </head>
 <body>
 <header class="header">
@@ -163,7 +163,7 @@ try {
         </div>
 
         <section class="panel issues-list">
-            <h2>Incidencias pendientes</h2>
+            <div class="issues-panel-header">Incidencias pendientes</div>
             <div id="incidenciasPendientes">
                 <?php if (count($incidenciasPendientesManual) === 0): ?>
                     <div class="issue-item low-priority">
@@ -204,7 +204,7 @@ try {
         </section>
 
         <section class="panel issues-list iot-panel">
-            <h2>Incidencias automaticas (IOT)</h2>
+            <div class="issues-panel-header">Incidencias automáticas (IoT)</div>
             <div id="incidenciasPendientesIot">
                 <?php if (count($incidenciasPendientesIot) === 0): ?>
                     <div class="issue-item low-priority">
@@ -219,7 +219,7 @@ try {
                             $afecta = !empty($inc['afecta_pasajero']) ? 'Afecta pasajeros' : 'No afecta pasajeros';
                             $origenInc = strtoupper((string)($inc['origen'] ?? ''));
                         ?>
-                        <div class="issue-item <?php echo $estadoClase; ?>" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>" data-estado="<?php echo htmlspecialchars((string)$estado, ENT_QUOTES, 'UTF-8'); ?>">
+                        <div class="issue-item iot <?php echo $estadoClase; ?>" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>" data-estado="<?php echo htmlspecialchars((string)$estado, ENT_QUOTES, 'UTF-8'); ?>">
                             <div class="issue-header">
                                 <span class="issue-id">#INC-<?php echo (int)$inc['id_incidencia']; ?></span>
                                 <span class="priority-tag"><?php echo $estadoEtiqueta; ?></span>
