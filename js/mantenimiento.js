@@ -425,5 +425,5 @@
     }
 
     cargar();
-    setInterval(cargar, 15000);
+    setInterval(cargar, 5000); // Refrescar cada 5 segundos
 });

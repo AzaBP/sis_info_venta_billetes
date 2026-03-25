@@ -6,7 +6,7 @@
 class IoTSimulador {
     constructor(tokenIoT = null) {
         this.tokenIoT = tokenIoT || 'trainweb_iot_test_token_2026';
-        this.intervalo = 10000; // 10 segundos entre simulaciones (acelerar testing)
+        this.intervalo = 5000; // 5 segundos PARA TESTING
         this.running = false;
         this.ultimaSimulacion = 0;
         this.contador = 0;
@@ -33,12 +33,6 @@ class IoTSimulador {
     async simular() {
         if (!this.running) return;
 
-        const ahora = Date.now();
-        if (ahora - this.ultimaSimulacion < this.intervalo) {
-            return;
-        }
-
-        this.ultimaSimulacion = ahora;
         this.contador++;
 
         try {
@@ -52,26 +46,23 @@ class IoTSimulador {
                 body: `token=${encodeURIComponent(this.tokenIoT)}`,
             });
 
-            if (!response.ok) {
-                console.warn(`⚠️ [IoT Simulador] HTTP ${response.status}`);
-                return;
-            }
-
             const data = await response.json();
 
-            if (data.ok && data.incidencias_generadas > 0) {
-                console.log(`✅ [IoT] Ejecución #${this.contador}: ${data.incidencias_generadas} incidencias generadas`, data.detalles);
+            if (data.ok) {
+                const gen = data.incidencias_generadas || data.gen || 0;
+                console.log(`🚂 [IoT #${this.contador}] Generadas: ${gen} incidencias`);
 
-                // Recargar el panel de incidencias
+                // SIEMPRE refrescar el panel
                 this.refrescarIncidencias();
 
-                // Mostrar notificación
-                this.mostrarNotificacion(data);
-            } else if (data.ok) {
-                console.log(`⏳ [IoT] Ejecución #${this.contador}: Sin nuevas incidencias (probando...)`);
+                if (gen > 0) {
+                    this.mostrarNotificacion(data);
+                }
+            } else {
+                console.warn(`⚠️ [IoT] Error: ${data.error || 'desconocido'}`);
             }
         } catch (error) {
-            console.error('❌ [IoT] Error:', error);
+            console.error('❌ [IoT] Error fetch:', error);
         }
     }
 
@@ -79,42 +70,41 @@ class IoTSimulador {
         const contenedor = document.getElementById('incidenciasPendientesIot');
         if (!contenedor) return;
 
-        // Recargar el contenido del panel vía AJAX
-        fetch('php/api_incidencias_listar_mantenimiento.php')
+        // Forzar recarga completa de la página de incidencias
+        fetch('php/api_incidencias_listar_mantenimiento.php', { credentials: 'same-origin' })
             .then(r => r.json())
-            .then(incidencias => {
-                const iotIncidencias = incidencias.filter(inc =>
-                    inc.origen?.toLowerCase() === 'iot' &&
+            .then(data => {
+                if (!Array.isArray(data)) return;
+
+                // Filtrar SOLO incidencias IoT no resueltas
+                const iotIncidencias = data.filter(inc =>
+                    String(inc.origen || '').toLowerCase() === 'iot' &&
                     inc.estado !== 'resuelto'
                 );
 
                 if (iotIncidencias.length === 0) {
-                    contenedor.innerHTML = `
-                        <div class="issue-item low-priority">
-                            <p class="issue-desc">No hay incidencias automáticas.</p>
-                        </div>
-                    `;
+                    contenedor.innerHTML = '<div class="issue-item low-priority"><p class="issue-desc">No hay incidencias automáticas.</p></div>';
                     return;
                 }
 
-                contenedor.innerHTML = iotIncidencias.map(inc => {
-                    const estado = inc.estado ?? '';
-                    const estadoClase = estado === 'reportado' ? 'high-priority' :
-                                       (estado === 'en_proceso' ? 'medium-priority' : 'low-priority');
-                    const estadoEtiqueta = estado === 'reportado' ? 'REPORTADO' :
-                                          (estado === 'en_proceso' ? 'CONFIRMADO' : 'RESUELTO');
+                // Renderizar incidencias
+                let html = '';
+                iotIncidencias.forEach(inc => {
+                    const estado = inc.estado || '';
+                    const clase = estado === 'reportado' ? 'high-priority' : (estado === 'en_proceso' ? 'medium-priority' : 'low-priority');
+                    const etiqueta = estado === 'reportado' ? 'REPORTADO' : (estado === 'en_proceso' ? 'CONFIRMADO' : 'RESUELTO');
 
-                    return `
-                        <div class="issue-item ${estadoClase}" data-incidencia-id="${inc.id_incidencia}" data-estado="${estado}">
+                    html += `
+                        <div class="issue-item ${clase}" data-incidencia-id="${inc.id_incidencia}" data-estado="${estado}">
                             <div class="issue-header">
                                 <span class="issue-id">#INC-${inc.id_incidencia}</span>
-                                <span class="priority-tag">${estadoEtiqueta}</span>
+                                <span class="priority-tag">${etiqueta}</span>
                             </div>
                             <p class="issue-desc">${escapeHtml(inc.descripcion)}</p>
                             <div class="issue-meta">
                                 <span><i class="fa-solid fa-train"></i> Viaje ${inc.id_viaje}</span>
                                 <span>IoT</span>
-                                <span>Estado: ${estadoEtiqueta}</span>
+                                <span>Estado: ${etiqueta}</span>
                             </div>
                             <div class="issue-actions">
                                 <button class="btn-detail" data-incidencia-id="${inc.id_incidencia}">Ver detalles</button>
@@ -127,14 +117,12 @@ class IoTSimulador {
                             </div>
                         </div>
                     `;
-                }).join('');
+                });
 
-                // Re-adjuntar event listeners
-                if (window.attachIncidenciaListeners) {
-                    window.attachIncidenciaListeners();
-                }
+                contenedor.innerHTML = html;
+                console.log(`✅ Panel IoT actualizado con ${iotIncidencias.length} incidencias`);
             })
-            .catch(err => console.error('[IoT] Error al refrescar:', err));
+            .catch(err => console.error('[IoT] Error refresh:', err));
     }
 
     mostrarNotificacion(data) {
