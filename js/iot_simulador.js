@@ -1,21 +1,22 @@
 /**
  * IoT Sensor Simulator - Gestor de Incidencias Automáticas
- * Llama periódicamente al simulador de sensores para generar incidencias realistas
+ * Se ejecuta automáticamente cada 30 segundos en el panel de mantenimiento
  */
 
 class IoTSimulador {
     constructor(tokenIoT = null) {
-        this.tokenIoT = tokenIoT;
+        this.tokenIoT = tokenIoT || 'trainweb_iot_test_token_2026';
         this.intervalo = 30000; // 30 segundos entre simulaciones
         this.running = false;
         this.ultimaSimulacion = 0;
+        this.contador = 0;
         this.iniciar();
     }
 
     iniciar() {
         if (this.running) return;
         this.running = true;
-        console.log('🚂 IoT Simulador iniciado');
+        console.log('🚂 [IoT] Simulador iniciado - Generando incidencias automáticamente...');
 
         // Ejecutar primera simulación inmediatamente
         this.simular();
@@ -26,7 +27,7 @@ class IoTSimulador {
 
     detener() {
         this.running = false;
-        console.log('🛑 IoT Simulador detenido');
+        console.log('🛑 [IoT] Simulador detenido');
     }
 
     async simular() {
@@ -38,42 +39,39 @@ class IoTSimulador {
         }
 
         this.ultimaSimulacion = ahora;
+        this.contador++;
 
         try {
             const url = 'php/sensor_iot_simulador.php';
-            const headers = {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            };
-
-            // Agregar token si está disponible
-            if (this.tokenIoT) {
-                headers['X-IoT-Token'] = this.tokenIoT;
-            }
-
             const response = await fetch(url, {
                 method: 'POST',
-                headers: headers,
-                body: this.tokenIoT ? `token=${this.tokenIoT}` : 'token=',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-IoT-Token': this.tokenIoT
+                },
+                body: `token=${encodeURIComponent(this.tokenIoT)}`,
             });
 
             if (!response.ok) {
-                console.warn('⚠️ Error en simulador IoT:', response.status);
+                console.warn(`⚠️ [IoT Simulador] HTTP ${response.status}`);
                 return;
             }
 
             const data = await response.json();
 
             if (data.ok && data.incidencias_generadas > 0) {
-                console.log(`✅ ${data.incidencias_generadas} incidencias generadas:`, data.detalles);
+                console.log(`✅ [IoT] Ejecución #${this.contador}: ${data.incidencias_generadas} incidencias generadas`, data.detalles);
 
                 // Recargar el panel de incidencias
                 this.refrescarIncidencias();
 
                 // Mostrar notificación
                 this.mostrarNotificacion(data);
+            } else if (data.ok) {
+                console.log(`⏳ [IoT] Ejecución #${this.contador}: Sin nuevas incidencias (probando...)`);
             }
         } catch (error) {
-            console.error('❌ Error al conectar con simulador IoT:', error);
+            console.error('❌ [IoT] Error:', error);
         }
     }
 
@@ -136,7 +134,7 @@ class IoTSimulador {
                     window.attachIncidenciaListeners();
                 }
             })
-            .catch(err => console.error('Error al refrescar incidencias:', err));
+            .catch(err => console.error('[IoT] Error al refrescar:', err));
     }
 
     mostrarNotificacion(data) {
@@ -144,9 +142,9 @@ class IoTSimulador {
 
         if (Notification.permission === 'granted') {
             const incidencias = data.detalles || [];
-            const titulo = `🚂 ${data.incidencias_generadas} Incidencia(s) IoT Detectada(s)`;
-            const msg = incidencias.slice(0, 3)
-                .map(inc => `${inc.sensor}: ${inc.descripcion.substring(0, 40)}...`)
+            const titulo = `🚂 ${data.incidencias_generadas} Incidencia(s) IoT`;
+            const msg = incidencias.slice(0, 2)
+                .map(inc => `${inc.sensor}: ${inc.descripcion.substring(0, 35)}...`)
                 .join('\n');
 
             new Notification(titulo, {
@@ -160,7 +158,7 @@ class IoTSimulador {
 
     cambiarIntervalo(ms) {
         this.intervalo = ms;
-        console.log(`⏱️ Intervalo de simulación cambiado a ${ms}ms`);
+        console.log(`⏱️ [IoT] Intervalo cambiado a ${ms}ms`);
     }
 }
 
@@ -184,6 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Inicializar simulador (puede recibir token desde variable global)
-    const tokenIoT = window.TRAINWEB_IOT_TOKEN || '';
+    const tokenIoT = window.TRAINWEB_IOT_TOKEN || 'trainweb_iot_test_token_2026';
     window.iotSimulador = new IoTSimulador(tokenIoT);
+
+    console.log('✅ [IoT] Sistema listo');
 });
+
