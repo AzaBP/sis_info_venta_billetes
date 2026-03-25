@@ -149,8 +149,10 @@
 
     function aplicarFiltro() {
         if (currentFilter === 'all') {
-            renderPendingList(pendingContainer, pendingManual, 'No hay incidencias pendientes.');
-            renderPendingList(pendingIotContainer, pendingIot, 'No hay incidencias automaticas.');
+            const noResueltoManual = pendingManual.filter(i => i.estado !== 'resuelto');
+            const noResueltoIot = pendingIot.filter(i => i.estado !== 'resuelto');
+            renderPendingList(pendingContainer, noResueltoManual, 'No hay incidencias pendientes.');
+            renderPendingList(pendingIotContainer, noResueltoIot, 'No hay incidencias automaticas.');
             return;
         }
         if (currentFilter === 'resuelto') {
@@ -160,8 +162,8 @@
             renderPendingList(pendingIotContainer, resueltoIot, 'No hay incidencias resueltas.');
             return;
         }
-        const filtradasManual = pendingManual.filter(i => i.estado === currentFilter);
-        const filtradasIot = pendingIot.filter(i => i.estado === currentFilter);
+        const filtradasManual = pendingManual.filter(i => i.estado === currentFilter && i.estado !== 'resuelto');
+        const filtradasIot = pendingIot.filter(i => i.estado === currentFilter && i.estado !== 'resuelto');
         renderPendingList(pendingContainer, filtradasManual, 'No hay incidencias pendientes.');
         renderPendingList(pendingIotContainer, filtradasIot, 'No hay incidencias automaticas.');
     }
@@ -200,8 +202,8 @@
             const manualAsignadas = allData.filter(i => !esIot(i));
             const iotTodas = allData.filter(i => esIot(i));
 
-            pendingManual = manualAsignadas.filter(i => i.estado !== 'resuelto');
-            pendingIot = iotTodas.filter(i => i.estado !== 'resuelto');
+            pendingManual = manualAsignadas;
+            pendingIot = iotTodas;
             aplicarFiltro();
             if (currentId) {
                 selectCard(currentId);
