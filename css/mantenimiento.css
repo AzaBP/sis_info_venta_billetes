@@ -152,6 +152,10 @@ body.modal-open {
 }
 
 /* PERFIL EN NAV */
+.profile-dropdown {
+    position: relative;
+}
+
 .profile-nav-btn {
     background: rgba(255, 255, 255, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -182,6 +186,94 @@ body.modal-open {
     .profile-nav-name {
         display: inline;
     }
+}
+
+.profile-menu-nav {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid #e0e0e0;
+    margin-top: 8px;
+    min-width: 280px;
+    padding: 16px;
+    z-index: 100;
+    animation: slideDown 0.2s ease;
+}
+
+.profile-menu-nav.hidden {
+    display: none;
+}
+
+.profile-menu-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 12px;
+}
+
+.profile-menu-header i {
+    font-size: 2rem;
+    color: #0a2a66;
+}
+
+.profile-menu-header div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.profile-menu-header div:last-child > div:first-child {
+    font-weight: 700;
+    color: #0a2a66;
+}
+
+.profile-menu-id {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.profile-form-nav {
+    display: grid;
+    gap: 10px;
+}
+
+.profile-form-nav label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #0a2a66;
+    display: grid;
+    gap: 4px;
+}
+
+.profile-form-nav input {
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    padding: 8px 10px;
+    background: #fff;
+    font-size: 0.85rem;
+}
+
+.profile-save-btn {
+    background: linear-gradient(135deg, #0a2a66, #1d4ed8);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+}
+
+.profile-save-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 12px rgba(10, 42, 102, 0.3);
 }
 
 /* PERFIL */

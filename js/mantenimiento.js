@@ -1,25 +1,19 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     const pendingContainer = document.getElementById('incidenciasPendientes');
     const pendingIotContainer = document.getElementById('incidenciasPendientesIot');
-    const historyContainer = document.getElementById('incidenciasHistorico');
-    const refreshBtn = document.getElementById('refreshNow');
-    const scrollTopBtn = document.getElementById('scrollTop');
     const filterOptions = document.querySelectorAll('.filter-option');
     const filterToggle = document.getElementById('filterToggle');
     const filterMenu = document.getElementById('filterMenu');
-    const profileForm = document.getElementById('profileForm');
-    const profileStatus = document.getElementById('profileStatus');
-    const profileToggle = document.getElementById('profileToggle');
-    const profilePanel = document.querySelector('.profile-panel');
     const detailModal = document.getElementById('detailModal');
     const detailModalBody = document.getElementById('detailModalBody');
     const detailClose = document.getElementById('detailClose');
     const profileNavBtn = document.getElementById('profileNavBtn');
+    const profileMenuNav = document.getElementById('profileMenuNav');
+    const profileFormNav = document.getElementById('profileFormNav');
 
     let allData = [];
     let pendingManual = [];
     let pendingIot = [];
-    let historyData = [];
     let currentFilter = 'all';
     let currentId = null;
 
@@ -153,16 +147,6 @@
         list.forEach(inc => container.appendChild(buildCard(inc, false)));
     }
 
-    function renderHistory(list) {
-        if (!historyContainer) return;
-        historyContainer.innerHTML = '';
-        if (!list || list.length === 0) {
-            renderEmpty(historyContainer, 'No hay incidencias resueltas.');
-            return;
-        }
-        list.forEach(inc => historyContainer.appendChild(buildCard(inc, true)));
-    }
-
     function aplicarFiltro() {
         if (currentFilter === 'all') {
             renderPendingList(pendingContainer, pendingManual, 'No hay incidencias pendientes.');
@@ -170,8 +154,10 @@
             return;
         }
         if (currentFilter === 'resuelto') {
-            renderEmpty(pendingContainer, 'El historico se muestra abajo.');
-            renderEmpty(pendingIotContainer, 'El historico se muestra abajo.');
+            const resueltoManual = pendingManual.filter(i => i.estado === 'resuelto');
+            const resueltoIot = pendingIot.filter(i => i.estado === 'resuelto');
+            renderPendingList(pendingContainer, resueltoManual, 'No hay incidencias resueltas.');
+            renderPendingList(pendingIotContainer, resueltoIot, 'No hay incidencias resueltas.');
             return;
         }
         const filtradasManual = pendingManual.filter(i => i.estado === currentFilter);
@@ -216,8 +202,6 @@
 
             pendingManual = manualAsignadas.filter(i => i.estado !== 'resuelto');
             pendingIot = iotTodas.filter(i => i.estado !== 'resuelto');
-            historyData = allData.filter(i => i.estado === 'resuelto');
-            renderHistory(historyData);
             aplicarFiltro();
             if (currentId) {
                 selectCard(currentId);
@@ -357,21 +341,8 @@
         // Solo abrir detalle desde el boton "Ver detalles"
     }
 
-    function setProfileStatus(message, isError) {
-        if (!profileStatus) return;
-        profileStatus.textContent = message || '';
-        profileStatus.classList.remove('ok', 'err');
-        if (message) {
-            profileStatus.classList.add(isError ? 'err' : 'ok');
-        }
-    }
-
     if (pendingContainer) pendingContainer.addEventListener('click', handleListClick);
     if (pendingIotContainer) pendingIotContainer.addEventListener('click', handleListClick);
-    if (historyContainer) historyContainer.addEventListener('click', handleListClick);
-
-    if (refreshBtn) refreshBtn.addEventListener('click', () => cargar());
-    if (scrollTopBtn) scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     if (detailClose) {
         detailClose.addEventListener('click', closeModal);
@@ -413,11 +384,23 @@
         });
     }
 
-    if (profileForm) {
-        profileForm.addEventListener('submit', async (e) => {
+    if (profileNavBtn && profileMenuNav) {
+        profileNavBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileMenuNav.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.profile-dropdown')) {
+                profileMenuNav.classList.add('hidden');
+            }
+        });
+    }
+
+    if (profileFormNav) {
+        profileFormNav.addEventListener('submit', async (e) => {
             e.preventDefault();
-            setProfileStatus('Guardando...', false);
-            const formData = new FormData(profileForm);
+            const formData = new FormData(profileFormNav);
             try {
                 const resp = await fetch('php/api_mantenimiento_actualizar_perfil.php', {
                     method: 'POST',
@@ -429,30 +412,13 @@
                 try {
                     data = JSON.parse(raw.replace(/^\uFEFF/, ''));
                 } catch (_) {
-                    setProfileStatus('Respuesta invalida del servidor.', true);
                     return;
                 }
                 if (!resp.ok || !data.ok) {
-                    setProfileStatus(data.error || 'No se pudo guardar.', true);
                     return;
                 }
-                setProfileStatus('Perfil actualizado.', false);
             } catch (e) {
-                setProfileStatus('Error al guardar.', true);
             }
-        });
-    }
-
-    if (profileToggle && profilePanel) {
-        profileToggle.addEventListener('click', () => {
-            profilePanel.classList.toggle('collapsed');
-        });
-    }
-
-    if (profileNavBtn && profilePanel) {
-        profileNavBtn.addEventListener('click', () => {
-            profilePanel.classList.remove('collapsed');
-            profilePanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     }
 

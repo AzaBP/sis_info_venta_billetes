@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Incidencias IoT - Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            color: #0a2a66;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .button-group {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f4ff;
+            color: #0a2a66;
+            border: 2px solid #0a2a66;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e8ff;
+        }
+
+        .status {
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            min-height: 60px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 2px solid #22c55e;
+            display: flex;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #ef4444;
+            display: flex;
+        }
+
+        .status.loading {
+            background: #e0f2fe;
+            color: #0c4a6e;
+            border: 2px solid #0ea5e9;
+            display: flex;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            margin-bottom: 20px;
+            color: #664d03;
+            font-size: 0.9rem;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-box code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🚂</div>
+        <h1>Generador IoT</h1>
+        <p class="subtitle">Genera incidencias de prueba para el sistema</p>
+
+        <div class="info-box">
+            <strong>⚙️ Cómo funciona:</strong>
+            Haz clic en el botón para generar incidencias IoT realistas que aparecerán automáticamente en el panel de mantenimiento.<br><br>
+            Las incidencias serán eliminadas automáticamente después de 24 horas si no son confirmadas.
+        </div>
+
+        <div class="button-group">
+            <button class="btn-generate" onclick="generarIncidencias()">
+                <i class="fa-solid fa-sparkles"></i> Generar Incidencias de Prueba
+            </button>
+            <button class="btn-secondary" onclick="irAMantenimiento()">
+                <i class="fa-solid fa-arrow-right"></i> Ir a Panel de Mantenimiento
+            </button>
+        </div>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+
+        function mostrarStatus(mensaje, tipo) {
+            statusDiv.className = 'status ' + tipo;
+            statusDiv.textContent = mensaje;
+        }
+
+        async function generarIncidencias() {
+            mostrarStatus('Generando incidencias...', 'loading');
+
+            try {
+                const response = await fetch('php/test_generar_incidencias_iot.php?debug=1', {
+                    method: 'POST',
+                    headers: {
+                        'X-IoT-Token': 'trainweb_iot_test_token_2026'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.ok) {
+                    mostrarStatus(
+                        `✅ ${data.incidencias_generadas} incidencias generadas correctamente`,
+                        'success'
+                    );
+                    setTimeout(() => irAMantenimiento(), 2000);
+                } else {
+                    mostrarStatus(
+                        `❌ Error: ${data.error || 'No se pudieron generar incidencias'}`,
+                        'error'
+                    );
+                }
+            } catch (error) {
+                mostrarStatus(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function irAMantenimiento() {
+            window.location.href = 'mantenimiento.php';
+        }
+    </script>
+</body>
+</html>

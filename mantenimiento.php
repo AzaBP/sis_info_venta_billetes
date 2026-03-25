@@ -90,10 +90,44 @@ try {
         <span style="font-size: .8rem; opacity: .8; font-weight: normal; margin-left: 10px;">| Mantenimiento</span>
     </div>
     <nav class="nav">
-        <button id="profileNavBtn" class="profile-nav-btn" title="Ver datos personales">
-            <i class="fa-solid fa-user-circle"></i>
-            <span class="profile-nav-name"><?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
-        </button>
+        <div class="profile-dropdown">
+            <button id="profileNavBtn" class="profile-nav-btn" title="Ver datos personales">
+                <i class="fa-solid fa-user-circle"></i>
+                <span class="profile-nav-name"><?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
+            </button>
+            <div id="profileMenuNav" class="profile-menu-nav hidden">
+                <div class="profile-menu-header">
+                    <i class="fa-solid fa-helmet-safety"></i>
+                    <div>
+                        <div><?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></div>
+                        <div class="profile-menu-id">ID #<?php echo $idEmpleado ? (int)$idEmpleado : 0; ?></div>
+                    </div>
+                </div>
+                <form id="profileFormNav" class="profile-form-nav">
+                    <label>
+                        Nombre
+                        <input type="text" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
+                    </label>
+                    <label>
+                        Apellido
+                        <input type="text" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
+                    </label>
+                    <label>
+                        Email
+                        <input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
+                    </label>
+                    <label>
+                        Teléfono
+                        <input type="text" name="telefono" value="<?php echo htmlspecialchars($usuario['telefono'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                    </label>
+                    <label>
+                        Especialidad
+                        <input type="text" name="especialidad" value="<?php echo htmlspecialchars((string)$especialidad, ENT_QUOTES, 'UTF-8'); ?>">
+                    </label>
+                    <button type="submit" class="profile-save-btn">Guardar</button>
+                </form>
+            </div>
+        </div>
         <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500;">
             <i class="fa-solid fa-helmet-safety"></i>
             <?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
@@ -134,74 +168,6 @@ try {
                 </button>
             </div>
         </div>
-
-        <section class="panel profile-panel collapsed">
-    <button type="button" id="profileToggle" class="profile-toggle">
-        <div class="profile-toggle-left">
-            <div class="profile-avatar">
-                <i class="fa-solid fa-helmet-safety"></i>
-            </div>
-            <div>
-                <div class="profile-toggle-title">Informacion personal</div>
-                <div class="profile-toggle-sub">
-                    <?php echo htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellido'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
-                    | ID #<?php echo $idEmpleado ? (int)$idEmpleado : 0; ?>
-                    | Asignadas: <?php echo count($incidencias); ?>
-                </div>
-            </div>
-        </div>
-        <i class="fa-solid fa-chevron-down"></i>
-    </button>
-    <div class="profile-body">
-        <form id="profileForm" class="profile-form">
-            <div class="profile-grid">
-                <label>
-                    Nombre
-                    <input type="text" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
-                </label>
-                <label>
-                    Apellido
-                    <input type="text" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
-                </label>
-                <label>
-                    Email
-                    <input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" required>
-                </label>
-                <label>
-                    Telefono
-                    <input type="text" name="telefono" value="<?php echo htmlspecialchars($usuario['telefono'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                </label>
-                <label>
-                    Especialidad
-                    <input type="text" name="especialidad" value="<?php echo htmlspecialchars((string)$especialidad, ENT_QUOTES, 'UTF-8'); ?>">
-                </label>
-                <label>
-                    Turno
-                    <?php
-                        $turnoLower = strtolower((string)$turno);
-                        if ($turnoLower === 'maÃ±ana') {
-                            $turnoLower = 'manana';
-                        }
-                    ?>
-                    <select name="turno">
-                        <option value="manana" <?php echo $turnoLower === 'manana' ? 'selected' : ''; ?>>Manana</option>
-                        <option value="tarde" <?php echo $turnoLower === 'tarde' ? 'selected' : ''; ?>>Tarde</option>
-                        <option value="noche" <?php echo $turnoLower === 'noche' ? 'selected' : ''; ?>>Noche</option>
-                        <option value="rotativo" <?php echo $turnoLower === 'rotativo' ? 'selected' : ''; ?>>Rotativo</option>
-                    </select>
-                </label>
-            </div>
-            <label class="profile-full">
-                Certificaciones
-                <textarea name="certificaciones" rows="2"><?php echo htmlspecialchars((string)$certificaciones, ENT_QUOTES, 'UTF-8'); ?></textarea>
-            </label>
-            <div class="profile-actions">
-                <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
-                <span id="profileStatus" class="profile-status"></span>
-            </div>
-        </form>
-    </div>
-</section>
 
         <section class="panel issues-list">
             <h2>Incidencias pendientes</h2>
@@ -278,46 +244,6 @@ try {
                                 <?php elseif ($estado === 'en_proceso'): ?>
                                     <button class="btn-resolve btn-final" data-action="resolver" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>">Resuelto</button>
                                 <?php endif; ?>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </section>
-
-        <section class="panel ops-panel">
-            <h2>Opciones y consejos</h2>
-            <div class="carousel-box">
-                <div class="carousel-track">
-                    <div class="carousel-item">Prioriza incidencias de frenos y puertas.</div>
-                    <div class="carousel-item">Confirma para marcar como confirmado.</div>
-                    <div class="carousel-item">Anade resolucion para trazabilidad.</div>
-                    <div class="carousel-item">Revisa alertas de senalizacion.</div>
-                </div>
-            </div>
-            <div class="quick-actions">
-                <button class="quick-btn" id="refreshNow"><i class="fa-solid fa-rotate"></i> Refrescar</button>
-                <button class="quick-btn" id="scrollTop"><i class="fa-solid fa-arrow-up"></i> Arriba</button>
-            </div>
-        </section>
-
-        <section class="panel history-panel">
-            <h2>Historico de incidencias</h2>
-            <div id="incidenciasHistorico">
-                <?php if (count($incidenciasHistorico) === 0): ?>
-                    <div class="issue-item low-priority">
-                        <p class="issue-desc">No hay incidencias resueltas.</p>
-                    </div>
-                <?php else: ?>
-                    <?php foreach ($incidenciasHistorico as $inc): ?>
-                        <div class="issue-item low-priority" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>" data-estado="resuelto">
-                            <div class="issue-header">
-                                <span class="issue-id">#INC-<?php echo (int)$inc['id_incidencia']; ?></span>
-                                <span class="priority-tag">RESUELTO</span>
-                            </div>
-                            <p class="issue-desc"><?php echo htmlspecialchars((string)$inc['descripcion'], ENT_QUOTES, 'UTF-8'); ?></p>
-                            <div class="issue-actions">
-                                <button class="btn-detail" data-incidencia-id="<?php echo (int)$inc['id_incidencia']; ?>">Ver detalles</button>
                             </div>
                         </div>
                     <?php endforeach; ?>
