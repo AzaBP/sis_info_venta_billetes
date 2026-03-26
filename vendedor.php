@@ -203,7 +203,7 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                 recentTrips.classList.remove('disabled');
                 
                 document.getElementById('recentTrips').innerHTML = `
-                    <li><span>MAD - BCN</span> <span style="color:#28a745">Completado</span></li>
+                    <li><span>MAD - BCN</span> <span style="color:#17632A">Completado</span></li>
                     <li><span>BCN - VAL</span> <span style="color:#f39c12">Pendiente</span></li>
                 `;
             } else {

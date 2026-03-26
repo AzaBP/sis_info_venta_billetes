@@ -237,7 +237,7 @@
 
 .progress-fill {
     height: 100%;
-    background-color: #28a745; /* Verde para viajes disponibles */
+    background-color: #17632A; /* Verde para viajes disponibles */
     border-radius: 5px;
     transition: width 0.5s ease;
 }

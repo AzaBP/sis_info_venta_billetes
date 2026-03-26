@@ -485,7 +485,7 @@ if (isset($_SESSION['usuario']['id_usuario'])) {
                         </div>
                     </div>
                     <div class="summary-box" style="text-align: center; margin-top: 20px;">
-                        <p style="margin: 0; font-size: 1.2rem;">Importe final a cargar: <strong id="finalPaymentPrice" style="color: #28a745;">0,00 €</strong></p>
+                        <p style="margin: 0; font-size: 1.2rem;">Importe final a cargar: <strong id="finalPaymentPrice" style="color: #17632A;">0,00 €</strong></p>
                     </div>
                     <button type="submit" class="btn-pay-confirm" style="margin-top: 15px; width: 100%;">Procesar Pago y Reservar</button>
                 </form>

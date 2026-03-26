@@ -33,7 +33,7 @@ function cargarAbonos() {
                 const hoy = new Date();
                 const esActivo = fechaFin >= hoy;
                 
-                const colorEstado = esActivo ? '#28a745' : '#dc3545'; // Verde o Rojo
+                const colorEstado = esActivo ? '#17632A' : '#dc3545'; // Verde o Rojo
                 const textoEstado = esActivo ? 'Activo' : 'Caducado';
 
                 // Lógica de los viajes restantes
@@ -80,7 +80,7 @@ function obtenerDisenoAbono(tipo) {
         'trimestral': { icon: 'fa-calendar-days', color: '#17a2b8', nombre: 'Abono Trimestral' },
         'anual': { icon: 'fa-infinity', color: '#f39c12', nombre: 'Abono Anual' },
         'viajes_limitados': { icon: 'fa-ticket', color: '#3156fc', nombre: 'Bono Viajes' },
-        'estudiante': { icon: 'fa-user-graduate', color: '#28a745', nombre: 'Abono Estudiante' }
+        'estudiante': { icon: 'fa-user-graduate', color: '#17632A', nombre: 'Abono Estudiante' }
     };
     
     // Si el tipo no coincide, le damos un diseño genérico

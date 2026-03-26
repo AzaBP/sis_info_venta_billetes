@@ -83,7 +83,7 @@ $rutas = $stmt->fetchAll(PDO::FETCH_ASSOC);
             --text-color: #333;
             --card-bg: #ffffff;
             --border-color: #e1e5eb;
-            --success-color: #28a745;
+            --success-color: #17632A;
             --danger-color: #dc3545;
             --edit-color: #17a2b8;
         }

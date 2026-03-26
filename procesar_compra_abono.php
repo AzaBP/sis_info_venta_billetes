@@ -82,7 +82,7 @@ try {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         .success-container { max-width: 600px; margin: 50px auto; text-align: center; padding: 40px; background: white; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .success-icon { font-size: 4rem; color: #28a745; margin-bottom: 20px; }
+        .success-icon { font-size: 4rem; color: #17632A; margin-bottom: 20px; }
         .btn-profile { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #0a2a66; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
         .error-box { background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 20px 0; text-align: left; font-size: 0.9em; border: 1px solid #f5c6cb; }
     </style>

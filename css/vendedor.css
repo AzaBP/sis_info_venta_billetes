@@ -6,7 +6,7 @@
     --primary-blue: #0a2a66; /* El mismo azul que index.css */
     --accent-orange: #e67e22;
     --text-muted: #6c757d;
-    --success: #28a745;
+    --success: #17632A;
 }
 
 /* El body ya tiene estilos base en index.css, aquí solo ajustamos el fondo del dashboard */
