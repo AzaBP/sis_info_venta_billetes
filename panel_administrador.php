@@ -104,7 +104,7 @@ try {
             // Si es maquinista, obtener datos adicionales
             if ($usuarioEdit && ($usuarioEdit['tipo_empleado'] ?? '') === 'maquinista') {
                 $stmtMaquinista = $pdo->prepare(
-                    "SELECT licencia, experiencia_anos, horario_preferido FROM maquinista WHERE id_empleado = :id_empleado LIMIT 1"
+                    "SELECT licencia, horario_preferido FROM maquinista WHERE id_empleado = :id_empleado LIMIT 1"
                 );
                 $stmtMaquinista->execute([':id_empleado' => (int)($usuarioEdit['id_empleado'] ?? 0)]);
                 $maquinistaData = $stmtMaquinista->fetch(PDO::FETCH_ASSOC);
@@ -186,29 +186,108 @@ try {
         <?php if ($error !== ''): ?><div class="msg-error"><?php echo h($error); ?></div><?php endif; ?>
     </div>
 
-    <!-- ESTADÍSTICAS RÁPIDAS -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 18px;">
-        <div style="background: #fff; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align: center; border-left: 4px solid #0d6efd;">
-            <div style="font-size: 1.8rem; font-weight: 800; color: #0d6efd;"><?php echo count($usuarios); ?></div>
-            <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">Total Usuarios</div>
+    <!-- ESTADÍSTICAS CON GRÁFICAS -->
+    <section class="card">
+        <h2>📊 Estadísticas del Sistema</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 16px;">
+            <!-- Gráfica de Distribución de Usuarios -->
+            <div style="background: #f8fafc; padding: 16px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <h3 style="color: #0a2a66; margin-top: 0; font-size: 1rem;">Distribución de Usuarios</h3>
+                <canvas id="chartDistribucion" style="max-height: 250px;"></canvas>
+            </div>
+
+            <!-- Gráfica de Empleados por Rol -->
+            <div style="background: #f8fafc; padding: 16px; border-radius: 12px; border: 1px solid #e5e7eb;">
+                <h3 style="color: #0a2a66; margin-top: 0; font-size: 1rem;">Empleados por Rol</h3>
+                <canvas id="chartRoles" style="max-height: 250px;"></canvas>
+            </div>
+
+            <!-- Cards de Resumen -->
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="background: linear-gradient(135deg, #0d6efd, #0d5ece); padding: 16px; border-radius: 12px; color: white;">
+                    <div style="font-size: 2rem; font-weight: 800;"><?php echo count($usuarios); ?></div>
+                    <div style="font-size: 0.95rem; opacity: 0.95;">Total Usuarios</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #198754, #176b45); padding: 16px; border-radius: 12px; color: white;">
+                    <div style="font-size: 2rem; font-weight: 800;"><?php echo count(array_filter($usuarios, fn($u) => ($u['tipo_usuario'] ?? '') === 'empleado')); ?></div>
+                    <div style="font-size: 0.95rem; opacity: 0.95;">Empleados Activos</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #0dcaf0, #0aaccd); padding: 16px; border-radius: 12px; color: white;">
+                    <div style="font-size: 2rem; font-weight: 800;"><?php echo count(array_filter($usuarios, fn($u) => ($u['tipo_usuario'] ?? '') === 'pasajero')); ?></div>
+                    <div style="font-size: 0.95rem; opacity: 0.95;">Pasajeros Registrados</div>
+                </div>
+            </div>
         </div>
-        <div style="background: #fff; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align: center; border-left: 4px solid #198754;">
-            <div style="font-size: 1.8rem; font-weight: 800; color: #198754;"><?php echo count(array_filter($usuarios, fn($u) => ($u['tipo_usuario'] ?? '') === 'empleado')); ?></div>
-            <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">Empleados</div>
-        </div>
-        <div style="background: #fff; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align: center; border-left: 4px solid #0dcaf0;">
-            <div style="font-size: 1.8rem; font-weight: 800; color: #0dcaf0;"><?php echo count(array_filter($usuarios, fn($u) => ($u['tipo_usuario'] ?? '') === 'pasajero')); ?></div>
-            <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">Pasajeros</div>
-        </div>
-        <div style="background: #fff; padding: 14px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); text-align: center; border-left: 4px solid #fd7e14;">
-            <div style="font-size: 1.8rem; font-weight: 800; color: #fd7e14;"><?php echo count(array_filter($usuarios, fn($u) => trim(($u['tipo_empleado'] ?? '')) !== '')); ?></div>
-            <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">Roles Especiales</div>
-        </div>
-    </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // Datos para gráficas
+        const totalUsuarios = <?php echo count($usuarios); ?>;
+        const empleados = <?php echo count(array_filter($usuarios, fn($u) => ($u['tipo_usuario'] ?? '') === 'empleado')); ?>;
+        const pasajeros = <?php echo count(array_filter($usuarios, fn($u) => ($u['tipo_usuario'] ?? '') === 'pasajero')); ?>;
+
+        // Contar empleados por rol
+        <?php
+        $roles = ['vendedor' => 0, 'mantenimiento' => 0, 'maquinista' => 0];
+        foreach ($usuarios as $u) {
+            $tipoEmpleado = trim((string)($u['tipo_empleado'] ?? ''));
+            if (isset($roles[$tipoEmpleado])) {
+                $roles[$tipoEmpleado]++;
+            }
+        }
+        ?>
+        const vendedores = <?php echo $roles['vendedor']; ?>;
+        const mantenimiento = <?php echo $roles['mantenimiento']; ?>;
+        const maquinistas = <?php echo $roles['maquinista']; ?>;
+
+        // Gráfica 1: Distribución de Usuarios (Pie)
+        const ctxDist = document.getElementById('chartDistribucion').getContext('2d');
+        new Chart(ctxDist, {
+            type: 'doughnut',
+            data: {
+                labels: ['Empleados', 'Pasajeros'],
+                datasets: [{
+                    data: [empleados, pasajeros],
+                    backgroundColor: ['#0d6efd', '#0dcaf0'],
+                    borderColor: ['#0d5ece', '#0aaccd'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+
+        // Gráfica 2: Empleados por Rol (Bar)
+        const ctxRoles = document.getElementById('chartRoles').getContext('2d');
+        new Chart(ctxRoles, {
+            type: 'bar',
+            data: {
+                labels: ['Vendedores', 'Mantenimiento', 'Maquinistas'],
+                datasets: [{
+                    label: 'Cantidad',
+                    data: [vendedores, mantenimiento, maquinistas],
+                    backgroundColor: ['#ffc107', '#28a745', '#d9534f'],
+                    borderColor: ['#ffb300', '#1e7e34', '#c9302c'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: { x: { beginAtZero: true } }
+            }
+        });
+    </script>
 
     <!-- FORMULARIO DE EDICIÓN - ARRIBA -->
     <?php if ($usuarioEdit): ?>
-        <section class="card" style="background: #fef3c7; border-left: 4px solid #fbbf24;">
+        <section class="card" style="background: linear-gradient(135deg, #f0f7ff, #e6f2ff); border-left: 4px solid #0d6efd;">
             <h2>✎ Editando usuario #<?php echo (int)$usuarioEdit['id_usuario']; ?></h2>
             <form method="POST" action="procesar_admin_usuario.php">
                 <input type="hidden" name="accion" value="actualizar_usuario">
@@ -264,7 +343,6 @@ try {
                 <?php elseif (($usuarioEdit['tipo_empleado'] ?? '') === 'maquinista'): ?>
                     <div class="grid-3" style="margin-top:10px;">
                         <div><label>Licencia</label><input name="licencia" value="<?php echo h((string)($usuarioEdit['licencia'] ?? '')); ?>"></div>
-                        <div><label>Experiencia (anos)</label><input name="experiencia_anos" type="number" min="0" value="<?php echo h((string)($usuarioEdit['experiencia_anos'] ?? '0')); ?>"></div>
                         <div><label>Horario preferido</label><input name="horario_preferido" value="<?php echo h((string)($usuarioEdit['horario_preferido'] ?? '')); ?>"></div>
                     </div>
                 <?php endif; ?>
@@ -302,7 +380,6 @@ try {
                     <div><label>Turno</label><input name="turno" value="manana"></div>
                     <div class="full"><label>Certificaciones</label><input name="certificaciones"></div>
                     <div><label>Licencia</label><input name="licencia" value=""></div>
-                    <div><label>Experiencia (anos)</label><input name="experiencia_anos" type="number" min="0" value="0"></div>
                     <div><label>Horario preferido</label><input name="horario_preferido" value="diurno"></div>
                 </div>
                 <div class="actions"><button class="btn btn-primary" type="submit">Crear empleado</button></div>
