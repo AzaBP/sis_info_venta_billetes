@@ -1,7 +1,13 @@
 <?php
 session_start();
 header('Content-Type: application/json');
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
 ob_start();
+
+set_error_handler(static function ($severity, $message, $file, $line) {
+    throw new ErrorException($message, 0, $severity, $file, $line);
+});
 
 require_once __DIR__ . '/Conexion.php';
 require_once __DIR__ . '/ConexionMongo.php';
@@ -120,4 +126,6 @@ try {
         ob_clean();
     }
     echo json_encode([]);
+} finally {
+    restore_error_handler();
 }

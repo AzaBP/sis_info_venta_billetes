@@ -42,8 +42,23 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    fetch('php/api_billetes_pasajero.php')
-        .then((res) => res.json())
+    fetch('php/api_billetes_pasajero.php', { cache: 'no-store' })
+        .then(async (res) => {
+            const body = await res.text();
+            let billetes;
+
+            try {
+                billetes = JSON.parse(body);
+            } catch (e) {
+                throw new Error('Respuesta invalida al consultar billetes');
+            }
+
+            if (!res.ok) {
+                throw new Error('Error tecnico al consultar viajes');
+            }
+
+            return billetes;
+        })
         .then((billetes) => {
             if (!Array.isArray(billetes) || billetes.length === 0) {
                 contenedorProximos.innerHTML = '<div class="empty-state">No tienes viajes proximos.</div>';
@@ -73,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 : '<div class="empty-state">No tienes viajes previos en tu cuenta.</div>';
         })
         .catch(() => {
-            contenedorProximos.innerHTML = '<div class="error-state">No se pudieron cargar tus viajes proximos.</div>';
-            contenedorFinalizados.innerHTML = '<div class="error-state">No se pudieron cargar tus viajes finalizados.</div>';
+            contenedorProximos.innerHTML = '<div class="error-state">Error tecnico al consultar tus viajes proximos.</div>';
+            contenedorFinalizados.innerHTML = '<div class="error-state">Error tecnico al consultar tus viajes finalizados.</div>';
         });
 });
