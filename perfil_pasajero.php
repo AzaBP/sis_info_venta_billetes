@@ -1,7 +1,12 @@
 <?php
 session_start();
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 require_once __DIR__ . '/php/auth_helpers.php';
 require_once __DIR__ . '/php/Conexion.php';
+
+$assetVersion = (string)@filemtime(__FILE__);
 
 $usuarioSesion = $_SESSION['usuario'] ?? null;
 if (!$usuarioSesion) {
@@ -80,9 +85,12 @@ if (!empty($perfil['fecha_nacimiento'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrainWeb - Mi Perfil</title>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/session_menu.css">
-    <link rel="stylesheet" href="css/perfil_pasajero.css">
+    <style>
+        .content-panel[hidden] { display: none !important; }
+    </style>
+    <link rel="stylesheet" href="css/index.css?v=<?php echo urlencode($assetVersion); ?>">
+    <link rel="stylesheet" href="css/session_menu.css?v=<?php echo urlencode($assetVersion); ?>">
+    <link rel="stylesheet" href="css/perfil_pasajero.css?v=<?php echo urlencode($assetVersion); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -189,7 +197,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
                     </div>
                 </div>
 
-                <div class="content-panel" id="panel-bonos">
+                <div class="content-panel" id="panel-bonos" hidden>
                     <div class="panel-header">
                         <h2>Mis bonos</h2>
                         <p>Revisa tus abonos activos, caducados y viajes restantes.</p>
@@ -197,7 +205,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
                     <div id="abonos-list" class="cards-grid"></div>
                 </div>
 
-                <div class="content-panel" id="panel-viajes">
+                <div class="content-panel" id="panel-viajes" hidden>
                     <div class="panel-header">
                         <h2>Mis viajes y billetes</h2>
                         <p>Billetes comprados y avisos que afectan a tus trayectos.</p>
@@ -210,7 +218,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
                     <div id="incidencias-viaje" class="cards-grid"></div>
                 </div>
 
-                <div class="content-panel" id="panel-config">
+                <div class="content-panel" id="panel-config" hidden>
                     <div class="panel-header">
                         <h2>Configuracion</h2>
                         <p>Gestiona notificaciones, datos de perfil y seguridad.</p>
@@ -370,10 +378,10 @@ if (!empty($perfil['fecha_nacimiento'])) {
         <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
 
-    <script src="scripts/session_menu.js"></script>
-    <script src="scripts/perfil_pasajero_ui.js"></script>
-    <script src="scripts/carga_abonos_perfil.js"></script>
-    <script src="scripts/carga_billetes_perfil.js"></script>
-    <script src="scripts/carga_incidencias_pasajero.js"></script>
+    <script src="scripts/session_menu.js?v=<?php echo urlencode($assetVersion); ?>"></script>
+    <script src="scripts/perfil_pasajero_ui.js?v=<?php echo urlencode($assetVersion); ?>"></script>
+    <script src="scripts/carga_abonos_perfil.js?v=<?php echo urlencode($assetVersion); ?>"></script>
+    <script src="scripts/carga_billetes_perfil.js?v=<?php echo urlencode($assetVersion); ?>"></script>
+    <script src="scripts/carga_incidencias_pasajero.js?v=<?php echo urlencode($assetVersion); ?>"></script>
 </body>
 </html>

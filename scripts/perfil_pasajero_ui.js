@@ -4,12 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function activarPanel(id) {
         links.forEach((btn) => btn.classList.toggle('active', btn.dataset.target === id));
-        panels.forEach((panel) => panel.classList.toggle('active', panel.id === id));
+        panels.forEach((panel) => {
+            const activo = panel.id === id;
+            panel.classList.toggle('active', activo);
+            panel.hidden = !activo;
+        });
     }
 
     links.forEach((btn) => {
         btn.addEventListener('click', () => activarPanel(btn.dataset.target));
     });
+
+    activarPanel('panel-datos');
 
     const accordions = document.querySelectorAll('.accordion-header');
     accordions.forEach((header) => {

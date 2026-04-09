@@ -1,6 +1,7 @@
 <?php
 session_start();
 header('Content-Type: application/json');
+ob_start();
 require_once __DIR__ . '/Conexion.php';
 require_once __DIR__ . '/ConexionMongo.php';
 require_once __DIR__ . '/DAO/BilleteMongoDB.php';
@@ -8,6 +9,9 @@ require_once __DIR__ . '/DAO/BilleteMongoDB.php';
 $usuario = $_SESSION['usuario'] ?? null;
 if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'pasajero') {
     http_response_code(403);
+    if (ob_get_length()) {
+        ob_clean();
+    }
     echo json_encode([]);
     exit;
 }
@@ -22,6 +26,9 @@ try {
     $stmt->execute([':id_usuario' => (int)$usuario['id_usuario']]);
     $id_pasajero = (int)$stmt->fetchColumn();
     if ($id_pasajero <= 0) {
+        if (ob_get_length()) {
+            ob_clean();
+        }
         echo json_encode([]);
         exit;
     }
@@ -38,6 +45,9 @@ try {
     }
 
     if (count($ids) === 0) {
+        if (ob_get_length()) {
+            ob_clean();
+        }
         echo json_encode([]);
         exit;
     }
@@ -57,8 +67,14 @@ try {
     $stmt->execute($idList);
     $incidencias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    if (ob_get_length()) {
+        ob_clean();
+    }
     echo json_encode($incidencias);
 } catch (Throwable $e) {
     http_response_code(500);
+    if (ob_get_length()) {
+        ob_clean();
+    }
     echo json_encode([]);
 }
