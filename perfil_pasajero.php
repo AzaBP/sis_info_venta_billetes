@@ -1,11 +1,18 @@
 <?php
 session_start();
 require_once __DIR__ . '/php/auth_helpers.php';
-if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') === 'empleado') {
-    header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
+require_once __DIR__ . '/php/Conexion.php';
+
+$usuarioSesion = $_SESSION['usuario'] ?? null;
+if (!$usuarioSesion) {
+    header('Location: inicio_sesion.html');
     exit;
 }
-require_once __DIR__ . '/php/Conexion.php';
+
+if (($usuarioSesion['tipo_usuario'] ?? '') === 'empleado') {
+    header('Location: ' . trainwebRutaPorRol($usuarioSesion));
+    exit;
+}
 
 $perfil = [
     'nombre' => $usuarioSesion['nombre'] ?? 'Usuario',
@@ -20,7 +27,7 @@ $perfil = [
     'pais' => ''
 ];
 
-$idUsuarioSesion = $_SESSION['usuario']['id_usuario'] ?? 0;
+$idUsuarioSesion = (int)($usuarioSesion['id_usuario'] ?? 0);
 
 try {
     $conexion = new Conexion();
@@ -52,7 +59,7 @@ try {
         }
     }
 } catch (Throwable $e) {
-    // Si falla la carga de perfil, se muestran los datos de sesión básicos.
+    // Si falla la carga del perfil, se muestran los datos de sesion basicos.
 }
 
 $nombreSesion = $perfil['nombre'] ?: 'Usuario';
@@ -66,32 +73,24 @@ if (!empty($perfil['fecha_nacimiento'])) {
         $fechaNacimientoInput = date('Y-m-d', $ts);
     }
 }
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>TrainWeb - Página Usuario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrainWeb - Mi Perfil</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/session_menu.css">
     <link rel="stylesheet" href="css/perfil_pasajero.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <!-- HEADER -->
     <header class="header">
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
             <a href="index.php">Inicio</a>
-            <a href="#">Billetes</a>
-            <div class="dropdown">
-                <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
-                <div class="dropdown-content">
-                    <a href="#">Español</a>
-                    <a href="#">Inglés</a>
-                    <a href="#">Francés</a>
-                    <a href="#">Alemán</a>
-                </div>
-            </div>
+            <a href="compra.php">Billetes</a>
             <a href="ofertas.php">Ofertas</a>
             <a href="ayuda.php">Ayuda</a>
         </nav>
@@ -104,268 +103,261 @@ if (!empty($perfil['fecha_nacimiento'])) {
                 </button>
                 <div class="account-menu">
                     <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
-                    <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+                    <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesion</a>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- CONTENIDO PERFIL -->
     <main class="perfil-main">
+        <section class="perfil-layout">
+            <aside class="perfil-sidebar">
+                <div class="sidebar-user-card">
+                    <div class="avatar-large"><?php echo strtoupper(substr($nombreSesion, 0, 1)); ?></div>
+                    <h1><?php echo htmlspecialchars($perfil['nombre'] . ' ' . $perfil['apellido'], ENT_QUOTES, 'UTF-8'); ?></h1>
+                    <p><?php echo htmlspecialchars($perfil['email'], ENT_QUOTES, 'UTF-8'); ?></p>
+                </div>
 
-        <!--BIENVENIDA USUARIO-->
-        <section class="welcome-section">
-            <div class="welcome-text">
-                <h1>Hola <?php echo htmlspecialchars($nombreSesion, ENT_QUOTES, 'UTF-8'); ?></h1>
-                <p class="welcome-subtitle">Aquí tienes el resumen de tu actividad y próximos viajes.</p>
-            </div>
-                
+                <nav class="sidebar-nav" aria-label="Apartados del perfil">
+                    <button class="sidebar-link active" data-target="panel-datos" type="button">
+                        <i class="fa-regular fa-id-card"></i>
+                        <span>Datos personales</span>
+                    </button>
+                    <button class="sidebar-link" data-target="panel-bonos" type="button">
+                        <i class="fa-solid fa-ticket"></i>
+                        <span>Mis bonos</span>
+                    </button>
+                    <button class="sidebar-link" data-target="panel-viajes" type="button">
+                        <i class="fa-solid fa-train-subway"></i>
+                        <span>Mis viajes y billetes</span>
+                    </button>
+                    <button class="sidebar-link" data-target="panel-config" type="button">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Configuracion</span>
+                    </button>
+                </nav>
+            </aside>
+
+            <section class="perfil-content">
+                <div class="content-panel active" id="panel-datos">
+                    <div class="panel-header">
+                        <h2>Datos personales</h2>
+                        <p>Consulta tu informacion de cuenta y facturacion.</p>
+                    </div>
+
+                    <div class="info-grid">
+                        <article class="info-card">
+                            <label>Nombre</label>
+                            <strong><?php echo htmlspecialchars($perfil['nombre'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </article>
+                        <article class="info-card">
+                            <label>Apellidos</label>
+                            <strong><?php echo htmlspecialchars($perfil['apellido'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </article>
+                        <article class="info-card">
+                            <label>Documento</label>
+                            <strong><?php echo htmlspecialchars($perfil['numero_documento'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </article>
+                        <article class="info-card">
+                            <label>Fecha de nacimiento</label>
+                            <strong><?php echo htmlspecialchars($fechaNacimientoVista, ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </article>
+                        <article class="info-card">
+                            <label>Email</label>
+                            <strong><?php echo htmlspecialchars($perfil['email'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </article>
+                        <article class="info-card">
+                            <label>Telefono</label>
+                            <strong><?php echo htmlspecialchars($perfil['telefono'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </article>
+                        <article class="info-card info-card-wide">
+                            <label>Direccion</label>
+                            <strong><?php echo htmlspecialchars($perfil['calle'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </article>
+                        <article class="info-card">
+                            <label>Ciudad</label>
+                            <strong><?php echo htmlspecialchars($perfil['ciudad'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </article>
+                        <article class="info-card">
+                            <label>Codigo postal</label>
+                            <strong><?php echo htmlspecialchars($perfil['codigo_postal'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </article>
+                        <article class="info-card">
+                            <label>Pais</label>
+                            <strong><?php echo htmlspecialchars($perfil['pais'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="content-panel" id="panel-bonos">
+                    <div class="panel-header">
+                        <h2>Mis bonos</h2>
+                        <p>Revisa tus abonos activos, caducados y viajes restantes.</p>
+                    </div>
+                    <div id="abonos-list" class="cards-grid"></div>
+                </div>
+
+                <div class="content-panel" id="panel-viajes">
+                    <div class="panel-header">
+                        <h2>Mis viajes y billetes</h2>
+                        <p>Billetes comprados y avisos que afectan a tus trayectos.</p>
+                    </div>
+
+                    <h3 class="section-subtitle">Billetes en tu cuenta</h3>
+                    <div id="billetes-list" class="cards-grid"></div>
+
+                    <h3 class="section-subtitle">Incidencias de viaje</h3>
+                    <div id="incidencias-viaje" class="cards-grid"></div>
+                </div>
+
+                <div class="content-panel" id="panel-config">
+                    <div class="panel-header">
+                        <h2>Configuracion</h2>
+                        <p>Gestiona notificaciones, datos de perfil y seguridad.</p>
+                    </div>
+
+                    <div class="profile-panel accordion-wrapper">
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <div class="header-title">
+                                    <i class="fa-regular fa-bell"></i> Preferencias de avisos
+                                </div>
+                                <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="notifications-list">
+                                    <div class="notification-option">
+                                        <div class="notif-text">
+                                            <strong>Avisos de viaje</strong>
+                                            <p>Retrasos, cambios de via e incidencias.</p>
+                                        </div>
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                    <hr class="trip-separator">
+                                    <div class="notification-option">
+                                        <div class="notif-text">
+                                            <strong>Ofertas comerciales</strong>
+                                            <p>Promociones exclusivas y descuentos.</p>
+                                        </div>
+                                        <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <div class="header-title">
+                                    <i class="fa-solid fa-user-pen"></i> Modificar datos personales
+                                </div>
+                                <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label>Nombre</label>
+                                        <input type="text" value="<?php echo htmlspecialchars($perfil['nombre'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Apellidos</label>
+                                        <input type="text" value="<?php echo htmlspecialchars($perfil['apellido'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Documento (DNI/NIE)</label>
+                                        <input type="text" value="<?php echo htmlspecialchars($perfil['numero_documento'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Fecha de nacimiento</label>
+                                        <input type="date" value="<?php echo htmlspecialchars($fechaNacimientoInput, ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email de contacto</label>
+                                        <input type="email" value="<?php echo htmlspecialchars($perfil['email'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Telefono movil</label>
+                                        <input type="tel" value="<?php echo htmlspecialchars($perfil['telefono'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                    </div>
+                                    <div class="form-full">
+                                        <button type="button" class="btn-primary">Guardar cambios</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <div class="header-title">
+                                    <i class="fa-solid fa-lock"></i> Seguridad y contrasena
+                                </div>
+                                <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <form class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label>Contrasena actual</label>
+                                        <input type="password" placeholder="********" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Nueva contrasena</label>
+                                        <input type="password" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Repetir nueva contrasena</label>
+                                        <input type="password" class="form-input">
+                                    </div>
+                                    <div class="form-full">
+                                        <button type="button" class="btn-primary">Cambiar contrasena</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <div class="header-title danger-title">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> Eliminar la cuenta
+                                </div>
+                                <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="danger-zone">
+                                    <p>Si eliminas tu cuenta, perderas acceso a tus billetes y abonos activos.</p>
+                                    <button type="button" class="btn-danger">Eliminar mi cuenta</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </section>
-
-        <!--VIAJES COMPRADOS POR EL USUARIO-->
-         <div class="profile-container" style="margin-top: 20px;">
-            <h2 class="section-title">Avisos de tus viajes</h2>
-            <div id="incidencias-viaje" class="profile-panel"></div>
-        </div>
-
-        <!--ABONOS COMPRADOS POR EL USUARIO-->
-        <div class="profile-container" style="margin-top: 40px;">
-            <h2 class="section-title">Mis Abonos</h2>
-            <div id="abonos-list"></div>
-        </div>
-            
-
-        <!--DATOS DEL USUARIO-->
-        <div class="profile-container" style="margin-top: 40px;"> 
-            <h2 class="section-title">Mis Datos</h2>
-            <div class="profile-panel accordion-wrapper">
-                <!-- Datos del usuario-->
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <div class="header-title">
-                            <i class="fa-regular fa-id-card"></i> Información Personal
-                        </div>
-                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="form-grid">
-                            <div class="form-group read-only-group">
-                                <label>Nombre</label>
-                                <div class="static-value"><?php echo htmlspecialchars($perfil['nombre'], ENT_QUOTES, 'UTF-8'); ?></div>
-                            </div>
-                            <div class="form-group read-only-group">
-                                <label>Apellidos</label>
-                                <div class="static-value"><?php echo htmlspecialchars($perfil['apellido'], ENT_QUOTES, 'UTF-8'); ?></div>
-                            </div>
-                            <div class="form-group read-only-group">
-                                <label>Documento (DNI/NIE)</label>
-                                <div class="static-value"><?php echo htmlspecialchars($perfil['numero_documento'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
-                            </div>
-                            <div class="form-group read-only-group">
-                                <label>Fecha de Nacimiento</label>
-                                <div class="static-value"><?php echo htmlspecialchars($fechaNacimientoVista, ENT_QUOTES, 'UTF-8'); ?></div>
-                            </div>
-                            <div class="form-group read-only-group">
-                                <label>Email</label>
-                                <div class="static-value"><?php echo htmlspecialchars($perfil['email'], ENT_QUOTES, 'UTF-8'); ?></div>
-                            </div>
-                            <div class="form-group read-only-group">
-                                <label>Teléfono Móvil</label>
-                                <div class="static-value"><?php echo htmlspecialchars($perfil['telefono'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Dirección de facturación -->
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <div class="header-title">
-                            <i class="fa-solid fa-file-invoice-dollar"></i> Dirección de Facturación
-                        </div>
-                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="form-grid">
-                            <div class="form-group full-width read-only-group">
-                                <label>Dirección Postal</label>
-                                <div class="static-value"><?php echo htmlspecialchars($perfil['calle'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
-                            </div>
-                            <div class="form-group read-only-group">
-                                <label>Código Postal</label>
-                                <div class="static-value"><?php echo htmlspecialchars($perfil['codigo_postal'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
-                            </div>
-                            <div class="form-group read-only-group">
-                                <label>Localidad</label>
-                                <div class="static-value"><?php echo htmlspecialchars($perfil['ciudad'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!--CONFIGURACIÓN DE LA CUENTA-->
-        <div class="profile-container" style="margin-top: 40px; margin-bottom: 60px;"> 
-            <h2 class="section-title">Configuración de Cuenta</h2>
-            <div class="profile-panel accordion-wrapper">
-                <!--notificaciones-->
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <div class="header-title">
-                            <i class="fa-regular fa-bell"></i> Preferencias de Avisos
-                        </div>
-                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div class="notifications-list">
-                            <div class="notification-option">
-                                <div class="notif-text">
-                                    <strong>Avisos de viaje</strong>
-                                    <p>Retrasos, cambios de vía e incidencias.</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" checked>
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                            <hr class="trip-separator">
-                            <div class="notification-option">
-                                <div class="notif-text">
-                                    <strong>Ofertas comerciales</strong>
-                                    <p>Promociones exclusivas y descuentos.</p>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox">
-                                    <span class="slider round"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--modificar datos personales-->
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <div class="header-title">
-                            <i class="fa-solid fa-user-pen"></i> Modificar Datos Personales
-                        </div>
-                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <form class="form-grid">
-                            <div class="form-group">
-                                <label>Nombre</label>
-                                <input type="text" value="<?php echo htmlspecialchars($perfil['nombre'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label>Apellidos</label>
-                                <input type="text" value="<?php echo htmlspecialchars($perfil['apellido'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label>Documento (DNI/NIE)</label>
-                                <input type="text" value="<?php echo htmlspecialchars($perfil['numero_documento'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" disabled style="background-color: #f0f0f0; cursor: not-allowed;">
-                            </div>
-                            <div class="form-group">
-                                <label>Fecha de Nacimiento</label>
-                                <input type="date" value="<?php echo htmlspecialchars($fechaNacimientoInput, ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label>Email de Contacto</label>
-                                <input type="email" value="<?php echo htmlspecialchars($perfil['email'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label>Teléfono Móvil</label>
-                                <input type="tel" value="<?php echo htmlspecialchars($perfil['telefono'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
-                            </div>
-                            <div class="form-full">
-                                <button type="button" class="btn-primary">Guardar Cambios</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!--cambio de contraseña-->
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <div class="header-title">
-                            <i class="fa-solid fa-lock"></i> Seguridad y Contraseña
-                        </div>
-                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <form class="form-grid">
-                            <div class="form-group full-width">
-                                <label>Contraseña Actual</label>
-                                <input type="password" placeholder="••••••••" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label>Nueva Contraseña</label>
-                                <input type="password" class="form-input">
-                            </div>
-                            <div class="form-group">
-                                <label>Repetir Nueva Contraseña</label>
-                                <input type="password" class="form-input">
-                            </div>
-                            <div class="form-full">
-                                <button type="button" class="btn-primary">Cambiar Contraseña</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!--eliminar cuenta-->
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <div class="header-title" style="color: #d9534f;">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Eliminar la cuenta
-                        </div>
-                        <i class="fa-solid fa-chevron-down arrow-icon"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <div style="padding: 15px 0;">
-                            <p style="margin-bottom: 15px; color: #666;">Si eliminas tu cuenta, perderás acceso a tus billetes y abonos activos.</p>
-                            <button type="button" class="btn-danger">Eliminar mi cuenta</button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!--SCRIPT ACORDEON -->
-        <script>
-            const accordions = document.querySelectorAll('.accordion-header');
-
-            accordions.forEach(header => {
-                header.addEventListener('click', () => {
-                    const item = header.parentElement;
-                    // Alternar la clase 'active' para abrir/cerrar
-                    item.classList.toggle('active');
-                });
-            });
-        </script>
-
     </main>
 
-    <!-- FOOTER -->
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-column">
                 <h3>TrainWeb</h3>
-                <p>Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
+                <p>Plataforma digital para la busqueda y compra de billetes de tren en todo el territorio nacional.</p>
             </div>
             <div class="footer-column">
                 <h4>Servicios</h4>
                 <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
                 <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
-                <a href="ofertas.html"><i class="fa-solid fa-tags"></i> Ofertas</a>
-                <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
+                <a href="ofertas.php"><i class="fa-solid fa-tags"></i> Ofertas</a>
+                <a href="#"><i class="fa-solid fa-headset"></i> Atencion al cliente</a>
             </div>
             <div class="footer-column">
-                <h4>Información legal</h4>
+                <h4>Informacion legal</h4>
                 <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
                 <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
                 <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
-                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> Terminos y condiciones</a>
             </div>
             <div class="footer-column">
                 <h4>Redes sociales</h4>
@@ -377,9 +369,11 @@ if (!empty($perfil['fecha_nacimiento'])) {
         </div>
         <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
-    <script src="scripts/session_menu.js"></script>
-    <script src="scripts/carga_abonos_perfil.js"></script>
-    <script src="scripts/carga_incidencias_pasajero.js"></script>
 
+    <script src="scripts/session_menu.js"></script>
+    <script src="scripts/perfil_pasajero_ui.js"></script>
+    <script src="scripts/carga_abonos_perfil.js"></script>
+    <script src="scripts/carga_billetes_perfil.js"></script>
+    <script src="scripts/carga_incidencias_pasajero.js"></script>
 </body>
 </html>
