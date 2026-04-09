@@ -1,175 +1,118 @@
 document.addEventListener('DOMContentLoaded', () => {
     const translations = {
         es: {
-            page_title: 'TrainWeb - Página de Trenes',
-            nav_billetes: 'Billetes',
-            nav_ofertas: 'Ofertas',
-            nav_ayuda: 'Ayuda',
-            nav_idiomas: 'Idiomas',
-            lang_es: 'Español',
-            lang_en: 'Inglés',
-            lang_fr: 'Francés',
-            lang_de: 'Alemán',
-            login_button: 'Iniciar sesión',
-            hero_title: 'Busca tu tren',
-            trip_oneway: 'Solo ida',
-            trip_roundtrip: 'Ida y vuelta',
-            origin_placeholder: 'Origen',
-            destination_placeholder: 'Destino',
-            passengers_1: '1 pasajero',
-            passengers_2: '2 pasajeros',
-            passengers_3: '3 pasajeros',
-            passengers_4: '4 pasajeros',
-            search_button: 'Buscar billetes',
-            popular_title: 'Destinos Populares',
-            madrid_desc: 'Capital vibrante con conexiones a todo el país.',
-            barcelona_desc: 'Rutas rápidas y vistas espectaculares al Mediterráneo.',
-            sevilla_desc: 'Cultura, historia y gastronomía en cada estación.',
-            valencia_desc: 'Costa mediterránea y ciudades modernas conectadas por tren.',
-            popular_button: 'Ver rutas',
-            offers_title: 'Abonos y Promociones',
-            buy_button: 'Comprar',
-            footer_services: 'Servicios',
-            footer_legal: 'Información legal',
-            footer_social: 'Redes sociales',
-            footer_billetes: 'Billetes',
-            footer_horarios: 'Horarios',
-            footer_ofertas: 'Ofertas',
-            footer_atencion: 'Atención al cliente',
-            footer_aviso: 'Aviso legal',
-            footer_privacidad: 'Privacidad',
-            footer_cookies: 'Cookies',
-            footer_terminos: 'Términos y condiciones'
+            billetes: 'Billetes',
+            idiomas: 'Idiomas',
+            es: 'Español',
+            en: 'Inglés',
+            fr: 'Francés',
+            de: 'Alemán',
+            ofertas: 'Ofertas',
+            ayuda: 'Ayuda',
+            iniciar_sesion: 'Iniciar sesión',
+            busca_tren: 'Busca tu tren',
+            solo_ida: 'Solo ida',
+            ida_vuelta: 'Ida y vuelta',
+            pasajero_1: '1 pasajero',
+            pasajero_2: '2 pasajeros',
+            pasajero_3: '3 pasajeros',
+            pasajero_4: '4 pasajeros',
+            buscar_billetes: 'Buscar billetes',
+            destinos_populares: 'Destinos Populares',
+            desc_madrid: 'Capital vibrante con conexiones a todo el país.',
+            desc_barcelona: 'Rutas rápidas y vistas espectaculares al Mediterráneo.',
+            desc_sevilla: 'Cultura, historia y gastronomía en cada estación.',
+            desc_valencia: 'Costa mediterránea y ciudades modernas conectadas por tren.',
+            ver_rutas: 'Ver rutas',
+            abonos_promociones: 'Abonos y Promociones',
+            comprar: 'Comprar'
         },
         en: {
-            page_title: 'TrainWeb - Train Tickets',
-            nav_billetes: 'Tickets',
-            nav_ofertas: 'Deals',
-            nav_ayuda: 'Help',
-            nav_idiomas: 'Languages',
-            lang_es: 'Spanish',
-            lang_en: 'English',
-            lang_fr: 'French',
-            lang_de: 'German',
-            login_button: 'Sign in',
-            hero_title: 'Find your train',
-            trip_oneway: 'One way',
-            trip_roundtrip: 'Round trip',
-            origin_placeholder: 'Origin',
-            destination_placeholder: 'Destination',
-            passengers_1: '1 passenger',
-            passengers_2: '2 passengers',
-            passengers_3: '3 passengers',
-            passengers_4: '4 passengers',
-            search_button: 'Search tickets',
-            popular_title: 'Popular destinations',
-            madrid_desc: 'A vibrant capital with connections across the country.',
-            barcelona_desc: 'Fast routes and spectacular Mediterranean views.',
-            sevilla_desc: 'Culture, history and gastronomy at every station.',
-            valencia_desc: 'Mediterranean coast and modern cities connected by rail.',
-            popular_button: 'View routes',
-            offers_title: 'Passes and promotions',
-            buy_button: 'Buy',
-            footer_services: 'Services',
-            footer_legal: 'Legal information',
-            footer_social: 'Social media',
-            footer_billetes: 'Tickets',
-            footer_horarios: 'Timetables',
-            footer_ofertas: 'Deals',
-            footer_atencion: 'Customer support',
-            footer_aviso: 'Legal notice',
-            footer_privacidad: 'Privacy',
-            footer_cookies: 'Cookies',
-            footer_terminos: 'Terms and conditions'
+            billetes: 'Tickets',
+            idiomas: 'Languages',
+            es: 'Spanish',
+            en: 'English',
+            fr: 'French',
+            de: 'German',
+            ofertas: 'Deals',
+            ayuda: 'Help',
+            iniciar_sesion: 'Sign in',
+            busca_tren: 'Find your train',
+            solo_ida: 'One way',
+            ida_vuelta: 'Round trip',
+            pasajero_1: '1 passenger',
+            pasajero_2: '2 passengers',
+            pasajero_3: '3 passengers',
+            pasajero_4: '4 passengers',
+            buscar_billetes: 'Search tickets',
+            destinos_populares: 'Popular destinations',
+            desc_madrid: 'A vibrant capital with connections across the country.',
+            desc_barcelona: 'Fast routes and spectacular Mediterranean views.',
+            desc_sevilla: 'Culture, history and gastronomy at every station.',
+            desc_valencia: 'Mediterranean coast and modern cities connected by rail.',
+            ver_rutas: 'View routes',
+            abonos_promociones: 'Passes and promotions',
+            comprar: 'Buy'
         },
         fr: {
-            page_title: 'TrainWeb - Billets de train',
-            nav_billetes: 'Billets',
-            nav_ofertas: 'Offres',
-            nav_ayuda: 'Aide',
-            nav_idiomas: 'Langues',
-            lang_es: 'Espagnol',
-            lang_en: 'Anglais',
-            lang_fr: 'Français',
-            lang_de: 'Allemand',
-            login_button: 'Se connecter',
-            hero_title: 'Trouvez votre train',
-            trip_oneway: 'Aller simple',
-            trip_roundtrip: 'Aller-retour',
-            origin_placeholder: 'Origine',
-            destination_placeholder: 'Destination',
-            passengers_1: '1 passager',
-            passengers_2: '2 passagers',
-            passengers_3: '3 passagers',
-            passengers_4: '4 passagers',
-            search_button: 'Rechercher des billets',
-            popular_title: 'Destinations populaires',
-            madrid_desc: 'Capitale dynamique avec des connexions dans tout le pays.',
-            barcelona_desc: 'Trajets rapides et vues spectaculaires sur la Méditerranée.',
-            sevilla_desc: 'Culture, histoire et gastronomie à chaque station.',
-            valencia_desc: 'Côte méditerranéenne et villes modernes reliées par le train.',
-            popular_button: 'Voir les trajets',
-            offers_title: 'Abonnements et promotions',
-            buy_button: 'Acheter',
-            footer_services: 'Services',
-            footer_legal: 'Informations légales',
-            footer_social: 'Réseaux sociaux',
-            footer_billetes: 'Billets',
-            footer_horarios: 'Horaires',
-            footer_ofertas: 'Offres',
-            footer_atencion: 'Service client',
-            footer_aviso: 'Mentions légales',
-            footer_privacidad: 'Confidentialité',
-            footer_cookies: 'Cookies',
-            footer_terminos: 'Conditions générales'
+            billetes: 'Billets',
+            idiomas: 'Langues',
+            es: 'Espagnol',
+            en: 'Anglais',
+            fr: 'Français',
+            de: 'Allemand',
+            ofertas: 'Offres',
+            ayuda: 'Aide',
+            iniciar_sesion: 'Se connecter',
+            busca_tren: 'Trouvez votre train',
+            solo_ida: 'Aller simple',
+            ida_vuelta: 'Aller-retour',
+            pasajero_1: '1 passager',
+            pasajero_2: '2 passagers',
+            pasajero_3: '3 passagers',
+            pasajero_4: '4 passagers',
+            buscar_billetes: 'Rechercher des billets',
+            destinos_populares: 'Destinations populaires',
+            desc_madrid: 'Capitale dynamique avec des connexions dans tout le pays.',
+            desc_barcelona: 'Trajets rapides et vues spectaculaires sur la Méditerranée.',
+            desc_sevilla: 'Culture, histoire et gastronomie à chaque station.',
+            desc_valencia: 'Côte méditerranéenne et villes modernes reliées par le train.',
+            ver_rutas: 'Voir les trajets',
+            abonos_promociones: 'Abonnements et promotions',
+            comprar: 'Acheter'
         },
         de: {
-            page_title: 'TrainWeb - Zugtickets',
-            nav_billetes: 'Tickets',
-            nav_ofertas: 'Angebote',
-            nav_ayuda: 'Hilfe',
-            nav_idiomas: 'Sprachen',
-            lang_es: 'Spanisch',
-            lang_en: 'Englisch',
-            lang_fr: 'Französisch',
-            lang_de: 'Deutsch',
-            login_button: 'Anmelden',
-            hero_title: 'Finden Sie Ihren Zug',
-            trip_oneway: 'Nur Hinfahrt',
-            trip_roundtrip: 'Hin- und Rückfahrt',
-            origin_placeholder: 'Abfahrt',
-            destination_placeholder: 'Ziel',
-            passengers_1: '1 Fahrgast',
-            passengers_2: '2 Fahrgäste',
-            passengers_3: '3 Fahrgäste',
-            passengers_4: '4 Fahrgäste',
-            search_button: 'Tickets suchen',
-            popular_title: 'Beliebte Reiseziele',
-            madrid_desc: 'Lebendige Hauptstadt mit Verbindungen im ganzen Land.',
-            barcelona_desc: 'Schnelle Strecken und spektakuläre Mittelmeerblicke.',
-            sevilla_desc: 'Kultur, Geschichte und Gastronomie an jeder Station.',
-            valencia_desc: 'Mittelmeerküste und moderne Städte per Zug verbunden.',
-            popular_button: 'Routen ansehen',
-            offers_title: 'Abos und Aktionen',
-            buy_button: 'Kaufen',
-            footer_services: 'Services',
-            footer_legal: 'Rechtliche Informationen',
-            footer_social: 'Soziale Netzwerke',
-            footer_billetes: 'Tickets',
-            footer_horarios: 'Fahrpläne',
-            footer_ofertas: 'Angebote',
-            footer_atencion: 'Kundendienst',
-            footer_aviso: 'Impressum',
-            footer_privacidad: 'Datenschutz',
-            footer_cookies: 'Cookies',
-            footer_terminos: 'Allgemeine Geschäftsbedingungen'
+            billetes: 'Tickets',
+            idiomas: 'Sprachen',
+            es: 'Spanisch',
+            en: 'Englisch',
+            fr: 'Französisch',
+            de: 'Deutsch',
+            ofertas: 'Angebote',
+            ayuda: 'Hilfe',
+            iniciar_sesion: 'Anmelden',
+            busca_tren: 'Finden Sie Ihren Zug',
+            solo_ida: 'Nur Hinfahrt',
+            ida_vuelta: 'Hin- und Rückfahrt',
+            pasajero_1: '1 Fahrgast',
+            pasajero_2: '2 Fahrgäste',
+            pasajero_3: '3 Fahrgäste',
+            pasajero_4: '4 Fahrgäste',
+            buscar_billetes: 'Tickets suchen',
+            destinos_populares: 'Beliebte Reiseziele',
+            desc_madrid: 'Lebendige Hauptstadt mit Verbindungen im ganzen Land.',
+            desc_barcelona: 'Schnelle Strecken und spektakuläre Mittelmeerblicke.',
+            desc_sevilla: 'Kultur, Geschichte und Gastronomie an jeder Station.',
+            desc_valencia: 'Mittelmeerküste und moderne Städte per Zug verbunden.',
+            ver_rutas: 'Routen ansehen',
+            abonos_promociones: 'Abos und Aktionen',
+            comprar: 'Kaufen'
         }
     };
 
     const storageKey = 'trainweb-lang';
     const languageLinks = document.querySelectorAll('[data-lang]');
     const userActions = document.getElementById('userActions');
-    const trackedRoot = document.body;
 
     function getLanguage() {
         return localStorage.getItem(storageKey) || 'es';
@@ -179,17 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return (translations[lang] && translations[lang][key]) || translations.es[key] || key;
     }
 
-    function setText(selector, key) {
-        const el = document.querySelector(selector);
-        if (el) {
-            el.textContent = t(key);
-        }
-    }
-
     function applyTranslations() {
         const lang = getLanguage();
         document.documentElement.lang = lang;
-        document.title = t('page_title', lang);
+        document.title = t('busca_tren') + ' - TrainWeb';
 
         // Batch process all [data-i18n] elements
         document.querySelectorAll('[data-i18n]').forEach((el) => {
@@ -202,57 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Handle specific placeholders
+        // Update placeholder para inputs de origen/destino
         const origin = document.getElementById('origen');
         const destination = document.getElementById('destino');
-        if (origin) origin.placeholder = t('origin_placeholder', lang);
-        if (destination) destination.placeholder = t('destination_placeholder', lang);
-
-        // Update passenger select options
-        const passengerOptions = document.querySelectorAll('select[name="pasajeros"] option');
-        const passengerKeys = ['passengers_1', 'passengers_2', 'passengers_3', 'passengers_4'];
-        passengerOptions.forEach((option, index) => {
-            if (passengerKeys[index]) {
-                option.textContent = t(passengerKeys[index], lang);
-            }
-        });
-
-        // Update buttons
-        document.querySelectorAll('.btn-popular').forEach((button) => {
-            button.textContent = t('popular_button', lang);
-        });
-
-        document.querySelectorAll('.offer-card a.btn-popular').forEach((button) => {
-            button.textContent = t('buy_button', lang);
-        });
-
-        // Update login button with icon
-        const loginButton = document.querySelector('.btn-login');
-        if (loginButton) {
-            const icon = loginButton.querySelector('i');
-            loginButton.innerHTML = '';
-            if (icon) {
-                loginButton.appendChild(icon.cloneNode(true));
-                loginButton.append(' ' + t('login_button', lang));
-            } else {
-                loginButton.textContent = t('login_button', lang);
-            }
-        }
-
-        // Update language dropdown links
-        document.querySelectorAll('.dropdown-content a').forEach((link, index) => {
-            const keys = ['lang_es', 'lang_en', 'lang_fr', 'lang_de'];
-            if (keys[index]) {
-                link.textContent = t(keys[index], lang);
-            }
-        });
-
-        // Update account menu links (session menu)
-        const accountMenuLinks = document.querySelectorAll('.account-menu a');
-        if (accountMenuLinks.length >= 2) {
-            accountMenuLinks[0].innerHTML = `<i class="fa-solid fa-user"></i> ${lang === 'en' ? 'My profile' : lang === 'fr' ? 'Mon profil' : lang === 'de' ? 'Mein Profil' : 'Mi perfil'}`;
-            accountMenuLinks[1].innerHTML = `<i class="fa-solid fa-right-from-bracket"></i> ${lang === 'en' ? 'Sign out' : lang === 'fr' ? 'Se déconnecter' : lang === 'de' ? 'Abmelden' : 'Cerrar sesión'}`;
-        }
+        if (origin) origin.placeholder = lang === 'en' ? 'Origin' : lang === 'fr' ? 'Origine' : lang === 'de' ? 'Abfahrt' : 'Origen';
+        if (destination) destination.placeholder = lang === 'en' ? 'Destination' : lang === 'fr' ? 'Destination' : lang === 'de' ? 'Ziel' : 'Destino';
     }
 
     function setLanguage(lang) {
@@ -270,16 +160,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Debounced MutationObserver to avoid excessive DOM scanning
+    // Debounced MutationObserver
     let translationTimeout = null;
     if (userActions && 'MutationObserver' in window) {
         const observer = new MutationObserver(() => {
             clearTimeout(translationTimeout);
             translationTimeout = setTimeout(() => {
                 applyTranslations();
-            }, 100); // Debounce by 100ms
+            }, 100);
         });
-        // Only observe direct children, not entire subtree (less aggressive)
         observer.observe(userActions, { childList: true });
     }
 

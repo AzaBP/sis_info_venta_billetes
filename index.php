@@ -45,18 +45,18 @@ try {
     <header class="header">
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
-            <a href="billetes_web.php" data-i18n="nav-billetes">Billetes</a>
+            <a href="billetes_web.php" data-i18n="billetes">Billetes</a>
             <div class="dropdown">
-                <a href="#" data-i18n="nav-idiomas">Idiomas <i class="fa-solid fa-caret-down"></i></a>
+                <a href="#" data-i18n="idiomas">Idiomas <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
-                    <a href="#" data-lang="es" data-i18n="lang-es">Español</a>
-                    <a href="#" data-lang="en" data-i18n="lang-en">Inglés</a>
-                    <a href="#" data-lang="fr" data-i18n="lang-fr">Francés</a>
-                    <a href="#" data-lang="de" data-i18n="lang-de">Alemán</a>
+                    <a href="#" data-lang="es" data-i18n="es">Español</a>
+                    <a href="#" data-lang="en" data-i18n="en">Inglés</a>
+                    <a href="#" data-lang="fr" data-i18n="fr">Francés</a>
+                    <a href="#" data-lang="de" data-i18n="de">Alemán</a>
                 </div>
             </div>
-            <a href="ofertas.php" data-i18n="nav-ofertas">Ofertas</a>
-            <a href="ayuda.php" data-i18n="nav-ayuda">Ayuda</a>
+            <a href="ofertas.php" data-i18n="ofertas">Ofertas</a>
+            <a href="ayuda.php" data-i18n="ayuda">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
             <?php if ($usuarioSesion): ?>
@@ -72,7 +72,7 @@ try {
                     </div>
                 </div>
             <?php else: ?>
-                <a href="inicio_sesion.html" class="btn-login" data-i18n="login-button"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                <a href="inicio_sesion.html" class="btn-login" data-i18n="iniciar_sesion"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
             <?php endif; ?>
         </div>
     </header>
@@ -83,17 +83,17 @@ try {
         <!-- BUSCADOR -->
         <section class="search-section">
             <div class="search-bg"></div>
-            <h1 data-i18n="hero-title">Busca tu tren</h1>
+            <h1 data-i18n="busca_tren">Busca tu tren</h1>
             <form action="compra.php" method="GET" class="search-form">
                 <!-- Tipo de viaje -->
                 <div class="trip-type">
                     <label>
                         <input type="radio" name="trip" value="oneway" checked>
-                        <span data-i18n="trip-oneway">Solo ida</span>
+                        <span data-i18n="solo_ida">Solo ida</span>
                     </label>
                     <label>
                         <input type="radio" name="trip" value="roundtrip">
-                        <span data-i18n="trip-roundtrip">Ida y vuelta</span>
+                        <span data-i18n="ida_vuelta">Ida y vuelta</span>
                     </label>
                 </div>
 
@@ -115,18 +115,18 @@ try {
                 </div>
 
                 <select name="pasajeros">
-                    <option value="1" data-i18n="passengers_1">1 pasajero</option>
-                    <option value="2" data-i18n="passengers_2">2 pasajeros</option>
-                    <option value="3" data-i18n="passengers_3">3 pasajeros</option>
-                    <option value="4" data-i18n="passengers_4">4 pasajeros</option>
+                    <option value="1" data-i18n="pasajero_1">1 pasajero</option>
+                    <option value="2" data-i18n="pasajero_2">2 pasajeros</option>
+                    <option value="3" data-i18n="pasajero_3">3 pasajeros</option>
+                    <option value="4" data-i18n="pasajero_4">4 pasajeros</option>
                 </select>
-                <button type="submit" data-i18n="search-button">Buscar billetes</button>
+                <button type="submit" data-i18n="buscar_billetes">Buscar billetes</button>
             </form>
         </section>
 
         <!-- DESTINOS POPULARES -->
         <section class="popular-section">
-            <h2 data-i18n="popular-title">Destinos Populares</h2>
+            <h2 data-i18n="destinos_populares">Destinos Populares</h2>
             <div class="carousel">
                 <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="popular-track">
@@ -134,8 +134,8 @@ try {
                         <img src="imagenes/madrid.webp" alt="Madrid">
                         <div class="popular-content">
                             <h3>Madrid</h3>
-                            <p data-i18n="popular-madrid-desc">Capital vibrante con conexiones a todo el país.</p>
-                            <a href="rutas_destino.php?destino=Madrid" class="btn-popular" data-i18n="popular-button">Ver rutas</a>
+                            <p data-i18n="desc_madrid">Capital vibrante con conexiones a todo el país.</p>
+                            <a href="rutas_destino.php?destino=Madrid" class="btn-popular" data-i18n="ver_rutas">Ver rutas</a>
                         </div>
                     </div>
 
@@ -143,8 +143,8 @@ try {
                         <img src="imagenes/barcelona.jpeg" alt="Barcelona">
                         <div class="popular-content">
                             <h3>Barcelona</h3>
-                            <p data-i18n="popular-barcelona-desc">Rutas rápidas y vistas espectaculares al Mediterráneo.</p>
-                            <a href="rutas_destino.php?destino=Barcelona" class="btn-popular" data-i18n="popular-button">Ver rutas</a>
+                            <p data-i18n="desc_barcelona">Rutas rápidas y vistas espectaculares al Mediterráneo.</p>
+                            <a href="rutas_destino.php?destino=Barcelona" class="btn-popular" data-i18n="ver_rutas">Ver rutas</a>
                         </div>
                     </div>
 
@@ -152,8 +152,8 @@ try {
                         <img src="imagenes/sevilla.webp" alt="Sevilla">
                         <div class="popular-content">
                             <h3>Sevilla</h3>
-                            <p data-i18n="popular-sevilla-desc">Cultura, historia y gastronomía en cada estación.</p>
-                            <a href="rutas_destino.php?destino=Sevilla" class="btn-popular" data-i18n="popular-button">Ver rutas</a>
+                            <p data-i18n="desc_sevilla">Cultura, historia y gastronomía en cada estación.</p>
+                            <a href="rutas_destino.php?destino=Sevilla" class="btn-popular" data-i18n="ver_rutas">Ver rutas</a>
                         </div>
                     </div>
 
@@ -161,8 +161,8 @@ try {
                         <img src="imagenes/valencia.jpg" alt="Valencia">
                         <div class="popular-content">
                             <h3>Valencia</h3>
-                            <p data-i18n="popular-valencia-desc">Costa mediterránea y ciudades modernas conectadas por tren.</p>
-                            <a href="rutas_destino.php?destino=Valencia" class="btn-popular" data-i18n="popular-button">Ver rutas</a>
+                            <p data-i18n="desc_valencia">Costa mediterránea y ciudades modernas conectadas por tren.</p>
+                            <a href="rutas_destino.php?destino=Valencia" class="btn-popular" data-i18n="ver_rutas">Ver rutas</a>
                         </div>
                     </div>
                 </div>
@@ -172,7 +172,7 @@ try {
 
         <!-- OFERTAS / PROMOCIONES -->
         <section class="offers-section">
-            <h2 data-i18n="offers-title">Abonos y Promociones</h2>
+            <h2 data-i18n="abonos_promociones">Abonos y Promociones</h2>
             <div class="carousel">
                 <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="offers-track">
@@ -185,7 +185,7 @@ try {
                             <div style="font-size: 1.5rem; font-weight: bold; color: #17632A; margin: 10px 0;">
                                 <?= number_format($abono['precio'], 2, ',', '.') ?> €
                             </div>
-                            <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-popular" data-i18n="buy-button" style="display: block; width: 100%; box-sizing: border-box;">Comprar</a>
+                            <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-popular" data-i18n="comprar" style="display: block; width: 100%; box-sizing: border-box;">Comprar</a>
                         </div>
                     <?php endforeach; ?>
 
