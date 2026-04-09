@@ -228,7 +228,7 @@ try {
         <div class="footer-container">
             <div class="footer-column">
                 <h3>TrainWeb</h3>
-                <p>Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
+                <p data-i18n="footer_descripcion">Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
             </div>
             <div class="footer-column">
                 <h4 data-i18n="footer-services">Servicios</h4>
