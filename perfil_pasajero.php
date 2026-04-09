@@ -217,8 +217,11 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                         <p>Billetes comprados y avisos que afectan a tus trayectos.</p>
                     </div>
 
-                    <h3 class="section-subtitle">Billetes en tu cuenta</h3>
-                    <div id="billetes-list" class="cards-grid"></div>
+                    <h3 class="section-subtitle">Viajes proximos</h3>
+                    <div id="viajes-proximos-list" class="cards-grid"></div>
+
+                    <h3 class="section-subtitle">Viajes finalizados</h3>
+                    <div id="viajes-finalizados-list" class="cards-grid"></div>
 
                     <h3 class="section-subtitle">Incidencias de viaje</h3>
                     <div id="incidencias-viaje" class="cards-grid"></div>

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function render(incidencias) {
         container.innerHTML = '';
         if (!incidencias || incidencias.length === 0) {
-            container.innerHTML = '<div class="empty-state">No hay incidencias que afecten a tus viajes.</div>';
+            container.innerHTML = '<div class="empty-state">No hay incidencias asociadas a tus viajes.</div>';
             return;
         }
 
@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ruta = `${inc.ruta_origen} - ${inc.ruta_destino}`;
             const fecha = inc.fecha ? inc.fecha : '';
             const hora = inc.hora_salida ? inc.hora_salida : '';
+            const descripcion = inc.descripcion ? inc.descripcion : 'Sin descripcion';
             div.innerHTML = `
                 <div class="data-card-top">
                     <h4>Viaje #${inc.id_viaje}</h4>
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <p><strong>Ruta:</strong> ${ruta}</p>
                 <p><strong>Salida:</strong> ${fecha} ${hora}</p>
-                <p><strong>Detalle:</strong> ${inc.descripcion}</p>
+                <p><strong>Detalle:</strong> ${descripcion}</p>
             `;
             container.appendChild(div);
         });
@@ -32,6 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(r => r.json())
         .then(render)
         .catch(() => {
-            container.innerHTML = '<div class="error-state">No se pudieron cargar las incidencias.</div>';
+            container.innerHTML = '<div class="error-state">No se pudieron cargar las incidencias asociadas.</div>';
         });
 });
