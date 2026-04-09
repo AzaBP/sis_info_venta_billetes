@@ -45,18 +45,18 @@ try {
     <header class="header">
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
-            <a href="billetes_web.php">Billetes</a>
+            <a href="billetes_web.php" data-i18n="nav-billetes">Billetes</a>
             <div class="dropdown">
-                <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
+                <a href="#" data-i18n="nav-idiomas">Idiomas <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
-                    <a href="#">Español</a>
-                    <a href="#">Inglés</a>
-                    <a href="#">Francés</a>
-                    <a href="#">Alemán</a>
+                    <a href="#" data-lang="es" data-i18n="lang-es">Español</a>
+                    <a href="#" data-lang="en" data-i18n="lang-en">Inglés</a>
+                    <a href="#" data-lang="fr" data-i18n="lang-fr">Francés</a>
+                    <a href="#" data-lang="de" data-i18n="lang-de">Alemán</a>
                 </div>
             </div>
-            <a href="ofertas.php">Ofertas</a>
-            <a href="ayuda.php">Ayuda</a>
+            <a href="ofertas.php" data-i18n="nav-ofertas">Ofertas</a>
+            <a href="ayuda.php" data-i18n="nav-ayuda">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
             <?php if ($usuarioSesion): ?>
@@ -72,7 +72,7 @@ try {
                     </div>
                 </div>
             <?php else: ?>
-                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                <a href="inicio_sesion.html" class="btn-login" data-i18n="login-button"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
             <?php endif; ?>
         </div>
     </header>
@@ -83,17 +83,17 @@ try {
         <!-- BUSCADOR -->
         <section class="search-section">
             <div class="search-bg"></div>
-            <h1>Busca tu tren</h1>
+            <h1 data-i18n="hero-title">Busca tu tren</h1>
             <form action="compra.php" method="GET" class="search-form">
                 <!-- Tipo de viaje -->
                 <div class="trip-type">
                     <label>
                         <input type="radio" name="trip" value="oneway" checked>
-                        Solo ida
+                        <span data-i18n="trip-oneway">Solo ida</span>
                     </label>
                     <label>
                         <input type="radio" name="trip" value="roundtrip">
-                        Ida y vuelta
+                        <span data-i18n="trip-roundtrip">Ida y vuelta</span>
                     </label>
                 </div>
 
@@ -115,18 +115,18 @@ try {
                 </div>
 
                 <select name="pasajeros">
-                    <option value="1">1 pasajero</option>
-                    <option value="2">2 pasajeros</option>
-                    <option value="3">3 pasajeros</option>
-                    <option value="4">4 pasajeros</option>
+                    <option value="1" data-i18n="passengers_1">1 pasajero</option>
+                    <option value="2" data-i18n="passengers_2">2 pasajeros</option>
+                    <option value="3" data-i18n="passengers_3">3 pasajeros</option>
+                    <option value="4" data-i18n="passengers_4">4 pasajeros</option>
                 </select>
-                <button type="submit">Buscar billetes</button>
+                <button type="submit" data-i18n="search-button">Buscar billetes</button>
             </form>
         </section>
 
         <!-- DESTINOS POPULARES -->
         <section class="popular-section">
-            <h2>Destinos Populares</h2>
+            <h2 data-i18n="popular-title">Destinos Populares</h2>
             <div class="carousel">
                 <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="popular-track">
@@ -134,8 +134,8 @@ try {
                         <img src="imagenes/madrid.webp" alt="Madrid">
                         <div class="popular-content">
                             <h3>Madrid</h3>
-                            <p>Capital vibrante con conexiones a todo el país.</p>
-                            <a href="rutas_destino.php?destino=Madrid" class="btn-popular">Ver rutas</a>
+                            <p data-i18n="popular-madrid-desc">Capital vibrante con conexiones a todo el país.</p>
+                            <a href="rutas_destino.php?destino=Madrid" class="btn-popular" data-i18n="popular-button">Ver rutas</a>
                         </div>
                     </div>
 
@@ -143,8 +143,8 @@ try {
                         <img src="imagenes/barcelona.jpeg" alt="Barcelona">
                         <div class="popular-content">
                             <h3>Barcelona</h3>
-                            <p>Rutas rápidas y vistas espectaculares al Mediterráneo.</p>
-                            <a href="rutas_destino.php?destino=Barcelona" class="btn-popular">Ver rutas</a>
+                            <p data-i18n="popular-barcelona-desc">Rutas rápidas y vistas espectaculares al Mediterráneo.</p>
+                            <a href="rutas_destino.php?destino=Barcelona" class="btn-popular" data-i18n="popular-button">Ver rutas</a>
                         </div>
                     </div>
 
@@ -152,8 +152,8 @@ try {
                         <img src="imagenes/sevilla.webp" alt="Sevilla">
                         <div class="popular-content">
                             <h3>Sevilla</h3>
-                            <p>Cultura, historia y gastronomía en cada estación.</p>
-                            <a href="rutas_destino.php?destino=Sevilla" class="btn-popular">Ver rutas</a>
+                            <p data-i18n="popular-sevilla-desc">Cultura, historia y gastronomía en cada estación.</p>
+                            <a href="rutas_destino.php?destino=Sevilla" class="btn-popular" data-i18n="popular-button">Ver rutas</a>
                         </div>
                     </div>
 
@@ -161,8 +161,8 @@ try {
                         <img src="imagenes/valencia.jpg" alt="Valencia">
                         <div class="popular-content">
                             <h3>Valencia</h3>
-                            <p>Costa mediterránea y ciudades modernas conectadas por tren.</p>
-                            <a href="rutas_destino.php?destino=Valencia" class="btn-popular">Ver rutas</a>
+                            <p data-i18n="popular-valencia-desc">Costa mediterránea y ciudades modernas conectadas por tren.</p>
+                            <a href="rutas_destino.php?destino=Valencia" class="btn-popular" data-i18n="popular-button">Ver rutas</a>
                         </div>
                     </div>
                 </div>
@@ -172,7 +172,7 @@ try {
 
         <!-- OFERTAS / PROMOCIONES -->
         <section class="offers-section">
-            <h2>Abonos y Promociones</h2>
+            <h2 data-i18n="offers-title">Abonos y Promociones</h2>
             <div class="carousel">
                 <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="offers-track">
@@ -185,7 +185,7 @@ try {
                             <div style="font-size: 1.5rem; font-weight: bold; color: #17632A; margin: 10px 0;">
                                 <?= number_format($abono['precio'], 2, ',', '.') ?> €
                             </div>
-                            <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-popular" style="display: block; width: 100%; box-sizing: border-box;">Comprar</a>
+                            <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-popular" data-i18n="buy-button" style="display: block; width: 100%; box-sizing: border-box;">Comprar</a>
                         </div>
                     <?php endforeach; ?>
 
@@ -231,21 +231,21 @@ try {
                 <p>Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
             </div>
             <div class="footer-column">
-                <h4>Servicios</h4>
-                <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
-                <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
-                <a href="ofertas.html"><i class="fa-solid fa-tags"></i> Ofertas</a>
-                <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
+                <h4 data-i18n="footer-services">Servicios</h4>
+                <a href="#" data-i18n="footer-billetes"><i class="fa-solid fa-ticket"></i> Billetes</a>
+                <a href="#" data-i18n="footer-horarios"><i class="fa-solid fa-clock"></i> Horarios</a>
+                <a href="ofertas.html" data-i18n="footer-ofertas"><i class="fa-solid fa-tags"></i> Ofertas</a>
+                <a href="#" data-i18n="footer-atencion"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
             </div>
             <div class="footer-column">
-                <h4>Información legal</h4>
-                <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
-                <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
-                <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
-                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+                <h4 data-i18n="footer-legal">Información legal</h4>
+                <a href="#" data-i18n="footer-aviso"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
+                <a href="#" data-i18n="footer-privacidad"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
+                <a href="#" data-i18n="footer-cookies"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
+                <a href="#" data-i18n="footer-terminos"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
             </div>
             <div class="footer-column">
-                <h4>Redes sociales</h4>
+                <h4 data-i18n="footer-social">Redes sociales</h4>
                 <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
                 <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
                 <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
@@ -254,6 +254,7 @@ try {
         </div>
         <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
+    <script src="scripts/i18n_index.js"></script>
     <script>
         const tracks = document.querySelectorAll('.offers-track, .popular-track');
         const nextBtns = document.querySelectorAll('.next');
