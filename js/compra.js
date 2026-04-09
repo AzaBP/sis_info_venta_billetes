@@ -221,7 +221,7 @@ function calcularPrecioFinal() {
     if (abonoActivo !== "") {
         descuento = precioCalculadoAsiento; 
         msg.textContent = "¡Abono aplicado! El viaje se descontará de tu saldo.";
-        msg.style.color = "#28a745"; 
+        msg.style.color = "#17632A"; 
         
         // Desmarcamos la promo si elige abono para no duplicar/confundir
         if (codigoPromo !== "") selectPromo.value = ""; 
@@ -230,7 +230,7 @@ function calcularPrecioFinal() {
     else if (codigoPromo !== "") {
         descuento = precioCalculadoAsiento * (porcentajeDescuento / 100);
         msg.textContent = `Promoción aplicada: -${porcentajeDescuento}%`;
-        msg.style.color = "#28a745";
+        msg.style.color = "#17632A";
     }
 
     // Calcular y actualizar interfaz

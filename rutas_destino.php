@@ -51,7 +51,7 @@ try {
             background: white; border-radius: 10px; padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid #0a2a66;
         }
-        .trip-price { font-size: 1.5rem; color: #28a745; font-weight: bold; }
+        .trip-price { font-size: 1.5rem; color: #17632A; font-weight: bold; }
         .no-results { text-align: center; padding: 50px; font-size: 1.2rem; color: #666; }
     </style>
 </head>

@@ -340,7 +340,7 @@ if (passwordInput) {
             strengthTextStrong.textContent = "Media";
         }
         else {
-            strengthBar.style.background = "#28a745";
+            strengthBar.style.background = "#17632A";
             strengthTextStrong.textContent = "Fuerte";
         }
 
@@ -364,7 +364,7 @@ function actualizarTip(id, valido) {
         tip.classList.add("completed");
         icon.classList.remove("fa-circle-xmark");
         icon.classList.add("fa-circle-check");
-        icon.style.color = "#28a745";
+        icon.style.color = "#17632A";
     } else {
         tip.classList.remove("completed");
         icon.classList.remove("fa-circle-check");

@@ -124,7 +124,7 @@ try {
             --text-color: #333;
             --card-bg: #ffffff;
             --border-color: #e1e5eb;
-            --success-color: #28a745;
+            --success-color: #17632A;
             --danger-color: #dc3545;
             --edit-color: #17a2b8;
         }
@@ -175,7 +175,7 @@ try {
         .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; color: white; display: inline-block; text-align: center; }
         .bg-programado { background: #17a2b8; }
         .bg-en_curso { background: #f39c12; }
-        .bg-completado { background: #28a745; }
+        .bg-completado { background: #17632A; }
         .bg-cancelado { background: #dc3545; }
 
         @media (max-width: 1000px) { .container { grid-template-columns: 1fr; } }

@@ -191,7 +191,7 @@ if ($usuarioSesion && ($usuarioSesion['tipo_usuario'] ?? '') === 'pasajero') {
             text-align: center;
             border-top: 1px dashed #ccc;
             font-weight: bold;
-            color: #28a745;
+            color: #17632A;
         }
 
         .login-banner {

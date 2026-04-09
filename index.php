@@ -182,7 +182,7 @@ try {
                             <i class="<?= htmlspecialchars($abono['icono'] ?? 'fa-solid fa-ticket') ?>" style="font-size: 2rem; color: #0a2a66; margin-bottom: 10px;"></i>
                             <h3 style="margin: 5px 0;"><?= htmlspecialchars($abono['nombre']) ?></h3>
                             <p style="font-size: 0.9rem; color: #555; height: 40px; overflow: hidden;"><?= htmlspecialchars($abono['descripcion']) ?></p>
-                            <div style="font-size: 1.5rem; font-weight: bold; color: #28a745; margin: 10px 0;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #17632A; margin: 10px 0;">
                                 <?= number_format($abono['precio'], 2, ',', '.') ?> €
                             </div>
                             <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-popular" style="display: block; width: 100%; box-sizing: border-box;">Comprar</a>
