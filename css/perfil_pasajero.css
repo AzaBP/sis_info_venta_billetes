@@ -522,6 +522,80 @@
     background: #fbe8e8;
 }
 
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(7, 18, 36, 0.58);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    z-index: 2000;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.modal-overlay.is-open {
+    display: flex;
+}
+
+.modal-card {
+    width: min(92vw, 420px);
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: 0 28px 70px rgba(10, 27, 55, 0.35);
+    padding: 22px;
+    text-align: center;
+    animation: modalPop 0.18s ease;
+}
+
+.modal-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #fff0f0;
+    color: #b13838;
+    font-size: 1.35rem;
+}
+
+.modal-card h3 {
+    margin: 0;
+    color: var(--text-main);
+    font-size: 1.2rem;
+}
+
+.modal-card p {
+    margin: 10px 0 18px;
+    color: var(--text-muted);
+    line-height: 1.45;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
 @media (max-width: 1080px) {
     .perfil-layout {
         grid-template-columns: 1fr;

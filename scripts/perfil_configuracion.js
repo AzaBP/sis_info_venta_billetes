@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const formPassword = document.getElementById('form-cambiar-contrasena');
     const btnNotificaciones = document.getElementById('btn-guardar-notificaciones');
     const btnEliminarCuenta = document.getElementById('btn-eliminar-cuenta');
+    const modalEliminar = document.getElementById('delete-account-modal');
+    const btnCancelarEliminar = document.getElementById('btn-cancelar-eliminar');
+    const btnConfirmarEliminar = document.getElementById('btn-confirmar-eliminar');
 
     const statusDatos = document.getElementById('config-status-datos');
     const statusPass = document.getElementById('config-status-password');
@@ -37,6 +40,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const data = await res.json().catch(() => ({ ok: false, mensaje: 'Respuesta invalida del servidor' }));
         return { ok: !!data.ok, mensaje: data.mensaje || 'Operacion completada', redirect: data.redirect || 'inicio_sesion.html' };
+    }
+
+    function abrirModalEliminar() {
+        if (!modalEliminar) {
+            return;
+        }
+        modalEliminar.classList.add('is-open');
+        modalEliminar.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+    }
+
+    function cerrarModalEliminar() {
+        if (!modalEliminar) {
+            return;
+        }
+        modalEliminar.classList.remove('is-open');
+        modalEliminar.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
     }
 
     if (btnNotificaciones) {
@@ -139,19 +160,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (btnEliminarCuenta) {
-        btnEliminarCuenta.addEventListener('click', async () => {
-            console.log('Click en eliminar cuenta detectado');
-            const confirmado = window.confirm('Vas a eliminar tu cuenta de forma permanente. Esta accion borrara tus datos, abonos y billetes. ¿Deseas continuar?');
-            if (!confirmado) {
-                return;
-            }
+        btnEliminarCuenta.addEventListener('click', abrirModalEliminar);
+    }
 
-            btnEliminarCuenta.disabled = true;
-            btnEliminarCuenta.textContent = 'Eliminando cuenta...';
+    if (btnCancelarEliminar) {
+        btnCancelarEliminar.addEventListener('click', cerrarModalEliminar);
+    }
+
+    if (modalEliminar) {
+        modalEliminar.addEventListener('click', (event) => {
+            if (event.target === modalEliminar) {
+                cerrarModalEliminar();
+            }
+        });
+    }
+
+    if (btnConfirmarEliminar) {
+        btnConfirmarEliminar.addEventListener('click', async () => {
+            btnConfirmarEliminar.disabled = true;
+            btnConfirmarEliminar.textContent = 'Eliminando...';
 
             try {
                 const r = await eliminarCuenta();
                 if (r.ok) {
+                    cerrarModalEliminar();
                     window.location.href = r.redirect || 'inicio_sesion.html';
                     return;
                 }
@@ -159,8 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 alert('No se pudo eliminar la cuenta');
             } finally {
-                btnEliminarCuenta.disabled = false;
-                btnEliminarCuenta.textContent = 'Eliminar mi cuenta';
+                btnConfirmarEliminar.disabled = false;
+                btnConfirmarEliminar.textContent = 'Eliminar';
             }
         });
     }

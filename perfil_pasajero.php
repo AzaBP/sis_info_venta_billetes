@@ -378,6 +378,18 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
         </section>
     </main>
 
+    <div class="modal-overlay" id="delete-account-modal" aria-hidden="true">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="delete-account-title">
+            <div class="modal-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 id="delete-account-title">Eliminar cuenta</h3>
+            <p>Vas a eliminar tu cuenta de forma permanente. Se borraran tus datos, abonos y billetes.</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="btn-cancelar-eliminar">Cancelar</button>
+                <button type="button" class="btn-danger" id="btn-confirmar-eliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-column">
