@@ -42,10 +42,17 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    fetch('php/api_billetes_pasajero.php', { cache: 'no-store' })
+    const urlApi = `php/api_billetes_pasajero.php?t=${Date.now()}`;
+    fetch(urlApi, { cache: 'no-store' })
         .then(async (res) => {
             const body = await res.text();
             let payload;
+
+            // Algunos servidores intermedios responden sin cuerpo (304/204);
+            // en ese caso tratamos como lista vacia para no romper la pantalla.
+            if (!body || body.trim() === '') {
+                return [];
+            }
 
             try {
                 payload = JSON.parse(body);
