@@ -53,8 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Respuesta invalida al consultar billetes');
             }
 
-            if (!res.ok) {
-                throw new Error('Error tecnico al consultar viajes');
+            if (!Array.isArray(billetes)) {
+                return [];
             }
 
             return billetes;

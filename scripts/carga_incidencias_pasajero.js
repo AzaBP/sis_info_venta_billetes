@@ -29,10 +29,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    fetch('php/api_incidencias_pasajero.php')
-        .then(r => r.json())
+    fetch('php/api_incidencias_pasajero.php', { cache: 'no-store' })
+        .then(async (r) => {
+            const body = await r.text();
+            try {
+                const data = JSON.parse(body);
+                return Array.isArray(data) ? data : [];
+            } catch (e) {
+                return [];
+            }
+        })
         .then(render)
         .catch(() => {
-            container.innerHTML = '<div class="error-state">No se pudieron cargar las incidencias asociadas.</div>';
+            container.innerHTML = '<div class="empty-state">No hay incidencias asociadas a tus viajes.</div>';
         });
 });

@@ -14,7 +14,7 @@ require_once __DIR__ . '/DAO/BilleteMongoDB.php';
 
 $usuario = $_SESSION['usuario'] ?? null;
 if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'pasajero') {
-    http_response_code(403);
+    http_response_code(200);
     if (ob_get_length()) {
         ob_clean();
     }
@@ -78,7 +78,7 @@ try {
     }
     echo json_encode($incidencias);
 } catch (Throwable $e) {
-    http_response_code(500);
+    http_response_code(200);
     if (ob_get_length()) {
         ob_clean();
     }
