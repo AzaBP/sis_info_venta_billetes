@@ -190,7 +190,7 @@ try {
                     <?php endforeach; ?>
 
                     <?php if (empty($promociones_index) && empty($abonos_index)): ?>
-                        <p style="padding: 20px;">Actualmente no hay ofertas disponibles. ¡Vuelve pronto!</p>
+                        <p style="padding: 20px;" data-i18n="sin_ofertas">Actualmente no hay ofertas disponibles. ¡Vuelve pronto!</p>
                     <?php endif; ?>
 
                 </div>
@@ -206,14 +206,14 @@ try {
                     <?php foreach ($promociones_index as $promo): ?>
                         <div class="offer-card" style="background: #fdf5e6; border-left: 5px solid #f39c12; padding: 20px; min-width: 250px; border-radius: 8px; text-align: center;">
                             <i class="fa-solid fa-tag" style="font-size: 2rem; color: #f39c12; margin-bottom: 10px;"></i>
-                            <h3 style="margin: 5px 0;">-<?= floatval($promo['descuento_porcentaje']) ?>% Dto.</h3>
-                            <p style="font-size: 0.9rem;">Usa el código:<br><strong style="font-size: 1.2rem; background: #fff; padding: 5px; border-radius: 4px; border: 1px dashed #f39c12; display: inline-block; margin-top: 5px;"><?= htmlspecialchars($promo['codigo']) ?></strong></p>
-                            <p style="font-size: 0.8rem; color: #666; margin-bottom: 0;">Válido hasta: <?= date('d/m/Y', strtotime($promo['fecha_fin'])) ?></p>
+                            <h3 class="promo-discount" data-discount="<?= floatval($promo['descuento_porcentaje']) ?>" style="margin: 5px 0;">-<?= floatval($promo['descuento_porcentaje']) ?>% Dto.</h3>
+                            <p style="font-size: 0.9rem;"><span data-i18n="usa_codigo">Usa el código</span>:<br><strong style="font-size: 1.2rem; background: #fff; padding: 5px; border-radius: 4px; border: 1px dashed #f39c12; display: inline-block; margin-top: 5px;"><?= htmlspecialchars($promo['codigo']) ?></strong></p>
+                            <p style="font-size: 0.8rem; color: #666; margin-bottom: 0;"><span data-i18n="valido_hasta">Válido hasta</span>: <?= date('d/m/Y', strtotime($promo['fecha_fin'])) ?></p>
                         </div>
                     <?php endforeach; ?>
 
                     <?php if (empty($promociones_index) && empty($abonos_index)): ?>
-                        <p style="padding: 20px;">Actualmente no hay ofertas disponibles. ¡Vuelve pronto!</p>
+                        <p style="padding: 20px;" data-i18n="sin_ofertas">Actualmente no hay ofertas disponibles. ¡Vuelve pronto!</p>
                     <?php endif; ?>
 
                 </div>
@@ -232,17 +232,17 @@ try {
             </div>
             <div class="footer-column">
                 <h4 data-i18n="footer-services">Servicios</h4>
-                <a href="#" data-i18n="footer-billetes"><i class="fa-solid fa-ticket"></i> Billetes</a>
-                <a href="#" data-i18n="footer-horarios"><i class="fa-solid fa-clock"></i> Horarios</a>
-                <a href="ofertas.html" data-i18n="footer-ofertas"><i class="fa-solid fa-tags"></i> Ofertas</a>
-                <a href="#" data-i18n="footer-atencion"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
+                <a href="#"><i class="fa-solid fa-ticket"></i> <span data-i18n="footer-billetes">Billetes</span></a>
+                <a href="#"><i class="fa-solid fa-clock"></i> <span data-i18n="footer-horarios">Horarios</span></a>
+                <a href="ofertas.html"><i class="fa-solid fa-tags"></i> <span data-i18n="footer-ofertas">Ofertas</span></a>
+                <a href="#"><i class="fa-solid fa-headset"></i> <span data-i18n="footer-atencion">Atención al cliente</span></a>
             </div>
             <div class="footer-column">
                 <h4 data-i18n="footer-legal">Información legal</h4>
-                <a href="#" data-i18n="footer-aviso"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
-                <a href="#" data-i18n="footer-privacidad"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
-                <a href="#" data-i18n="footer-cookies"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
-                <a href="#" data-i18n="footer-terminos"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="footer-aviso">Aviso legal</span></a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> <span data-i18n="footer-privacidad">Privacidad</span></a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> <span data-i18n="footer-cookies">Cookies</span></a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> <span data-i18n="footer-terminos">Términos y condiciones</span></a>
             </div>
             <div class="footer-column">
                 <h4 data-i18n="footer-social">Redes sociales</h4>

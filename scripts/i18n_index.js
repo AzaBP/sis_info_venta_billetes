@@ -25,7 +25,22 @@ document.addEventListener('DOMContentLoaded', () => {
             desc_valencia: 'Costa mediterránea y ciudades modernas conectadas por tren.',
             ver_rutas: 'Ver rutas',
             abonos_promociones: 'Abonos y Promociones',
-            comprar: 'Comprar'
+            comprar: 'Comprar',
+            usa_codigo: 'Usa el código',
+            valido_hasta: 'Válido hasta',
+            sin_ofertas: 'Actualmente no hay ofertas disponibles. ¡Vuelve pronto!',
+            dto: 'Dto.',
+            footer_services: 'Servicios',
+            footer_legal: 'Información legal',
+            footer_social: 'Redes sociales',
+            footer_billetes: 'Billetes',
+            footer_horarios: 'Horarios',
+            footer_ofertas: 'Ofertas',
+            footer_atencion: 'Atención al cliente',
+            footer_aviso: 'Aviso legal',
+            footer_privacidad: 'Privacidad',
+            footer_cookies: 'Cookies',
+            footer_terminos: 'Términos y condiciones'
         },
         en: {
             billetes: 'Tickets',
@@ -52,7 +67,22 @@ document.addEventListener('DOMContentLoaded', () => {
             desc_valencia: 'Mediterranean coast and modern cities connected by rail.',
             ver_rutas: 'View routes',
             abonos_promociones: 'Passes and promotions',
-            comprar: 'Buy'
+            comprar: 'Buy',
+            usa_codigo: 'Use code',
+            valido_hasta: 'Valid until',
+            sin_ofertas: 'There are currently no offers available. Please come back soon!',
+            dto: 'Off.',
+            footer_services: 'Services',
+            footer_legal: 'Legal information',
+            footer_social: 'Social media',
+            footer_billetes: 'Tickets',
+            footer_horarios: 'Timetables',
+            footer_ofertas: 'Deals',
+            footer_atencion: 'Customer support',
+            footer_aviso: 'Legal notice',
+            footer_privacidad: 'Privacy',
+            footer_cookies: 'Cookies',
+            footer_terminos: 'Terms and conditions'
         },
         fr: {
             billetes: 'Billets',
@@ -79,7 +109,22 @@ document.addEventListener('DOMContentLoaded', () => {
             desc_valencia: 'Côte méditerranéenne et villes modernes reliées par le train.',
             ver_rutas: 'Voir les trajets',
             abonos_promociones: 'Abonnements et promotions',
-            comprar: 'Acheter'
+            comprar: 'Acheter',
+            usa_codigo: 'Utilisez le code',
+            valido_hasta: 'Valable jusqu\'au',
+            sin_ofertas: 'Il n\'y a actuellement aucune offre disponible. Revenez bientôt!',
+            dto: 'Réduc.',
+            footer_services: 'Services',
+            footer_legal: 'Informations légales',
+            footer_social: 'Réseaux sociaux',
+            footer_billetes: 'Billets',
+            footer_horarios: 'Horaires',
+            footer_ofertas: 'Offres',
+            footer_atencion: 'Service client',
+            footer_aviso: 'Mentions légales',
+            footer_privacidad: 'Confidentialité',
+            footer_cookies: 'Cookies',
+            footer_terminos: 'Conditions générales'
         },
         de: {
             billetes: 'Tickets',
@@ -106,7 +151,55 @@ document.addEventListener('DOMContentLoaded', () => {
             desc_valencia: 'Mittelmeerküste und moderne Städte per Zug verbunden.',
             ver_rutas: 'Routen ansehen',
             abonos_promociones: 'Abos und Aktionen',
-            comprar: 'Kaufen'
+            comprar: 'Kaufen',
+            usa_codigo: 'Code verwenden',
+            valido_hasta: 'Gültig bis',
+            sin_ofertas: 'Derzeit sind keine Angebote verfügbar. Bitte kommen Sie bald wieder!',
+            dto: 'Rab.',
+            footer_services: 'Services',
+            footer_legal: 'Rechtliche Informationen',
+            footer_social: 'Soziale Netzwerke',
+            footer_billetes: 'Tickets',
+            footer_horarios: 'Fahrpläne',
+            footer_ofertas: 'Angebote',
+            footer_atencion: 'Kundendienst',
+            footer_aviso: 'Impressum',
+            footer_privacidad: 'Datenschutz',
+            footer_cookies: 'Cookies',
+            footer_terminos: 'Allgemeine Geschäftsbedingungen'
+        }
+    };
+
+    const abonoTranslations = {
+        en: {
+            'Estudiantes': 'Students',
+            'Abono para estudiantes que necesitan desplazarse para realizar sus estudios': 'Pass for students who need to travel for their studies',
+            'abono descuento': 'Discount pass',
+            'abono que va durisimo y mola tajo': 'Very powerful discount pass',
+            'Abonico Majico': 'Magic pass',
+            'abono para gente tajo maja': 'Pass for very nice people',
+            'Abono 60': 'Pass 60',
+            'Abono para jovenes de 60 años, que les guste viajar a un precio asequible': 'Pass for young 60-year-old travelers who want affordable prices'
+        },
+        fr: {
+            'Estudiantes': 'Étudiants',
+            'Abono para estudiantes que necesitan desplazarse para realizar sus estudios': 'Abonnement pour les étudiants qui doivent se déplacer pour leurs études',
+            'abono descuento': 'Abonnement réduction',
+            'abono que va durisimo y mola tajo': 'Abonnement super puissant',
+            'Abonico Majico': 'Abonnement magique',
+            'abono para gente tajo maja': 'Abonnement pour les gens très sympas',
+            'Abono 60': 'Abonnement 60',
+            'Abono para jovenes de 60 años, que les guste viajar a un precio asequible': 'Abonnement pour les jeunes de 60 ans qui aiment voyager à prix abordable'
+        },
+        de: {
+            'Estudiantes': 'Studenten',
+            'Abono para estudiantes que necesitan desplazarse para realizar sus estudios': 'Pass für Studierende, die für ihr Studium reisen müssen',
+            'abono descuento': 'Rabattpass',
+            'abono que va durisimo y mola tajo': 'Sehr starker Rabattpass',
+            'Abonico Majico': 'Magischer Pass',
+            'abono para gente tajo maja': 'Pass für sehr nette Leute',
+            'Abono 60': 'Pass 60',
+            'Abono para jovenes de 60 años, que les guste viajar a un precio asequible': 'Pass für junge 60-Jährige, die günstig reisen möchten'
         }
     };
 
@@ -143,6 +236,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const destination = document.getElementById('destino');
         if (origin) origin.placeholder = lang === 'en' ? 'Origin' : lang === 'fr' ? 'Origine' : lang === 'de' ? 'Abfahrt' : 'Origen';
         if (destination) destination.placeholder = lang === 'en' ? 'Destination' : lang === 'fr' ? 'Destination' : lang === 'de' ? 'Ziel' : 'Destino';
+
+        // Translate dynamic abono names/descriptions without changing DB values
+        document.querySelectorAll('a[href^="comprar_abono.php"]').forEach((buyLink) => {
+            const card = buyLink.closest('.offer-card');
+            if (!card) return;
+
+            const title = card.querySelector('h3');
+            const desc = card.querySelector('p');
+
+            if (title) {
+                if (!title.dataset.original) {
+                    title.dataset.original = title.textContent.trim();
+                }
+                const originalTitle = title.dataset.original;
+                title.textContent = (abonoTranslations[lang] && abonoTranslations[lang][originalTitle]) || originalTitle;
+            }
+
+            if (desc) {
+                if (!desc.dataset.original) {
+                    desc.dataset.original = desc.textContent.trim();
+                }
+                const originalDesc = desc.dataset.original;
+                desc.textContent = (abonoTranslations[lang] && abonoTranslations[lang][originalDesc]) || originalDesc;
+            }
+        });
+
+        // Translate promotion discount suffix by language
+        document.querySelectorAll('.promo-discount').forEach((discountEl) => {
+            const rawValue = discountEl.dataset.discount || '0';
+            discountEl.textContent = `-${rawValue}% ${t('dto', lang)}`;
+        });
     }
 
     function setLanguage(lang) {
