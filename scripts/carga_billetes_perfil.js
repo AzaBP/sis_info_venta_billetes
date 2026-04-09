@@ -45,19 +45,25 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('php/api_billetes_pasajero.php', { cache: 'no-store' })
         .then(async (res) => {
             const body = await res.text();
-            let billetes;
+            let payload;
 
             try {
-                billetes = JSON.parse(body);
+                payload = JSON.parse(body);
             } catch (e) {
-                throw new Error('Respuesta invalida al consultar billetes');
+                const preview = body ? String(body).slice(0, 180) : 'sin contenido';
+                throw new Error(`JSON invalido en respuesta API: ${preview}`);
             }
 
-            if (!Array.isArray(billetes)) {
-                return [];
+            if (!res.ok) {
+                const mensaje = payload && payload.error ? payload.error : `HTTP ${res.status}`;
+                throw new Error(`API billetes fallo: ${mensaje}`);
             }
 
-            return billetes;
+            if (!Array.isArray(payload)) {
+                throw new Error('La API no devolvio un array de billetes');
+            }
+
+            return payload;
         })
         .then((billetes) => {
             if (!Array.isArray(billetes) || billetes.length === 0) {
@@ -87,8 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? finalizados.map(renderCard).join('')
                 : '<div class="empty-state">No tienes viajes previos en tu cuenta.</div>';
         })
-        .catch(() => {
-            contenedorProximos.innerHTML = '<div class="error-state">Error tecnico al consultar tus viajes proximos.</div>';
-            contenedorFinalizados.innerHTML = '<div class="error-state">Error tecnico al consultar tus viajes finalizados.</div>';
+        .catch((err) => {
+            const motivo = err && err.message ? err.message : 'Error desconocido';
+            contenedorProximos.innerHTML = `<div class="error-state">Error al cargar viajes proximos: ${motivo}</div>`;
+            contenedorFinalizados.innerHTML = `<div class="error-state">Error al cargar viajes finalizados: ${motivo}</div>`;
         });
 });

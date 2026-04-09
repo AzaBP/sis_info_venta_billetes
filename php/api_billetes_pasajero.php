@@ -14,11 +14,11 @@ require_once __DIR__ . '/ConexionMongo.php';
 
 $usuario = $_SESSION['usuario'] ?? null;
 if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'pasajero') {
-    http_response_code(200);
+    http_response_code(401);
     if (ob_get_length()) {
         ob_clean();
     }
-    echo json_encode([]);
+    echo json_encode(['error' => 'Sesion no valida para pasajero']);
     exit;
 }
 
@@ -121,11 +121,11 @@ try {
     }
     echo json_encode($salida);
 } catch (Throwable $e) {
-    http_response_code(200);
+    http_response_code(500);
     if (ob_get_length()) {
         ob_clean();
     }
-    echo json_encode([]);
+    echo json_encode(['error' => $e->getMessage()]);
 } finally {
     restore_error_handler();
 }
