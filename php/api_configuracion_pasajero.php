@@ -136,10 +136,9 @@ try {
 
         if ($tieneNewsletter) {
             $stmtNotif = $pdo->prepare('UPDATE pasajero SET newsletter = :newsletter WHERE id_pasajero = :id_pasajero');
-            $stmtNotif->execute([
-                ':newsletter' => $notificacionesOfertas,
-                ':id_pasajero' => $idPasajero
-            ]);
+            $stmtNotif->bindValue(':newsletter', $notificacionesOfertas, PDO::PARAM_BOOL);
+            $stmtNotif->bindValue(':id_pasajero', $idPasajero, PDO::PARAM_INT);
+            $stmtNotif->execute();
         } else {
             $mensajeGuardado = 'Preferencias guardadas (la columna newsletter no existe en BD)';
         }
