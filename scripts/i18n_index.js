@@ -191,48 +191,24 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.lang = lang;
         document.title = t('page_title', lang);
 
-        const translationsMap = [
-            ['[data-i18n="nav-billetes"]', 'nav_billetes'],
-            ['[data-i18n="nav-ofertas"]', 'nav_ofertas'],
-            ['[data-i18n="nav-ayuda"]', 'nav_ayuda'],
-            ['[data-i18n="nav-idiomas"]', 'nav_idiomas'],
-            ['[data-i18n="lang-es"]', 'lang_es'],
-            ['[data-i18n="lang-en"]', 'lang_en'],
-            ['[data-i18n="lang-fr"]', 'lang_fr'],
-            ['[data-i18n="lang-de"]', 'lang_de'],
-            ['[data-i18n="login-button"]', 'login_button'],
-            ['[data-i18n="hero-title"]', 'hero_title'],
-            ['[data-i18n="trip-oneway"]', 'trip_oneway'],
-            ['[data-i18n="trip-roundtrip"]', 'trip_roundtrip'],
-            ['[data-i18n="search-button"]', 'search_button'],
-            ['[data-i18n="popular-title"]', 'popular_title'],
-            ['[data-i18n="popular-madrid-desc"]', 'madrid_desc'],
-            ['[data-i18n="popular-barcelona-desc"]', 'barcelona_desc'],
-            ['[data-i18n="popular-sevilla-desc"]', 'sevilla_desc'],
-            ['[data-i18n="popular-valencia-desc"]', 'valencia_desc'],
-            ['[data-i18n="popular-button"]', 'popular_button'],
-            ['[data-i18n="offers-title"]', 'offers_title'],
-            ['[data-i18n="buy-button"]', 'buy_button'],
-            ['[data-i18n="footer-services"]', 'footer_services'],
-            ['[data-i18n="footer-legal"]', 'footer_legal'],
-            ['[data-i18n="footer-social"]', 'footer_social'],
-            ['[data-i18n="footer-billetes"]', 'footer_billetes'],
-            ['[data-i18n="footer-horarios"]', 'footer_horarios'],
-            ['[data-i18n="footer-ofertas"]', 'footer_ofertas'],
-            ['[data-i18n="footer-atencion"]', 'footer_atencion'],
-            ['[data-i18n="footer-aviso"]', 'footer_aviso'],
-            ['[data-i18n="footer-privacidad"]', 'footer_privacidad'],
-            ['[data-i18n="footer-cookies"]', 'footer_cookies'],
-            ['[data-i18n="footer-terminos"]', 'footer_terminos']
-        ];
+        // Batch process all [data-i18n] elements
+        document.querySelectorAll('[data-i18n]').forEach((el) => {
+            const key = el.getAttribute('data-i18n');
+            const text = t(key, lang);
+            if (el.tagName === 'SELECT' || el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
+                el.placeholder = text;
+            } else {
+                el.textContent = text;
+            }
+        });
 
-        translationsMap.forEach(([selector, key]) => setText(selector, key));
-
+        // Handle specific placeholders
         const origin = document.getElementById('origen');
         const destination = document.getElementById('destino');
         if (origin) origin.placeholder = t('origin_placeholder', lang);
         if (destination) destination.placeholder = t('destination_placeholder', lang);
 
+        // Update passenger select options
         const passengerOptions = document.querySelectorAll('select[name="pasajeros"] option');
         const passengerKeys = ['passengers_1', 'passengers_2', 'passengers_3', 'passengers_4'];
         passengerOptions.forEach((option, index) => {
@@ -241,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Update buttons
         document.querySelectorAll('.btn-popular').forEach((button) => {
             button.textContent = t('popular_button', lang);
         });
@@ -249,6 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
             button.textContent = t('buy_button', lang);
         });
 
+        // Update login button with icon
         const loginButton = document.querySelector('.btn-login');
         if (loginButton) {
             const icon = loginButton.querySelector('i');
@@ -261,6 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Update language dropdown links
         document.querySelectorAll('.dropdown-content a').forEach((link, index) => {
             const keys = ['lang_es', 'lang_en', 'lang_fr', 'lang_de'];
             if (keys[index]) {
@@ -268,6 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Update account menu links (session menu)
         const accountMenuLinks = document.querySelectorAll('.account-menu a');
         if (accountMenuLinks.length >= 2) {
             accountMenuLinks[0].innerHTML = `<i class="fa-solid fa-user"></i> ${lang === 'en' ? 'My profile' : lang === 'fr' ? 'Mon profil' : lang === 'de' ? 'Mein Profil' : 'Mi perfil'}`;
@@ -290,11 +270,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Debounced MutationObserver to avoid excessive DOM scanning
+    let translationTimeout = null;
     if (userActions && 'MutationObserver' in window) {
         const observer = new MutationObserver(() => {
-            applyTranslations();
+            clearTimeout(translationTimeout);
+            translationTimeout = setTimeout(() => {
+                applyTranslations();
+            }, 100); // Debounce by 100ms
         });
-        observer.observe(userActions, { childList: true, subtree: true });
+        // Only observe direct children, not entire subtree (less aggressive)
+        observer.observe(userActions, { childList: true });
     }
 
     window.trainwebI18n = { t, getLanguage, setLanguage, applyTranslations };
