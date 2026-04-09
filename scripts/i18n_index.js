@@ -204,11 +204,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const storageKey = 'trainweb-lang';
+    const supportedLanguages = ['es', 'en', 'fr', 'de'];
     const languageLinks = document.querySelectorAll('[data-lang]');
     const userActions = document.getElementById('userActions');
 
+    function normalizeLanguage(lang) {
+        return supportedLanguages.includes(lang) ? lang : 'es';
+    }
+
     function getLanguage() {
-        return localStorage.getItem(storageKey) || 'es';
+        const saved = localStorage.getItem(storageKey);
+        return normalizeLanguage(saved || 'es');
     }
 
     function t(key, lang = getLanguage()) {
@@ -276,18 +282,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setLanguage(lang) {
-        if (!translations[lang]) {
-            lang = 'es';
-        }
-        localStorage.setItem(storageKey, lang);
+        const safeLang = normalizeLanguage(lang);
+        localStorage.setItem(storageKey, safeLang);
         applyTranslations();
     }
 
     languageLinks.forEach((link) => {
         link.addEventListener('click', (event) => {
             event.preventDefault();
-            setLanguage(link.dataset.lang);
+            event.stopPropagation();
+            const lang = (link.dataset.lang || '').toLowerCase();
+            setLanguage(lang);
         });
+    });
+
+    // Fallback for dynamically rendered language links.
+    document.addEventListener('click', (event) => {
+        const langLink = event.target.closest('[data-lang]');
+        if (!langLink) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const lang = (langLink.dataset.lang || '').toLowerCase();
+        setLanguage(lang);
     });
 
     // Debounced MutationObserver
@@ -301,6 +317,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         observer.observe(userActions, { childList: true });
     }
+
+    // Force a valid default language on first load.
+    localStorage.setItem(storageKey, getLanguage());
 
     window.trainwebI18n = { t, getLanguage, setLanguage, applyTranslations };
     applyTranslations();
