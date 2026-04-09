@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formDatos = document.getElementById('form-datos-perfil');
     const formPassword = document.getElementById('form-cambiar-contrasena');
     const btnNotificaciones = document.getElementById('btn-guardar-notificaciones');
-    const btnEliminarCuenta = document.querySelector('.btn-danger');
+    const btnEliminarCuenta = document.getElementById('btn-eliminar-cuenta');
 
     const statusDatos = document.getElementById('config-status-datos');
     const statusPass = document.getElementById('config-status-password');
@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnEliminarCuenta) {
         btnEliminarCuenta.addEventListener('click', async () => {
+            console.log('Click en eliminar cuenta detectado');
             const confirmado = window.confirm('Vas a eliminar tu cuenta de forma permanente. Esta accion borrara tus datos, abonos y billetes. ¿Deseas continuar?');
             if (!confirmado) {
                 return;

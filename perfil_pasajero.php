@@ -368,7 +368,7 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                             <div class="accordion-content">
                                 <div class="danger-zone">
                                     <p>Si eliminas tu cuenta, perderas acceso a tus billetes y abonos activos.</p>
-                                    <button type="button" class="btn-danger">Eliminar mi cuenta</button>
+                                    <button type="button" class="btn-danger" id="btn-eliminar-cuenta">Eliminar mi cuenta</button>
                                 </div>
                             </div>
                         </div>
