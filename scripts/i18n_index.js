@@ -212,7 +212,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function t(key, lang = getLanguage()) {
-        return (translations[lang] && translations[lang][key]) || translations.es[key] || key;
+        const normalizedKey = String(key || '').replace(/-/g, '_');
+        return (
+            (translations[lang] && (translations[lang][key] || translations[lang][normalizedKey])) ||
+            (translations.es && (translations.es[key] || translations.es[normalizedKey])) ||
+            null
+        );
     }
 
     function applyTranslations() {
@@ -224,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-i18n]').forEach((el) => {
             const key = el.getAttribute('data-i18n');
             const text = t(key, lang);
+            if (text === null) return;
             if (el.tagName === 'SELECT' || el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
                 el.placeholder = text;
             } else {

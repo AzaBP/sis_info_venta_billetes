@@ -47,7 +47,7 @@ try {
         <nav class="nav">
             <a href="billetes_web.php" data-i18n="billetes">Billetes</a>
             <div class="dropdown">
-                <a href="#" data-i18n="idiomas">Idiomas <i class="fa-solid fa-caret-down"></i></a>
+                <a href="#"><i class="fa-solid fa-earth-europe"></i> <span data-i18n="idiomas">Idiomas</span> <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
                     <a href="#" data-lang="es" data-i18n="es">Español</a>
                     <a href="#" data-lang="en" data-i18n="en">Inglés</a>
@@ -72,7 +72,7 @@ try {
                     </div>
                 </div>
             <?php else: ?>
-                <a href="inicio_sesion.html" class="btn-login" data-i18n="iniciar_sesion"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> <span data-i18n="iniciar_sesion">Iniciar sesión</span></a>
             <?php endif; ?>
         </div>
     </header>
