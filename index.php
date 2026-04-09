@@ -254,7 +254,7 @@ try {
         </div>
         <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
-    <script src="scripts/i18n_index.js"></script>
+    <script src="scripts/i18n_index.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n_index.js'); ?>"></script>
     <script>
         const tracks = document.querySelectorAll('.offers-track, .popular-track');
         const nextBtns = document.querySelectorAll('.next');
