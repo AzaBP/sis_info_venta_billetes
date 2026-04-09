@@ -252,7 +252,7 @@ try {
                 <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
             </div>
         </div>
-        <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
+        <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
     <script src="scripts/i18n_index.js"></script>
     <script>

@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_aviso: 'Aviso legal',
             footer_privacidad: 'Privacidad',
             footer_cookies: 'Cookies',
-            footer_terminos: 'Términos y condiciones'
+            footer_terminos: 'Términos y condiciones',
+            footer_copyright: '© 2026 TrainWeb · Todos los derechos reservados'
         },
         en: {
             billetes: 'Tickets',
@@ -84,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_aviso: 'Legal notice',
             footer_privacidad: 'Privacy',
             footer_cookies: 'Cookies',
-            footer_terminos: 'Terms and conditions'
+            footer_terminos: 'Terms and conditions',
+            footer_copyright: '© 2026 TrainWeb · All rights reserved'
         },
         fr: {
             billetes: 'Billets',
@@ -127,7 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_aviso: 'Mentions légales',
             footer_privacidad: 'Confidentialité',
             footer_cookies: 'Cookies',
-            footer_terminos: 'Conditions générales'
+            footer_terminos: 'Conditions générales',
+            footer_copyright: '© 2026 TrainWeb · Tous droits réservés'
         },
         de: {
             billetes: 'Tickets',
@@ -170,7 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_aviso: 'Impressum',
             footer_privacidad: 'Datenschutz',
             footer_cookies: 'Cookies',
-            footer_terminos: 'Allgemeine Geschäftsbedingungen'
+            footer_terminos: 'Allgemeine Geschäftsbedingungen',
+            footer_copyright: '© 2026 TrainWeb · Alle Rechte vorbehalten'
         }
     };
 
