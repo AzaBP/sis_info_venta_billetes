@@ -291,7 +291,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setLanguage(lang) {
         const safeLang = normalizeLanguage(lang);
+        const currentLang = getLanguage();
         localStorage.setItem(storageKey, safeLang);
+        if (currentLang !== safeLang) {
+            window.location.reload();
+            return;
+        }
         applyTranslations();
     }
 
@@ -327,7 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Force a valid default language on first load.
-    localStorage.setItem(storageKey, getLanguage());
+    const startupLanguage = getLanguage();
+    localStorage.setItem(storageKey, startupLanguage);
 
     window.trainwebI18n = { t, getLanguage, setLanguage, applyTranslations };
     applyTranslations();
