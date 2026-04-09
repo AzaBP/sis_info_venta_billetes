@@ -29,7 +29,8 @@ $perfil = [
     'calle' => '',
     'ciudad' => '',
     'codigo_postal' => '',
-    'pais' => ''
+    'pais' => '',
+    'notificaciones_ofertas' => false
 ];
 
 $idUsuarioSesion = (int)($usuarioSesion['id_usuario'] ?? 0);
@@ -40,7 +41,8 @@ try {
 
     if ($pdo && $idUsuarioSesion > 0) {
         $sql = "SELECT u.nombre, u.apellido, u.email, u.telefono,
-                       p.numero_documento, p.fecha_nacimiento, p.calle, p.ciudad, p.codigo_postal, p.pais
+                   p.numero_documento, p.fecha_nacimiento, p.calle, p.ciudad, p.codigo_postal, p.pais,
+                   p.newsletter
                 FROM usuario u
                 LEFT JOIN pasajero p ON p.id_usuario = u.id_usuario
                 WHERE u.id_usuario = :id_usuario
@@ -61,6 +63,7 @@ try {
             $perfil['ciudad'] = $fila['ciudad'] ?? '';
             $perfil['codigo_postal'] = $fila['codigo_postal'] ?? '';
             $perfil['pais'] = $fila['pais'] ?? '';
+            $perfil['notificaciones_ofertas'] = (bool)($fila['newsletter'] ?? false);
         }
     }
 } catch (Throwable $e) {
@@ -78,6 +81,9 @@ if (!empty($perfil['fecha_nacimiento'])) {
         $fechaNacimientoInput = date('Y-m-d', $ts);
     }
 }
+
+$notificacionesViaje = (bool)($_SESSION['preferencias_pasajero']['notificaciones_viaje'] ?? true);
+$notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -234,13 +240,14 @@ if (!empty($perfil['fecha_nacimiento'])) {
                             </div>
                             <div class="accordion-content">
                                 <div class="notifications-list">
+                                    <p id="config-status-notificaciones" class="config-status" aria-live="polite"></p>
                                     <div class="notification-option">
                                         <div class="notif-text">
                                             <strong>Avisos de viaje</strong>
                                             <p>Retrasos, cambios de via e incidencias.</p>
                                         </div>
                                         <label class="switch">
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" id="notif_viaje" <?php echo $notificacionesViaje ? 'checked' : ''; ?>>
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
@@ -251,9 +258,12 @@ if (!empty($perfil['fecha_nacimiento'])) {
                                             <p>Promociones exclusivas y descuentos.</p>
                                         </div>
                                         <label class="switch">
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="notif_ofertas" <?php echo $notificacionesOfertas ? 'checked' : ''; ?>>
                                             <span class="slider round"></span>
                                         </label>
+                                    </div>
+                                    <div class="form-full">
+                                        <button type="button" class="btn-primary" id="btn-guardar-notificaciones">Guardar preferencias</button>
                                     </div>
                                 </div>
                             </div>
@@ -267,14 +277,15 @@ if (!empty($perfil['fecha_nacimiento'])) {
                                 <i class="fa-solid fa-chevron-down arrow-icon"></i>
                             </div>
                             <div class="accordion-content">
-                                <form class="form-grid">
+                                <form class="form-grid" id="form-datos-perfil">
+                                    <p id="config-status-datos" class="config-status full-width" aria-live="polite"></p>
                                     <div class="form-group">
                                         <label>Nombre</label>
-                                        <input type="text" value="<?php echo htmlspecialchars($perfil['nombre'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                        <input type="text" name="nombre" value="<?php echo htmlspecialchars($perfil['nombre'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Apellidos</label>
-                                        <input type="text" value="<?php echo htmlspecialchars($perfil['apellido'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                        <input type="text" name="apellido" value="<?php echo htmlspecialchars($perfil['apellido'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Documento (DNI/NIE)</label>
@@ -282,18 +293,34 @@ if (!empty($perfil['fecha_nacimiento'])) {
                                     </div>
                                     <div class="form-group">
                                         <label>Fecha de nacimiento</label>
-                                        <input type="date" value="<?php echo htmlspecialchars($fechaNacimientoInput, ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                        <input type="date" name="fecha_nacimiento" value="<?php echo htmlspecialchars($fechaNacimientoInput, ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                                     </div>
                                     <div class="form-group">
                                         <label>Email de contacto</label>
-                                        <input type="email" value="<?php echo htmlspecialchars($perfil['email'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                        <input type="email" name="email" value="<?php echo htmlspecialchars($perfil['email'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Telefono movil</label>
-                                        <input type="tel" value="<?php echo htmlspecialchars($perfil['telefono'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                        <input type="tel" name="telefono" value="<?php echo htmlspecialchars($perfil['telefono'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Direccion</label>
+                                        <input type="text" name="calle" value="<?php echo htmlspecialchars($perfil['calle'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Ciudad</label>
+                                        <input type="text" name="ciudad" value="<?php echo htmlspecialchars($perfil['ciudad'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Codigo postal</label>
+                                        <input type="text" name="codigo_postal" value="<?php echo htmlspecialchars($perfil['codigo_postal'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Pais</label>
+                                        <input type="text" name="pais" value="<?php echo htmlspecialchars($perfil['pais'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                                     </div>
                                     <div class="form-full">
-                                        <button type="button" class="btn-primary">Guardar cambios</button>
+                                        <button type="submit" class="btn-primary" id="btn-guardar-datos">Guardar cambios</button>
                                     </div>
                                 </form>
                             </div>
@@ -307,21 +334,22 @@ if (!empty($perfil['fecha_nacimiento'])) {
                                 <i class="fa-solid fa-chevron-down arrow-icon"></i>
                             </div>
                             <div class="accordion-content">
-                                <form class="form-grid">
+                                <form class="form-grid" id="form-cambiar-contrasena">
+                                    <p id="config-status-password" class="config-status full-width" aria-live="polite"></p>
                                     <div class="form-group full-width">
                                         <label>Contrasena actual</label>
-                                        <input type="password" placeholder="********" class="form-input">
+                                        <input type="password" name="password_actual" placeholder="********" class="form-input" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Nueva contrasena</label>
-                                        <input type="password" class="form-input">
+                                        <input type="password" name="password_nueva" class="form-input" required minlength="8">
                                     </div>
                                     <div class="form-group">
                                         <label>Repetir nueva contrasena</label>
-                                        <input type="password" class="form-input">
+                                        <input type="password" name="password_repetida" class="form-input" required minlength="8">
                                     </div>
                                     <div class="form-full">
-                                        <button type="button" class="btn-primary">Cambiar contrasena</button>
+                                        <button type="submit" class="btn-primary" id="btn-cambiar-contrasena">Cambiar contrasena</button>
                                     </div>
                                 </form>
                             </div>
@@ -380,6 +408,7 @@ if (!empty($perfil['fecha_nacimiento'])) {
 
     <script src="scripts/session_menu.js?v=<?php echo urlencode($assetVersion); ?>"></script>
     <script src="scripts/perfil_pasajero_ui.js?v=<?php echo urlencode($assetVersion); ?>"></script>
+    <script src="scripts/perfil_configuracion.js?v=<?php echo urlencode($assetVersion); ?>"></script>
     <script src="scripts/carga_abonos_perfil.js?v=<?php echo urlencode($assetVersion); ?>"></script>
     <script src="scripts/carga_billetes_perfil.js?v=<?php echo urlencode($assetVersion); ?>"></script>
     <script src="scripts/carga_incidencias_pasajero.js?v=<?php echo urlencode($assetVersion); ?>"></script>

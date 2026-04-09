@@ -458,6 +458,28 @@
     text-align: right;
 }
 
+.config-status {
+    margin: 0;
+    padding: 9px 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+    background: #f3f7ff;
+    color: var(--text-muted);
+}
+
+.config-status.is-success {
+    border-color: #b6e3ca;
+    background: #eaf9f1;
+    color: #176442;
+}
+
+.config-status.is-error {
+    border-color: #edc0c0;
+    background: #fff0f0;
+    color: #9a3333;
+}
+
 .btn-primary,
 .btn-danger {
     border-radius: 9px;
@@ -465,6 +487,14 @@
     border: 1px solid transparent;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-primary:disabled,
+.btn-danger:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .btn-primary {
