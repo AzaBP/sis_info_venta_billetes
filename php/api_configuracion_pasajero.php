@@ -123,16 +123,31 @@ try {
         $notificacionesViaje = filter_var(($input['notificaciones_viaje'] ?? true), FILTER_VALIDATE_BOOLEAN);
         $notificacionesOfertas = filter_var(($input['notificaciones_ofertas'] ?? false), FILTER_VALIDATE_BOOLEAN);
 
-        $stmtNotif = $pdo->prepare('UPDATE pasajero SET newsletter = :newsletter WHERE id_pasajero = :id_pasajero');
-        $stmtNotif->execute([
-            ':newsletter' => $notificacionesOfertas,
-            ':id_pasajero' => $idPasajero
-        ]);
+        // Algunos entornos pueden no tener aun la columna newsletter creada.
+        $mensajeGuardado = 'Preferencias guardadas correctamente';
+        $stmtCol = $pdo->prepare("SELECT 1
+                                  FROM information_schema.columns
+                                  WHERE table_schema = 'public'
+                                    AND table_name = 'pasajero'
+                                    AND column_name = 'newsletter'
+                                  LIMIT 1");
+        $stmtCol->execute();
+        $tieneNewsletter = (bool)$stmtCol->fetchColumn();
+
+        if ($tieneNewsletter) {
+            $stmtNotif = $pdo->prepare('UPDATE pasajero SET newsletter = :newsletter WHERE id_pasajero = :id_pasajero');
+            $stmtNotif->execute([
+                ':newsletter' => $notificacionesOfertas,
+                ':id_pasajero' => $idPasajero
+            ]);
+        } else {
+            $mensajeGuardado = 'Preferencias guardadas (la columna newsletter no existe en BD)';
+        }
 
         $_SESSION['preferencias_pasajero'] = $_SESSION['preferencias_pasajero'] ?? [];
         $_SESSION['preferencias_pasajero']['notificaciones_viaje'] = $notificacionesViaje;
 
-        responder(true, 'Preferencias guardadas correctamente', 200, [
+        responder(true, $mensajeGuardado, 200, [
             'notificaciones_viaje' => $notificacionesViaje,
             'notificaciones_ofertas' => $notificacionesOfertas
         ]);
@@ -175,5 +190,5 @@ try {
 
     responder(false, 'Accion no soportada', 400);
 } catch (Throwable $e) {
-    responder(false, 'Error interno en configuracion', 500);
+    responder(false, 'Error interno en configuracion: ' . $e->getMessage(), 500);
 }
