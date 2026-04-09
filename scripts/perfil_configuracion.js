@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formDatos = document.getElementById('form-datos-perfil');
     const formPassword = document.getElementById('form-cambiar-contrasena');
     const btnNotificaciones = document.getElementById('btn-guardar-notificaciones');
+    const btnEliminarCuenta = document.querySelector('.btn-danger');
 
     const statusDatos = document.getElementById('config-status-datos');
     const statusPass = document.getElementById('config-status-password');
@@ -25,6 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const data = await res.json().catch(() => ({ ok: false, mensaje: 'Respuesta invalida del servidor' }));
         return { ok: !!data.ok, mensaje: data.mensaje || 'Operacion completada' };
+    }
+
+    async function eliminarCuenta() {
+        const res = await fetch('php/api_eliminar_cuenta_pasajero.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ accion: 'eliminar_cuenta' })
+        });
+
+        const data = await res.json().catch(() => ({ ok: false, mensaje: 'Respuesta invalida del servidor' }));
+        return { ok: !!data.ok, mensaje: data.mensaje || 'Operacion completada', redirect: data.redirect || 'inicio_sesion.html' };
     }
 
     if (btnNotificaciones) {
@@ -122,6 +134,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (boton) {
                     boton.disabled = false;
                 }
+            }
+        });
+    }
+
+    if (btnEliminarCuenta) {
+        btnEliminarCuenta.addEventListener('click', async () => {
+            const confirmado = window.confirm('Vas a eliminar tu cuenta de forma permanente. Esta accion borrara tus datos, abonos y billetes. ¿Deseas continuar?');
+            if (!confirmado) {
+                return;
+            }
+
+            btnEliminarCuenta.disabled = true;
+            btnEliminarCuenta.textContent = 'Eliminando cuenta...';
+
+            try {
+                const r = await eliminarCuenta();
+                if (r.ok) {
+                    window.location.href = r.redirect || 'inicio_sesion.html';
+                    return;
+                }
+                alert(r.mensaje);
+            } catch (err) {
+                alert('No se pudo eliminar la cuenta');
+            } finally {
+                btnEliminarCuenta.disabled = false;
+                btnEliminarCuenta.textContent = 'Eliminar mi cuenta';
             }
         });
     }
