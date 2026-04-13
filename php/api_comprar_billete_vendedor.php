@@ -45,12 +45,17 @@ if (!$asiento || $asiento['estado'] !== 'disponible') {
 $stmt = $pdo->prepare('UPDATE ASIENTO SET estado = \'ocupado\' WHERE numero_asiento = :numero_asiento AND id_tren = :id_tren');
 $stmt->execute([':numero_asiento'=>$numero_asiento, ':id_tren'=>$viaje['id_tren']]);
 
-// Obtener precio base del viaje
-$stmt = $pdo->prepare('SELECT precio FROM VIAJE WHERE id_viaje = :id_viaje');
-$stmt->execute([':id_viaje'=>$id_viaje]);
+// Comprobar que el viaje existe y obtener su precio
+$stmt = $pdo->prepare('SELECT id_tren, precio FROM VIAJE WHERE id_viaje = :id_viaje');
+$stmt->execute([':id_viaje' => $id_viaje]);
+$fila = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$fila) {
+    echo json_encode(['error' => 'Viaje no encontrado']);
+    exit;
+}
 
+// Guardamos el precio de forma segura
 $precio_final = $fila['precio'];
 
 // Insertar billete en mongo
