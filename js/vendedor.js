@@ -74,12 +74,12 @@ function openModal(tipo) {
         return;
     }
     if (tipo === 'venta') {
-        // Redirigir a compra.php con el id_pasajero
+        // Seleccionar cliente gestionado en la sesión y redirigir a compra.php
         if (!clienteBuscado.id_pasajero) {
             alert('Este usuario no es un pasajero válido.');
             return;
         }
-        window.location.href = `compra.php?id_pasajero=${clienteBuscado.id_pasajero}`;
+        window.location.href = `php/seleccionar_cliente_gestionado.php?id_pasajero=${clienteBuscado.id_pasajero}`;
         return;
     }
     // Aquí puedes implementar el resto de acciones para otros botones
