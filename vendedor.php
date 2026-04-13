@@ -210,6 +210,15 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                                 <div id="infoViajeSeleccionado"></div>
                                 <div id="asientosGrid" class="asientos-grid"></div>
                                 <input type="hidden" name="numero_asiento" id="inputAsientoSeleccionado" required>
+                                <button type="button" id="btnPasoDatosCompra">Siguiente: Datos de compra</button>
+                            </form>
+                        </div>
+                        <div id="ventaVendedorPaso3" class="hidden">
+                            <h3>Datos de compra y descuento</h3>
+                            <form id="formDatosCompra">
+                                <label>Precio base: <span id="precioBaseCompra">-</span> €</label><br>
+                                <label>Descuento (%): <input type="number" id="descuentoCompra" min="0" max="100" value="0"></label><br>
+                                <label>Precio final: <span id="precioFinalCompra">-</span> €</label><br>
                                 <button type="submit">Confirmar compra</button>
                             </form>
                             <div id="compraResultado"></div>

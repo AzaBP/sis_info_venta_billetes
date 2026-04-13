@@ -88,18 +88,38 @@ function seleccionarViajeVendedor(id_viaje) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('formSeleccionAsiento').addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (!viajeSeleccionado) return;
+  // Paso de asientos a datos de compra
+  document.getElementById('btnPasoDatosCompra').addEventListener('click', function() {
     const asiento = document.getElementById('inputAsientoSeleccionado').value;
-    if (!asiento) {
+    if (!viajeSeleccionado || !asiento) {
       alert('Selecciona un asiento.');
       return;
     }
+    // Mostrar paso 3
+    document.getElementById('ventaVendedorPaso2').classList.add('hidden');
+    document.getElementById('ventaVendedorPaso3').classList.remove('hidden');
+    // Mostrar precio base
+    document.getElementById('precioBaseCompra').textContent = viajeSeleccionado.precio_base;
+    document.getElementById('precioFinalCompra').textContent = viajeSeleccionado.precio_base;
+    document.getElementById('descuentoCompra').value = 0;
+  });
+  // Actualizar precio final al cambiar descuento
+  document.getElementById('descuentoCompra').addEventListener('input', function() {
+    const base = parseFloat(document.getElementById('precioBaseCompra').textContent);
+    const desc = parseFloat(this.value) || 0;
+    const final = Math.max(0, base - (base * desc / 100));
+    document.getElementById('precioFinalCompra').textContent = final.toFixed(2);
+  });
+  // Confirmar compra con datos
+  document.getElementById('formDatosCompra').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!viajeSeleccionado) return;
+    const asiento = document.getElementById('inputAsientoSeleccionado').value;
+    const descuento = parseFloat(document.getElementById('descuentoCompra').value) || 0;
     fetch('php/api_comprar_billete_vendedor.php', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ id_viaje: viajeSeleccionado.id_viaje, numero_asiento: asiento })
+      body: JSON.stringify({ id_viaje: viajeSeleccionado.id_viaje, numero_asiento: asiento, descuento: descuento })
     })
     .then(r=>r.json())
     .then(data => {
