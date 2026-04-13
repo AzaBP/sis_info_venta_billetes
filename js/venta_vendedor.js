@@ -14,6 +14,9 @@ function cerrarModalVentaVendedor() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Siempre ocultar el modal al cargar
+  document.getElementById('modalVentaVendedor').classList.add('hidden');
+
   const btnVenta = document.getElementById('btnIniciarVenta');
   const cerrarBtn = document.getElementById('cerrarVentaVendedor');
   btnVenta && btnVenta.addEventListener('click', mostrarModalVentaVendedor);
