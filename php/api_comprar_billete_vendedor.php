@@ -46,13 +46,12 @@ $stmt = $pdo->prepare('UPDATE ASIENTO SET estado = \'ocupado\' WHERE numero_asie
 $stmt->execute([':numero_asiento'=>$numero_asiento, ':id_tren'=>$viaje['id_tren']]);
 
 // Obtener precio base del viaje
-$stmt = $pdo->prepare('SELECT precio_base FROM VIAJE WHERE id_viaje = :id_viaje');
+$stmt = $pdo->prepare('SELECT precio FROM VIAJE WHERE id_viaje = :id_viaje');
 $stmt->execute([':id_viaje'=>$id_viaje]);
 
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$precio_base = $row ? floatval($row['precio_base']) : 0;
-$precio_final = max(0, $precio_base - ($precio_base * $descuento / 100));
+$precio_final = $fila['precio'];
 
 // Insertar billete (debes tener tabla BILLETE, añade campo descuento y precio_final si lo deseas)
 try {
