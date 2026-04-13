@@ -73,7 +73,15 @@ function openModal(tipo) {
         alert('Primero busca un cliente.');
         return;
     }
-    // Aquí puedes redirigir, abrir modal, o enviar datos según el tipo
+    if (tipo === 'venta') {
+        // Redirigir a compra.php con el id_pasajero
+        if (!clienteBuscado.id_pasajero) {
+            alert('Este usuario no es un pasajero válido.');
+            return;
+        }
+        window.location.href = `compra.php?id_pasajero=${clienteBuscado.id_pasajero}`;
+        return;
+    }
+    // Aquí puedes implementar el resto de acciones para otros botones
     alert(`Abriendo proceso de ${tipo.toUpperCase()} para el cliente: ${clienteBuscado.nombre} (DNI: ${clienteBuscado.dni}, Email: ${clienteBuscado.email})`);
-    // Ejemplo: window.location.href = `venta.php?id_pasajero=${clienteBuscado.id_pasajero}`;
 }
