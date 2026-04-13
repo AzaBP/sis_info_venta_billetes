@@ -98,10 +98,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mostrar paso 3
     document.getElementById('ventaVendedorPaso2').classList.add('hidden');
     document.getElementById('ventaVendedorPaso3').classList.remove('hidden');
-    // Mostrar precio base
+    // Mostrar resumen de viaje y asiento
+    document.getElementById('resumenViajeVendedor').textContent = `${viajeSeleccionado.origen} → ${viajeSeleccionado.destino} (${viajeSeleccionado.fecha} ${viajeSeleccionado.hora_salida}) - Tren: ${viajeSeleccionado.tipo_tren}`;
+    document.getElementById('resumenAsientoVendedor').textContent = asiento;
+    // Mostrar precio base y precio final
     document.getElementById('precioBaseCompra').textContent = viajeSeleccionado.precio_base;
     document.getElementById('precioFinalCompra').textContent = viajeSeleccionado.precio_base;
     document.getElementById('descuentoCompra').value = 0;
+    document.getElementById('promoMsgVendedor').textContent = '';
   });
   // Actualizar precio final al cambiar descuento
   document.getElementById('descuentoCompra').addEventListener('input', function() {
@@ -109,6 +113,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const desc = parseFloat(this.value) || 0;
     const final = Math.max(0, base - (base * desc / 100));
     document.getElementById('precioFinalCompra').textContent = final.toFixed(2);
+    // Mensaje visual de descuento
+    const promoMsg = document.getElementById('promoMsgVendedor');
+    if (desc > 0) {
+      promoMsg.textContent = `Descuento aplicado: -${desc}%`;
+      promoMsg.style.color = '#17632A';
+    } else {
+      promoMsg.textContent = '';
+    }
   });
   // Confirmar compra con datos
   document.getElementById('formDatosCompra').addEventListener('submit', function(e) {
@@ -116,11 +128,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!viajeSeleccionado) return;
     const asiento = document.getElementById('inputAsientoSeleccionado').value;
     const descuento = parseFloat(document.getElementById('descuentoCompra').value) || 0;
-    // Recoger datos de facturación
+    // Recoger datos de compra
     const facturaNombre = document.getElementById('facturaNombre').value;
     const facturaNif = document.getElementById('facturaNif').value;
     const facturaDireccion = document.getElementById('facturaDireccion').value;
     const facturaEmail = document.getElementById('facturaEmail').value;
+    // Deshabilitar botón para evitar dobles envíos
+    const btn = this.querySelector('button[type="submit"]');
+    if (btn) btn.disabled = true;
     fetch('php/api_comprar_billete_vendedor.php', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
@@ -136,7 +151,9 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(r=>r.json())
     .then(data => {
-      document.getElementById('compraResultado').innerHTML = data.ok ? '<b>¡Compra realizada correctamente!</b>' : `<b>Error:</b> ${data.error}`;
-    });
+      document.getElementById('compraResultado').innerHTML = data.ok ? '<b style="color:#17632A">¡Compra realizada correctamente!</b>' : `<b style="color:#c00">Error:</b> ${data.error}`;
+      if (btn) btn.disabled = false;
+    })
+    .catch(() => { if (btn) btn.disabled = false; });
   });
 });

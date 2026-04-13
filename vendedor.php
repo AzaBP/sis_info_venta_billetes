@@ -214,19 +214,49 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                             </form>
                         </div>
                         <div id="ventaVendedorPaso3" class="hidden">
-                            <h3>Datos de compra, descuento y facturación</h3>
-                            <form id="formDatosCompra">
-                                <label>Precio base: <span id="precioBaseCompra">-</span> €</label><br>
-                                <label>Descuento (%): <input type="number" id="descuentoCompra" min="0" max="100" value="0"></label><br>
-                                <label>Precio final: <span id="precioFinalCompra">-</span> €</label><br>
-                                <hr>
-                                <label>Nombre completo (facturación): <input type="text" id="facturaNombre" name="facturaNombre" required></label><br>
-                                <label>NIF/CIF: <input type="text" id="facturaNif" name="facturaNif" required></label><br>
-                                <label>Dirección: <input type="text" id="facturaDireccion" name="facturaDireccion" required></label><br>
-                                <label>Email: <input type="email" id="facturaEmail" name="facturaEmail" required></label><br>
-                                <button type="submit">Confirmar compra</button>
-                            </form>
-                            <div id="compraResultado"></div>
+                            <div class="progress-bar-container" style="margin-bottom: 18px;">
+                                <div class="step completed"><span class="step-num">1</span> Viaje</div>
+                                <div class="step completed"><span class="step-num">2</span> Asiento</div>
+                                <div class="step active"><span class="step-num">3</span> Resumen y compra</div>
+                            </div>
+                            <div class="payment-container" style="max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                                <div class="payment-header" style="border-bottom: none; margin-bottom: 10px;">
+                                    <h3 style="color:#0a2a66;"><i class="fa-solid fa-list-check"></i> Resumen y Descuentos</h3>
+                                </div>
+                                <div class="trip-details" style="margin-bottom: 18px; padding: 12px; background: #f4f6f8; border-radius: 8px; font-size: 1.05rem;">
+                                    <p style="margin: 5px 0;"><strong>Viaje:</strong> <span id="resumenViajeVendedor">--</span></p>
+                                    <p style="margin: 5px 0;"><strong>Asiento:</strong> <span id="resumenAsientoVendedor">--</span></p>
+                                    <p style="margin: 5px 0;"><strong>Precio base:</strong> <span id="precioBaseCompra">-</span> €</p>
+                                </div>
+                                <div class="discounts-section" style="margin-bottom: 18px;">
+                                    <label for="descuentoCompra" style="font-weight: bold;">Descuento (%)</label>
+                                    <input type="number" id="descuentoCompra" min="0" max="100" value="0" style="width: 80px; margin-left: 10px; border-radius: 5px; border: 1px solid #ccc; padding: 4px 8px;">
+                                    <span id="promoMsgVendedor" style="display: block; margin-top: 5px; font-size: 0.9rem;"></span>
+                                </div>
+                                <div class="summary-box" style="margin-bottom: 18px; font-size: 1.15rem; background: #e9ecef; padding: 12px; border-radius: 8px; text-align: center;">
+                                    <p style="margin: 0;">Total a pagar: <strong id="precioFinalCompra" style="color: #0a2a66; font-size: 1.3rem;">-</strong> €</p>
+                                </div>
+                                <form id="formDatosCompra" autocomplete="off">
+                                    <div class="form-group full-width">
+                                        <label for="facturaNombre">Nombre completo</label>
+                                        <input type="text" id="facturaNombre" name="facturaNombre" required placeholder="Ej: Juan Pérez" style="width:100%;padding:8px;border-radius:5px;border:1px solid #ccc;">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="facturaNif">NIF/CIF</label>
+                                        <input type="text" id="facturaNif" name="facturaNif" required placeholder="Ej: 12345678A" style="width:100%;padding:8px;border-radius:5px;border:1px solid #ccc;">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="facturaDireccion">Dirección</label>
+                                        <input type="text" id="facturaDireccion" name="facturaDireccion" required placeholder="Ej: Calle Mayor 1, Madrid" style="width:100%;padding:8px;border-radius:5px;border:1px solid #ccc;">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="facturaEmail">Email</label>
+                                        <input type="email" id="facturaEmail" name="facturaEmail" required placeholder="Ej: correo@ejemplo.com" style="width:100%;padding:8px;border-radius:5px;border:1px solid #ccc;">
+                                    </div>
+                                    <button type="submit" class="btn-primary" style="width:100%;margin-top:10px;font-size:1.1rem;">Confirmar compra</button>
+                                </form>
+                                <div id="compraResultado" style="margin-top:10px;"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
