@@ -166,6 +166,29 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
             <div class="actions-grid disabled" id="clientActionsBox">
                 <button class="action-btn" id="btnIniciarVenta"><i class="fa-solid fa-cart-plus"></i><span>Nueva venta</span></button>
                 <!-- Modal de venta vendedor -->
+                <style>
+                    .modal-vendedor {
+                        position: fixed; z-index: 1000; left: 0; top: 0; width: 100vw; height: 100vh;
+                        background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
+                    }
+                    .modal-vendedor .modal-content {
+                        background: #fff; border-radius: 12px; padding: 32px 28px 24px 28px; min-width: 380px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+                        position: relative;
+                    }
+                    .modal-vendedor .close-modal {
+                        position: absolute; right: 18px; top: 12px; font-size: 2rem; color: #888; cursor: pointer;
+                    }
+                    .modal-vendedor label { display: block; margin: 10px 0 6px 0; }
+                    .modal-vendedor input, .modal-vendedor select, .modal-vendedor button { margin-bottom: 10px; }
+                    .modal-vendedor h2 { margin-top: 0; color: #0a2a66; }
+                    .modal-vendedor .asientos-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin: 18px 0; }
+                    .modal-vendedor .asiento-btn {
+                        background: #e9ecef; border: 1px solid #bbb; border-radius: 6px; padding: 8px 0; cursor: pointer;
+                        font-weight: bold; color: #0a2a66; transition: background 0.2s, border 0.2s;
+                    }
+                    .modal-vendedor .asiento-btn.selected { background: #0a2a66; color: #fff; border-color: #0a2a66; }
+                    .modal-vendedor .asiento-btn:disabled { background: #eee; color: #aaa; border-color: #ddd; cursor: not-allowed; }
+                </style>
                 <div id="modalVentaVendedor" class="modal-vendedor hidden">
                     <div class="modal-content">
                         <span class="close-modal" id="cerrarVentaVendedor">&times;</span>
@@ -173,10 +196,10 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                         <div id="ventaVendedorPaso1">
                             <h3>Buscar viajes</h3>
                             <form id="formBuscarViajes">
-                                <label>Origen: <input type="text" name="origen" required></label><br>
-                                <label>Destino: <input type="text" name="destino" required></label><br>
-                                <label>Fecha: <input type="date" name="fecha" required></label><br>
-                                <label>Pasajeros: <input type="number" name="pasajeros" min="1" max="10" value="1" required></label><br>
+                                <label>Origen: <input type="text" name="origen" required></label>
+                                <label>Destino: <input type="text" name="destino" required></label>
+                                <label>Fecha: <input type="date" name="fecha" required></label>
+                                <label>Pasajeros: <input type="number" name="pasajeros" min="1" max="10" value="1" required></label>
                                 <button type="submit">Buscar viajes</button>
                             </form>
                             <div id="resultadosViajes"></div>
@@ -185,7 +208,8 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                             <h3>Selecciona viaje y asiento</h3>
                             <form id="formSeleccionAsiento">
                                 <div id="infoViajeSeleccionado"></div>
-                                <label>Asiento: <select name="numero_asiento" id="selectAsiento" required></select></label><br>
+                                <div id="asientosGrid" class="asientos-grid"></div>
+                                <input type="hidden" name="numero_asiento" id="inputAsientoSeleccionado" required>
                                 <button type="submit">Confirmar compra</button>
                             </form>
                             <div id="compraResultado"></div>

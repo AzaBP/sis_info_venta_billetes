@@ -42,7 +42,6 @@ function seleccionarViajeVendedor(id_viaje) {
   const viaje = viajes.find(v => v.id_viaje == id_viaje);
   if (!viaje) return;
   viajeSeleccionado = viaje;
-  // Buscar asientos disponibles
   fetch('php/api_asientos_disponibles.php?id_viaje='+id_viaje)
     .then(r=>r.json())
     .then(data => {
@@ -50,8 +49,23 @@ function seleccionarViajeVendedor(id_viaje) {
       document.getElementById('ventaVendedorPaso1').classList.add('hidden');
       document.getElementById('ventaVendedorPaso2').classList.remove('hidden');
       document.getElementById('infoViajeSeleccionado').innerHTML = `${viaje.origen} → ${viaje.destino} (${viaje.fecha} ${viaje.hora_salida}) - Tren: ${viaje.tipo_tren}`;
-      const select = document.getElementById('selectAsiento');
-      select.innerHTML = asientosDisponibles.map(n => `<option value='${n}'>${n}</option>`).join('');
+      // Mostrar asientos visualmente
+      const grid = document.getElementById('asientosGrid');
+      grid.innerHTML = '';
+      asientosDisponibles.forEach(n => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'asiento-btn';
+        btn.textContent = n;
+        btn.onclick = function() {
+          document.querySelectorAll('.asiento-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          document.getElementById('inputAsientoSeleccionado').value = n;
+        };
+        grid.appendChild(btn);
+      });
+      // Limpiar selección previa
+      document.getElementById('inputAsientoSeleccionado').value = '';
     });
 }
 
@@ -59,7 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('formSeleccionAsiento').addEventListener('submit', function(e) {
     e.preventDefault();
     if (!viajeSeleccionado) return;
-    const asiento = this.numero_asiento.value;
+    const asiento = document.getElementById('inputAsientoSeleccionado').value;
+    if (!asiento) {
+      alert('Selecciona un asiento.');
+      return;
+    }
     fetch('php/api_comprar_billete_vendedor.php', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
