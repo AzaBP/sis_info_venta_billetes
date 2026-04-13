@@ -121,16 +121,15 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
         <section class="card search-section">
             <h2><i class="fa-solid fa-users"></i> Buscar Cliente</h2>
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="DNI, Nombre o ID Reserva...">
-                <button class="btn-search" onclick="searchClient()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <input type="text" id="dniInput" placeholder="Introduce el DNI...">
+                <button class="btn-search" id="btnBuscar"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-            
-            <div id="clientProfile" class="client-profile hidden">
+            <div id="clientInfo" class="client-profile hidden">
                 <div class="profile-header">
                     <div class="avatar"><i class="fa-solid fa-user"></i></div>
                     <div>
                         <h3 id="clientName">---</h3>
-                        <p class="text-muted" id="clientDni">DNI: ---</p>
+                        <p class="text-muted" id="clientDni">DNI: <span id="clientDniValue">---</span></p>
                     </div>
                 </div>
                 <hr>
@@ -236,4 +235,6 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
         }
     </script>
 </body>
+</body>
+<script src="js/vendedor.js"></script>
 </html>
