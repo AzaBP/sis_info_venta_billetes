@@ -53,28 +53,44 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $precio_final = $fila['precio'];
 
-// Insertar billete (debes tener tabla BILLETE, añade campo descuento y precio_final si lo deseas)
+// Insertar billete en mongo
 try {
-    $stmt = $pdo->prepare('INSERT INTO BILLETE (id_pasajero, id_viaje, numero_asiento, fecha_compra, descuento, precio_final, factura_nombre, factura_nif, factura_direccion, factura_email) VALUES (:id_pasajero, :id_viaje, :numero_asiento, NOW(), :descuento, :precio_final, :factura_nombre, :factura_nif, :factura_direccion, :factura_email)');
-    $stmt->execute([
-        ':id_pasajero'=>$id_pasajero,
-        ':id_viaje'=>$id_viaje,
-        ':numero_asiento'=>$numero_asiento,
-        ':descuento'=>$descuento,
-        ':precio_final'=>$precio_final,
-        ':factura_nombre'=>$facturaNombre,
-        ':factura_nif'=>$facturaNif,
-        ':factura_direccion'=>$facturaDireccion,
-        ':factura_email'=>$facturaEmail
+    // Si tienes un archivo de conexión a Mongo (ej: ConexionMongo.php), requiérelo aquí.
+    // Si usas la librería estándar de Composer, asegúrate de tener el autoload:
+    require_once __DIR__ . '/../vendor/autoload.php'; 
+    
+    // Conexión a MongoDB (ajusta la URI 'mongodb://localhost:27017' si usas Docker u otra ruta)
+    $mongoClient = new MongoDB\Client("mongodb://localhost:27017"); 
+    
+    // Seleccionamos base de datos y colección
+    $coleccionBilletes = $mongoClient->gestion_ferroviaria->billetes;
+    
+    // Preparamos el documento a insertar
+    $documentoBillete = [
+        'id_pasajero' => (int)$id_pasajero,
+        'id_viaje' => (int)$id_viaje,
+        'numero_asiento' => (int)$numero_asiento,
+        'fecha_compra' => new MongoDB\BSON\UTCDateTime(), // Guarda la fecha actual en formato Mongo
+        'descuento' => (float)$descuento,
+        'precio_final' => (float)$precio_final,
+        'factura' => [
+            'nombre' => $facturaNombre,
+            'nif' => $facturaNif,
+            'direccion' => $facturaDireccion,
+            'email' => $facturaEmail
+        ]
+    ];
+    
+    // Insertamos el documento
+    $resultado = $coleccionBilletes->insertOne($documentoBillete);
+    
+    // Devolvemos el éxito al Javascript (incluyendo el ID generado por Mongo si quieres)
+    echo json_encode([
+        'ok' => true, 
+        'precio_final' => $precio_final,
+        'id_billete_mongo' => (string)$resultado->getInsertedId()
     ]);
-    echo json_encode(['ok'=>true, 'precio_final'=>$precio_final]);
-} catch (PDOException $e) {
-    // Si la tabla no tiene los campos descuento/precio_final, inserta solo los obligatorios
-    $stmt = $pdo->prepare('INSERT INTO BILLETE (id_pasajero, id_viaje, numero_asiento, fecha_compra) VALUES (:id_pasajero, :id_viaje, :numero_asiento, NOW())');
-    $stmt->execute([
-        ':id_pasajero'=>$id_pasajero,
-        ':id_viaje'=>$id_viaje,
-        ':numero_asiento'=>$numero_asiento
-    ]);
-    echo json_encode(['ok'=>true, 'precio_final'=>$precio_final, 'aviso'=>'No se guardó descuento/precio_final/datos_facturacion en BILLETE']);
+
+} catch (Exception $e) {
+    echo json_encode(['error' => 'Error al guardar billete en MongoDB: ' . $e->getMessage()]);
 }
