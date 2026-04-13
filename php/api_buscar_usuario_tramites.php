@@ -38,6 +38,7 @@ try {
     }
     echo json_encode([
         'usuario' => [
+            'id_pasajero' => $usuario['id_pasajero'] ?? null,
             'nombre' => $usuario['nombre'] . ' ' . $usuario['apellido'],
             'dni' => $usuario['numero_documento'] ?? '',
             'email' => $usuario['email'],
