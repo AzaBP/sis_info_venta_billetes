@@ -164,7 +164,35 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
 
             <h3 class="section-subtitle"><i class="fa-solid fa-headset"></i> Atención al Cliente (Requiere buscar cliente)</h3>
             <div class="actions-grid disabled" id="clientActionsBox">
-                <button class="action-btn" onclick="openModal('venta')"><i class="fa-solid fa-cart-plus"></i><span>Nueva venta</span></button>
+                <button class="action-btn" id="btnIniciarVenta"><i class="fa-solid fa-cart-plus"></i><span>Nueva venta</span></button>
+                <!-- Modal de venta vendedor -->
+                <div id="modalVentaVendedor" class="modal-vendedor hidden">
+                    <div class="modal-content">
+                        <span class="close-modal" id="cerrarVentaVendedor">&times;</span>
+                        <h2>Venta de billete para cliente</h2>
+                        <div id="ventaVendedorPaso1">
+                            <h3>Buscar viajes</h3>
+                            <form id="formBuscarViajes">
+                                <label>Origen: <input type="text" name="origen" required></label><br>
+                                <label>Destino: <input type="text" name="destino" required></label><br>
+                                <label>Fecha: <input type="date" name="fecha" required></label><br>
+                                <label>Pasajeros: <input type="number" name="pasajeros" min="1" max="10" value="1" required></label><br>
+                                <button type="submit">Buscar viajes</button>
+                            </form>
+                            <div id="resultadosViajes"></div>
+                        </div>
+                        <div id="ventaVendedorPaso2" class="hidden">
+                            <h3>Selecciona viaje y asiento</h3>
+                            <form id="formSeleccionAsiento">
+                                <div id="infoViajeSeleccionado"></div>
+                                <label>Asiento: <select name="numero_asiento" id="selectAsiento" required></select></label><br>
+                                <button type="submit">Confirmar compra</button>
+                            </form>
+                            <div id="compraResultado"></div>
+                        </div>
+                    </div>
+                </div>
+                <script src="js/venta_vendedor.js"></script>
                 <button class="action-btn" onclick="openModal('cambio')"><i class="fa-solid fa-repeat"></i><span>Cambio billete</span></button>
                 <button class="action-btn" onclick="alert('Funcionalidad en construccion')"><i class="fa-solid fa-ban"></i><span>Cancelar reserva</span></button>
                 <button class="action-btn" onclick="alert('Factura enviada')"><i class="fa-solid fa-file-invoice"></i><span>Reenviar factura</span></button>
