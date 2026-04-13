@@ -148,45 +148,50 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   // Confirmar compra con datos
+  // Confirmar compra con datos
   document.getElementById('formDatosCompra').addEventListener('submit', function(e) {
     e.preventDefault();
     if (!viajeSeleccionado) return;
+    
     const asiento = document.getElementById('inputAsientoSeleccionado').value;
     const descuento = parseFloat(document.getElementById('descuentoCompra').value) || 0;
+    
     // Recoger datos de compra
     const facturaNombre = document.getElementById('facturaNombre').value;
     const facturaNif = document.getElementById('facturaNif').value;
     const facturaDireccion = document.getElementById('facturaDireccion').value;
     const facturaEmail = document.getElementById('facturaEmail').value;
+    
     // Deshabilitar botón para evitar dobles envíos
     const btn = this.querySelector('button[type="submit"]');
     if (btn) btn.disabled = true;
-    
+
+    // ---> ESTO ES LO NUEVO: Obtenemos el ID del cliente buscado <---
+    const idUsuario = typeof clienteBuscado !== 'undefined' && clienteBuscado ? (clienteBuscado.id_usuario || clienteBuscado.id_pasajero) : null;
+
     fetch('php/api_comprar_billete_vendedor.php', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ 
-        // NUEVO: Enviamos el ID del cliente al backend
-        id_usuario: clienteBuscado.id_usuario || clienteBuscado.id_pasajero, 
+        id_usuario: idUsuario, // ---> ESTO ES LO NUEVO: Lo enviamos en la petición <---
         id_viaje: viajeSeleccionado.id_viaje, 
         numero_asiento: asiento, 
         descuento: descuento,
-        facturaNombre,
-        facturaNif,
-        facturaDireccion,
-        facturaEmail
+        facturaNombre: facturaNombre,
+        facturaNif: facturaNif,
+        facturaDireccion: facturaDireccion,
+        facturaEmail: facturaEmail
       })
     })
     .then(r=>r.json())
     .then(data => {
-      document.getElementById('compraResultado').innerHTML = data.ok ? '<b style="color:#17632A"><i class="fa-solid fa-check-circle"></i> ¡Compra realizada correctamente!</b>' : `<b style="color:#c00"><i class="fa-solid fa-circle-exclamation"></i> Error:</b> ${data.error}`;
+      document.getElementById('compraResultado').innerHTML = data.ok ? '<b style="color:#17632A">¡Compra realizada correctamente!</b>' : `<b style="color:#c00">Error:</b> ${data.error}`;
       if (btn) btn.disabled = false;
-      
-      // Opcional: Refrescar la lista de viajes del cliente llamando de nuevo a la búsqueda o actualizando el DOM
     })
     .catch(() => { 
-        document.getElementById('compraResultado').innerHTML = '<b style="color:#c00">Error de conexión al procesar la compra.</b>';
+        document.getElementById('compraResultado').innerHTML = '<b style="color:#c00">Error de conexión.</b>';
         if (btn) btn.disabled = false; 
     });
   });
 });
+
