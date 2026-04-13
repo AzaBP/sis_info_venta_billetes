@@ -3,12 +3,37 @@ let viajeSeleccionado = null;
 let asientosDisponibles = [];
 
 function mostrarModalVentaVendedor() {
+  // 1. Verificamos que el vendedor haya buscado un cliente primero
+  if (typeof clienteBuscado === 'undefined' || !clienteBuscado) {
+      alert('Por favor, busca y selecciona un cliente usando su DNI antes de iniciar una venta.');
+      return;
+  }
+
   document.getElementById('modalVentaVendedor').classList.remove('hidden');
   document.getElementById('ventaVendedorPaso1').classList.remove('hidden');
   document.getElementById('ventaVendedorPaso2').classList.add('hidden');
+  
+  // Asegurarnos de que el paso 3 también esté oculto al iniciar
+  const paso3 = document.getElementById('ventaVendedorPaso3');
+  if(paso3) paso3.classList.add('hidden');
+
   document.getElementById('resultadosViajes').innerHTML = '';
   document.getElementById('compraResultado').innerHTML = '';
+
+  // 2. Mejora UX: Autocompletar la fecha de hoy en el buscador de viajes
+  const hoy = new Date().toISOString().split('T')[0];
+  const inputFecha = document.querySelector('#formBuscarViajes input[name="fecha"]');
+  if(inputFecha) inputFecha.value = hoy;
+
+  // 3. Pre-rellenar los datos del formulario de compra (Paso 3)
+  // Utilizamos la variable global 'clienteBuscado' de vendedor.js
+  document.getElementById('facturaNombre').value = clienteBuscado.nombre + (clienteBuscado.apellido ? ' ' + clienteBuscado.apellido : '');
+  document.getElementById('facturaNif').value = clienteBuscado.dni || '';
+  document.getElementById('facturaEmail').value = clienteBuscado.email || '';
+  // El campo de dirección lo dejamos vacío a menos que lo traigas en clienteBuscado.direccion
+  document.getElementById('facturaDireccion').value = ''; 
 }
+
 function cerrarModalVentaVendedor() {
   document.getElementById('modalVentaVendedor').classList.add('hidden');
 }
@@ -136,10 +161,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Deshabilitar botón para evitar dobles envíos
     const btn = this.querySelector('button[type="submit"]');
     if (btn) btn.disabled = true;
+    
     fetch('php/api_comprar_billete_vendedor.php', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ 
+        // NUEVO: Enviamos el ID del cliente al backend
+        id_usuario: clienteBuscado.id_usuario || clienteBuscado.id_pasajero, 
         id_viaje: viajeSeleccionado.id_viaje, 
         numero_asiento: asiento, 
         descuento: descuento,
@@ -151,9 +179,14 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(r=>r.json())
     .then(data => {
-      document.getElementById('compraResultado').innerHTML = data.ok ? '<b style="color:#17632A">¡Compra realizada correctamente!</b>' : `<b style="color:#c00">Error:</b> ${data.error}`;
+      document.getElementById('compraResultado').innerHTML = data.ok ? '<b style="color:#17632A"><i class="fa-solid fa-check-circle"></i> ¡Compra realizada correctamente!</b>' : `<b style="color:#c00"><i class="fa-solid fa-circle-exclamation"></i> Error:</b> ${data.error}`;
       if (btn) btn.disabled = false;
+      
+      // Opcional: Refrescar la lista de viajes del cliente llamando de nuevo a la búsqueda o actualizando el DOM
     })
-    .catch(() => { if (btn) btn.disabled = false; });
+    .catch(() => { 
+        document.getElementById('compraResultado').innerHTML = '<b style="color:#c00">Error de conexión al procesar la compra.</b>';
+        if (btn) btn.disabled = false; 
+    });
   });
 });
