@@ -116,10 +116,23 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!viajeSeleccionado) return;
     const asiento = document.getElementById('inputAsientoSeleccionado').value;
     const descuento = parseFloat(document.getElementById('descuentoCompra').value) || 0;
+    // Recoger datos de facturación
+    const facturaNombre = document.getElementById('facturaNombre').value;
+    const facturaNif = document.getElementById('facturaNif').value;
+    const facturaDireccion = document.getElementById('facturaDireccion').value;
+    const facturaEmail = document.getElementById('facturaEmail').value;
     fetch('php/api_comprar_billete_vendedor.php', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ id_viaje: viajeSeleccionado.id_viaje, numero_asiento: asiento, descuento: descuento })
+      body: JSON.stringify({ 
+        id_viaje: viajeSeleccionado.id_viaje, 
+        numero_asiento: asiento, 
+        descuento: descuento,
+        facturaNombre,
+        facturaNif,
+        facturaDireccion,
+        facturaEmail
+      })
     })
     .then(r=>r.json())
     .then(data => {

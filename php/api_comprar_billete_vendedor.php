@@ -9,7 +9,12 @@ $data = json_decode(file_get_contents('php://input'), true);
 // Recoger descuento
 $id_viaje = $data['id_viaje'] ?? 0;
 $numero_asiento = $data['numero_asiento'] ?? 0;
+// Datos de facturación
 $descuento = $data['descuento'] ?? 0;
+$facturaNombre = $data['facturaNombre'] ?? '';
+$facturaNif = $data['facturaNif'] ?? '';
+$facturaDireccion = $data['facturaDireccion'] ?? '';
+$facturaEmail = $data['facturaEmail'] ?? '';
 if (!$id_pasajero || !$id_viaje || !$numero_asiento) {
     echo json_encode(['error'=>'Faltan datos para la compra']);
     exit;
@@ -40,13 +45,17 @@ $precio_base = $row ? floatval($row['precio_base']) : 0;
 $precio_final = max(0, $precio_base - ($precio_base * $descuento / 100));
 // Insertar billete (debes tener tabla BILLETE, añade campo descuento y precio_final si lo deseas)
 try {
-    $stmt = $pdo->prepare('INSERT INTO BILLETE (id_pasajero, id_viaje, numero_asiento, fecha_compra, descuento, precio_final) VALUES (:id_pasajero, :id_viaje, :numero_asiento, NOW(), :descuento, :precio_final)');
+    $stmt = $pdo->prepare('INSERT INTO BILLETE (id_pasajero, id_viaje, numero_asiento, fecha_compra, descuento, precio_final, factura_nombre, factura_nif, factura_direccion, factura_email) VALUES (:id_pasajero, :id_viaje, :numero_asiento, NOW(), :descuento, :precio_final, :factura_nombre, :factura_nif, :factura_direccion, :factura_email)');
     $stmt->execute([
         ':id_pasajero'=>$id_pasajero,
         ':id_viaje'=>$id_viaje,
         ':numero_asiento'=>$numero_asiento,
         ':descuento'=>$descuento,
-        ':precio_final'=>$precio_final
+        ':precio_final'=>$precio_final,
+        ':factura_nombre'=>$facturaNombre,
+        ':factura_nif'=>$facturaNif,
+        ':factura_direccion'=>$facturaDireccion,
+        ':factura_email'=>$facturaEmail
     ]);
     echo json_encode(['ok'=>true, 'precio_final'=>$precio_final]);
 } catch (PDOException $e) {
@@ -57,5 +66,5 @@ try {
         ':id_viaje'=>$id_viaje,
         ':numero_asiento'=>$numero_asiento
     ]);
-    echo json_encode(['ok'=>true, 'precio_final'=>$precio_final, 'aviso'=>'No se guardó descuento/precio_final en BILLETE']);
+    echo json_encode(['ok'=>true, 'precio_final'=>$precio_final, 'aviso'=>'No se guardó descuento/precio_final/datos_facturacion en BILLETE']);
 }

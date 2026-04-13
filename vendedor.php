@@ -214,11 +214,16 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                             </form>
                         </div>
                         <div id="ventaVendedorPaso3" class="hidden">
-                            <h3>Datos de compra y descuento</h3>
+                            <h3>Datos de compra, descuento y facturación</h3>
                             <form id="formDatosCompra">
                                 <label>Precio base: <span id="precioBaseCompra">-</span> €</label><br>
                                 <label>Descuento (%): <input type="number" id="descuentoCompra" min="0" max="100" value="0"></label><br>
                                 <label>Precio final: <span id="precioFinalCompra">-</span> €</label><br>
+                                <hr>
+                                <label>Nombre completo (facturación): <input type="text" id="facturaNombre" name="facturaNombre" required></label><br>
+                                <label>NIF/CIF: <input type="text" id="facturaNif" name="facturaNif" required></label><br>
+                                <label>Dirección: <input type="text" id="facturaDireccion" name="facturaDireccion" required></label><br>
+                                <label>Email: <input type="email" id="facturaEmail" name="facturaEmail" required></label><br>
                                 <button type="submit">Confirmar compra</button>
                             </form>
                             <div id="compraResultado"></div>
