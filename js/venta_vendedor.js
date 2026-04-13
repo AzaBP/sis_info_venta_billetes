@@ -56,24 +56,34 @@ function seleccionarViajeVendedor(id_viaje) {
       // Mostrar asientos visualmente
       const grid = document.getElementById('asientosGrid');
       grid.innerHTML = '';
-      asientos.forEach(a => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'asiento-btn';
-        btn.textContent = a.numero_asiento;
-        if (a.estado !== 'disponible') {
-          btn.disabled = true;
-        }
-        btn.onclick = function() {
-          if (btn.disabled) return;
-          document.querySelectorAll('.asiento-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          document.getElementById('inputAsientoSeleccionado').value = a.numero_asiento;
-        };
-        grid.appendChild(btn);
-      });
+      grid.style.border = '2px dashed #0a2a66'; // Borde para depuración visual
+      if (asientos.length === 0) {
+        grid.innerHTML = '<span style="grid-column: span 8; color: #c00;">No hay asientos en este tren.</span>';
+      } else {
+        asientos.forEach(a => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'asiento-btn';
+          btn.textContent = a.numero_asiento;
+          if (a.estado !== 'disponible') {
+            btn.disabled = true;
+          }
+          btn.onclick = function() {
+            if (btn.disabled) return;
+            document.querySelectorAll('.asiento-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            document.getElementById('inputAsientoSeleccionado').value = a.numero_asiento;
+          };
+          grid.appendChild(btn);
+        });
+      }
       // Limpiar selección previa
       document.getElementById('inputAsientoSeleccionado').value = '';
+    })
+    .catch(err => {
+      const grid = document.getElementById('asientosGrid');
+      grid.innerHTML = '<span style="color:#c00">Error cargando asientos</span>';
+      grid.style.border = '2px dashed #c00';
     });
 }
 
