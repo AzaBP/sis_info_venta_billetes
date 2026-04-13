@@ -45,25 +45,30 @@ function seleccionarViajeVendedor(id_viaje) {
   const viaje = viajes.find(v => v.id_viaje == id_viaje);
   if (!viaje) return;
   viajeSeleccionado = viaje;
-  fetch('php/api_asientos_disponibles.php?id_viaje='+id_viaje)
+  // Buscar todos los asientos (disponibles y ocupados)
+  fetch('php/api_asientos_todos.php?id_viaje='+id_viaje)
     .then(r=>r.json())
     .then(data => {
-      asientosDisponibles = data.asientos || [];
+      const asientos = data.asientos || [];
       document.getElementById('ventaVendedorPaso1').classList.add('hidden');
       document.getElementById('ventaVendedorPaso2').classList.remove('hidden');
       document.getElementById('infoViajeSeleccionado').innerHTML = `${viaje.origen} → ${viaje.destino} (${viaje.fecha} ${viaje.hora_salida}) - Tren: ${viaje.tipo_tren}`;
       // Mostrar asientos visualmente
       const grid = document.getElementById('asientosGrid');
       grid.innerHTML = '';
-      asientosDisponibles.forEach(n => {
+      asientos.forEach(a => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'asiento-btn';
-        btn.textContent = n;
+        btn.textContent = a.numero_asiento;
+        if (a.estado !== 'disponible') {
+          btn.disabled = true;
+        }
         btn.onclick = function() {
+          if (btn.disabled) return;
           document.querySelectorAll('.asiento-btn').forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
-          document.getElementById('inputAsientoSeleccionado').value = n;
+          document.getElementById('inputAsientoSeleccionado').value = a.numero_asiento;
         };
         grid.appendChild(btn);
       });
