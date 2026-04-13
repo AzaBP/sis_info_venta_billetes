@@ -1,3 +1,4 @@
+let clienteBuscado = null;
 document.addEventListener('DOMContentLoaded', () => {
     const btnBuscar = document.getElementById('btnBuscar');
     const inputDni = document.getElementById('dniInput');
@@ -6,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clientError = document.getElementById('clientError');
     const operationsPanel = document.getElementById('operationsPanel');
     const clientDniValue = document.getElementById('clientDniValue');
+    const clientActionsBox = document.getElementById('clientActionsBox');
     // Elementos de datos
     const elName = document.getElementById('clientName');
     const elEmail = document.getElementById('clientEmail');
@@ -19,7 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
         clientInfo.classList.add('hidden');
         clientError.classList.add('hidden');
         operationsPanel.classList.add('disabled');
+        clientActionsBox.classList.add('disabled');
         listTrips.innerHTML = '';
+        clienteBuscado = null;
         if (!busqueda) {
             clientError.textContent = 'Introduce un DNI o correo válido.';
             clientError.classList.remove('hidden');
@@ -52,6 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     clientInfo.classList.remove('hidden');
                     operationsPanel.classList.remove('disabled');
+                    clientActionsBox.classList.remove('disabled');
+                    clienteBuscado = data.usuario;
                 }
             })
             .catch(() => {
@@ -63,6 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Función auxiliar para los botones de acción
 function openModal(tipo) {
-    const dni = document.getElementById('dniInput').value;
-    alert(`Abriendo proceso de ${tipo.toUpperCase()} para el cliente DNI: ${dni}`);
+    if (!clienteBuscado) {
+        alert('Primero busca un cliente.');
+        return;
+    }
+    // Aquí puedes redirigir, abrir modal, o enviar datos según el tipo
+    alert(`Abriendo proceso de ${tipo.toUpperCase()} para el cliente: ${clienteBuscado.nombre} (DNI: ${clienteBuscado.dni}, Email: ${clienteBuscado.email})`);
+    // Ejemplo: window.location.href = `venta.php?id_pasajero=${clienteBuscado.id_pasajero}`;
 }
