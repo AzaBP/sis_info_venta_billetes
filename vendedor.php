@@ -121,7 +121,7 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
         <section class="card search-section">
             <h2><i class="fa-solid fa-users"></i> Buscar Cliente</h2>
             <div class="search-box">
-                <input type="text" id="dniInput" placeholder="Introduce el DNI...">
+                <input type="text" id="dniInput" placeholder="Introduce el DNI o correo...">
                 <button class="btn-search" id="btnBuscar"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
             <div id="clientInfo" class="client-profile hidden">

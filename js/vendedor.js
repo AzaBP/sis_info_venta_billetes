@@ -14,18 +14,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const listTrips = document.getElementById('recentTrips');
 
     btnBuscar.addEventListener('click', () => {
-        const dni = inputDni.value.trim().toUpperCase();
+        const busqueda = inputDni.value.trim();
         // Resetear vista
         clientInfo.classList.add('hidden');
         clientError.classList.add('hidden');
         operationsPanel.classList.add('disabled');
         listTrips.innerHTML = '';
-        if (!dni) {
-            clientError.textContent = 'Introduce un DNI válido.';
+        if (!busqueda) {
+            clientError.textContent = 'Introduce un DNI o correo válido.';
             clientError.classList.remove('hidden');
             return;
         }
-        fetch('php/api_buscar_usuario_tramites.php?dni=' + encodeURIComponent(dni))
+        fetch('php/api_buscar_usuario_tramites.php?dni=' + encodeURIComponent(busqueda))
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const li = document.createElement('li');
                             li.innerHTML = `
                                 <span>${viaje.ruta} <br><small>${viaje.fecha}</small></span>
-                                <span class="status-ok">${viaje.estado}</span>
+                                <span class=\"status-ok\">${viaje.estado}</span>
                             `;
                             listTrips.appendChild(li);
                         });
