@@ -56,6 +56,10 @@ body {
     padding-bottom: 10px;
 }
 
+/* Estados dinámicos */
+.hidden { display: none !important; }
+.disabled { pointer-events: none; opacity: 0.6; }
+
 /* SECCION 1: Buscador */
 .search-box {
     display: flex;

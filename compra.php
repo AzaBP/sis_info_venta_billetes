@@ -114,6 +114,27 @@ if (isset($_SESSION['usuario']['id_usuario'])) {
         $abonos_usuario = $stmt_abonos->fetchAll(PDO::FETCH_ASSOC);
     }
 }
+// --- CLIENTE GESTIONADO POR VENDEDOR ---
+$id_pasajero_gestionado = $_SESSION['cliente_gestionado'] ?? null;
+if ($id_pasajero_gestionado) {
+    // Sobrescribir sesión de usuario para el flujo de compra
+    $stmt = $pdo->prepare('SELECT p.id_pasajero, u.nombre, u.apellido, u.email FROM PASAJERO p JOIN USUARIO u ON p.id_usuario = u.id_usuario WHERE p.id_pasajero = :id_pasajero');
+    $stmt->execute([':id_pasajero' => $id_pasajero_gestionado]);
+    $pasajero = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($pasajero) {
+        $usuarioSesion = [
+            'id_usuario' => null, // No se usa
+            'tipo_usuario' => 'pasajero',
+            'nombre' => $pasajero['nombre'],
+            'apellido' => $pasajero['apellido'],
+            'email' => $pasajero['email'],
+            'id_pasajero' => $pasajero['id_pasajero']
+        ];
+        // Opcional: mostrar aviso de compra gestionada
+        $nombreSesion = $pasajero['nombre'];
+    }
+}
+
 ?>
 
 <!DOCTYPE html>

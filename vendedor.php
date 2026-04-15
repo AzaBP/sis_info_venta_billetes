@@ -121,16 +121,15 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
         <section class="card search-section">
             <h2><i class="fa-solid fa-users"></i> Buscar Cliente</h2>
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="DNI, Nombre o ID Reserva...">
-                <button class="btn-search" onclick="searchClient()"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <input type="text" id="dniInput" placeholder="Introduce el DNI o correo...">
+                <button class="btn-search" id="btnBuscar"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
-            
-            <div id="clientProfile" class="client-profile hidden">
+            <div id="clientInfo" class="client-profile hidden">
                 <div class="profile-header">
                     <div class="avatar"><i class="fa-solid fa-user"></i></div>
                     <div>
                         <h3 id="clientName">---</h3>
-                        <p class="text-muted" id="clientDni">DNI: ---</p>
+                        <p class="text-muted" id="clientDni">DNI: <span id="clientDniValue">---</span></p>
                     </div>
                 </div>
                 <hr>
@@ -165,7 +164,103 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
 
             <h3 class="section-subtitle"><i class="fa-solid fa-headset"></i> Atención al Cliente (Requiere buscar cliente)</h3>
             <div class="actions-grid disabled" id="clientActionsBox">
-                <button class="action-btn" onclick="openModal('venta')"><i class="fa-solid fa-cart-plus"></i><span>Nueva venta</span></button>
+                <button class="action-btn" id="btnIniciarVenta"><i class="fa-solid fa-cart-plus"></i><span>Nueva venta</span></button>
+                <!-- Modal de venta vendedor -->
+                <style>
+                    .modal-vendedor {
+                        position: fixed; z-index: 1000; left: 0; top: 0; width: 100vw; height: 100vh;
+                        background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
+                    }
+                    .modal-vendedor .modal-content {
+                        background: #fff; border-radius: 12px; padding: 32px 28px 24px 28px; min-width: 380px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+                        position: relative;
+                    }
+                    .modal-vendedor .close-modal {
+                        position: absolute; right: 18px; top: 12px; font-size: 2rem; color: #888; cursor: pointer;
+                    }
+                    .modal-vendedor label { display: block; margin: 10px 0 6px 0; }
+                    .modal-vendedor input, .modal-vendedor select, .modal-vendedor button { margin-bottom: 10px; }
+                    .modal-vendedor h2 { margin-top: 0; color: #0a2a66; }
+                    .modal-vendedor .asientos-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin: 18px 0; }
+                    .modal-vendedor .asiento-btn {
+                        background: #e9ecef; border: 1px solid #bbb; border-radius: 6px; padding: 8px 0; cursor: pointer;
+                        font-weight: bold; color: #0a2a66; transition: background 0.2s, border 0.2s;
+                    }
+                    .modal-vendedor .asiento-btn.selected { background: #0a2a66; color: #fff; border-color: #0a2a66; }
+                    .modal-vendedor .asiento-btn:disabled { background: #eee; color: #aaa; border-color: #ddd; cursor: not-allowed; }
+                </style>
+                <div id="modalVentaVendedor" class="modal-vendedor hidden">
+                    <div class="modal-content">
+                        <span class="close-modal" id="cerrarVentaVendedor">&times;</span>
+                        <h2>Venta de billete para cliente</h2>
+                        <div id="ventaVendedorPaso1">
+                            <h3>Buscar viajes</h3>
+                            <form id="formBuscarViajes">
+                                <label>Origen: <input type="text" name="origen" required></label>
+                                <label>Destino: <input type="text" name="destino" required></label>
+                                <label>Fecha: <input type="date" name="fecha" required></label>
+                                <label>Pasajeros: <input type="number" name="pasajeros" min="1" max="10" value="1" required></label>
+                                <button type="submit">Buscar viajes</button>
+                            </form>
+                            <div id="resultadosViajes"></div>
+                        </div>
+                        <div id="ventaVendedorPaso2" class="hidden">
+                            <h3>Selecciona viaje y asiento</h3>
+                            <form id="formSeleccionAsiento">
+                                <div id="infoViajeSeleccionado"></div>
+                                <div id="asientosGrid" class="asientos-grid"></div>
+                                <input type="hidden" name="numero_asiento" id="inputAsientoSeleccionado" required>
+                                <button type="button" id="btnPasoDatosCompra">Siguiente: Datos de compra</button>
+                            </form>
+                        </div>
+                        <div id="ventaVendedorPaso3" class="hidden">
+                            <div class="progress-bar-container" style="margin-bottom: 18px;">
+                                <div class="step completed"><span class="step-num">1</span> Viaje</div>
+                                <div class="step completed"><span class="step-num">2</span> Asiento</div>
+                                <div class="step active"><span class="step-num">3</span> Resumen y compra</div>
+                            </div>
+                            <div class="payment-container" style="max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                                <div class="payment-header" style="border-bottom: none; margin-bottom: 10px;">
+                                    <h3 style="color:#0a2a66;"><i class="fa-solid fa-list-check"></i> Resumen y Descuentos</h3>
+                                </div>
+                                <div class="trip-details" style="margin-bottom: 18px; padding: 12px; background: #f4f6f8; border-radius: 8px; font-size: 1.05rem;">
+                                    <p style="margin: 5px 0;"><strong>Viaje:</strong> <span id="resumenViajeVendedor">--</span></p>
+                                    <p style="margin: 5px 0;"><strong>Asiento:</strong> <span id="resumenAsientoVendedor">--</span></p>
+                                    <p style="margin: 5px 0;"><strong>Precio base:</strong> <span id="precioBaseCompra">-</span> €</p>
+                                </div>
+                                <div class="discounts-section" style="margin-bottom: 18px;">
+                                    <label for="descuentoCompra" style="font-weight: bold;">Descuento (%)</label>
+                                    <input type="number" id="descuentoCompra" min="0" max="100" value="0" style="width: 80px; margin-left: 10px; border-radius: 5px; border: 1px solid #ccc; padding: 4px 8px;">
+                                    <span id="promoMsgVendedor" style="display: block; margin-top: 5px; font-size: 0.9rem;"></span>
+                                </div>
+                                <div class="summary-box" style="margin-bottom: 18px; font-size: 1.15rem; background: #e9ecef; padding: 12px; border-radius: 8px; text-align: center;">
+                                    <p style="margin: 0;">Total a pagar: <strong id="precioFinalCompra" style="color: #0a2a66; font-size: 1.3rem;">-</strong> €</p>
+                                </div>
+                                <form id="formDatosCompra" autocomplete="off">
+                                    <div class="form-group full-width">
+                                        <label for="facturaNombre">Nombre completo</label>
+                                        <input type="text" id="facturaNombre" name="facturaNombre" required placeholder="Ej: Juan Pérez" style="width:100%;padding:8px;border-radius:5px;border:1px solid #ccc;">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="facturaNif">NIF/CIF</label>
+                                        <input type="text" id="facturaNif" name="facturaNif" required placeholder="Ej: 12345678A" style="width:100%;padding:8px;border-radius:5px;border:1px solid #ccc;">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="facturaDireccion">Dirección</label>
+                                        <input type="text" id="facturaDireccion" name="facturaDireccion" required placeholder="Ej: Calle Mayor 1, Madrid" style="width:100%;padding:8px;border-radius:5px;border:1px solid #ccc;">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="facturaEmail">Email</label>
+                                        <input type="email" id="facturaEmail" name="facturaEmail" required placeholder="Ej: correo@ejemplo.com" style="width:100%;padding:8px;border-radius:5px;border:1px solid #ccc;">
+                                    </div>
+                                    <button type="submit" class="btn-primary" style="width:100%;margin-top:10px;font-size:1.1rem;">Confirmar compra</button>
+                                </form>
+                                <div id="compraResultado" style="margin-top:10px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script src="js/venta_vendedor.js"></script>
                 <button class="action-btn" onclick="openModal('cambio')"><i class="fa-solid fa-repeat"></i><span>Cambio billete</span></button>
                 <button class="action-btn" onclick="alert('Funcionalidad en construccion')"><i class="fa-solid fa-ban"></i><span>Cancelar reserva</span></button>
                 <button class="action-btn" onclick="alert('Factura enviada')"><i class="fa-solid fa-file-invoice"></i><span>Reenviar factura</span></button>
@@ -236,4 +331,6 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
         }
     </script>
 </body>
+</body>
+<script src="js/vendedor.js"></script>
 </html>
