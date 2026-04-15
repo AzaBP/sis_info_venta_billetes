@@ -140,8 +140,8 @@ if (isset($_SESSION['usuario']['id_usuario'])) {
         </div>
         
         <nav class="nav">
-            <a href="index.php">Inicio</a>
-            <a href="ayuda.php">Ayuda</a>
+            <a href="index.php" data-i18n="inicio">Inicio</a>
+            <a href="ayuda.php" data-i18n="ayuda">Ayuda</a>
         </nav>
 
         <div class="user-actions" id="userActions">
@@ -153,18 +153,18 @@ if (isset($_SESSION['usuario']['id_usuario'])) {
                         <i class="fa-solid fa-caret-down"></i>
                     </button>
                     <div class="account-menu">
-                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
-                        <a href="mis_billetes.php"><i class="fa-solid fa-ticket"></i> Mis billetes</a>
+                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> <span data-i18n="mi_perfil">Mi perfil</span></a>
+                        <a href="mis_billetes.php"><i class="fa-solid fa-ticket"></i> <span data-i18n="mis_billetes">Mis billetes</span></a>
                         
                         <?php if (($usuarioSesion['tipo_usuario'] ?? '') === 'empleado'): ?>
                             <a href="vendedor.php"><i class="fa-solid fa-briefcase"></i> Panel Empleado</a>
                         <?php endif; ?>
                         
-                        <a href="php/logout.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+                        <a href="php/logout.php"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="cerrar_sesion">Cerrar sesión</span></a>
                     </div>
                 </div>
             <?php else: ?>
-                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> <span data-i18n="iniciar_sesion">Iniciar sesión</span></a>
             <?php endif; ?>
         </div>
     </header>
@@ -494,6 +494,7 @@ if (isset($_SESSION['usuario']['id_usuario'])) {
 
     </main>
 
+    <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
     <script src="js/compra.js"></script>
     <script>
     // --- Formato y validación de pago seguro ---

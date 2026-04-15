@@ -64,19 +64,19 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
     <header class="header">
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
-            <a href="index.php">Inicio</a>
-            <a href="#">Billetes</a>
+            <a href="index.php" data-i18n="inicio">Inicio</a>
+            <a href="billetes_web.php" data-i18n="billetes">Billetes</a>
             <div class="dropdown">
-                <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
+                <a href="#"><i class="fa-solid fa-earth-europe"></i> <span data-i18n="idiomas">Idiomas</span> <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
-                    <a href="#">Español</a>
-                    <a href="#">Inglés</a>
-                    <a href="#">Francés</a>
-                    <a href="#">Alemán</a>
+                    <a href="#" data-lang="es" data-i18n="es">Español</a>
+                    <a href="#" data-lang="en" data-i18n="en">Inglés</a>
+                    <a href="#" data-lang="fr" data-i18n="fr">Francés</a>
+                    <a href="#" data-lang="de" data-i18n="de">Alemán</a>
                 </div>
             </div>
-            <a href="ofertas.php">Ofertas</a>
-            <a href="ayuda.php">Ayuda</a>
+            <a href="ofertas.php" data-i18n="ofertas">Ofertas</a>
+            <a href="ayuda.php" data-i18n="ayuda">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
             <?php if ($usuarioSesion): ?>
@@ -87,12 +87,12 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
                         <i class="fa-solid fa-caret-down"></i>
                     </button>
                     <div class="account-menu">
-                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
-                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> <span data-i18n="mi_perfil">Mi perfil</span></a>
+                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="cerrar_sesion">Cerrar sesión</span></a>
                     </div>
                 </div>
             <?php else: ?>
-                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> <span data-i18n="iniciar_sesion">Iniciar sesión</span></a>
             <?php endif; ?>
         </div>
     </header>
@@ -146,8 +146,11 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
     </main>
 
     <footer class="footer">
-        <div class="footer-bottom">&copy; 2026 TrainWeb</div>
+        <div class="footer-bottom" data-i18n="footer_copyright">&copy; 2026 TrainWeb</div>
     </footer>
+
+    <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
+    <script src="scripts/session_menu.js"></script>
 
 </body>
 </html>

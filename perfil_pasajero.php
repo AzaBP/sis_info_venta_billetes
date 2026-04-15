@@ -103,10 +103,19 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
     <header class="header">
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
-            <a href="index.php">Inicio</a>
-            <a href="compra.php">Billetes</a>
-            <a href="ofertas.php">Ofertas</a>
-            <a href="ayuda.php">Ayuda</a>
+            <a href="index.php" data-i18n="inicio">Inicio</a>
+            <a href="billetes_web.php" data-i18n="billetes">Billetes</a>
+            <div class="dropdown">
+                <a href="#"><i class="fa-solid fa-earth-europe"></i> <span data-i18n="idiomas">Idiomas</span> <i class="fa-solid fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="#" data-lang="es" data-i18n="es">Español</a>
+                    <a href="#" data-lang="en" data-i18n="en">Inglés</a>
+                    <a href="#" data-lang="fr" data-i18n="fr">Francés</a>
+                    <a href="#" data-lang="de" data-i18n="de">Alemán</a>
+                </div>
+            </div>
+            <a href="ofertas.php" data-i18n="ofertas">Ofertas</a>
+            <a href="ayuda.php" data-i18n="ayuda">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
             <div class="account-dropdown open-on-hover">
@@ -116,8 +125,8 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                     <i class="fa-solid fa-caret-down"></i>
                 </button>
                 <div class="account-menu">
-                    <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
-                    <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesion</a>
+                    <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> <span data-i18n="mi_perfil">Mi perfil</span></a>
+                    <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="cerrar_sesion">Cerrar sesión</span></a>
                 </div>
             </div>
         </div>
@@ -421,6 +430,7 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
         <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
 
+    <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
     <script src="scripts/session_menu.js?v=<?php echo urlencode($assetVersion); ?>"></script>
     <script src="scripts/perfil_pasajero_ui.js?v=<?php echo urlencode($assetVersion); ?>"></script>
     <script src="scripts/perfil_configuracion.js?v=<?php echo urlencode($assetVersion); ?>"></script>

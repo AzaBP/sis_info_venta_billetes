@@ -60,9 +60,19 @@ try {
     <header class="header">
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
-            <a href="index.php">Inicio</a>
-            <a href="ofertas.php">Ofertas</a>
-            <a href="ayuda.php">Ayuda</a>
+            <a href="index.php" data-i18n="inicio">Inicio</a>
+            <a href="billetes_web.php" data-i18n="billetes">Billetes</a>
+            <div class="dropdown">
+                <a href="#"><i class="fa-solid fa-earth-europe"></i> <span data-i18n="idiomas">Idiomas</span> <i class="fa-solid fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="#" data-lang="es" data-i18n="es">Español</a>
+                    <a href="#" data-lang="en" data-i18n="en">Inglés</a>
+                    <a href="#" data-lang="fr" data-i18n="fr">Francés</a>
+                    <a href="#" data-lang="de" data-i18n="de">Alemán</a>
+                </div>
+            </div>
+            <a href="ofertas.php" data-i18n="ofertas">Ofertas</a>
+            <a href="ayuda.php" data-i18n="ayuda">Ayuda</a>
         </nav>
         <div class="user-actions">
             <?php if ($usuarioSesion): ?>
@@ -73,7 +83,7 @@ try {
                     </button>
                 </div>
             <?php else: ?>
-                <a href="inicio_sesion.html" class="btn-login">Iniciar sesión</a>
+                <a href="inicio_sesion.html" class="btn-login"><span data-i18n="iniciar_sesion">Iniciar sesión</span></a>
             <?php endif; ?>
         </div>
     </header>
@@ -112,6 +122,7 @@ try {
         <?php endif; ?>
     </main>
 
+    <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
     <script src="scripts/session_menu.js"></script>
 </body>
 </html>
