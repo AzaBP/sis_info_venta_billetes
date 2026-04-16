@@ -286,6 +286,7 @@ function confirmarReserva() {
 
     fetch('php/api_reservar.php', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             id_viaje: viajeSeleccionado,
@@ -293,7 +294,22 @@ function confirmarReserva() {
             precio: precioFinalConDescuento
         })
     })
-    .then(res => res.json())
+    .then(async (res) => {
+        const raw = await res.text();
+        let data;
+
+        try {
+            data = raw ? JSON.parse(raw) : {};
+        } catch (_parseError) {
+            throw new Error(raw || `Respuesta no JSON (${res.status})`);
+        }
+
+        if (!res.ok) {
+            throw new Error(data.error || `HTTP ${res.status}`);
+        }
+
+        return data;
+    })
     .then(data => {
         if (data.exito) {
             alert(tr('reserva_exito', '¡Reserva realizada con éxito!\nID de reserva: {id}', { id: data.id_mongo }));
@@ -305,7 +321,7 @@ function confirmarReserva() {
         }
     })
     .catch(err => {
-        alert(tr('error_red_reservar', 'Error de red al reservar.'));
+        alert(tr('error_reservar', 'Error al reservar: {error}', { error: err.message || err }));
         if (btn) btn.disabled = false;
     });
 }

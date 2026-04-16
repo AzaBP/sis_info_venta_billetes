@@ -14,8 +14,7 @@ class ConexionMongo {
             $this->client = new MongoDB\Client($this->uri);
             $this->db = $this->client->selectDatabase($this->database);
             return $this->db;
-        } catch (Exception $e) {
-            echo "Error de conexión a MongoDB: " . $e->getMessage();
+        } catch (Throwable $e) {
             return null;
         }
     }
