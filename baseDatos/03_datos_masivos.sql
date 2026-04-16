@@ -1,239 +1,223 @@
 -- Script de inserción masiva de datos para pruebas
--- Tabla: USUARIO (base para otros tipos de usuarios)
-INSERT INTO usuario (nombre, email, contraseña, telefono, fecha_creacion) VALUES
-('Juan García', 'juan@trenes.com', 'pass123', '600111111', NOW()),
-('María López', 'maria@trenes.com', 'pass123', '600222222', NOW()),
-('Carlos Rodríguez', 'carlos@trenes.com', 'pass123', '600333333', NOW()),
-('Ana Martínez', 'ana@trenes.com', 'pass123', '600444444', NOW()),
-('Pedro Sánchez', 'pedro@trenes.com', 'pass123', '600555555', NOW()),
-('Laura Fernández', 'laura@trenes.com', 'pass123', '600666666', NOW()),
-('Diego Torres', 'diego@trenes.com', 'pass123', '600777777', NOW()),
-('Isabel Ruiz', 'isabel@trenes.com', 'pass123', '600888888', NOW());
+-- Ajustado al esquema real de la BD
 
--- Tabla: PASAJERO
-INSERT INTO pasajero (id_usuario, edad, dni, direccion) VALUES
-(1, 35, '12345678A', 'Calle Principal 1, Madrid'),
-(2, 28, '87654321B', 'Avenida Central 2, Barcelona'),
-(3, 42, '11223344C', 'Plaza Mayor 3, Valencia'),
-(4, 31, '44332211D', 'Carrera 4, Sevilla');
+-- ================================================
+-- 1. TIPO_ABONO (se debe insertar primero)
+-- ================================================
+INSERT INTO TIPO_ABONO (tipo_codigo, nombre, descripcion, precio, icono, color) VALUES
+('MENSUAL_MADRID', 'Mensual Madrid', 'Viajes ilimitados en Madrid por 30 días', 89.99, 'fa-calendar', '#0066cc'),
+('MENSUAL_ESPAÑA', 'Mensual España', 'Viajes ilimitados en toda España por 30 días', 199.99, 'fa-map', '#009966'),
+('TRIMESTRAL', 'Trimestral', 'Viajes ilimitados por 90 días', 449.99, 'fa-star', '#ff6600'),
+('ANUAL', 'Anual', 'Viajes ilimitados por 365 días', 1299.99, 'fa-crown', '#cc0000'),
+('10_VIAJES', '10 viajes', '10 viajes válidos por 60 días', 499.99, 'fa-ticket', '#0066cc'),
+('20_VIAJES', '20 viajes', '20 viajes válidos por 90 días', 899.99, 'fa-tickets', '#0066cc'),
+('WEEKEND', 'Fin de semana', 'Viajes ilimitados viernes a domingo', 79.99, 'fa-heart', '#ff0066'),
+('ESTUDIANTE', 'Estudiante', 'Abono estudiante por 90 días', 199.99, 'fa-graduation-cap', '#0066cc');
 
--- Tabla: EMPLEADO
-INSERT INTO empleado (id_usuario, puesto, departamento, salario) VALUES
-(5, 'Gerente', 'Administración', 2500.00),
-(6, 'Técnico', 'Mantenimiento', 2000.00),
-(7, 'Asistente', 'Atención al Cliente', 1800.00),
-(8, 'Inspector', 'Operaciones', 2100.00);
+-- ================================================
+-- 2. USUARIOS (varios tipos)
+-- ================================================
+INSERT INTO USUARIO (nombre, apellido, email, password, telefono, tipo_usuario) VALUES
+('Juan', 'García', 'juan@trenes.com', 'pass123', '600111111', 'pasajero'),
+('María', 'López', 'maria@trenes.com', 'pass123', '600222222', 'pasajero'),
+('Carlos', 'Rodríguez', 'carlos@trenes.com', 'pass123', '600333333', 'pasajero'),
+('Ana', 'Martínez', 'ana@trenes.com', 'pass123', '600444444', 'pasajero'),
+('Luis', 'Fernández', 'luis@trenes.com', 'pass123', '600555555', 'empleado'),
+('Laura', 'Torres', 'laura@trenes.com', 'pass123', '600666666', 'empleado'),
+('Diego', 'Ruiz', 'diego@trenes.com', 'pass123', '600777777', 'empleado'),
+('Isabel', 'Sánchez', 'isabel@trenes.com', 'pass123', '600888888', 'empleado'),
+('Roberto', 'Pérez', 'roberto@trenes.com', 'pass123', '600999999', 'empleado'),
+('Sandra', 'Campos', 'sandra@trenes.com', 'pass123', '601000000', 'empleado');
 
--- Tabla: VENDEDOR (ya exist), solo asegurar que hay más
-INSERT INTO vendedor (id_usuario, comision) VALUES
-(5, 0.05);
+-- ================================================
+-- 3. PASAJEROS
+-- ================================================
+INSERT INTO PASAJERO (id_usuario, fecha_nacimiento, genero, tipo_documento, numero_documento, calle, ciudad, codigo_postal, pais, metodo_pago, acepta_terminos, acepta_privacidad, newsletter) VALUES
+((SELECT id_usuario FROM USUARIO WHERE email = 'juan@trenes.com'), '1988-05-15', 'masculino', 'dni', '12345678A', 'Calle Principal 1', 'Madrid', '28001', 'España', 'tarjeta', true, true, true),
+((SELECT id_usuario FROM USUARIO WHERE email = 'maria@trenes.com'), '1995-03-22', 'femenino', 'dni', '87654321B', 'Avenida Central 2', 'Barcelona', '08002', 'España', 'tarjeta', true, true, false),
+((SELECT id_usuario FROM USUARIO WHERE email = 'carlos@trenes.com'), '1982-07-10', 'masculino', 'dni', '11223344C', 'Plaza Mayor 3', 'Valencia', '46001', 'España', 'paypal', true, true, true),
+((SELECT id_usuario FROM USUARIO WHERE email = 'ana@trenes.com'), '1990-11-08', 'femenino', 'nie', '44332211D', 'Carrera 4', 'Sevilla', '41001', 'España', 'tarjeta', true, false, false);
 
--- Tabla: MAQUINISTA (ya existe), solo asegurar que hay más
-INSERT INTO maquinista (id_usuario, numero_licencia, fecha_vencimiento_licencia) VALUES
-(6, 'LIC001', '2025-12-31');
+-- ================================================
+-- 4. EMPLEADOS (base para vendedor, maquinista, mantenimiento)
+-- ================================================
+INSERT INTO EMPLEADO (id_usuario, tipo_empleado) VALUES
+((SELECT id_usuario FROM USUARIO WHERE email = 'luis@trenes.com'), 'vendedor'),
+((SELECT id_usuario FROM USUARIO WHERE email = 'laura@trenes.com'), 'maquinista'),
+((SELECT id_usuario FROM USUARIO WHERE email = 'diego@trenes.com'), 'maquinista'),
+((SELECT id_usuario FROM USUARIO WHERE email = 'isabel@trenes.com'), 'mantenimiento'),
+((SELECT id_usuario FROM USUARIO WHERE email = 'roberto@trenes.com'), 'mantenimiento'),
+((SELECT id_usuario FROM USUARIO WHERE email = 'sandra@trenes.com'), 'vendedor');
 
--- Tabla: RUTA
-INSERT INTO ruta (origen, destino, distancia_km, tiempo_estimado_minutos) VALUES
-('Madrid', 'Barcelona', 640, 480),
-('Madrid', 'Valencia', 360, 240),
-('Barcelona', 'Sevilla', 1286, 960),
-('Valencia', 'Alicante', 160, 100),
-('Madrid', 'Bilbao', 400, 280),
-('Barcelona', 'Valencia', 360, 240),
-('Sevilla', 'Córdoba', 160, 120),
-('Madrid', 'Toledo', 80, 60),
-('Bilbao', 'San Sebastián', 100, 70),
-('Valencia', 'Tarragona', 270, 180),
-('Madrid', 'Segovia', 120, 90),
-('Barcelona', 'Girona', 100, 70),
-('Sevilla', 'Cádiz', 260, 180),
-('Valencia', 'Cuenca', 200, 150),
-('Madrid', 'Guadalajara', 80, 50);
+-- ================================================
+-- 5. VENDEDORES (subtabla de EMPLEADO)
+-- ================================================
+INSERT INTO VENDEDOR (id_empleado, comision_porcentaje, region) VALUES
+((SELECT id_empleado FROM EMPLEADO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'luis@trenes.com')), 5.0, 'Centro'),
+((SELECT id_empleado FROM EMPLEADO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'sandra@trenes.com')), 4.5, 'Sur');
 
--- Tabla: TREN
-INSERT INTO tren (marca, modelo, ano_fabricacion, capacidad_total, numero_vagones) VALUES
-('Renfe', 'AVE-103', 2018, 450, 9),
-('Renfe', 'AVLO-100', 2019, 400, 8),
-('Talgo', 'Talgo-200', 2015, 350, 7),
-('Renfe', 'Avant-Siemens', 2020, 500, 10),
-('CAF', 'Avant-100', 2017, 550, 10),
-('Renfe', 'AVE-S-103', 2021, 480, 9),
-('Talgo', 'Talgo-360', 2016, 380, 8),
-('SiE', 'Eurostar', 2019, 450, 9),
-('Renfe', 'MD-300', 2014, 300, 6),
-('CAF', 'Oaris', 2018, 520, 10),
-('Renfe', 'AVE-R', 2022, 490, 9),
-('Talgo', 'Talgo-250', 2017, 360, 7);
+-- ================================================
+-- 6. MAQUINISTAS (subtabla de EMPLEADO)
+-- ================================================
+INSERT INTO MAQUINISTA (id_empleado, licencia, experiencia_años, horario_preferido) VALUES
+((SELECT id_empleado FROM EMPLEADO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'laura@trenes.com')), 'A1', 10, 'Diurno'),
+((SELECT id_empleado FROM EMPLEADO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'diego@trenes.com')), 'A2', 8, 'Nocturno');
 
--- Tabla: VIAJE
-INSERT INTO viaje (id_ruta, id_tren, id_maquinista, fecha_salida, hora_salida, precio_base, asientos_disponibles) VALUES
-(1, 1, 1, '2025-04-20', '08:00:00', 89.99, 450),
-(1, 1, 1, '2025-04-20', '10:30:00', 89.99, 450),
-(1, 2, 1, '2025-04-20', '14:00:00', 65.99, 400),
-(1, 1, 1, '2025-04-20', '18:00:00', 99.99, 450),
-(2, 3, 1, '2025-04-20', '09:00:00', 49.99, 350),
-(2, 4, 1, '2025-04-20', '13:00:00', 49.99, 500),
-(3, 5, 1, '2025-04-21', '07:00:00', 129.99, 550),
-(3, 6, 1, '2025-04-21', '15:00:00', 135.99, 480),
-(4, 7, 1, '2025-04-21', '08:30:00', 35.99, 380),
-(4, 2, 1, '2025-04-21', '16:00:00', 39.99, 400),
-(5, 8, 1, '2025-04-21', '06:00:00', 79.99, 450),
-(5, 9, 1, '2025-04-21', '12:00:00', 79.99, 300),
-(6, 10, 1, '2025-04-22', '09:00:00', 45.99, 520),
-(6, 1, 1, '2025-04-22', '14:00:00', 49.99, 450),
-(7, 11, 1, '2025-04-22', '07:30:00', 39.99, 490),
-(8, 3, 1, '2025-04-22', '10:00:00', 25.99, 350),
-(9, 12, 1, '2025-04-22', '10:30:00', 29.99, 360),
-(10, 2, 1, '2025-04-22', '11:00:00', 35.99, 400),
-(11, 4, 1, '2025-04-22', '13:00:00', 29.99, 500),
-(12, 5, 1, '2025-04-22', '15:00:00', 35.99, 550),
-(1, 6, 1, '2025-04-23', '08:00:00', 89.99, 480),
-(2, 7, 1, '2025-04-23', '09:30:00', 49.99, 380),
-(3, 8, 1, '2025-04-23', '07:00:00', 129.99, 450),
-(4, 9, 1, '2025-04-23', '08:00:00', 35.99, 300),
-(5, 10, 1, '2025-04-23', '06:00:00', 79.99, 520);
+-- ================================================
+-- 7. MANTENIMIENTO (subtabla de EMPLEADO)
+-- ================================================
+INSERT INTO MANTENIMIENTO (id_empleado, especialidad, turno, certificaciones) VALUES
+((SELECT id_empleado FROM EMPLEADO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'isabel@trenes.com')), 'Sistema Eléctrico', 'Mañana', 'ISO-9001'),
+((SELECT id_empleado FROM EMPLEADO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'roberto@trenes.com')), 'Mecánica', 'Tarde', 'ISO-9001,ISO-45001');
 
--- Tabla: ASIENTO
--- Para cada viaje (25 viajes), crear asientos según capacidad del tren
--- Viajes 1-4: 450, 450, 400, 450 (AVE, AVE, AVLO, AVE)
-INSERT INTO asiento (id_viaje, numero_asiento, clase, estado) 
-SELECT 1, GENERATE_SERIES(1, 450), 'Turista', 'Disponible'
-UNION ALL
-SELECT 2, GENERATE_SERIES(1, 450), 'Turista', 'Disponible'
-UNION ALL
-SELECT 3, GENERATE_SERIES(1, 400), 'Turista', 'Disponible'
-UNION ALL
-SELECT 4, GENERATE_SERIES(1, 450), 'Turista', 'Disponible'
-UNION ALL
-SELECT 5, GENERATE_SERIES(1, 350), 'Turista', 'Disponible'
-UNION ALL
-SELECT 6, GENERATE_SERIES(1, 500), 'Turista', 'Disponible'
-UNION ALL
-SELECT 7, GENERATE_SERIES(1, 550), 'Turista', 'Disponible'
-UNION ALL
-SELECT 8, GENERATE_SERIES(1, 480), 'Turista', 'Disponible'
-UNION ALL
-SELECT 9, GENERATE_SERIES(1, 380), 'Turista', 'Disponible'
-UNION ALL
-SELECT 10, GENERATE_SERIES(1, 400), 'Turista', 'Disponible'
-UNION ALL
-SELECT 11, GENERATE_SERIES(1, 450), 'Turista', 'Disponible'
-UNION ALL
-SELECT 12, GENERATE_SERIES(1, 300), 'Turista', 'Disponible'
-UNION ALL
-SELECT 13, GENERATE_SERIES(1, 520), 'Turista', 'Disponible'
-UNION ALL
-SELECT 14, GENERATE_SERIES(1, 450), 'Turista', 'Disponible'
-UNION ALL
-SELECT 15, GENERATE_SERIES(1, 490), 'Turista', 'Disponible'
-UNION ALL
-SELECT 16, GENERATE_SERIES(1, 350), 'Turista', 'Disponible'
-UNION ALL
-SELECT 17, GENERATE_SERIES(1, 360), 'Turista', 'Disponible'
-UNION ALL
-SELECT 18, GENERATE_SERIES(1, 400), 'Turista', 'Disponible'
-UNION ALL
-SELECT 19, GENERATE_SERIES(1, 500), 'Turista', 'Disponible'
-UNION ALL
-SELECT 20, GENERATE_SERIES(1, 550), 'Turista', 'Disponible'
-UNION ALL
-SELECT 21, GENERATE_SERIES(1, 480), 'Turista', 'Disponible'
-UNION ALL
-SELECT 22, GENERATE_SERIES(1, 380), 'Turista', 'Disponible'
-UNION ALL
-SELECT 23, GENERATE_SERIES(1, 450), 'Turista', 'Disponible'
-UNION ALL
-SELECT 24, GENERATE_SERIES(1, 300), 'Turista', 'Disponible'
-UNION ALL
-SELECT 25, GENERATE_SERIES(1, 520), 'Turista', 'Disponible';
+-- ================================================
+-- 8. RUTAS
+-- ================================================
+INSERT INTO RUTA (origen, destino, duracion, id_vendedor) VALUES
+('Madrid Puerta de Atocha', 'Barcelona Sants', '02:30:00', (SELECT id_empleado FROM VENDEDOR LIMIT 1)),
+('Madrid Puerta de Atocha', 'Valencia Joaquín Sorolla', '01:50:00', (SELECT id_empleado FROM VENDEDOR LIMIT 1)),
+('Barcelona Sants', 'Sevilla Santa Justa', '03:00:00', (SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1)),
+('Valencia Joaquín Sorolla', 'Alicante Término', '01:00:00', (SELECT id_empleado FROM VENDEDOR LIMIT 1)),
+('Madrid Puerta de Atocha', 'Bilbao Abando', '02:30:00', (SELECT id_empleado FROM VENDEDOR LIMIT 1)),
+('Barcelona Sants', 'Valencia Joaquín Sorolla', '01:30:00', (SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1)),
+('Sevilla Santa Justa', 'Córdoba Central', '01:00:00', (SELECT id_empleado FROM VENDEDOR LIMIT 1)),
+('Madrid Puerta de Atocha', 'Toledo Estación', '00:45:00', (SELECT id_empleado FROM VENDEDOR LIMIT 1)),
+('Bilbao Abando', 'San Sebastián Donostia', '01:30:00', (SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1)),
+('Barcelona Sants', 'Girona Estación', '01:00:00', (SELECT id_empleado FROM VENDEDOR LIMIT 1)),
+('Madrid Puerta de Atocha', 'Segovia-Guadarrama', '01:00:00', (SELECT id_empleado FROM VENDEDOR LIMIT 1)),
+('Valencia Joaquín Sorolla', 'Tarragona Central', '01:30:00', (SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1)),
+('Sevilla Santa Justa', 'Cádiz Término', '02:00:00', (SELECT id_empleado FROM VENDEDOR LIMIT 1)),
+('Valencia Joaquín Sorolla', 'Cuenca Fernando Zóbel', '01:30:00', (SELECT id_empleado FROM VENDEDOR LIMIT 1)),
+('Madrid Puerta de Atocha', 'Guadalajara Central', '00:40:00', (SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1));
 
--- Tabla: TIPO_ABONO
-INSERT INTO tipo_abono (nombre, descripcion, duracion_dias, precio) VALUES
-('Mensual Madrid', 'Viajes ilimitados en Madrid por 30 días', 30, 89.99),
-('Mensual España', 'Viajes ilimitados en toda España por 30 días', 30, 199.99),
-('Trimestral', 'Viajes ilimitados por 90 días', 90, 449.99),
-('Anual', 'Viajes ilimitados por 365 días', 365, 1299.99),
-('10 viajes', '10 viajes válidos por 60 días', 60, 499.99),
-('20 viajes', '20 viajes válidos por 90 días', 90, 899.99),
-('Fin de semana', 'Viajes ilimitados viernes a domingo', 7, 79.99),
-('Estudiante 3 meses', 'Abono estudiante por 90 días', 90, 199.99);
+-- ================================================
+-- 9. TRENES
+-- ================================================
+INSERT INTO TREN (modelo, capacidad) VALUES
+('AVE-103', 450),
+('AVLO', 400),
+('ALVIA', 350),
+('AVE S-103', 500),
+('Talgo-200', 320),
+('Avant-Siemens', 550),
+('Talgo-360', 380),
+('Eurostar', 450),
+('MD-300', 300),
+('OARIS', 520),
+('AVE-R', 490),
+('Talgo-250', 360);
 
--- Tabla: BILLETE
-INSERT INTO billete (id_pasajero, id_viaje, id_asiento, fecha_compra, precio_pagado, estado) VALUES
-(1, 1, 1, NOW() - INTERVAL '5 days', 89.99, 'Activo'),
-(1, 1, 2, NOW() - INTERVAL '5 days', 89.99, 'Activo'),
-(2, 1, 3, NOW() - INTERVAL '4 days', 89.99, 'Activo'),
-(2, 2, 4, NOW() - INTERVAL '4 days', 89.99, 'Activo'),
-(3, 2, 5, NOW() - INTERVAL '3 days', 89.99, 'Activo'),
-(3, 3, 6, NOW() - INTERVAL '3 days', 65.99, 'Activo'),
-(4, 3, 7, NOW() - INTERVAL '2 days', 65.99, 'Activo'),
-(1, 4, 8, NOW() - INTERVAL '2 days', 99.99, 'Activo'),
-(2, 5, 9, NOW() - INTERVAL '1 day', 49.99, 'Activo'),
-(3, 6, 10, NOW() - INTERVAL '1 day', 49.99, 'Activo'),
-(4, 7, 11, NOW(), 129.99, 'Reservado'),
-(1, 8, 12, NOW(), 135.99, 'Reservado'),
-(2, 9, 13, NOW(), 35.99, 'Reservado'),
-(3, 10, 14, NOW(), 39.99, 'Reservado'),
-(4, 11, 15, NOW(), 79.99, 'Reservado'),
-(1, 12, 16, NOW(), 79.99, 'Reservado'),
-(2, 13, 17, NOW(), 45.99, 'Reservado'),
-(3, 14, 18, NOW(), 49.99, 'Reservado'),
-(4, 15, 19, NOW(), 39.99, 'Reservado'),
-(1, 16, 20, NOW(), 25.99, 'Reservado');
+-- ================================================
+-- 10. VIAJES
+-- ================================================
+INSERT INTO VIAJE (id_vendedor, id_ruta, id_tren, id_maquinista, fecha, hora_salida, hora_llegada, precio, estado) VALUES
+-- Viajes Madrid → Barcelona
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' AND destino = 'Barcelona Sants' LIMIT 1), 1, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-20', '08:00:00', '10:30:00', 89.99, 'programado'),
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' AND destino = 'Barcelona Sants' LIMIT 1), 2, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-20', '10:30:00', '13:00:00', 65.99, 'programado'),
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' AND destino = 'Barcelona Sants' LIMIT 1), 3, (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), '2026-04-20', '14:00:00', '16:30:00', 75.99, 'programado'),
+-- Viajes Madrid → Valencia
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' AND destino = 'Valencia Joaquín Sorolla' LIMIT 1), 4, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-20', '09:00:00', '10:50:00', 49.99, 'programado'),
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' AND destino = 'Valencia Joaquín Sorolla' LIMIT 1), 5, (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), '2026-04-20', '13:00:00', '14:50:00', 49.99, 'programado'),
+-- Viajes Barcelona → Sevilla
+((SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Barcelona Sants' AND destino = 'Sevilla Santa Justa' LIMIT 1), 6, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-21', '07:00:00', '10:00:00', 129.99, 'programado'),
+((SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Barcelona Sants' AND destino = 'Sevilla Santa Justa' LIMIT 1), 1, (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), '2026-04-21', '15:00:00', '18:00:00', 135.99, 'programado'),
+-- Viajes Valencia → Alicante
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Valencia Joaquín Sorolla' AND destino = 'Alicante Término' LIMIT 1), 2, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-21', '08:30:00', '09:30:00', 35.99, 'programado'),
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Valencia Joaquín Sorolla' AND destino = 'Alicante Término' LIMIT 1), 3, (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), '2026-04-21', '16:00:00', '17:00:00', 39.99, 'programado'),
+-- Viajes Madrid → Bilbao
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' AND destino = 'Bilbao Abando' LIMIT 1), 4, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-21', '06:00:00', '08:30:00', 79.99, 'programado'),
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' AND destino = 'Bilbao Abando' LIMIT 1), 5, (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), '2026-04-21', '12:00:00', '14:30:00', 79.99, 'programado'),
+-- Viajes Barcelona → Valencia
+((SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Barcelona Sants' AND destino = 'Valencia Joaquín Sorolla' LIMIT 1), 6, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-22', '09:00:00', '10:30:00', 45.99, 'programado'),
+((SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Barcelona Sants' AND destino = 'Valencia Joaquín Sorolla' LIMIT 1), 7, (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), '2026-04-22', '14:00:00', '15:30:00', 49.99, 'programado'),
+-- Viajes Sevilla → Córdoba
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Sevilla Santa Justa' AND destino = 'Córdoba Central' LIMIT 1), 8, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-22', '07:30:00', '08:30:00', 39.99, 'programado'),
+-- Viajes Madrid → Toledo
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' AND destino = 'Toledo Estación' LIMIT 1), 1, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-22', '10:00:00', '10:45:00', 25.99, 'programado'),
+-- Viajes Bilbao → San Sebastián
+((SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Bilbao Abando' AND destino = 'San Sebastián Donostia' LIMIT 1), 2, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-22', '10:30:00', '12:00:00', 29.99, 'programado'),
+-- Viajes Barcelona → Girona
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Barcelona Sants' AND destino = 'Girona Estación' LIMIT 1), 3, (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), '2026-04-22', '11:00:00', '12:00:00', 35.99, 'programado'),
+-- Viajes Madrid → Segovia
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' AND destino = 'Segovia-Guadarrama' LIMIT 1), 4, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-22', '13:00:00', '14:00:00', 29.99, 'programado'),
+-- Viajes Valencia → Tarragona
+((SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Valencia Joaquín Sorolla' AND destino = 'Tarragona Central' LIMIT 1), 5, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-22', '15:00:00', '16:30:00', 35.99, 'programado'),
+-- Viajes Sevilla → Cádiz
+((SELECT id_empleado FROM VENDEDOR LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Sevilla Santa Justa' AND destino = 'Cádiz Término' LIMIT 1), 6, (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), '2026-04-23', '08:00:00', '10:00:00', 99.99, 'programado'),
+-- Viajes Valencia → Cuenca
+((SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Valencia Joaquín Sorolla' AND destino = 'Cuenca Fernando Zóbel' LIMIT 1), 7, (SELECT id_empleado FROM MAQUINISTA LIMIT 1), '2026-04-23', '09:30:00', '11:00:00', 45.99, 'programado'),
+-- Viajes Madrid → Guadalajara
+((SELECT id_empleado FROM VENDEDOR ORDER BY id_empleado DESC LIMIT 1), (SELECT id_ruta FROM RUTA WHERE origen = 'Madrid Puerta de Atocha' AND destino = 'Guadalajara Central' LIMIT 1), 8, (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), '2026-04-23', '14:00:00', '14:40:00', 35.99, 'programado');
 
--- Tabla: ABONO
-INSERT INTO abono (id_pasajero, id_tipo_abono, fecha_compra, fecha_vencimiento, usos_restantes, estado) VALUES
-(1, 1, NOW() - INTERVAL '20 days', NOW() + INTERVAL '10 days', 15, 'Activo'),
-(2, 2, NOW() - INTERVAL '25 days', NOW() + INTERVAL '5 days', 25, 'Activo'),
-(3, 3, NOW() - INTERVAL '45 days', NOW() + INTERVAL '45 days', 50, 'Activo'),
-(4, 4, NOW() - INTERVAL '150 days', NOW() + INTERVAL '215 days', 200, 'Activo'),
-(1, 5, NOW() - INTERVAL '30 days', NOW() + INTERVAL '30 days', 7, 'Activo'),
-(2, 6, NOW() - INTERVAL '60 days', NOW() + INTERVAL '30 days', 12, 'Activo'),
-(3, 7, NOW() - INTERVAL '2 days', NOW() + INTERVAL '5 days', 8, 'Activo'),
-(4, 8, NOW() - INTERVAL '80 days', NOW() + INTERVAL '10 days', 30, 'Activo');
+-- ================================================
+-- 11. ASIENTOS (para cada viaje según capacidad del tren)
+-- ================================================
+INSERT INTO ASIENTO (id_tren, numero_asiento, clase, estado)
+SELECT id_tren, n, CASE WHEN n <= 10 THEN 'primera' ELSE 'segunda' END, 'disponible'
+FROM TREN, generate_series(1, 100) AS n;
 
--- Tabla: PROMOCION
-INSERT INTO promocion (codigo, descripcion, descuento_porcentaje, descuento_fijo, fecha_inicio, fecha_fin, usos_limite, usos_realizados, activo) VALUES
-('PROMO20', 'Descuento 20% en viajes', 20, NULL, '2025-04-01', '2025-04-30', 1000, 45, true),
-('VIAJE10', 'Descuento 10 euros fijo', NULL, 10.00, '2025-04-10', '2025-12-31', 500, 23, true),
-('ESTUDIANTE15', 'Descuento 15% estudiantes', 15, NULL, '2025-04-01', '2025-06-30', 2000, 120, true),
-('REPATRIADO25', 'Descuento 25% para repatriados', 25, NULL, '2025-04-15', '2025-05-31', 300, 8, true),
-('ABRIL5EUROS', '5 euros de descuento en abril', NULL, 5.00, '2025-04-01', '2025-04-30', 10000, 876, true),
-('BIENVENIDA30', '30% descuento primer viaje', 30, NULL, '2025-01-01', '2025-12-31', 500, 45, true),
-('VERANO50', '50% descuento viajes verano', 50, NULL, '2025-06-01', '2025-08-31', 1000, 0, true),
-('BLACKFRIDAY', '40% Black Friday', 40, NULL, '2025-11-24', '2025-11-30', 2000, 0, true);
+-- ================================================
+-- 12. ABONOS
+-- ================================================
+INSERT INTO ABONO (id_pasajero, tipo, fecha_inicio, fecha_fin, viajes_totales, viajes_restantes) VALUES
+((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'juan@trenes.com')), 'MENSUAL_MADRID', NOW() - INTERVAL '20 days', NOW() + INTERVAL '10 days', 30, 15),
+((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'maria@trenes.com')), 'MENSUAL_ESPAÑA', NOW() - INTERVAL '25 days', NOW() + INTERVAL '5 days', 30, 25),
+((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'carlos@trenes.com')), 'TRIMESTRAL', NOW() - INTERVAL '45 days', NOW() + INTERVAL '45 days', 90, 50),
+((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'ana@trenes.com')), 'ANUAL', NOW() - INTERVAL '150 days', NOW() + INTERVAL '215 days', 365, 200),
+((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'juan@trenes.com')), '10_VIAJES', NOW() - INTERVAL '30 days', NOW() + INTERVAL '30 days', 10, 7),
+((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'maria@trenes.com')), '20_VIAJES', NOW() - INTERVAL '60 days', NOW() + INTERVAL '30 days', 20, 12),
+((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'carlos@trenes.com')), 'WEEKEND', NOW() - INTERVAL '2 days', NOW() + INTERVAL '5 days', 8, 8),
+((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'ana@trenes.com')), 'ESTUDIANTE', NOW() - INTERVAL '80 days', NOW() + INTERVAL '10 days', 90, 30);
 
--- Tabla: INCIDENCIA
-INSERT INTO incidencia (id_pasajero, tipo_incidencia, origen, descripcion, fecha_reporte, estado, afecta_pasajero, resolucion, fecha_resolucion) VALUES
-(1, 'Retraso', 'Pasajero', 'Tren llegó con 45 minutos de retraso', NOW() - INTERVAL '10 days', 'Resuelto', true, 'Se compensó con bono de 15 euros', NOW() - INTERVAL '5 days'),
-(2, 'Equipaje Perdido', 'Pasajero', 'No encontré mi maleta en destino', NOW() - INTERVAL '8 days', 'Resuelto', true, 'Se recuperó la maleta y se devolvió', NOW() - INTERVAL '3 days'),
-(3, 'Asiento Defectuoso', 'Pasajero', 'El esquinero de mi asiento estaba roto', NOW() - INTERVAL '6 days', 'Resuelto', true, 'Se cambió de asiento y se ofreció 10 euros', NOW() - INTERVAL '2 days'),
-(4, 'Falta de Higiene', 'Pasajero', 'Vagón muy sucio y desordenado', NOW() - INTERVAL '5 days', 'En Revisión', true, 'Pendiente de inspección', NULL),
-(1, 'Servicio Deficiente', 'Pasajero', 'Personal de tren fue poco amable', NOW() - INTERVAL '4 days', 'En Revisión', true, 'Se está investigando el incidente', NULL),
-(2, 'Accidente Menor', 'Maquinista', 'Pequeño roze al entrar en estación', NOW() - INTERVAL '3 days', 'En Mantenimiento', false, 'Tren enviado a revisión técnica', NULL),
-(3, 'Fallo Catenaria', 'Sistema', 'Pérdida de conexión con catenaria', NOW() - INTERVAL '2 days', 'En Mantenimiento', true, 'Reparación en progreso', NULL),
-(4, 'Billete No Válido', 'Pasajero', 'Código de billete no se reconocía', NOW() - INTERVAL '1 day', 'Resuelto', true, 'Se emitió nuevo billete', NOW() - INTERVAL '1 day');
+-- ================================================
+-- 13. PROMOCIONES
+-- ================================================
+INSERT INTO PROMOCION (codigo, descuento_porcentaje, fecha_inicio, fecha_fin, usos_maximos, usos_actuales) VALUES
+('PROMO20', 20.00, '2026-04-01', '2026-04-30', 1000, 45),
+('VIAJE10', 0.00, '2026-04-10', '2026-12-31', 500, 23),
+('ESTUDIANTE15', 15.00, '2026-04-01', '2026-06-30', 2000, 120),
+('REPATRIADO25', 25.00, '2026-04-15', '2026-05-31', 300, 8),
+('BIENVENIDA30', 30.00, '2026-01-01', '2026-12-31', 500, 45),
+('VERANO50', 50.00, '2026-06-01', '2026-08-31', 1000, 0),
+('BLACKFRIDAY', 40.00, '2026-11-24', '2026-11-30', 2000, 0);
 
--- Tabla: MANTENIMIENTO
-INSERT INTO mantenimiento (id_tren, tipo_mantenimiento, descripcion, fecha_programada, fecha_realizacion, estado, costo) VALUES
-(1, 'Revisión General', 'Inspección completa de sistemas', '2025-05-15', NULL, 'Programado', 5000.00),
-(2, 'Cambio Pastillas Freno', 'Reemplazo de pastillas de freno desgastadas', '2025-04-25', NULL, 'Programado', 1200.00),
-(3, 'Limpieza Profunda', 'Limpieza integral de interior y exterior', '2025-04-22', NOW(), 'Completado', 800.00),
-(4, 'Reparación Catenaria', 'Reparación de conexiones eléctricas', '2025-04-20', NOW(), 'Completado', 3500.00),
-(5, 'Control Técnico', 'Control de sistemas de tracción y frenado', '2025-04-23', NULL, 'Pendiente', 2000.00),
-(6, 'Cambio Aceite', 'Cambio de aceite en todos sistemas', '2025-04-26', NULL, 'Programado', 600.00),
-(7, 'Revisión Puertas', 'Inspección y ajuste de mecanismos de puertas', '2025-04-25', NULL, 'Programado', 1500.00),
-(8, 'Limpieza Ventilación', 'Limpieza de filtros y sistema de aire', '2025-04-22', NOW(), 'Completado', 400.00),
-(9, 'Control Eje', 'Inspección de ejes y ruedas', '2025-04-27', NULL, 'Programado', 2200.00),
-(10, 'Reparación Calefacción', 'Reparación del sistema de calefacción', '2025-04-24', NULL, 'Programado', 1800.00),
-(11, 'Pintura y Detalle', 'Repintado de áreas dañadas', '2025-05-01', NULL, 'Programado', 900.00),
-(12, 'Revisión Completa Post-Accidente', 'Inspección exhaustiva tras incidente', '2025-04-21', NOW(), 'Completado', 6000.00);
+-- ================================================
+-- 14. INCIDENCIAS
+-- ================================================
+INSERT INTO INCIDENCIA (id_viaje, id_mantenimiento, id_maquinista, tipo_incidencia, origen, descripcion, fecha_reporte, estado, afecta_pasajero, resolucion, fecha_resolucion) VALUES
+((SELECT id_viaje FROM VIAJE LIMIT 1), (SELECT id_empleado FROM MANTENIMIENTO LIMIT 1), (SELECT id_empleado FROM MAQUINISTA LIMIT 1), 'Retraso', 'maquinista', 'Tren llegó con 45 minutos de retraso', NOW() - INTERVAL '10 days', 'resuelto', true, 'Se compensó con bono de 15 euros', NOW() - INTERVAL '5 days'),
+((SELECT id_viaje FROM VIAJE LIMIT 1 OFFSET 1), (SELECT id_empleado FROM MANTENIMIENTO LIMIT 1), (SELECT id_empleado FROM MAQUINISTA LIMIT 1), 'Avería', 'iot', 'Fallo en sistema de aire acondicionado', NOW() - INTERVAL '8 days', 'resuelto', true, 'Se reparó el sistema', NOW() - INTERVAL '3 days'),
+((SELECT id_viaje FROM VIAJE LIMIT 1 OFFSET 2), (SELECT id_empleado FROM MANTENIMIENTO LIMIT 1 OFFSET 1), (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), 'Limpieza', 'maquinista', 'Vagón sucio al inicio de viaje', NOW() - INTERVAL '6 days', 'resuelto', true, 'Se limpió completo', NOW() - INTERVAL '2 days'),
+((SELECT id_viaje FROM VIAJE LIMIT 1 OFFSET 3), (SELECT id_empleado FROM MANTENIMIENTO LIMIT 1), (SELECT id_empleado FROM MAQUINISTA ORDER BY id_empleado DESC LIMIT 1), 'Otro', 'maquinista', 'Ruido inusual en Sistema de Tracción', NOW() - INTERVAL '5 days', 'en_proceso', false, NULL, NULL),
+((SELECT id_viaje FROM VIAJE LIMIT 1 OFFSET 4), (SELECT id_empleado FROM MANTENIMIENTO LIMIT 1 OFFSET 1), (SELECT id_empleado FROM MAQUINISTA LIMIT 1), 'Fallo Eléctrico', 'iot', 'Pérdida de conexión con catenaria', NOW() - INTERVAL '3 days', 'en_proceso', true, NULL, NULL);
 
--- Estadísticas finales
-SELECT COUNT(*) as total_usuarios FROM usuario;
-SELECT COUNT(*) as total_pasajeros FROM pasajero;
-SELECT COUNT(*) as total_empleados FROM empleado;
-SELECT COUNT(*) as total_viajes FROM viaje;
-SELECT COUNT(*) as total_billetes FROM billete;
-SELECT COUNT(*) as total_abonos FROM abono;
-SELECT COUNT(*) as total_incidencias FROM incidencia;
+-- ================================================
+-- RESUMEN FINAL
+-- ================================================
+SELECT 'USUARIOS' as tabla, COUNT(*) as total FROM USUARIO
+UNION ALL
+SELECT 'PASAJEROS', COUNT(*) FROM PASAJERO
+UNION ALL
+SELECT 'EMPLEADOS', COUNT(*) FROM EMPLEADO
+UNION ALL
+SELECT 'VENDEDORES', COUNT(*) FROM VENDEDOR
+UNION ALL
+SELECT 'MAQUINISTAS', COUNT(*) FROM MAQUINISTA
+UNION ALL
+SELECT 'MANTENIMIENTO', COUNT(*) FROM MANTENIMIENTO
+UNION ALL
+SELECT 'RUTAS', COUNT(*) FROM RUTA
+UNION ALL
+SELECT 'TRENES', COUNT(*) FROM TREN
+UNION ALL
+SELECT 'VIAJES', COUNT(*) FROM VIAJE
+UNION ALL
+SELECT 'ASIENTOS', COUNT(*) FROM ASIENTO
+UNION ALL
+SELECT 'ABONOS', COUNT(*) FROM ABONO
+UNION ALL
+SELECT 'PROMOCIONES', COUNT(*) FROM PROMOCION
+UNION ALL
+SELECT 'INCIDENCIAS', COUNT(*) FROM INCIDENCIA
+UNION ALL
+SELECT 'TIPO_ABONO', COUNT(*) FROM TIPO_ABONO;
