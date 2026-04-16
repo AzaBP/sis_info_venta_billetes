@@ -1,6 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('formCompraAbono');
     const mensajeDiv = document.getElementById('mensajeCompra');
+    if (!form || !mensajeDiv) return;
+
+    function tr(key, fallback, params = {}) {
+        const i18n = window.trainwebI18n;
+        let text = (i18n && typeof i18n.t === 'function') ? i18n.t(key) : null;
+        if (!text) text = fallback;
+        Object.keys(params).forEach((k) => {
+            text = text.replace(`{${k}}`, params[k]);
+        });
+        return text;
+    }
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault(); // Evitamos que la página se recargue
@@ -11,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Deshabilitamos el botón para evitar doble envío
         const btnSubmit = form.querySelector('button[type="submit"]');
         btnSubmit.disabled = true;
-        btnSubmit.textContent = 'Procesando pago...';
+        btnSubmit.textContent = tr('pago_procesando', 'Procesando pago...');
 
         try {
             // Enviamos los datos al backend usando fetch
@@ -30,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (resultado.exito) {
                 mensajeDiv.style.color = 'green';
-                mensajeDiv.textContent = '¡Pago completado! Tu abono ha sido activado con éxito.';
+                mensajeDiv.textContent = tr('abono_pago_completado_exito', '¡Pago completado! Tu abono ha sido activado con éxito.');
                 
                 // Redirigir al área de cliente después de 2 segundos
                 setTimeout(() => {
@@ -43,11 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error:', error);
             mensajeDiv.style.color = 'red';
-            mensajeDiv.textContent = 'Hubo un error: ' + error.message;
+            mensajeDiv.textContent = tr('error_hubo_un_error', 'Hubo un error: {error}', { error: error.message });
             
             // Reactivamos el botón
             btnSubmit.disabled = false;
-            btnSubmit.textContent = 'Confirmar Pago';
+            btnSubmit.textContent = tr('pago_confirmar', 'Confirmar Pago');
         }
     });
 });

@@ -64,19 +64,19 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
     <header class="header">
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
-            <a href="index.php">Inicio</a>
-            <a href="#">Billetes</a>
+            <a href="index.php" data-i18n="inicio">Inicio</a>
+            <a href="billetes_web.php" data-i18n="billetes">Billetes</a>
             <div class="dropdown">
-                <a href="#">Idiomas <i class="fa-solid fa-caret-down"></i></a>
+                <a href="#"><i class="fa-solid fa-earth-europe"></i> <span data-i18n="idiomas">Idiomas</span> <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
-                    <a href="#">Español</a>
-                    <a href="#">Inglés</a>
-                    <a href="#">Francés</a>
-                    <a href="#">Alemán</a>
+                    <a href="#" data-lang="es" data-i18n="es">Español</a>
+                    <a href="#" data-lang="en" data-i18n="en">Inglés</a>
+                    <a href="#" data-lang="fr" data-i18n="fr">Francés</a>
+                    <a href="#" data-lang="de" data-i18n="de">Alemán</a>
                 </div>
             </div>
-            <a href="ofertas.php">Ofertas</a>
-            <a href="ayuda.php">Ayuda</a>
+            <a href="ofertas.php" data-i18n="ofertas">Ofertas</a>
+            <a href="ayuda.php" data-i18n="ayuda">Ayuda</a>
         </nav>
         <div class="user-actions" id="userActions">
             <?php if ($usuarioSesion): ?>
@@ -87,12 +87,12 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
                         <i class="fa-solid fa-caret-down"></i>
                     </button>
                     <div class="account-menu">
-                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
-                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> <span data-i18n="mi_perfil">Mi perfil</span></a>
+                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="cerrar_sesion">Cerrar sesión</span></a>
                     </div>
                 </div>
             <?php else: ?>
-                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> <span data-i18n="iniciar_sesion">Iniciar sesión</span></a>
             <?php endif; ?>
         </div>
     </header>
@@ -110,7 +110,7 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
                 <input type="hidden" name="precio" value="<?= $abono['precio'] ?>">
 
                 <div class="payment-header">
-                    <h3><i class="fa-solid fa-credit-card"></i> Detalles de Pago</h3>
+                    <h3><i class="fa-solid fa-credit-card"></i> <span data-i18n="detalles_pago">Detalles de Pago</span></h3>
                     <div class="card-icons">
                         <i class="fa-brands fa-cc-visa brand-visa"></i>
                         <i class="fa-brands fa-cc-mastercard brand-mastercard"></i>
@@ -118,36 +118,39 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
                 </div>
 
                 <div class="form-group">
-                    <label>Titular de la tarjeta</label>
-                    <input type="text" name="titular" placeholder="Nombre completo" required>
+                    <label data-i18n="titular_tarjeta">Titular de la tarjeta</label>
+                    <input type="text" name="titular" placeholder="Nombre completo" data-i18n="nombre_completo" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Número de tarjeta</label>
-                    <input type="text" name="tarjeta" placeholder="0000 0000 0000 0000" maxlength="16" required>
+                    <label data-i18n="numero_tarjeta">Número de tarjeta</label>
+                    <input type="text" name="tarjeta" placeholder="0000 0000 0000 0000" data-i18n-placeholder="card_number_placeholder" maxlength="16" required>
                 </div>
 
                 <div style="display: flex; gap: 15px;">
                     <div class="form-group expand">
-                        <label>Caducidad</label>
-                        <input type="text" name="caducidad" placeholder="MM/AA" maxlength="5" required>
+                        <label data-i18n="caducidad">Caducidad</label>
+                        <input type="text" name="caducidad" placeholder="MM/AA" data-i18n="mm_aa" maxlength="5" required>
                     </div>
                     <div class="form-group expand">
-                        <label>CVV</label>
-                        <input type="password" name="cvv" placeholder="123" maxlength="3" required>
+                        <label data-i18n="cvv">CVV</label>
+                        <input type="password" name="cvv" placeholder="123" data-i18n-placeholder="cvv_placeholder" maxlength="3" required>
                     </div>
                 </div>
 
                 <button type="submit" class="btn-pay-confirm" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1rem; background: #0a2a66; color: white; border: none; border-radius: 6px; cursor: pointer;">
-                    Pagar <?= $precio_formateado ?>
+                    <span data-i18n="pagar">Pagar</span> <?= $precio_formateado ?>
                 </button>
             </form>
         </div>
     </main>
 
     <footer class="footer">
-        <div class="footer-bottom">&copy; 2026 TrainWeb</div>
+        <div class="footer-bottom" data-i18n="footer_copyright">&copy; 2026 TrainWeb</div>
     </footer>
+
+    <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
+    <script src="scripts/session_menu.js"></script>
 
 </body>
 </html>

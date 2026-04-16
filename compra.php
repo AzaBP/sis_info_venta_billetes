@@ -157,12 +157,12 @@ if ($id_pasajero_gestionado) {
     <header class="header">
         <div class="logo">
             <i class="fa-solid fa-train"></i> TrainWeb 
-            <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; margin-left: 10px;">| Área de Cliente</span>
+            <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; margin-left: 10px;">| <span data-i18n="area_cliente">Área de Cliente</span></span>
         </div>
         
         <nav class="nav">
-            <a href="index.php">Inicio</a>
-            <a href="ayuda.php">Ayuda</a>
+            <a href="index.php" data-i18n="inicio">Inicio</a>
+            <a href="ayuda.php" data-i18n="ayuda">Ayuda</a>
         </nav>
 
         <div class="user-actions" id="userActions">
@@ -174,18 +174,18 @@ if ($id_pasajero_gestionado) {
                         <i class="fa-solid fa-caret-down"></i>
                     </button>
                     <div class="account-menu">
-                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
-                        <a href="mis_billetes.php"><i class="fa-solid fa-ticket"></i> Mis billetes</a>
+                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> <span data-i18n="mi_perfil">Mi perfil</span></a>
+                        <a href="mis_billetes.php"><i class="fa-solid fa-ticket"></i> <span data-i18n="mis_billetes">Mis billetes</span></a>
                         
                         <?php if (($usuarioSesion['tipo_usuario'] ?? '') === 'empleado'): ?>
-                            <a href="vendedor.php"><i class="fa-solid fa-briefcase"></i> Panel Empleado</a>
+                            <a href="vendedor.php"><i class="fa-solid fa-briefcase"></i> <span data-i18n="panel_empleado">Panel Empleado</span></a>
                         <?php endif; ?>
                         
-                        <a href="php/logout.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+                        <a href="php/logout.php"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="cerrar_sesion">Cerrar sesión</span></a>
                     </div>
                 </div>
             <?php else: ?>
-                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                <a href="inicio_sesion.html" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> <span data-i18n="iniciar_sesion">Iniciar sesión</span></a>
             <?php endif; ?>
         </div>
     </header>
@@ -193,10 +193,10 @@ if ($id_pasajero_gestionado) {
     <main class="booking-container">
         
         <div class="progress-bar-container">
-            <div class="step active" id="step1" onclick="irAPaso(1)" style="cursor: pointer;"><span class="step-num">1</span> Trenes disponibles</div>
-            <div class="step" id="step2" onclick="irAPaso(2)" style="cursor: pointer;"><span class="step-num">2</span> Selección de asientos</div>
-            <div class="step" id="step3" onclick="irAPaso(3)" style="cursor: pointer;"><span class="step-num">3</span> Resumen y Descuentos</div>
-            <div class="step" id="step4" onclick="irAPaso(4)" style="cursor: pointer;"><span class="step-num">4</span> Pago seguro</div>
+            <div class="step active" id="step1" onclick="irAPaso(1)" style="cursor: pointer;"><span class="step-num">1</span> <span data-i18n="trenes_disponibles">Trenes disponibles</span></div>
+            <div class="step" id="step2" onclick="irAPaso(2)" style="cursor: pointer;"><span class="step-num">2</span> <span data-i18n="seleccion_asientos">Selección de asientos</span></div>
+            <div class="step" id="step3" onclick="irAPaso(3)" style="cursor: pointer;"><span class="step-num">3</span> <span data-i18n="resumen_descuentos">Resumen y Descuentos</span></div>
+            <div class="step" id="step4" onclick="irAPaso(4)" style="cursor: pointer;"><span class="step-num">4</span> <span data-i18n="pago_seguro">Pago seguro</span></div>
         </div>
 
 
@@ -213,14 +213,14 @@ if ($id_pasajero_gestionado) {
                             $fechaObj = DateTime::createFromFormat('Y-m-d', $fecha);
                             echo $fechaObj ? $fechaObj->format('l, d \d\e F') : htmlspecialchars($fecha);
                         } else {
-                            echo 'Fecha no seleccionada';
+                            echo '<span data-i18n="fecha_no_seleccionada">Fecha no seleccionada</span>';
                         }
                     ?>
-                    | <?php echo $pasajeros; ?> <?php echo ($pasajeros == 1) ? 'Pasajero' : 'Pasajeros'; ?>
+                    | <?php echo $pasajeros; ?> <?php echo ($pasajeros == 1) ? '<span data-i18n="pasajero_singular">Pasajero</span>' : '<span data-i18n="pasajero_plural">Pasajeros</span>'; ?>
                 </p>
             </div>
             <button class="btn-modify" onclick="window.location.href='index.php'">
-                <i class="fa-solid fa-pen-to-square"></i> Modificar datos
+                <i class="fa-solid fa-pen-to-square"></i> <span data-i18n="modificar_datos">Modificar datos</span>
             </button>
         </div>
 
@@ -240,7 +240,7 @@ if ($id_pasajero_gestionado) {
                     <div style="font-size: 0.85rem; color: #666; margin-bottom: 5px;"><?= $dia_semana ?> <?= $dia_mes ?></div>
                     <?php if ($precio_dia): ?>
                         <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 4px; min-width: 0;">
-                            <span style="font-size: 0.8rem; color: #888; line-height: 1; white-space: nowrap;">Desde</span>
+                            <span style="font-size: 0.8rem; color: #888; line-height: 1; white-space: nowrap;" data-i18n="desde">Desde</span>
                             <span style="font-size: 1.1rem; font-weight: bold; color: <?= $es_activa ? '#0a2a66' : '#333' ?>; line-height: 1; white-space: nowrap;"><?= number_format($precio_dia, 2, ',', '') . ' €' ?></span>
                         </div>
                     <?php else: ?>
@@ -255,9 +255,9 @@ if ($id_pasajero_gestionado) {
             <?php if (empty($trayectos)): ?>
                 <div class="no-trains-message" style="text-align: center; padding: 50px; background: #fff; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
                     <i class="fa-solid fa-train-track" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
-                    <h3 style="color: #0a2a66;">Lo sentimos, no hay trenes disponibles</h3>
-                    <p style="color: #666;">No hemos encontrado ningún viaje programado para la ruta y fecha seleccionadas.</p>
-                    <a href="index.php" class="btn-primary" style="display: inline-block; margin-top: 15px; text-decoration: none;">Volver al buscador</a>
+                    <h3 style="color: #0a2a66;" data-i18n="no_trenes_disponibles">Lo sentimos, no hay trenes disponibles</h3>
+                    <p style="color: #666;" data-i18n="no_trenes_desc">No hemos encontrado ningún viaje programado para la ruta y fecha seleccionadas.</p>
+                    <a href="index.php" class="btn-primary" style="display: inline-block; margin-top: 15px; text-decoration: none;" data-i18n="volver_buscador">Volver al buscador</a>
                 </div>
             <?php else: ?>
                 <?php foreach ($trayectos as $trayecto): 
@@ -267,6 +267,8 @@ if ($id_pasajero_gestionado) {
                     $dteEnd   = new DateTime($trayecto['hora_llegada']);
                     $duracion = $dteStart->diff($dteEnd)->format('%hh %Imin');
                     $precio = number_format($trayecto['precio_base'], 2, ',', '');
+                    $origenCode = strtoupper(substr(trim((string)$trayecto['origen']), 0, 3));
+                    $destinoCode = strtoupper(substr(trim((string)$trayecto['destino']), 0, 3));
 
                     $icono_amenity = 'fa-train'; 
                     if (strtolower($trayecto['tipo_tren']) == 'ave') $icono_amenity = 'fa-wifi';
@@ -283,17 +285,17 @@ if ($id_pasajero_gestionado) {
                         <div class="amenities"><i class="fa-solid <?= $icono_amenity ?>"></i></div>
                     </div>
                     <div class="col-schedule">
-                        <div class="time-group"><span class="hour"><?= $hora_salida ?></span><span class="city">MAD</span></div>
+                        <div class="time-group"><span class="hour"><?= $hora_salida ?></span><span class="city"><?= htmlspecialchars($origenCode, ENT_QUOTES, 'UTF-8') ?></span></div>
                         <div class="duration-line"><span class="duration-text"><?= $duracion ?></span><div class="line"><i class="fa-solid fa-train"></i></div></div>
-                        <div class="time-group"><span class="hour"><?= $hora_llegada ?></span><span class="city">BCN</span></div>
+                        <div class="time-group"><span class="hour"><?= $hora_llegada ?></span><span class="city"><?= htmlspecialchars($destinoCode, ENT_QUOTES, 'UTF-8') ?></span></div>
                     </div>
                     <div class="col-price">
                         <?php if ($isFull): ?>
-                            <div class="price-full">Completo</div>
-                            <button class="btn-select" disabled>Agotado</button>
+                            <div class="price-full" data-i18n="completo">Completo</div>
+                            <button class="btn-select" disabled data-i18n="agotado">Agotado</button>
                         <?php else: ?>
                             <div class="price"><?= $precio ?> €</div>
-                            <button class="btn-select" onclick="seleccionarTren(<?= $trayecto['id_viaje'] ?>, '<?= $trayecto['tipo_tren'] ?>', <?= $trayecto['precio_base'] ?>)">Elegir</button>
+                            <button class="btn-select" onclick="seleccionarTren(<?= $trayecto['id_viaje'] ?>, '<?= $trayecto['tipo_tren'] ?>', <?= $trayecto['precio_base'] ?>)" data-i18n="elegir">Elegir</button>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -304,10 +306,10 @@ if ($id_pasajero_gestionado) {
 
         <section id="sectionSeats" class="booking-section hidden">
             <div class="seat-header">
-                <h3>Selecciona tu plaza en <span id="lblTrenSeleccionado">--</span></h3>
+                <h3><span data-i18n="selecciona_plaza_en">Selecciona tu plaza en</span> <span id="lblTrenSeleccionado">--</span></h3>
                 <div class="wagon-navigator">
                     <button class="nav-arrow" id="btnPrev" onclick="cambiarVagon(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-                    <span class="wagon-title">Vagón <span id="currentWagonNum">1</span></span>
+                    <span class="wagon-title"><span data-i18n="vagon">Vagón</span> <span id="currentWagonNum">1</span></span>
                     <button class="nav-arrow" id="btnNext" onclick="cambiarVagon(1)"><i class="fa-solid fa-chevron-right"></i></button>
                 </div>
             </div>
@@ -326,7 +328,8 @@ if ($id_pasajero_gestionado) {
                     $clasePasillo = $isPremium ? "aisle-horizontal-wide" : "aisle-horizontal";
 
                     echo "<div id='wagon$w' class='wagon-body $wagonClass $displayClass'>";
-                    echo "<div class='info-message'>$wagonTitle</div>";
+                    $wagonTitleKey = $isPremium ? 'primera_clase' : 'segunda_clase';
+                    echo "<div class='info-message' data-i18n='$wagonTitleKey'>$wagonTitle</div>";
                     echo "<div class='wagon-layout'>";
 
                     // PARTE SUPERIOR (Filas A y B)
@@ -342,7 +345,7 @@ if ($id_pasajero_gestionado) {
                                 echo "</div>";
                             }
                         echo "</div>";
-                        echo "<div class='$claseMesa'>MESA</div>";
+                        echo "<div class='$claseMesa' data-i18n='mesa'>MESA</div>";
                         echo "<div class='seat-block'>";
                             foreach (['A', 'B'] as $letra) {
                                 echo "<div class='seat-row-tight " . ($isPremium ? "premium-row" : "") . "'>";
@@ -371,7 +374,7 @@ if ($id_pasajero_gestionado) {
                                 echo "</div>";
                             }
                         echo "</div>";
-                        echo "<div class='$claseMesa'>MESA</div>";
+                        echo "<div class='$claseMesa' data-i18n='mesa'>MESA</div>";
                         echo "<div class='seat-block'>";
                             foreach (['C', 'D'] as $letra) {
                                 echo "<div class='seat-row-tight " . ($isPremium ? "premium-row" : "") . "'>";
@@ -388,37 +391,37 @@ if ($id_pasajero_gestionado) {
                     echo "</div></div>"; 
                 }
                 ?>
-                <div class="tail-indicator">Cola</div>
+                <div class="tail-indicator" data-i18n="cola">Cola</div>
             </div>
             
             <div class="booking-footer">
                 <div class="selection-info">
-                    Asiento: <strong id="displaySeat">Ninguno</strong> <br>Precio Base: <strong id="displayPrice">0,00 €</strong>
+                    <span data-i18n="asiento">Asiento</span>: <strong id="displaySeat" data-i18n="ninguno">Ninguno</strong> <br><span data-i18n="precio_base_label">Precio Base</span>: <strong id="displayPrice">0,00 €</strong>
                 </div>
-                <button class="btn-next" id="btnToPayment" disabled onclick="irAPaso(3)">Continuar al Resumen</button>
+                <button class="btn-next" id="btnToPayment" disabled onclick="irAPaso(3)" data-i18n="continuar_resumen">Continuar al Resumen</button>
             </div>
         </section>
 
         <section id="sectionSummary" class="booking-section hidden">
             <div class="payment-container" style="max-width: 600px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
                 <div class="payment-header" style="border-bottom: none; margin-bottom: 10px;">
-                    <h3><i class="fa-solid fa-list-check"></i> Resumen y Descuentos</h3>
+                    <h3><i class="fa-solid fa-list-check"></i> <span data-i18n="resumen_descuentos">Resumen y Descuentos</span></h3>
                 </div>
                 
                 <div class="trip-details" style="margin-bottom: 25px; padding: 15px; background: #f4f6f8; border-radius: 8px; font-size: 1.1rem;">
-                    <p style="margin: 5px 0;"><strong>Tren:</strong> <span id="summaryTrain">--</span></p>
-                    <p style="margin: 5px 0;"><strong>Asiento:</strong> <span id="summarySeat">--</span></p>
-                    <p style="margin: 5px 0;"><strong>Precio del billete:</strong> <span id="summaryBasePrice">0,00 €</span></p>
+                    <p style="margin: 5px 0;"><strong data-i18n="tren_label">Tren</strong>: <span id="summaryTrain">--</span></p>
+                    <p style="margin: 5px 0;"><strong data-i18n="asiento">Asiento</strong>: <span id="summarySeat">--</span></p>
+                    <p style="margin: 5px 0;"><strong data-i18n="precio_billete">Precio del billete</strong>: <span id="summaryBasePrice">0,00 €</span></p>
                 </div>
 
                 <div class="discounts-section">
-                    <h4 style="color: #0a2a66; margin-bottom: 15px;"><i class="fa-solid fa-tags"></i> Aplicar Descuentos</h4>
+                    <h4 style="color: #0a2a66; margin-bottom: 15px;"><i class="fa-solid fa-tags"></i> <span data-i18n="aplicar_descuentos">Aplicar Descuentos</span></h4>
                     
                     <div class="promo-section">
-                        <label for="codigoPromo" style="display: block; margin-bottom: 5px; font-weight: bold;">Promoción a aplicar</label>
+                        <label for="codigoPromo" style="display: block; margin-bottom: 5px; font-weight: bold;" data-i18n="promocion_aplicar">Promoción a aplicar</label>
                         
                         <select id="codigoPromo" name="codigoPromo" onchange="aplicarPromocion()" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;">
-                            <option value="" data-descuento="0">Sin promoción</option>
+                            <option value="" data-descuento="0" data-i18n="sin_promocion">Sin promoción</option>
                             <?php foreach ($promociones as $promo): ?>
                                 <option value="<?= htmlspecialchars($promo['codigo']) ?>" data-descuento="<?= htmlspecialchars($promo['descuento_porcentaje']) ?>">
                                     <?= htmlspecialchars($promo['codigo']) ?> (-<?= (float)$promo['descuento_porcentaje'] ?>%)
@@ -431,18 +434,18 @@ if ($id_pasajero_gestionado) {
 
                     <div class="abono-selector" style="margin-top: 20px;">
                         <?php if (!isset($_SESSION['usuario'])): ?>
-                            <label for="abonoActivo" style="display: block; margin-bottom: 5px; font-weight: bold;">Usar abono activo</label>
+                            <label for="abonoActivo" style="display: block; margin-bottom: 5px; font-weight: bold;" data-i18n="usar_abono_activo">Usar abono activo</label>
                             <select id="abonoActivo" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;" disabled>
-                                <option value="">Inicie sesión para aplicar descuentos por abonos</option>
+                                <option value="" data-i18n="iniciar_sesion_abonos">Inicie sesión para aplicar descuentos por abonos</option>
                             </select>
                         
                         <?php else: ?>
                             
                             <?php if (!empty($abonos_usuario)): ?>
                                 <div class="form-group" style="padding: 15px; background: #eef2f7; border-radius: 8px; border: 1px solid #cce5ff;">
-                                    <label style="color: #0a2a66; font-weight: bold; display: block; margin-bottom: 5px;"><i class="fa-solid fa-ticket"></i> Aplicar un Abono de mi cuenta</label>
+                                    <label style="color: #0a2a66; font-weight: bold; display: block; margin-bottom: 5px;"><i class="fa-solid fa-ticket"></i> <span data-i18n="aplicar_abono_cuenta">Aplicar un Abono de mi cuenta</span></label>
                                     <select id="select-abono" name="id_abono_usado" onchange="recalcularPrecio()" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-                                        <option value="">No usar abono (Pagar precio normal)</option>
+                                        <option value="" data-i18n="no_usar_abono">No usar abono (Pagar precio normal)</option>
                                         <?php foreach ($abonos_usuario as $abono): ?>
                                             <option value="<?= $abono['id_abono'] ?>" data-tipo="<?= $abono['tipo'] ?>">
                                                 Abono <?= ucfirst(str_replace('_', ' ', $abono['tipo'])) ?> 
@@ -453,7 +456,7 @@ if ($id_pasajero_gestionado) {
                                 </div>
                             <?php else: ?>
                                 <p style="font-size: 0.9em; color: #666; padding: 10px; background: #f8f9fa; border-radius: 5px; border: 1px dashed #ccc;">
-                                    <i class="fa-solid fa-info-circle"></i> No tienes abonos activos para aplicar a esta compra.
+                                    <i class="fa-solid fa-info-circle"></i> <span data-i18n="no_abonos_activos">No tienes abonos activos para aplicar a esta compra.</span>
                                 </p>
                             <?php endif; ?>
 
@@ -462,17 +465,17 @@ if ($id_pasajero_gestionado) {
                     </div>
 
                 <div class="summary-box" style="margin-top: 25px; font-size: 1.2rem; background: #e9ecef; padding: 15px; border-radius: 8px; text-align: center;">
-                    <p style="margin: 0;">Total a pagar: <strong id="summaryFinalPrice" style="color: #0a2a66; font-size: 1.5rem;">0,00 €</strong></p>
+                    <p style="margin: 0;"><span data-i18n="total_pagar">Total a pagar</span>: <strong id="summaryFinalPrice" style="color: #0a2a66; font-size: 1.5rem;">0,00 €</strong></p>
                 </div>
 
-                <button id="btnPaso3" class="btn-pay-confirm" onclick="irAPaso(4)" style="margin-top: 15px; width: 100%;">Continuar al Pago Seguro</button>
+                <button id="btnPaso3" class="btn-pay-confirm" onclick="irAPaso(4)" style="margin-top: 15px; width: 100%;" data-i18n="continuar_pago_seguro">Continuar al Pago Seguro</button>
             </div>
         </section>
 
         <section id="sectionPayment" class="booking-section hidden">
             <div class="payment-container" style="max-width: 500px; margin: 0 auto;">
                 <div class="payment-header">
-                    <h3><i class="fa-regular fa-credit-card"></i> Datos de Pago</h3>
+                    <h3><i class="fa-regular fa-credit-card"></i> <span data-i18n="datos_pago">Datos de Pago</span></h3>
                     <div class="card-icons">
                         <i class="fa-brands fa-cc-visa"></i>
                         <i class="fa-brands fa-cc-mastercard"></i>
@@ -481,40 +484,41 @@ if ($id_pasajero_gestionado) {
                 
                 <form class="payment-form" onsubmit="event.preventDefault(); confirmarReserva();" autocomplete="off">
                     <div class="form-group full-width">
-                        <label for="cardHolder">Titular</label>
-                        <input type="text" id="cardHolder" required placeholder="Ej: Juan Pérez">
+                        <label for="cardHolder" data-i18n="titular">Titular</label>
+                        <input type="text" id="cardHolder" required placeholder="Ej: Juan Pérez" data-i18n="ej_juan_perez">
                         <span class="input-error" id="errCardHolder" style="display:none;"></span>
                     </div>
                     <div class="form-group full-width">
-                        <label for="cardNumber">Número de Tarjeta</label>
+                        <label for="cardNumber" data-i18n="numero_tarjeta">Número de Tarjeta</label>
                         <div class="input-icon">
-                            <input type="text" id="cardNumber" maxlength="19" required placeholder="1234 5678 9012 3456" inputmode="numeric">
+                            <input type="text" id="cardNumber" maxlength="19" required placeholder="1234 5678 9012 3456" data-i18n-placeholder="card_number_placeholder" inputmode="numeric">
                             <i class="fa-solid fa-lock" style="position: absolute; right: 10px; top: 12px; color: #ccc;"></i>
                         </div>
                         <span class="input-error" id="errCardNumber" style="display:none;"></span>
                     </div>
                     <div class="form-row" style="display: flex; gap: 15px;">
                         <div class="form-group expand">
-                            <label for="cardExpiry">Caducidad</label>
-                            <input type="text" id="cardExpiry" required placeholder="MM/AA" maxlength="5" inputmode="numeric">
+                            <label for="cardExpiry" data-i18n="caducidad">Caducidad</label>
+                            <input type="text" id="cardExpiry" required placeholder="MM/AA" data-i18n="mm_aa" maxlength="5" inputmode="numeric">
                             <span class="input-error" id="errCardExpiry" style="display:none;"></span>
                         </div>
                         <div class="form-group expand">
-                            <label for="cardCVV">CVV</label>
-                            <input type="password" id="cardCVV" required placeholder="Ej: 123" maxlength="3" inputmode="numeric">
+                            <label for="cardCVV" data-i18n="cvv">CVV</label>
+                            <input type="password" id="cardCVV" required placeholder="Ej: 123" data-i18n="ej_123" data-i18n-placeholder="cvv_placeholder" maxlength="3" inputmode="numeric">
                             <span class="input-error" id="errCardCVV" style="display:none;"></span>
                         </div>
                     </div>
                     <div class="summary-box" style="text-align: center; margin-top: 20px;">
-                        <p style="margin: 0; font-size: 1.2rem;">Importe final a cargar: <strong id="finalPaymentPrice" style="color: #17632A;">0,00 €</strong></p>
+                        <p style="margin: 0; font-size: 1.2rem;"><span data-i18n="importe_final_cargar">Importe final a cargar</span>: <strong id="finalPaymentPrice" style="color: #17632A;">0,00 €</strong></p>
                     </div>
-                    <button type="submit" class="btn-pay-confirm" style="margin-top: 15px; width: 100%;">Procesar Pago y Reservar</button>
+                    <button type="submit" class="btn-pay-confirm" style="margin-top: 15px; width: 100%;" data-i18n="procesar_pago_reservar">Procesar Pago y Reservar</button>
                 </form>
             </div>
         </section>
 
     </main>
 
+    <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
     <script src="js/compra.js"></script>
     <script>
     // --- Formato y validación de pago seguro ---
