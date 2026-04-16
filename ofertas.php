@@ -144,11 +144,11 @@ try {
                                 <div class="abono-icon" style="background-color: <?= htmlspecialchars($a['color']) ?>;">
                                     <i class="fa-solid <?= htmlspecialchars($a['icono']) ?>"></i>
                                 </div>
-                                <h3 class="abono-title"><?= htmlspecialchars($a['nombre']) ?></h3>
+                                <h3 class="abono-title js-i18n-abono-name" data-i18n-abono-code="<?= htmlspecialchars($a['tipo_codigo']) ?>"><?= htmlspecialchars($a['nombre']) ?></h3>
                             </div>
                             
                             <div class="abono-body">
-                                <p class="abono-desc">
+                                <p class="abono-desc js-i18n-abono-desc" data-i18n-abono-code="<?= htmlspecialchars($a['tipo_codigo']) ?>">
                                     <?= nl2br(htmlspecialchars($a['descripcion'])) ?>
                                 </p>
                             </div>

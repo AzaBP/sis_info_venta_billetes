@@ -273,6 +273,22 @@ document.addEventListener('DOMContentLoaded', () => {
             perfil_viaje_num: 'Viaje #{id}',
             perfil_incidencia: 'Incidencia',
             perfil_detalle: 'Detalle',
+            abono_nombre_weekend: 'Fin de semana',
+            abono_desc_weekend: 'Viajes ilimitados viernes a domingo',
+            abono_nombre_mensual_madrid: 'Mensual Madrid',
+            abono_desc_mensual_madrid: 'Viajes ilimitados en Madrid por 30 días',
+            abono_nombre_estudiante: 'Estudiante',
+            abono_desc_estudiante: 'Abono estudiante por 90 días',
+            abono_nombre_mensual_espana: 'Mensual España',
+            abono_desc_mensual_espana: 'Viajes ilimitados en toda España por 30 días',
+            abono_nombre_trimestral: 'Trimestral',
+            abono_desc_trimestral: 'Viajes ilimitados por 90 días',
+            abono_nombre_10_viajes: '10 viajes',
+            abono_desc_10_viajes: '10 viajes válidos por 60 días',
+            abono_nombre_20_viajes: '20 viajes',
+            abono_desc_20_viajes: '20 viajes válidos por 90 días',
+            abono_nombre_anual: 'Anual',
+            abono_desc_anual: 'Viajes ilimitados por 365 días',
             social_facebook: 'Facebook',
             social_twitter: 'Twitter',
             social_instagram: 'Instagram',
@@ -557,6 +573,22 @@ document.addEventListener('DOMContentLoaded', () => {
             perfil_viaje_num: 'Trip #{id}',
             perfil_incidencia: 'Incident',
             perfil_detalle: 'Detail',
+            abono_nombre_weekend: 'Weekend',
+            abono_desc_weekend: 'Unlimited travel from Friday to Sunday',
+            abono_nombre_mensual_madrid: 'Madrid Monthly',
+            abono_desc_mensual_madrid: 'Unlimited trips in Madrid for 30 days',
+            abono_nombre_estudiante: 'Student',
+            abono_desc_estudiante: 'Student pass for 90 days',
+            abono_nombre_mensual_espana: 'Spain Monthly',
+            abono_desc_mensual_espana: 'Unlimited trips across Spain for 30 days',
+            abono_nombre_trimestral: 'Quarterly',
+            abono_desc_trimestral: 'Unlimited trips for 90 days',
+            abono_nombre_10_viajes: '10 trips',
+            abono_desc_10_viajes: '10 trips valid for 60 days',
+            abono_nombre_20_viajes: '20 trips',
+            abono_desc_20_viajes: '20 trips valid for 90 days',
+            abono_nombre_anual: 'Yearly',
+            abono_desc_anual: 'Unlimited trips for 365 days',
             social_facebook: 'Facebook',
             social_twitter: 'Twitter',
             social_instagram: 'Instagram',
@@ -841,6 +873,22 @@ document.addEventListener('DOMContentLoaded', () => {
             perfil_viaje_num: 'Voyage #{id}',
             perfil_incidencia: 'Incident',
             perfil_detalle: 'Détail',
+            abono_nombre_weekend: 'Week-end',
+            abono_desc_weekend: 'Voyages illimités du vendredi au dimanche',
+            abono_nombre_mensual_madrid: 'Mensuel Madrid',
+            abono_desc_mensual_madrid: 'Voyages illimités à Madrid pendant 30 jours',
+            abono_nombre_estudiante: 'Étudiant',
+            abono_desc_estudiante: 'Abonnement étudiant valable 90 jours',
+            abono_nombre_mensual_espana: 'Mensuel Espagne',
+            abono_desc_mensual_espana: 'Voyages illimités dans toute l\'Espagne pendant 30 jours',
+            abono_nombre_trimestral: 'Trimestriel',
+            abono_desc_trimestral: 'Voyages illimités pendant 90 jours',
+            abono_nombre_10_viajes: '10 voyages',
+            abono_desc_10_viajes: '10 voyages valables 60 jours',
+            abono_nombre_20_viajes: '20 voyages',
+            abono_desc_20_viajes: '20 voyages valables 90 jours',
+            abono_nombre_anual: 'Annuel',
+            abono_desc_anual: 'Voyages illimités pendant 365 jours',
             social_facebook: 'Facebook',
             social_twitter: 'Twitter',
             social_instagram: 'Instagram',
@@ -1125,6 +1173,22 @@ document.addEventListener('DOMContentLoaded', () => {
             perfil_viaje_num: 'Reise #{id}',
             perfil_incidencia: 'Vorfall',
             perfil_detalle: 'Detail',
+            abono_nombre_weekend: 'Wochenende',
+            abono_desc_weekend: 'Unbegrenzte Fahrten von Freitag bis Sonntag',
+            abono_nombre_mensual_madrid: 'Monatlich Madrid',
+            abono_desc_mensual_madrid: 'Unbegrenzte Fahrten in Madrid für 30 Tage',
+            abono_nombre_estudiante: 'Student',
+            abono_desc_estudiante: 'Studentenabo für 90 Tage',
+            abono_nombre_mensual_espana: 'Monatlich Spanien',
+            abono_desc_mensual_espana: 'Unbegrenzte Fahrten in ganz Spanien für 30 Tage',
+            abono_nombre_trimestral: 'Vierteljährlich',
+            abono_desc_trimestral: 'Unbegrenzte Fahrten für 90 Tage',
+            abono_nombre_10_viajes: '10 Fahrten',
+            abono_desc_10_viajes: '10 Fahrten gültig für 60 Tage',
+            abono_nombre_20_viajes: '20 Fahrten',
+            abono_desc_20_viajes: '20 Fahrten gültig für 90 Tage',
+            abono_nombre_anual: 'Jährlich',
+            abono_desc_anual: 'Unbegrenzte Fahrten für 365 Tage',
             social_facebook: 'Facebook',
             social_twitter: 'Twitter',
             social_instagram: 'Instagram',
@@ -1157,6 +1221,16 @@ document.addEventListener('DOMContentLoaded', () => {
             (translations.es && (translations.es[key] || translations.es[normalizedKey])) ||
             null
         );
+    }
+
+    function normalizeDynamicKey(raw) {
+        return String(raw || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .replace(/[^a-z0-9_]/g, '_')
+            .replace(/_+/g, '_')
+            .replace(/^_+|_+$/g, '');
     }
 
     function applyTranslations() {
@@ -1198,6 +1272,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const destination = document.getElementById('destino');
         if (origin) origin.placeholder = lang === 'en' ? 'Origin' : lang === 'fr' ? 'Origine' : lang === 'de' ? 'Abfahrt' : 'Origen';
         if (destination) destination.placeholder = lang === 'en' ? 'Destination' : lang === 'fr' ? 'Destination' : lang === 'de' ? 'Ziel' : 'Destino';
+
+        // Traducciones dinámicas para contenido de BD (abonos por código)
+        document.querySelectorAll('.js-i18n-abono-name[data-i18n-abono-code]').forEach((el) => {
+            const code = normalizeDynamicKey(el.getAttribute('data-i18n-abono-code'));
+            const text = t(`abono_nombre_${code}`, lang);
+            if (text !== null) el.textContent = text;
+        });
+
+        document.querySelectorAll('.js-i18n-abono-desc[data-i18n-abono-code]').forEach((el) => {
+            const code = normalizeDynamicKey(el.getAttribute('data-i18n-abono-code'));
+            const text = t(`abono_desc_${code}`, lang);
+            if (text !== null) el.textContent = text;
+        });
     }
 
     function setLanguage(lang) {
