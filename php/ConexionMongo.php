@@ -4,8 +4,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class ConexionMongo {
     //private $uri = "mongodb://admin:admin@localhost:27017";
     //conexion en docker
-    private $uri = "mongodb://admin:admin@mongo:27017";
-    private $database = "trenesDB";
+    private $uri = "mongodb://admin:password123@mongo:27017/?authSource=admin";
+    private $database = "gestion_ferroviaria";
     private $client;
     private $db;
 

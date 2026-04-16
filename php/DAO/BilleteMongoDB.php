@@ -118,7 +118,8 @@ class BilleteMongoDB {
         return new Billete(
             (string)$documento['_id'],
             $documento['id_pasajero'] ?? null,
-            $documento['id_asiento'] ?? null,
+            $documento['id_viaje'] ?? null,
+            $documento['id_asiento'] ?? ($documento['numero_asiento'] ?? null),
             $documento['fecha_viaje'] ?? '',
             $documento['precio_pagado'] ?? 0.0,
             $documento['metodo_pago'] ?? '',
