@@ -1,28 +1,36 @@
 <?php
-session_start();
-header('Content-Type: application/json');
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
 ob_start();
+
+function responderJson(int $status, array $payload): void {
+    if (ob_get_length()) {
+        ob_clean();
+    }
+    if (!headers_sent()) {
+        http_response_code($status);
+        header('Content-Type: application/json');
+    }
+    echo json_encode($payload);
+    exit;
+}
 
 set_error_handler(static function ($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
 });
 
-require_once __DIR__ . '/Conexion.php';
-require_once __DIR__ . '/ConexionMongo.php';
-
-$usuario = $_SESSION['usuario'] ?? null;
-if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'pasajero') {
-    http_response_code(401);
-    if (ob_get_length()) {
-        ob_clean();
-    }
-    echo json_encode(['error' => 'Sesion no valida para pasajero']);
-    exit;
-}
-
 try {
+    session_start();
+    header('Content-Type: application/json');
+
+    require_once __DIR__ . '/Conexion.php';
+    require_once __DIR__ . '/ConexionMongo.php';
+
+    $usuario = $_SESSION['usuario'] ?? null;
+    if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'pasajero') {
+        responderJson(401, ['error' => 'Sesion no valida para pasajero']);
+    }
+
     $pdo = (new Conexion())->conectar();
     if (!$pdo) {
         throw new RuntimeException('Conexion SQL no disponible');
@@ -33,11 +41,7 @@ try {
     $idPasajero = (int)$stmtPasajero->fetchColumn();
 
     if ($idPasajero <= 0) {
-        if (ob_get_length()) {
-            ob_clean();
-        }
-        echo json_encode([]);
-        exit;
+        responderJson(200, []);
     }
 
     $mongo = new ConexionMongo();
@@ -70,11 +74,7 @@ try {
     }
 
     if (count($billetes) === 0) {
-        if (ob_get_length()) {
-            ob_clean();
-        }
-        echo json_encode([]);
-        exit;
+        responderJson(200, []);
     }
 
     $viajesPorId = [];
@@ -116,16 +116,9 @@ try {
         ];
     }
 
-    if (ob_get_length()) {
-        ob_clean();
-    }
-    echo json_encode($salida);
+    responderJson(200, $salida);
 } catch (Throwable $e) {
-    http_response_code(500);
-    if (ob_get_length()) {
-        ob_clean();
-    }
-    echo json_encode(['error' => $e->getMessage()]);
+    responderJson(500, ['error' => $e->getMessage()]);
 } finally {
     restore_error_handler();
 }
