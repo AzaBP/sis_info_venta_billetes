@@ -10,12 +10,15 @@ class BilleteMongoDB {
     public function __construct() {
         $this->conexion = new ConexionMongo();
         $db = $this->conexion->conectar();
-        $this->collection = $db->selectCollection("billetes");
+        $this->collection = $db ? $db->selectCollection("billetes") : null;
     }
 
     // INSERTAR
     public function insertar(Billete $billete) {
         try {
+            if (!$this->collection) {
+                throw new RuntimeException('Conexion Mongo no disponible');
+            }
             $resultado = $this->collection->insertOne($billete->toArray());
             return $resultado->getInsertedId();
         } catch (Exception $e) {
@@ -27,6 +30,9 @@ class BilleteMongoDB {
     // OBTENER POR ID
     public function obtenerPorId($id) {
         try {
+            if (!$this->collection) {
+                throw new RuntimeException('Conexion Mongo no disponible');
+            }
             $documento = $this->collection->findOne(['_id' => new MongoDB\BSON\ObjectId($id)]);
             if ($documento) {
                 return $this->documentoABillete($documento);
@@ -41,6 +47,9 @@ class BilleteMongoDB {
     // OBTENER TODOS
     public function obtenerTodos() {
         try {
+            if (!$this->collection) {
+                throw new RuntimeException('Conexion Mongo no disponible');
+            }
             $documentos = $this->collection->find();
             $billetes = [];
             
@@ -57,6 +66,9 @@ class BilleteMongoDB {
     // OBTENER POR PASAJERO
     public function obtenerPorPasajero($id_pasajero) {
         try {
+            if (!$this->collection) {
+                throw new RuntimeException('Conexion Mongo no disponible');
+            }
             $documentos = $this->collection->find(['id_pasajero' => $id_pasajero]);
             $billetes = [];
             
@@ -73,6 +85,9 @@ class BilleteMongoDB {
     // ACTUALIZAR
     public function actualizar($id, Billete $billete) {
         try {
+            if (!$this->collection) {
+                throw new RuntimeException('Conexion Mongo no disponible');
+            }
             $resultado = $this->collection->updateOne(
                 ['_id' => new MongoDB\BSON\ObjectId($id)],
                 ['$set' => $billete->toArray()]
@@ -87,6 +102,9 @@ class BilleteMongoDB {
     // ELIMINAR
     public function eliminar($id) {
         try {
+            if (!$this->collection) {
+                throw new RuntimeException('Conexion Mongo no disponible');
+            }
             $resultado = $this->collection->deleteOne(['_id' => new MongoDB\BSON\ObjectId($id)]);
             return $resultado->getDeletedCount() > 0;
         } catch (Exception $e) {
@@ -100,8 +118,6 @@ class BilleteMongoDB {
         return new Billete(
             (string)$documento['_id'],
             $documento['id_pasajero'] ?? null,
-            $documento['id_ruta'] ?? null,
-            $documento['id_tren'] ?? null,
             $documento['id_asiento'] ?? null,
             $documento['fecha_viaje'] ?? '',
             $documento['precio_pagado'] ?? 0.0,

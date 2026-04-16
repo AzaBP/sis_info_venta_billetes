@@ -5,6 +5,7 @@ class Billete {
     private $id_pasajero;
     private $id_viaje;
     private $id_asiento;
+    private $fecha_viaje;
     private $precio_pagado;
     private $metodo_pago;
     private $codigo_billete;
@@ -12,12 +13,14 @@ class Billete {
     private $fecha_compra;
 
     public function __construct($id_billete = null, $id_pasajero = null, $id_viaje = null, 
-                                $id_asiento = null, $precio_pagado = 0.0, $metodo_pago = '', 
-                                $codigo_billete = '', $estado = '', $fecha_compra = '') {
+                                $id_asiento = null, $fecha_viaje = '', $precio_pagado = 0.0, 
+                                $metodo_pago = '', $codigo_billete = '', $estado = '', 
+                                $fecha_compra = '') {
         $this->id_billete = $id_billete;
         $this->id_pasajero = $id_pasajero;
         $this->id_viaje = $id_viaje;
         $this->id_asiento = $id_asiento;
+        $this->fecha_viaje = $fecha_viaje;
         $this->precio_pagado = $precio_pagado;
         $this->metodo_pago = $metodo_pago;
         $this->codigo_billete = $codigo_billete;
@@ -40,6 +43,10 @@ class Billete {
 
     public function getIdAsiento() {
         return $this->id_asiento;
+    }
+
+    public function getFechaViaje() {
+        return $this->fecha_viaje;
     }
 
     public function getPrecioPagado() {
@@ -79,6 +86,10 @@ class Billete {
         $this->id_asiento = $id_asiento;
     }
 
+    public function setFechaViaje($fecha_viaje) {
+        $this->fecha_viaje = $fecha_viaje;
+    }
+
     public function setPrecioPagado($precio_pagado) {
         $this->precio_pagado = $precio_pagado;
     }
@@ -106,6 +117,7 @@ class Billete {
             'id_pasajero' => $this->id_pasajero,
             'id_viaje' => $this->id_viaje,
             'id_asiento' => $this->id_asiento,
+            'fecha_viaje' => $this->fecha_viaje,
             'precio_pagado' => $this->precio_pagado,
             'metodo_pago' => $this->metodo_pago,
             'codigo_billete' => $this->codigo_billete,
