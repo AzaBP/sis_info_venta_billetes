@@ -20,7 +20,7 @@ WORKDIR /var/www/html/
 
 # Copiamos primero la definición de dependencias para aprovechar cache y luego instalamos vendor/
 COPY composer.json composer.lock ./
-RUN composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
+RUN composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader --ignore-platform-req=ext-mongodb
 
 # Copiamos el resto del proyecto
 COPY . /var/www/html/
