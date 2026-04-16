@@ -14,6 +14,30 @@ let estado = {
     maxVagones: 3
 };
 
+function tr(key, fallback, params = {}) {
+    const i18n = window.trainwebI18n;
+    let text = (i18n && typeof i18n.t === 'function') ? i18n.t(key) : null;
+    if (!text) text = fallback;
+    Object.keys(params).forEach((k) => {
+        text = text.replace(`{${k}}`, params[k]);
+    });
+    return text;
+}
+
+function localizeAbonoOptions() {
+    const select = document.getElementById('select-abono');
+    if (!select) return;
+
+    Array.from(select.options).forEach((opt, idx) => {
+        if (idx === 0) return;
+        let label = opt.textContent || '';
+        label = label.replace(/^\s*Abono\s+/i, `${tr('abono_label', 'Abono')} `);
+        label = label.replace(/\((\d+)\s+viajes rest\.\)/i, (_m, n) => `(${n} ${tr('viajes_rest_short', 'viajes rest.')})`);
+        label = label.replace(/\(Ilimitado\)/i, `(${tr('ilimitado', 'Ilimitado')})`);
+        opt.textContent = label.trim();
+    });
+}
+
 // ================= PASO 1: SELECCIÓN DE TREN =================
 function seleccionarTren(id_viaje, tipo_tren, precio) {
     if(typeof tipo_tren === 'number') {
@@ -165,8 +189,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectPromo = document.getElementById('codigoPromo');
     if (selectPromo) selectPromo.addEventListener('change', calcularPrecioFinal);
     
-    const selectAbono = document.getElementById('abonoActivo');
+    const selectAbono = document.getElementById('abonoActivo') || document.getElementById('select-abono');
     if (selectAbono) selectAbono.addEventListener('change', calcularPrecioFinal);
+
+    localizeAbonoOptions();
 
     // // 3. Cargar abonos del usuario logueado usando tu API original
     // fetch('php/abonos_usuario_api.php')
@@ -194,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // ================= PASO 3: RESUMEN Y CÁLCULO DINÁMICO =================
 function cargarDatosResumen() {
     document.getElementById('summaryTrain').textContent = "Tren #" + String(viajeSeleccionado).padStart(4, '0');
-    document.getElementById('summarySeat').textContent = `Vagón ${estado.vagonActual} - Asiento ${asientoSeleccionadoNum}`;
+    document.getElementById('summarySeat').textContent = `${tr('vagon', 'Vagón')} ${estado.vagonActual} - ${tr('asiento', 'Asiento')} ${asientoSeleccionadoNum}`;
     document.getElementById('summaryBasePrice').textContent = precioCalculadoAsiento.toFixed(2) + " €";
     
     // Ejecutar por si hay opciones preseleccionadas
@@ -212,7 +238,7 @@ function calcularPrecioFinal() {
     const codigoPromo = selectPromo.value;
 
     // Leer datos del abono
-    const selectAbono = document.getElementById('abonoActivo');
+    const selectAbono = document.getElementById('abonoActivo') || document.getElementById('select-abono');
     const abonoActivo = selectAbono ? selectAbono.value : "";
 
     msg.textContent = "";
@@ -220,7 +246,7 @@ function calcularPrecioFinal() {
     // PRIORIDAD 1: Si selecciona Abono, el viaje es gratis
     if (abonoActivo !== "") {
         descuento = precioCalculadoAsiento; 
-        msg.textContent = "¡Abono aplicado! El viaje se descontará de tu saldo.";
+        msg.textContent = tr('abono_aplicado', '¡Abono aplicado! El viaje se descontará de tu saldo.');
         msg.style.color = "#17632A"; 
         
         // Desmarcamos la promo si elige abono para no duplicar/confundir
@@ -229,7 +255,7 @@ function calcularPrecioFinal() {
     // PRIORIDAD 2: Si elige una promoción de la Base de Datos
     else if (codigoPromo !== "") {
         descuento = precioCalculadoAsiento * (porcentajeDescuento / 100);
-        msg.textContent = `Promoción aplicada: -${porcentajeDescuento}%`;
+        msg.textContent = tr('promo_aplicada', 'Promoción aplicada: -{pct}%', { pct: porcentajeDescuento });
         msg.style.color = "#17632A";
     }
 
@@ -240,7 +266,9 @@ function calcularPrecioFinal() {
     // Cambiar texto del botón si el importe es 0€
     const btnPaso3 = document.getElementById('btnPaso3');
     if (btnPaso3) {
-        btnPaso3.textContent = precioFinalConDescuento === 0 ? "Confirmar Reserva Gratis" : "Continuar al Pago Seguro";
+        btnPaso3.textContent = precioFinalConDescuento === 0
+            ? tr('confirmar_reserva_gratis', 'Confirmar Reserva Gratis')
+            : tr('continuar_pago_seguro', 'Continuar al Pago Seguro');
     }
 }
 
@@ -248,7 +276,7 @@ function calcularPrecioFinal() {
 function confirmarReserva() {
     // Validación básica antes de enviar
     if (!viajeSeleccionado || !asientoSeleccionadoNum) {
-        alert('Faltan datos para la reserva.');
+        alert(tr('faltan_datos_reserva', 'Faltan datos para la reserva.'));
         return;
     }
 
@@ -268,15 +296,16 @@ function confirmarReserva() {
     .then(res => res.json())
     .then(data => {
         if (data.exito) {
-            alert('¡Reserva realizada con éxito!\nID de reserva: ' + data.id_mongo);
+            alert(tr('reserva_exito', '¡Reserva realizada con éxito!\nID de reserva: {id}', { id: data.id_mongo }));
             window.location.href = 'index.php';
         } else {
-            alert('Error al reservar: ' + (data.error || 'Error desconocido.'));
+            const err = data.error || tr('error_desconocido', 'Error desconocido.');
+            alert(tr('error_reservar', 'Error al reservar: {error}', { error: err }));
             if (btn) btn.disabled = false;
         }
     })
     .catch(err => {
-        alert('Error de red al reservar.');
+        alert(tr('error_red_reservar', 'Error de red al reservar.'));
         if (btn) btn.disabled = false;
     });
 }

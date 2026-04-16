@@ -89,16 +89,16 @@ try {
     </header>
 
     <div class="destination-hero">
-        <h1>Viajes disponibles a <?php echo htmlspecialchars($destinoBuscado); ?></h1>
-        <p>Encuentra los mejores precios para tu próximo destino.</p>
+        <h1><span data-i18n="rutas_viajes_disponibles_a">Viajes disponibles a</span> <?php echo htmlspecialchars($destinoBuscado); ?></h1>
+        <p data-i18n="rutas_mejores_precios">Encuentra los mejores precios para tu próximo destino.</p>
     </div>
 
     <main>
         <?php if (empty($viajes)): ?>
             <div class="no-results">
                 <i class="fa-solid fa-circle-info fa-3x"></i>
-                <p>Lo sentimos, no hay viajes programados a <?php echo htmlspecialchars($destinoBuscado); ?> en este momento.</p>
-                <a href="index.php" class="btn-login" style="display:inline-block; margin-top:20px;">Volver al inicio</a>
+                <p><span data-i18n="rutas_no_viajes_a">Lo sentimos, no hay viajes programados a</span> <?php echo htmlspecialchars($destinoBuscado); ?> <span data-i18n="rutas_en_este_momento">en este momento.</span></p>
+                <a href="index.php" class="btn-login" style="display:inline-block; margin-top:20px;" data-i18n="volver_inicio">Volver al inicio</a>
             </div>
         <?php else: ?>
             <div class="trips-grid">
@@ -109,12 +109,12 @@ try {
                             <span class="trip-price"><?php echo number_format($v['precio'], 2); ?> €</span>
                         </div>
                         <hr style="margin: 15px 0; opacity: 0.2;">
-                        <p><strong>Origen:</strong> <?php echo htmlspecialchars($v['origen']); ?></p>
-                        <p><strong>Salida:</strong> <?php echo substr($v['hora_salida'], 0, 5); ?> h</p>
-                        <p><strong>Tren:</strong> <?php echo htmlspecialchars($v['tren']); ?></p>
+                        <p><strong data-i18n="origen">Origen</strong>: <?php echo htmlspecialchars($v['origen']); ?></p>
+                        <p><strong data-i18n="salida_label">Salida</strong>: <?php echo substr($v['hora_salida'], 0, 5); ?> h</p>
+                        <p><strong data-i18n="tren_label">Tren</strong>: <?php echo htmlspecialchars($v['tren']); ?></p>
                         <button onclick="window.location.href='compra.php?id=<?php echo $v['id_viaje']; ?>'" 
                                 style="width:100%; padding:10px; margin-top:15px; background:#0a2a66; color:white; border:none; border-radius:5px; cursor:pointer;">
-                            Reservar billete
+                            <span data-i18n="reservar_billete">Reservar billete</span>
                         </button>
                     </div>
                 <?php endforeach; ?>

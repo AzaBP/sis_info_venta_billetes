@@ -110,7 +110,7 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
                 <input type="hidden" name="precio" value="<?= $abono['precio'] ?>">
 
                 <div class="payment-header">
-                    <h3><i class="fa-solid fa-credit-card"></i> Detalles de Pago</h3>
+                    <h3><i class="fa-solid fa-credit-card"></i> <span data-i18n="detalles_pago">Detalles de Pago</span></h3>
                     <div class="card-icons">
                         <i class="fa-brands fa-cc-visa brand-visa"></i>
                         <i class="fa-brands fa-cc-mastercard brand-mastercard"></i>
@@ -118,28 +118,28 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
                 </div>
 
                 <div class="form-group">
-                    <label>Titular de la tarjeta</label>
-                    <input type="text" name="titular" placeholder="Nombre completo" required>
+                    <label data-i18n="titular_tarjeta">Titular de la tarjeta</label>
+                    <input type="text" name="titular" placeholder="Nombre completo" data-i18n="nombre_completo" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Número de tarjeta</label>
+                    <label data-i18n="numero_tarjeta">Número de tarjeta</label>
                     <input type="text" name="tarjeta" placeholder="0000 0000 0000 0000" maxlength="16" required>
                 </div>
 
                 <div style="display: flex; gap: 15px;">
                     <div class="form-group expand">
-                        <label>Caducidad</label>
-                        <input type="text" name="caducidad" placeholder="MM/AA" maxlength="5" required>
+                        <label data-i18n="caducidad">Caducidad</label>
+                        <input type="text" name="caducidad" placeholder="MM/AA" data-i18n="mm_aa" maxlength="5" required>
                     </div>
                     <div class="form-group expand">
-                        <label>CVV</label>
+                        <label data-i18n="cvv">CVV</label>
                         <input type="password" name="cvv" placeholder="123" maxlength="3" required>
                     </div>
                 </div>
 
                 <button type="submit" class="btn-pay-confirm" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1rem; background: #0a2a66; color: white; border: none; border-radius: 6px; cursor: pointer;">
-                    Pagar <?= $precio_formateado ?>
+                    <span data-i18n="pagar">Pagar</span> <?= $precio_formateado ?>
                 </button>
             </form>
         </div>

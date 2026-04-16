@@ -127,15 +127,15 @@ try {
 
     <main class="offers-main">
         <div class="page-header">
-            <h1 data-i18n="abonos_promociones">Descubre Nuestras Ofertas</h1>
-            <p data-i18n="footer_descripcion">Ahorra en tus viajes con nuestros abonos y promociones exclusivas.</p>
+            <h1 data-i18n="ofertas_h1">Descubre Nuestras Ofertas</h1>
+            <p data-i18n="ofertas_desc">Ahorra en tus viajes con nuestros abonos y promociones exclusivas.</p>
         </div>
 
         <section>
-            <h2 class="section-title"><i class="fa-solid fa-address-card"></i> Catálogo de Abonos</h2>
+            <h2 class="section-title"><i class="fa-solid fa-address-card"></i> <span data-i18n="catalogo_abonos">Catálogo de Abonos</span></h2>
             <div id="abonos-container" class="grid-container">
                 <?php if (empty($abonos)): ?>
-                    <p style="color: #666;">No hay abonos a la venta en este momento.</p>
+                    <p style="color: #666;" data-i18n="no_abonos_venta">No hay abonos a la venta en este momento.</p>
                 <?php else: ?>
                     <?php foreach ($abonos as $a): ?>
                         <div class="abono-card" style="border-top: 5px solid <?= htmlspecialchars($a['color']) ?>;">
@@ -154,12 +154,12 @@ try {
                             </div>
 
                             <div class="abono-price-box">
-                                <span style="display:block; font-size: 0.85rem; color:#666; margin-bottom: 5px;">Precio final</span>
+                                <span style="display:block; font-size: 0.85rem; color:#666; margin-bottom: 5px;" data-i18n="precio_final">Precio final</span>
                                 <div class="abono-price"><?= number_format($a['precio'], 2, ',', '.') ?> €</div>
                             </div>
                             
                             <a href="comprar_abono.php?tipo=<?= $a['tipo_codigo'] ?>" class="btn-action btn-buy">
-                                <i class="fa-solid fa-cart-shopping"></i> Comprar Abono
+                                <i class="fa-solid fa-cart-shopping"></i> <span data-i18n="comprar_abono">Comprar Abono</span>
                             </a>
                         </div>
                     <?php endforeach; ?>
@@ -168,29 +168,29 @@ try {
         </section>
 
         <section>
-            <h2 class="section-title"><i class="fa-solid fa-tags"></i> Códigos Promocionales</h2>
+            <h2 class="section-title"><i class="fa-solid fa-tags"></i> <span data-i18n="codigos_promocionales">Códigos Promocionales</span></h2>
             <div id="promociones-container" class="grid-container">
                 <?php if (empty($promociones)): ?>
-                    <p style="color: #666;">No hay promociones disponibles actualmente.</p>
+                    <p style="color: #666;" data-i18n="no_promociones_disponibles">No hay promociones disponibles actualmente.</p>
                 <?php else: ?>
                     <?php foreach ($promociones as $p): ?>
                         <div class="promo-card">
-                            <h3 style="margin-top:0; color:#333;">Cupón Descuento</h3>
+                            <h3 style="margin-top:0; color:#333;" data-i18n="cupon_descuento">Cupón Descuento</h3>
                             
                             <div class="descuento">-<?= (float)$p['descuento_porcentaje'] ?>%</div>
                             <div class="codigo" id="codigo-<?= $p['codigo'] ?>"><?= htmlspecialchars($p['codigo']) ?></div>
                             
                             <div class="info-extra">
-                                <span><i class="fa-regular fa-calendar-xmark"></i> Válido hasta: <strong><?= date('d/m/Y', strtotime($p['fecha_fin'])) ?></strong></span>
+                                <span><i class="fa-regular fa-calendar-xmark"></i> <span data-i18n="valido_hasta">Válido hasta</span>: <strong><?= date('d/m/Y', strtotime($p['fecha_fin'])) ?></strong></span>
                                 <?php if (!empty($p['usos_maximos'])): ?>
-                                    <span><i class="fa-solid fa-users"></i> Usos restantes: <strong><?= $p['usos_maximos'] - $p['usos_actuales'] ?></strong> de <?= $p['usos_maximos'] ?></span>
+                                    <span><i class="fa-solid fa-users"></i> <span data-i18n="usos_restantes">Usos restantes</span>: <strong><?= $p['usos_maximos'] - $p['usos_actuales'] ?></strong> <span data-i18n="de">de</span> <?= $p['usos_maximos'] ?></span>
                                 <?php else: ?>
-                                    <span><i class="fa-solid fa-infinity"></i> Usos ilimitados</span>
+                                    <span><i class="fa-solid fa-infinity"></i> <span data-i18n="usos_ilimitados">Usos ilimitados</span></span>
                                 <?php endif; ?>
                             </div>
                             
                             <button class="btn-action btn-copy" onclick="copyToClipboard('<?= $p['codigo'] ?>')">
-                                <i class="fa-regular fa-copy"></i> Copiar Código
+                                <i class="fa-regular fa-copy"></i> <span data-i18n="copiar_codigo">Copiar Código</span>
                             </button>
                         </div>
                     <?php endforeach; ?>
@@ -207,7 +207,13 @@ try {
     <script>
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert("¡Código " + text + " copiado al portapapeles! Úsalo en el proceso de compra.");
+                const i18n = window.trainwebI18n;
+                const template = i18n && i18n.t ? i18n.t('codigo_copiado_msg') : null;
+                if (template) {
+                    alert(template.replace('{code}', text));
+                } else {
+                    alert("¡Código " + text + " copiado al portapapeles! Úsalo en el proceso de compra.");
+                }
             }).catch(err => {
                 console.error('Error al copiar: ', err);
             });
