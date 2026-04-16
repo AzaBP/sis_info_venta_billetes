@@ -36,4 +36,15 @@ class ConexionMongo {
     }
 }
 
+// Mensaje de verificación solo si se accede directamente desde el navegador
+if (basename(__FILE__) == basename($_SERVER['SCRIPT_FILENAME'])) {
+    $conexion = new ConexionMongo();
+    $db = $conexion->conectar();
+    if ($db) {
+        echo "<p>Conexión a MongoDB exitosa.</p>";
+    } else {
+        echo "<p>Error al conectar a MongoDB.</p>";
+    }
+}
+
 ?>
