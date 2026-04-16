@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     pkg-config \
     && docker-php-ext-install pdo pdo_pgsql pgsql \
-    && pecl install mongodb-1.15.2 \
+    && pecl install mongodb \
     && docker-php-ext-enable mongodb
 
 # Habilitamos el mod_rewrite de Apache (muy útil para URLs amigables o frameworks)
