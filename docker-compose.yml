@@ -65,8 +65,8 @@ services:
     depends_on:
       - postgres
       - mongo
-    volumes:
-      - ./:/var/www/html/   # <--- Fíjate en el guion, esto es el "array" que pedía
+    # En despliegue de servidor no montamos el proyecto para no sobrescribir vendor/
+    # generado en la imagen por Composer.
 
 volumes:
   datos_postgres:
