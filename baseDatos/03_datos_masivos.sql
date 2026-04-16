@@ -153,21 +153,20 @@ INSERT INTO VIAJE (id_vendedor, id_ruta, id_tren, id_maquinista, fecha, hora_sal
 -- 11. ASIENTOS (para cada viaje según capacidad del tren)
 -- ================================================
 INSERT INTO ASIENTO (id_tren, numero_asiento, clase, estado)
-SELECT id_tren, n, CASE WHEN n <= 10 THEN 'primera' ELSE 'segunda' END, 'disponible'
-FROM TREN, generate_series(1, 100) AS n;
+SELECT
+	t.id_tren,
+	((t.id_tren - 1) * 100) + s.n AS numero_asiento,
+	CASE WHEN s.n <= 10 THEN 'primera' ELSE 'segunda' END,
+	'disponible'
+FROM TREN t
+CROSS JOIN generate_series(1, 100) AS s(n)
+ON CONFLICT (numero_asiento) DO NOTHING;
 
 -- ================================================
--- 12. ABONOS
+-- 12. ABONOS DE USUARIO
 -- ================================================
-INSERT INTO ABONO (id_pasajero, tipo, fecha_inicio, fecha_fin, viajes_totales, viajes_restantes) VALUES
-((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'juan@trenes.com')), 'MENSUAL_MADRID', NOW() - INTERVAL '20 days', NOW() + INTERVAL '10 days', 30, 15),
-((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'maria@trenes.com')), 'MENSUAL_ESPAÑA', NOW() - INTERVAL '25 days', NOW() + INTERVAL '5 days', 30, 25),
-((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'carlos@trenes.com')), 'TRIMESTRAL', NOW() - INTERVAL '45 days', NOW() + INTERVAL '45 days', 90, 50),
-((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'ana@trenes.com')), 'ANUAL', NOW() - INTERVAL '150 days', NOW() + INTERVAL '215 days', 365, 200),
-((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'juan@trenes.com')), '10_VIAJES', NOW() - INTERVAL '30 days', NOW() + INTERVAL '30 days', 10, 7),
-((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'maria@trenes.com')), '20_VIAJES', NOW() - INTERVAL '60 days', NOW() + INTERVAL '30 days', 20, 12),
-((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'carlos@trenes.com')), 'WEEKEND', NOW() - INTERVAL '2 days', NOW() + INTERVAL '5 days', 8, 8),
-((SELECT id_pasajero FROM PASAJERO WHERE id_usuario = (SELECT id_usuario FROM USUARIO WHERE email = 'ana@trenes.com')), 'ESTUDIANTE', NOW() - INTERVAL '80 days', NOW() + INTERVAL '10 days', 90, 30);
+-- En esta BD solo se usa el catálogo TIPO_ABONO para ofertas.
+-- No se insertan compras en una tabla ABONO.
 
 -- ================================================
 -- 13. PROMOCIONES
@@ -213,8 +212,6 @@ UNION ALL
 SELECT 'VIAJES', COUNT(*) FROM VIAJE
 UNION ALL
 SELECT 'ASIENTOS', COUNT(*) FROM ASIENTO
-UNION ALL
-SELECT 'ABONOS', COUNT(*) FROM ABONO
 UNION ALL
 SELECT 'PROMOCIONES', COUNT(*) FROM PROMOCION
 UNION ALL
