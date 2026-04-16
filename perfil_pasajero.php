@@ -144,19 +144,19 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                 <nav class="sidebar-nav" aria-label="Apartados del perfil">
                     <button class="sidebar-link active" data-target="panel-datos" type="button">
                         <i class="fa-regular fa-id-card"></i>
-                        <span>Datos personales</span>
+                        <span data-i18n="perfil_datos_personales">Datos personales</span>
                     </button>
                     <button class="sidebar-link" data-target="panel-bonos" type="button">
                         <i class="fa-solid fa-ticket"></i>
-                        <span>Mis bonos</span>
+                        <span data-i18n="perfil_mis_bonos">Mis bonos</span>
                     </button>
                     <button class="sidebar-link" data-target="panel-viajes" type="button">
                         <i class="fa-solid fa-train-subway"></i>
-                        <span>Mis viajes y billetes</span>
+                        <span data-i18n="perfil_mis_viajes_billetes">Mis viajes y billetes</span>
                     </button>
                     <button class="sidebar-link" data-target="panel-config" type="button">
                         <i class="fa-solid fa-gear"></i>
-                        <span>Configuracion</span>
+                        <span data-i18n="perfil_configuracion">Configuracion</span>
                     </button>
                 </nav>
             </aside>
@@ -164,49 +164,49 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
             <section class="perfil-content">
                 <div class="content-panel active" id="panel-datos">
                     <div class="panel-header">
-                        <h2>Datos personales</h2>
-                        <p>Consulta tu informacion de cuenta y facturacion.</p>
+                        <h2 data-i18n="perfil_datos_personales">Datos personales</h2>
+                        <p data-i18n="perfil_consulta_info">Consulta tu informacion de cuenta y facturacion.</p>
                     </div>
 
                     <div class="info-grid">
                         <article class="info-card">
-                            <label>Nombre</label>
+                            <label data-i18n="perfil_nombre">Nombre</label>
                             <strong><?php echo htmlspecialchars($perfil['nombre'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
                         </article>
                         <article class="info-card">
-                            <label>Apellidos</label>
+                            <label data-i18n="perfil_apellidos">Apellidos</label>
                             <strong><?php echo htmlspecialchars($perfil['apellido'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
                         </article>
                         <article class="info-card">
-                            <label>Documento</label>
+                            <label data-i18n="perfil_documento">Documento</label>
                             <strong><?php echo htmlspecialchars($perfil['numero_documento'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
                         </article>
                         <article class="info-card">
-                            <label>Fecha de nacimiento</label>
+                            <label data-i18n="perfil_fecha_nacimiento">Fecha de nacimiento</label>
                             <strong><?php echo htmlspecialchars($fechaNacimientoVista, ENT_QUOTES, 'UTF-8'); ?></strong>
                         </article>
                         <article class="info-card">
-                            <label>Email</label>
+                            <label data-i18n="perfil_email">Email</label>
                             <strong><?php echo htmlspecialchars($perfil['email'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
                         </article>
                         <article class="info-card">
-                            <label>Telefono</label>
+                            <label data-i18n="perfil_telefono">Telefono</label>
                             <strong><?php echo htmlspecialchars($perfil['telefono'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
                         </article>
                         <article class="info-card info-card-wide">
-                            <label>Direccion</label>
+                            <label data-i18n="perfil_direccion">Direccion</label>
                             <strong><?php echo htmlspecialchars($perfil['calle'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
                         </article>
                         <article class="info-card">
-                            <label>Ciudad</label>
+                            <label data-i18n="perfil_ciudad">Ciudad</label>
                             <strong><?php echo htmlspecialchars($perfil['ciudad'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
                         </article>
                         <article class="info-card">
-                            <label>Codigo postal</label>
+                            <label data-i18n="perfil_codigo_postal">Codigo postal</label>
                             <strong><?php echo htmlspecialchars($perfil['codigo_postal'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
                         </article>
                         <article class="info-card">
-                            <label>Pais</label>
+                            <label data-i18n="perfil_pais">Pais</label>
                             <strong><?php echo htmlspecialchars($perfil['pais'] ?: '-', ENT_QUOTES, 'UTF-8'); ?></strong>
                         </article>
                     </div>
@@ -214,39 +214,39 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
 
                 <div class="content-panel" id="panel-bonos" hidden>
                     <div class="panel-header">
-                        <h2>Mis bonos</h2>
-                        <p>Revisa tus abonos activos, caducados y viajes restantes.</p>
+                        <h2 data-i18n="perfil_mis_bonos">Mis bonos</h2>
+                        <p data-i18n="perfil_bonos_desc">Revisa tus abonos activos, caducados y viajes restantes.</p>
                     </div>
                     <div id="abonos-list" class="cards-grid"></div>
                 </div>
 
                 <div class="content-panel" id="panel-viajes" hidden>
                     <div class="panel-header">
-                        <h2>Mis viajes y billetes</h2>
-                        <p>Billetes comprados y avisos que afectan a tus trayectos.</p>
+                        <h2 data-i18n="perfil_mis_viajes_billetes">Mis viajes y billetes</h2>
+                        <p data-i18n="perfil_viajes_desc">Billetes comprados y avisos que afectan a tus trayectos.</p>
                     </div>
 
-                    <h3 class="section-subtitle">Viajes proximos</h3>
+                    <h3 class="section-subtitle" data-i18n="perfil_viajes_proximos">Viajes proximos</h3>
                     <div id="viajes-proximos-list" class="cards-grid"></div>
 
-                    <h3 class="section-subtitle">Viajes finalizados</h3>
+                    <h3 class="section-subtitle" data-i18n="perfil_viajes_finalizados">Viajes finalizados</h3>
                     <div id="viajes-finalizados-list" class="cards-grid"></div>
 
-                    <h3 class="section-subtitle">Incidencias de viaje</h3>
+                    <h3 class="section-subtitle" data-i18n="perfil_incidencias_viaje">Incidencias de viaje</h3>
                     <div id="incidencias-viaje" class="cards-grid"></div>
                 </div>
 
                 <div class="content-panel" id="panel-config" hidden>
                     <div class="panel-header">
-                        <h2>Configuracion</h2>
-                        <p>Gestiona notificaciones, datos de perfil y seguridad.</p>
+                        <h2 data-i18n="perfil_configuracion">Configuracion</h2>
+                        <p data-i18n="perfil_config_desc">Gestiona notificaciones, datos de perfil y seguridad.</p>
                     </div>
 
                     <div class="profile-panel accordion-wrapper">
                         <div class="accordion-item">
                             <div class="accordion-header">
                                 <div class="header-title">
-                                    <i class="fa-regular fa-bell"></i> Preferencias de avisos
+                                    <i class="fa-regular fa-bell"></i> <span data-i18n="perfil_preferencias_avisos">Preferencias de avisos</span>
                                 </div>
                                 <i class="fa-solid fa-chevron-down arrow-icon"></i>
                             </div>
@@ -255,8 +255,8 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                                     <p id="config-status-notificaciones" class="config-status" aria-live="polite"></p>
                                     <div class="notification-option">
                                         <div class="notif-text">
-                                            <strong>Avisos de viaje</strong>
-                                            <p>Retrasos, cambios de via e incidencias.</p>
+                                            <strong data-i18n="perfil_avisos_viaje">Avisos de viaje</strong>
+                                            <p data-i18n="perfil_avisos_viaje_desc">Retrasos, cambios de via e incidencias.</p>
                                         </div>
                                         <label class="switch">
                                             <input type="checkbox" id="notif_viaje" <?php echo $notificacionesViaje ? 'checked' : ''; ?>>
@@ -266,8 +266,8 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                                     <hr class="trip-separator">
                                     <div class="notification-option">
                                         <div class="notif-text">
-                                            <strong>Ofertas comerciales</strong>
-                                            <p>Promociones exclusivas y descuentos.</p>
+                                            <strong data-i18n="perfil_ofertas_comerciales">Ofertas comerciales</strong>
+                                            <p data-i18n="perfil_ofertas_desc">Promociones exclusivas y descuentos.</p>
                                         </div>
                                         <label class="switch">
                                             <input type="checkbox" id="notif_ofertas" <?php echo $notificacionesOfertas ? 'checked' : ''; ?>>
@@ -275,7 +275,7 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                                         </label>
                                     </div>
                                     <div class="form-full">
-                                        <button type="button" class="btn-primary" id="btn-guardar-notificaciones">Guardar preferencias</button>
+                                        <button type="button" class="btn-primary" id="btn-guardar-notificaciones" data-i18n="perfil_guardar_preferencias">Guardar preferencias</button>
                                     </div>
                                 </div>
                             </div>
@@ -284,7 +284,7 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                         <div class="accordion-item">
                             <div class="accordion-header">
                                 <div class="header-title">
-                                    <i class="fa-solid fa-user-pen"></i> Modificar datos personales
+                                    <i class="fa-solid fa-user-pen"></i> <span data-i18n="perfil_modificar_datos">Modificar datos personales</span>
                                 </div>
                                 <i class="fa-solid fa-chevron-down arrow-icon"></i>
                             </div>
@@ -292,47 +292,47 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                                 <form class="form-grid" id="form-datos-perfil">
                                     <p id="config-status-datos" class="config-status full-width" aria-live="polite"></p>
                                     <div class="form-group">
-                                        <label>Nombre</label>
+                                        <label data-i18n="perfil_nombre">Nombre</label>
                                         <input type="text" name="nombre" value="<?php echo htmlspecialchars($perfil['nombre'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" required>
                                     </div>
                                     <div class="form-group">
-                                        <label>Apellidos</label>
+                                        <label data-i18n="perfil_apellidos">Apellidos</label>
                                         <input type="text" name="apellido" value="<?php echo htmlspecialchars($perfil['apellido'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" required>
                                     </div>
                                     <div class="form-group">
-                                        <label>Documento (DNI/NIE)</label>
+                                        <label data-i18n="perfil_documento_dni">Documento (DNI/NIE)</label>
                                         <input type="text" value="<?php echo htmlspecialchars($perfil['numero_documento'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>Fecha de nacimiento</label>
+                                        <label data-i18n="perfil_fecha_nacimiento">Fecha de nacimiento</label>
                                         <input type="date" name="fecha_nacimiento" value="<?php echo htmlspecialchars($fechaNacimientoInput, ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                                     </div>
                                     <div class="form-group">
-                                        <label>Email de contacto</label>
+                                        <label data-i18n="perfil_email_contacto">Email de contacto</label>
                                         <input type="email" name="email" value="<?php echo htmlspecialchars($perfil['email'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input" required>
                                     </div>
                                     <div class="form-group">
-                                        <label>Telefono movil</label>
+                                        <label data-i18n="perfil_telefono_movil">Telefono movil</label>
                                         <input type="tel" name="telefono" value="<?php echo htmlspecialchars($perfil['telefono'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                                     </div>
                                     <div class="form-group full-width">
-                                        <label>Direccion</label>
+                                        <label data-i18n="perfil_direccion">Direccion</label>
                                         <input type="text" name="calle" value="<?php echo htmlspecialchars($perfil['calle'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                                     </div>
                                     <div class="form-group">
-                                        <label>Ciudad</label>
+                                        <label data-i18n="perfil_ciudad">Ciudad</label>
                                         <input type="text" name="ciudad" value="<?php echo htmlspecialchars($perfil['ciudad'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                                     </div>
                                     <div class="form-group">
-                                        <label>Codigo postal</label>
+                                        <label data-i18n="perfil_codigo_postal">Codigo postal</label>
                                         <input type="text" name="codigo_postal" value="<?php echo htmlspecialchars($perfil['codigo_postal'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                                     </div>
                                     <div class="form-group">
-                                        <label>Pais</label>
+                                        <label data-i18n="perfil_pais">Pais</label>
                                         <input type="text" name="pais" value="<?php echo htmlspecialchars($perfil['pais'], ENT_QUOTES, 'UTF-8'); ?>" class="form-input">
                                     </div>
                                     <div class="form-full">
-                                        <button type="submit" class="btn-primary" id="btn-guardar-datos">Guardar cambios</button>
+                                        <button type="submit" class="btn-primary" id="btn-guardar-datos" data-i18n="perfil_guardar_cambios">Guardar cambios</button>
                                     </div>
                                 </form>
                             </div>
@@ -341,7 +341,7 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                         <div class="accordion-item">
                             <div class="accordion-header">
                                 <div class="header-title">
-                                    <i class="fa-solid fa-lock"></i> Seguridad y contrasena
+                                    <i class="fa-solid fa-lock"></i> <span data-i18n="perfil_seguridad">Seguridad y contrasena</span>
                                 </div>
                                 <i class="fa-solid fa-chevron-down arrow-icon"></i>
                             </div>
@@ -349,19 +349,19 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                                 <form class="form-grid" id="form-cambiar-contrasena">
                                     <p id="config-status-password" class="config-status full-width" aria-live="polite"></p>
                                     <div class="form-group full-width">
-                                        <label>Contrasena actual</label>
+                                        <label data-i18n="perfil_contrasena_actual">Contrasena actual</label>
                                         <input type="password" name="password_actual" placeholder="********" class="form-input" required>
                                     </div>
                                     <div class="form-group">
-                                        <label>Nueva contrasena</label>
+                                        <label data-i18n="perfil_nueva_contrasena">Nueva contrasena</label>
                                         <input type="password" name="password_nueva" class="form-input" required minlength="8">
                                     </div>
                                     <div class="form-group">
-                                        <label>Repetir nueva contrasena</label>
+                                        <label data-i18n="perfil_repetir_contrasena">Repetir nueva contrasena</label>
                                         <input type="password" name="password_repetida" class="form-input" required minlength="8">
                                     </div>
                                     <div class="form-full">
-                                        <button type="submit" class="btn-primary" id="btn-cambiar-contrasena">Cambiar contrasena</button>
+                                        <button type="submit" class="btn-primary" id="btn-cambiar-contrasena" data-i18n="perfil_cambiar_contrasena">Cambiar contrasena</button>
                                     </div>
                                 </form>
                             </div>
@@ -370,14 +370,14 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                         <div class="accordion-item">
                             <div class="accordion-header">
                                 <div class="header-title danger-title">
-                                    <i class="fa-solid fa-triangle-exclamation"></i> Eliminar la cuenta
+                                    <i class="fa-solid fa-triangle-exclamation"></i> <span data-i18n="perfil_eliminar_cuenta">Eliminar la cuenta</span>
                                 </div>
                                 <i class="fa-solid fa-chevron-down arrow-icon"></i>
                             </div>
                             <div class="accordion-content">
                                 <div class="danger-zone">
-                                    <p>Si eliminas tu cuenta, perderas acceso a tus billetes y abonos activos.</p>
-                                    <button type="button" class="btn-danger" id="btn-eliminar-cuenta">Eliminar mi cuenta</button>
+                                    <p data-i18n="perfil_eliminar_desc">Si eliminas tu cuenta, perderas acceso a tus billetes y abonos activos.</p>
+                                    <button type="button" class="btn-danger" id="btn-eliminar-cuenta" data-i18n="perfil_eliminar_mi_cuenta">Eliminar mi cuenta</button>
                                 </div>
                             </div>
                         </div>
@@ -390,11 +390,11 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
     <div class="modal-overlay" id="delete-account-modal" aria-hidden="true">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="delete-account-title">
             <div class="modal-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <h3 id="delete-account-title">Eliminar cuenta</h3>
-            <p>Vas a eliminar tu cuenta de forma permanente. Se borraran tus datos, abonos y billetes.</p>
+            <h3 id="delete-account-title" data-i18n="perfil_modal_eliminar_titulo">Eliminar cuenta</h3>
+            <p data-i18n="perfil_modal_eliminar_desc">Vas a eliminar tu cuenta de forma permanente. Se borraran tus datos, abonos y billetes.</p>
             <div class="modal-actions">
-                <button type="button" class="btn-secondary" id="btn-cancelar-eliminar">Cancelar</button>
-                <button type="button" class="btn-danger" id="btn-confirmar-eliminar">Eliminar</button>
+                <button type="button" class="btn-secondary" id="btn-cancelar-eliminar" data-i18n="perfil_cancelar">Cancelar</button>
+                <button type="button" class="btn-danger" id="btn-confirmar-eliminar" data-i18n="perfil_eliminar">Eliminar</button>
             </div>
         </div>
     </div>
@@ -403,31 +403,31 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
         <div class="footer-container">
             <div class="footer-column">
                 <h3>TrainWeb</h3>
-                <p>Plataforma digital para la busqueda y compra de billetes de tren en todo el territorio nacional.</p>
+                <p data-i18n="footer_descripcion">Plataforma digital para la busqueda y compra de billetes de tren en todo el territorio nacional.</p>
             </div>
             <div class="footer-column">
-                <h4>Servicios</h4>
-                <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
-                <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
-                <a href="ofertas.php"><i class="fa-solid fa-tags"></i> Ofertas</a>
-                <a href="#"><i class="fa-solid fa-headset"></i> Atencion al cliente</a>
+                <h4 data-i18n="footer_services">Servicios</h4>
+                <a href="#"><i class="fa-solid fa-ticket"></i> <span data-i18n="footer_billetes">Billetes</span></a>
+                <a href="#"><i class="fa-solid fa-clock"></i> <span data-i18n="footer_horarios">Horarios</span></a>
+                <a href="ofertas.php"><i class="fa-solid fa-tags"></i> <span data-i18n="footer_ofertas">Ofertas</span></a>
+                <a href="#"><i class="fa-solid fa-headset"></i> <span data-i18n="footer_atencion">Atencion al cliente</span></a>
             </div>
             <div class="footer-column">
-                <h4>Informacion legal</h4>
-                <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
-                <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
-                <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
-                <a href="#"><i class="fa-solid fa-file-contract"></i> Terminos y condiciones</a>
+                <h4 data-i18n="footer_legal">Informacion legal</h4>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="footer_aviso">Aviso legal</span></a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> <span data-i18n="footer_privacidad">Privacidad</span></a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> <span data-i18n="footer_cookies">Cookies</span></a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> <span data-i18n="footer_terminos">Terminos y condiciones</span></a>
             </div>
             <div class="footer-column">
-                <h4>Redes sociales</h4>
-                <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
-                <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
-                <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
-                <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+                <h4 data-i18n="footer_social">Redes sociales</h4>
+                <a href="#"><i class="fa-brands fa-facebook-f"></i> <span data-i18n="social_facebook">Facebook</span></a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i> <span data-i18n="social_twitter">Twitter</span></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i> <span data-i18n="social_instagram">Instagram</span></a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i> <span data-i18n="social_linkedin">LinkedIn</span></a>
             </div>
         </div>
-        <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
+        <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
 
     <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>

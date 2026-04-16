@@ -5,6 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    function tr(key, fallback, params = {}) {
+        const i18n = window.trainwebI18n;
+        let text = (i18n && typeof i18n.t === 'function') ? i18n.t(key) : null;
+        if (!text) text = fallback;
+        Object.keys(params).forEach((k) => {
+            text = text.replace(`{${k}}`, params[k]);
+        });
+        return text;
+    }
+
     function parseFechaHora(fechaViaje, horaSalida) {
         if (!fechaViaje) {
             return null;
@@ -22,9 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const codigoBase = b.id_mongo ? String(b.id_mongo) : '000000';
         const codigo = b.codigo_billete ? b.codigo_billete : `TKT-${codigoBase.slice(-6).toUpperCase()}`;
         const ruta = b.origen && b.destino ? `${b.origen} - ${b.destino}` : `Viaje #${b.id_viaje}`;
-        const horario = b.hora_salida || b.hora_llegada ? `${b.hora_salida || '--:--'} / ${b.hora_llegada || '--:--'}` : 'Horario no disponible';
-        const precio = Number.isFinite(Number(b.precio_pagado)) ? `${Number(b.precio_pagado).toFixed(2)} EUR` : 'N/D';
-        const asiento = b.numero_asiento !== null && b.numero_asiento !== undefined ? b.numero_asiento : 'N/D';
+        const horario = b.hora_salida || b.hora_llegada ? `${b.hora_salida || '--:--'} / ${b.hora_llegada || '--:--'}` : tr('perfil_horario_no_disponible', 'Horario no disponible');
+        const precio = Number.isFinite(Number(b.precio_pagado)) ? `${Number(b.precio_pagado).toFixed(2)} EUR` : tr('perfil_no_disponible', 'N/D');
+        const asiento = b.numero_asiento !== null && b.numero_asiento !== undefined ? b.numero_asiento : tr('perfil_no_disponible', 'N/D');
 
         return `
             <article class="data-card" data-id-viaje="${b.id_viaje}">
@@ -32,12 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h4>${codigo}</h4>
                     <span class="badge ${claseEstado}">${estado}</span>
                 </div>
-                <p><strong>Ruta:</strong> ${ruta}</p>
-                <p><strong>Fecha viaje:</strong> ${b.fecha_viaje || 'N/D'}</p>
-                <p><strong>Horario:</strong> ${horario}</p>
-                <p><strong>Asiento:</strong> ${asiento}</p>
-                <p><strong>Precio:</strong> ${precio}</p>
-                <p><strong>Compra:</strong> ${b.fecha_compra || 'N/D'}</p>
+                <p><strong>${tr('perfil_ruta', 'Ruta')}:</strong> ${ruta}</p>
+                <p><strong>${tr('perfil_fecha_viaje', 'Fecha viaje')}:</strong> ${b.fecha_viaje || tr('perfil_no_disponible', 'N/D')}</p>
+                <p><strong>${tr('perfil_horario', 'Horario')}:</strong> ${horario}</p>
+                <p><strong>${tr('asiento', 'Asiento')}:</strong> ${asiento}</p>
+                <p><strong>${tr('precio', 'Precio')}:</strong> ${precio}</p>
+                <p><strong>${tr('perfil_compra', 'Compra')}:</strong> ${b.fecha_compra || tr('perfil_no_disponible', 'N/D')}</p>
             </article>
         `;
     }
@@ -74,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then((billetes) => {
             if (!Array.isArray(billetes) || billetes.length === 0) {
-                contenedorProximos.innerHTML = '<div class="empty-state">No tienes viajes proximos.</div>';
-                contenedorFinalizados.innerHTML = '<div class="empty-state">No tienes viajes previos en tu cuenta.</div>';
+                contenedorProximos.innerHTML = `<div class="empty-state">${tr('perfil_no_viajes_proximos', 'No tienes viajes proximos.')}</div>`;
+                contenedorFinalizados.innerHTML = `<div class="empty-state">${tr('perfil_no_viajes_previos', 'No tienes viajes previos en tu cuenta.')}</div>`;
                 return;
             }
 
@@ -94,15 +104,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             contenedorProximos.innerHTML = proximos.length > 0
                 ? proximos.map(renderCard).join('')
-                : '<div class="empty-state">No tienes viajes proximos.</div>';
+                : `<div class="empty-state">${tr('perfil_no_viajes_proximos', 'No tienes viajes proximos.')}</div>`;
 
             contenedorFinalizados.innerHTML = finalizados.length > 0
                 ? finalizados.map(renderCard).join('')
-                : '<div class="empty-state">No tienes viajes previos en tu cuenta.</div>';
+                : `<div class="empty-state">${tr('perfil_no_viajes_previos', 'No tienes viajes previos en tu cuenta.')}</div>`;
         })
         .catch((err) => {
             const motivo = err && err.message ? err.message : 'Error desconocido';
-            contenedorProximos.innerHTML = `<div class="error-state">Error al cargar viajes proximos: ${motivo}</div>`;
-            contenedorFinalizados.innerHTML = `<div class="error-state">Error al cargar viajes finalizados: ${motivo}</div>`;
+            contenedorProximos.innerHTML = `<div class="error-state">${tr('perfil_error_viajes_proximos', 'Error al cargar viajes proximos: {motivo}', { motivo })}</div>`;
+            contenedorFinalizados.innerHTML = `<div class="error-state">${tr('perfil_error_viajes_finalizados', 'Error al cargar viajes finalizados: {motivo}', { motivo })}</div>`;
         });
 });

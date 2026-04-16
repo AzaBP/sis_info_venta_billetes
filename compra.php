@@ -267,6 +267,8 @@ if ($id_pasajero_gestionado) {
                     $dteEnd   = new DateTime($trayecto['hora_llegada']);
                     $duracion = $dteStart->diff($dteEnd)->format('%hh %Imin');
                     $precio = number_format($trayecto['precio_base'], 2, ',', '');
+                    $origenCode = strtoupper(substr(trim((string)$trayecto['origen']), 0, 3));
+                    $destinoCode = strtoupper(substr(trim((string)$trayecto['destino']), 0, 3));
 
                     $icono_amenity = 'fa-train'; 
                     if (strtolower($trayecto['tipo_tren']) == 'ave') $icono_amenity = 'fa-wifi';
@@ -283,9 +285,9 @@ if ($id_pasajero_gestionado) {
                         <div class="amenities"><i class="fa-solid <?= $icono_amenity ?>"></i></div>
                     </div>
                     <div class="col-schedule">
-                        <div class="time-group"><span class="hour"><?= $hora_salida ?></span><span class="city">MAD</span></div>
+                        <div class="time-group"><span class="hour"><?= $hora_salida ?></span><span class="city"><?= htmlspecialchars($origenCode, ENT_QUOTES, 'UTF-8') ?></span></div>
                         <div class="duration-line"><span class="duration-text"><?= $duracion ?></span><div class="line"><i class="fa-solid fa-train"></i></div></div>
-                        <div class="time-group"><span class="hour"><?= $hora_llegada ?></span><span class="city">BCN</span></div>
+                        <div class="time-group"><span class="hour"><?= $hora_llegada ?></span><span class="city"><?= htmlspecialchars($destinoCode, ENT_QUOTES, 'UTF-8') ?></span></div>
                     </div>
                     <div class="col-price">
                         <?php if ($isFull): ?>
@@ -489,7 +491,7 @@ if ($id_pasajero_gestionado) {
                     <div class="form-group full-width">
                         <label for="cardNumber" data-i18n="numero_tarjeta">Número de Tarjeta</label>
                         <div class="input-icon">
-                            <input type="text" id="cardNumber" maxlength="19" required placeholder="1234 5678 9012 3456" inputmode="numeric">
+                            <input type="text" id="cardNumber" maxlength="19" required placeholder="1234 5678 9012 3456" data-i18n-placeholder="card_number_placeholder" inputmode="numeric">
                             <i class="fa-solid fa-lock" style="position: absolute; right: 10px; top: 12px; color: #ccc;"></i>
                         </div>
                         <span class="input-error" id="errCardNumber" style="display:none;"></span>
@@ -502,7 +504,7 @@ if ($id_pasajero_gestionado) {
                         </div>
                         <div class="form-group expand">
                             <label for="cardCVV" data-i18n="cvv">CVV</label>
-                            <input type="password" id="cardCVV" required placeholder="Ej: 123" data-i18n="ej_123" maxlength="3" inputmode="numeric">
+                            <input type="password" id="cardCVV" required placeholder="Ej: 123" data-i18n="ej_123" data-i18n-placeholder="cvv_placeholder" maxlength="3" inputmode="numeric">
                             <span class="input-error" id="errCardCVV" style="display:none;"></span>
                         </div>
                     </div>

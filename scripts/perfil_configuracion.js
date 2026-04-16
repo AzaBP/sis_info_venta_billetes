@@ -11,6 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusPass = document.getElementById('config-status-password');
     const statusNotif = document.getElementById('config-status-notificaciones');
 
+    function tr(key, fallback, params = {}) {
+        const i18n = window.trainwebI18n;
+        let text = (i18n && typeof i18n.t === 'function') ? i18n.t(key) : null;
+        if (!text) text = fallback;
+        Object.keys(params).forEach((k) => {
+            text = text.replace(`{${k}}`, params[k]);
+        });
+        return text;
+    }
+
     function pintarEstado(el, ok, mensaje) {
         if (!el) {
             return;
@@ -27,8 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify(payload)
         });
 
-        const data = await res.json().catch(() => ({ ok: false, mensaje: 'Respuesta invalida del servidor' }));
-        return { ok: !!data.ok, mensaje: data.mensaje || 'Operacion completada' };
+        const data = await res.json().catch(() => ({ ok: false, mensaje: tr('perfil_respuesta_invalida', 'Respuesta invalida del servidor') }));
+        return { ok: !!data.ok, mensaje: data.mensaje || tr('perfil_operacion_completada', 'Operacion completada') };
     }
 
     async function eliminarCuenta() {
@@ -38,8 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({ accion: 'eliminar_cuenta' })
         });
 
-        const data = await res.json().catch(() => ({ ok: false, mensaje: 'Respuesta invalida del servidor' }));
-        return { ok: !!data.ok, mensaje: data.mensaje || 'Operacion completada', redirect: data.redirect || 'inicio_sesion.html' };
+        const data = await res.json().catch(() => ({ ok: false, mensaje: tr('perfil_respuesta_invalida', 'Respuesta invalida del servidor') }));
+        return { ok: !!data.ok, mensaje: data.mensaje || tr('perfil_operacion_completada', 'Operacion completada'), redirect: data.redirect || 'inicio_sesion.html' };
     }
 
     function abrirModalEliminar() {
@@ -63,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnNotificaciones) {
         btnNotificaciones.addEventListener('click', async () => {
             btnNotificaciones.disabled = true;
-            pintarEstado(statusNotif, true, 'Guardando preferencias...');
+            pintarEstado(statusNotif, true, tr('perfil_guardando_preferencias', 'Guardando preferencias...'));
 
             const payload = {
                 accion: 'guardar_notificaciones',
@@ -75,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const r = await llamarConfiguracion(payload);
                 pintarEstado(statusNotif, r.ok, r.mensaje);
             } catch (e) {
-                pintarEstado(statusNotif, false, 'No se pudo guardar la configuracion');
+                pintarEstado(statusNotif, false, tr('perfil_no_guardar_config', 'No se pudo guardar la configuracion'));
             } finally {
                 btnNotificaciones.disabled = false;
             }
@@ -90,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 boton.disabled = true;
             }
 
-            pintarEstado(statusDatos, true, 'Guardando datos...');
+            pintarEstado(statusDatos, true, tr('perfil_guardando_datos', 'Guardando datos...'));
             const fd = new FormData(formDatos);
             const payload = {
                 accion: 'actualizar_datos',
@@ -109,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const r = await llamarConfiguracion(payload);
                 pintarEstado(statusDatos, r.ok, r.mensaje);
             } catch (err) {
-                pintarEstado(statusDatos, false, 'No se pudieron actualizar los datos');
+                pintarEstado(statusDatos, false, tr('perfil_no_actualizar_datos', 'No se pudieron actualizar los datos'));
             } finally {
                 if (boton) {
                     boton.disabled = false;
@@ -126,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 boton.disabled = true;
             }
 
-            pintarEstado(statusPass, true, 'Actualizando contrasena...');
+            pintarEstado(statusPass, true, tr('perfil_actualizando_contrasena', 'Actualizando contrasena...'));
             const fd = new FormData(formPassword);
             const payload = {
                 accion: 'cambiar_password',
@@ -136,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             if (payload.password_nueva !== payload.password_repetida) {
-                pintarEstado(statusPass, false, 'La nueva contrasena no coincide');
+                pintarEstado(statusPass, false, tr('perfil_contrasena_no_coincide', 'La nueva contrasena no coincide'));
                 if (boton) {
                     boton.disabled = false;
                 }
@@ -150,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     formPassword.reset();
                 }
             } catch (err) {
-                pintarEstado(statusPass, false, 'No se pudo cambiar la contrasena');
+                pintarEstado(statusPass, false, tr('perfil_no_cambiar_contrasena', 'No se pudo cambiar la contrasena'));
             } finally {
                 if (boton) {
                     boton.disabled = false;
@@ -178,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnConfirmarEliminar) {
         btnConfirmarEliminar.addEventListener('click', async () => {
             btnConfirmarEliminar.disabled = true;
-            btnConfirmarEliminar.textContent = 'Eliminando...';
+            btnConfirmarEliminar.textContent = tr('perfil_eliminando', 'Eliminando...');
 
             try {
                 const r = await eliminarCuenta();
@@ -189,10 +199,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 alert(r.mensaje);
             } catch (err) {
-                alert('No se pudo eliminar la cuenta');
+                alert(tr('perfil_no_eliminar_cuenta', 'No se pudo eliminar la cuenta'));
             } finally {
                 btnConfirmarEliminar.disabled = false;
-                btnConfirmarEliminar.textContent = 'Eliminar';
+                btnConfirmarEliminar.textContent = tr('perfil_eliminar', 'Eliminar');
             }
         });
     }

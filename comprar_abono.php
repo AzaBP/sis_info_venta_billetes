@@ -124,7 +124,7 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
 
                 <div class="form-group">
                     <label data-i18n="numero_tarjeta">Número de tarjeta</label>
-                    <input type="text" name="tarjeta" placeholder="0000 0000 0000 0000" maxlength="16" required>
+                    <input type="text" name="tarjeta" placeholder="0000 0000 0000 0000" data-i18n-placeholder="card_number_placeholder" maxlength="16" required>
                 </div>
 
                 <div style="display: flex; gap: 15px;">
@@ -134,7 +134,7 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
                     </div>
                     <div class="form-group expand">
                         <label data-i18n="cvv">CVV</label>
-                        <input type="password" name="cvv" placeholder="123" maxlength="3" required>
+                        <input type="password" name="cvv" placeholder="123" data-i18n-placeholder="cvv_placeholder" maxlength="3" required>
                     </div>
                 </div>
 

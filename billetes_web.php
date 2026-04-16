@@ -285,7 +285,7 @@ if ($usuarioSesion && ($usuarioSesion['tipo_usuario'] ?? '') === 'pasajero') {
                                     <p><i class="fa-regular fa-clock"></i> <span data-i18n="salida_label">Salida</span>: <strong><?= substr($b['hora_salida'], 0, 5) ?>h</strong></p>
                                     <p><i class="fa-solid fa-couch"></i> <span data-i18n="asiento">Asiento</span>: <strong><?= htmlspecialchars($b['asiento'] ?? '') ?><?= empty($b['asiento']) ? '<span data-i18n="por_asignar">Por asignar</span>' : '' ?></strong></p>
                                 </div>
-                                <div class="ticket-qr" title="Muestra este QR al revisor">
+                                <div class="ticket-qr" title="Muestra este QR al revisor" data-i18n-title="qr_tooltip_message">
                                     <i class="fa-solid fa-qrcode fa-3x"></i>
                                 </div>
                             </div>

@@ -183,7 +183,7 @@ try {
                             <div class="info-extra">
                                 <span><i class="fa-regular fa-calendar-xmark"></i> <span data-i18n="valido_hasta">Válido hasta</span>: <strong><?= date('d/m/Y', strtotime($p['fecha_fin'])) ?></strong></span>
                                 <?php if (!empty($p['usos_maximos'])): ?>
-                                    <span><i class="fa-solid fa-users"></i> <span data-i18n="usos_restantes">Usos restantes</span>: <strong><?= $p['usos_maximos'] - $p['usos_actuales'] ?></strong> <span data-i18n="de">de</span> <?= $p['usos_maximos'] ?></span>
+                                    <span><i class="fa-solid fa-users"></i> <span data-i18n="usos_restantes">Usos restantes</span>: <strong><?= $p['usos_maximos'] - $p['usos_actuales'] ?></strong> <span data-i18n="of_word">de</span> <?= $p['usos_maximos'] ?></span>
                                 <?php else: ?>
                                     <span><i class="fa-solid fa-infinity"></i> <span data-i18n="usos_ilimitados">Usos ilimitados</span></span>
                                 <?php endif; ?>
