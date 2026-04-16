@@ -105,7 +105,7 @@
 .aisle-horizontal-wide { height: 30px; min-width: 60px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 0.7rem; }
 
 /* ASIENTOS */
-.seat { width: 35px; height: 35px; background: white; border: 1px solid #bbb; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #555; cursor: pointer; position: relative; user-select: none; }
+.seat { width: 35px; height: 35px; background: white; border: 1px solid #bbb; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #555; cursor: pointer; position: relative; -webkit-user-select: none; user-select: none; }
 .seat-left::after { content: ''; position: absolute; right: -3px; top: 5px; bottom: 5px; width: 3px; background: #bbb; border-radius: 2px; }
 .seat-right::after { content: ''; position: absolute; left: -3px; top: 5px; bottom: 5px; width: 3px; background: #bbb; border-radius: 2px; }
 
@@ -144,6 +144,7 @@
     cursor: not-allowed;
     pointer-events: none;
     position: relative;
+    -webkit-user-select: none;
     user-select: none;
 }
 /* Marca lateral igual que asientos normales */
@@ -244,4 +245,33 @@
     color: #888;
     cursor: not-allowed;
     opacity: 0.7;
+}
+
+.passengers-forms-container {
+    display: grid;
+    gap: 16px;
+}
+
+.passenger-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+    background: #f8fafc;
+}
+
+.passenger-card h4 {
+    margin: 0 0 12px;
+    color: #0a2a66;
+}
+
+.passenger-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+@media (max-width: 768px) {
+    .passenger-grid {
+        grid-template-columns: 1fr;
+    }
 }

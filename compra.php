@@ -19,6 +19,7 @@ $origen = isset($_GET['origen']) ? trim($_GET['origen']) : '';
 $destino = isset($_GET['destino']) ? trim($_GET['destino']) : '';
 $fecha = isset($_GET['fecha']) ? trim($_GET['fecha']) : '';
 $pasajeros = isset($_GET['pasajeros']) ? intval($_GET['pasajeros']) : 1;
+$pasajeros = max(1, min(4, $pasajeros));
 
 $where = [];
 $params = [];
@@ -195,8 +196,9 @@ if ($id_pasajero_gestionado) {
         <div class="progress-bar-container">
             <div class="step active" id="step1" onclick="irAPaso(1)" style="cursor: pointer;"><span class="step-num">1</span> <span data-i18n="trenes_disponibles">Trenes disponibles</span></div>
             <div class="step" id="step2" onclick="irAPaso(2)" style="cursor: pointer;"><span class="step-num">2</span> <span data-i18n="seleccion_asientos">Selección de asientos</span></div>
-            <div class="step" id="step3" onclick="irAPaso(3)" style="cursor: pointer;"><span class="step-num">3</span> <span data-i18n="resumen_descuentos">Resumen y Descuentos</span></div>
-            <div class="step" id="step4" onclick="irAPaso(4)" style="cursor: pointer;"><span class="step-num">4</span> <span data-i18n="pago_seguro">Pago seguro</span></div>
+            <div class="step" id="step3" onclick="irAPaso(3)" style="cursor: pointer;"><span class="step-num">3</span> Datos de pasajeros</div>
+            <div class="step" id="step4" onclick="irAPaso(4)" style="cursor: pointer;"><span class="step-num">4</span> <span data-i18n="resumen_descuentos">Resumen y Descuentos</span></div>
+            <div class="step" id="step5" onclick="irAPaso(5)" style="cursor: pointer;"><span class="step-num">5</span> <span data-i18n="pago_seguro">Pago seguro</span></div>
         </div>
 
 
@@ -340,7 +342,7 @@ if ($id_pasajero_gestionado) {
                                 for ($i = 0; $i < $asientosPorBloque; $i++) {
                                     $id = sprintf("%03d", $numero_asiento_global++);
                                     $p = $isPremium ? "seat-premium" : "";
-                                    echo "<div class='seat $p seat-left' data-seat='$id'>$id</div>";
+                                    echo "<div class='seat $p seat-left' data-seat='$id' data-wagon='$w'>$id</div>";
                                 }
                                 echo "</div>";
                             }
@@ -352,7 +354,7 @@ if ($id_pasajero_gestionado) {
                                 for ($i = 0; $i < $asientosPorBloque; $i++) {
                                     $id = sprintf("%03d", $numero_asiento_global++);
                                     $p = $isPremium ? "seat-premium" : "";
-                                    echo "<div class='seat $p seat-right' data-seat='$id'>$id</div>";
+                                    echo "<div class='seat $p seat-right' data-seat='$id' data-wagon='$w'>$id</div>";
                                 }
                                 echo "</div>";
                             }
@@ -369,7 +371,7 @@ if ($id_pasajero_gestionado) {
                                 for ($i = 0; $i < $asientosPorBloque; $i++) {
                                     $id = sprintf("%03d", $numero_asiento_global++);
                                     $p = $isPremium ? "seat-premium" : "";
-                                    echo "<div class='seat $p seat-left' data-seat='$id'>$id</div>";
+                                    echo "<div class='seat $p seat-left' data-seat='$id' data-wagon='$w'>$id</div>";
                                 }
                                 echo "</div>";
                             }
@@ -381,7 +383,7 @@ if ($id_pasajero_gestionado) {
                                 for ($i = 0; $i < $asientosPorBloque; $i++) {
                                     $id = sprintf("%03d", $numero_asiento_global++);
                                     $p = $isPremium ? "seat-premium" : "";
-                                    echo "<div class='seat $p seat-right' data-seat='$id'>$id</div>";
+                                    echo "<div class='seat $p seat-right' data-seat='$id' data-wagon='$w'>$id</div>";
                                 }
                                 echo "</div>";
                             }
@@ -396,9 +398,22 @@ if ($id_pasajero_gestionado) {
             
             <div class="booking-footer">
                 <div class="selection-info">
-                    <span data-i18n="asiento">Asiento</span>: <strong id="displaySeat" data-i18n="ninguno">Ninguno</strong> <br><span data-i18n="precio_base_label">Precio Base</span>: <strong id="displayPrice">0,00 €</strong>
+                    <span data-i18n="asiento">Asientos</span> (<strong id="requiredPassengersCount"><?php echo $pasajeros; ?></strong>): <strong id="displaySeat" data-i18n="ninguno">Ninguno</strong> <br><span data-i18n="precio_base_label">Precio Base</span>: <strong id="displayPrice">0,00 €</strong>
                 </div>
-                <button class="btn-next" id="btnToPayment" disabled onclick="irAPaso(3)" data-i18n="continuar_resumen">Continuar al Resumen</button>
+                <button class="btn-next" id="btnToPassengerData" disabled onclick="irAPaso(3)">Continuar a Datos de Pasajeros</button>
+            </div>
+        </section>
+
+        <section id="sectionPassengers" class="booking-section hidden">
+            <div class="payment-container" style="max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <div class="payment-header" style="border-bottom: none; margin-bottom: 10px;">
+                    <h3><i class="fa-solid fa-users"></i> Datos de pasajeros</h3>
+                </div>
+                <div id="passengersFormsContainer" class="passengers-forms-container"></div>
+                <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
+                    <button class="btn-next" type="button" onclick="irAPaso(2)" style="background: #666;">Volver a asientos</button>
+                    <button class="btn-next" type="button" onclick="irAPaso(4)">Continuar al Resumen</button>
+                </div>
             </div>
         </section>
 
@@ -468,7 +483,7 @@ if ($id_pasajero_gestionado) {
                     <p style="margin: 0;"><span data-i18n="total_pagar">Total a pagar</span>: <strong id="summaryFinalPrice" style="color: #0a2a66; font-size: 1.5rem;">0,00 €</strong></p>
                 </div>
 
-                <button id="btnPaso3" class="btn-pay-confirm" onclick="irAPaso(4)" style="margin-top: 15px; width: 100%;" data-i18n="continuar_pago_seguro">Continuar al Pago Seguro</button>
+                <button id="btnPaso4" class="btn-pay-confirm" onclick="irAPaso(5)" style="margin-top: 15px; width: 100%;" data-i18n="continuar_pago_seguro">Continuar al Pago Seguro</button>
             </div>
         </section>
 
@@ -519,6 +534,16 @@ if ($id_pasajero_gestionado) {
     </main>
 
     <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
+    <script>
+    window.compraConfig = {
+        totalPasajeros: <?php echo (int)$pasajeros; ?>,
+        pasajeroPrincipal: {
+            nombre: <?php echo json_encode((string)($usuarioSesion['nombre'] ?? '')); ?>,
+            apellidos: <?php echo json_encode((string)($usuarioSesion['apellido'] ?? '')); ?>,
+            email: <?php echo json_encode((string)($usuarioSesion['email'] ?? '')); ?>
+        }
+    };
+    </script>
     <script src="js/compra.js"></script>
     <script>
     // --- Formato y validación de pago seguro ---
