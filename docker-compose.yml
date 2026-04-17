@@ -65,9 +65,15 @@ services:
     depends_on:
       - postgres
       - mongo
-    # En despliegue de servidor no montamos el proyecto para no sobrescribir vendor/
-    # generado en la imagen por Composer.
+    volumes:
+      - ./:/var/www/html
+      - vendor_data:/var/www/html/vendor
+    command: >
+      sh -c "if [ ! -f /var/www/html/vendor/autoload.php ]; then
+      composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader --ignore-platform-reqs;
+      fi && apache2-foreground"
 
 volumes:
   datos_postgres:
   datos_mongo:
+  vendor_data:
