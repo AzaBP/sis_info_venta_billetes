@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const ruta = `${ticket.origen || ''} → ${ticket.destino || ''}`.trim();
         const pasajero = `${ticket.pasajero_nombre || ''} ${ticket.pasajero_apellidos || ''}`.trim();
         const downloadUrl = `${config.downloadUrl || 'php/descargar_billete.php'}?id_mongo=${encodeURIComponent(ticket.id_mongo || '')}`;
-        const trainImage = ticket.train_image || 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=800&q=80';
 
         return `
             <article class="ticket-row${esPasado ? ' expired' : ''}">
@@ -52,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div class="ticket-actions">
-                    <div class="ticket-train-image" style="background-image: linear-gradient(180deg, rgba(12,35,68,0.12), rgba(12,35,68,0.3)), url('${escapeHtml(trainImage)}');"></div>
                     <a class="btn-link" href="${downloadUrl}">
                         <i class="fa-solid fa-file-pdf"></i> Descargar PDF
                     </a>

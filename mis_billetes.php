@@ -66,15 +66,6 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
         .badge-soft { background: #e7eefb; color: #183d82; }
         .ticket-meta { min-width: 220px; }
         .ticket-actions { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-        .ticket-train-image {
-            width: 110px;
-            height: 72px;
-            border-radius: 16px;
-            border: 1px solid #d8e0ef;
-            background-size: cover;
-            background-position: center;
-            box-shadow: 0 10px 18px rgba(16, 39, 82, 0.12);
-        }
         .empty-box, .error-box {
             background: #fff;
             border-radius: 18px;
