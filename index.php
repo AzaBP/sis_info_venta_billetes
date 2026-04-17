@@ -120,7 +120,7 @@ try {
                     <option value="3" data-i18n="pasajero_3">3 pasajeros</option>
                     <option value="4" data-i18n="pasajero_4">4 pasajeros</option>
                 </select>
-                <button type="submit" data-i18n="buscar_billetes">Buscarrr billetes</button>
+                <button type="submit" data-i18n="buscar_billetes">Buscar billetes</button>
             </form>
         </section>
 

@@ -64,8 +64,14 @@ function buscarTrayectos(PDO $pdo, string $origen, string $destino, string $fech
 $trayectos = buscarTrayectos($pdo, $origen, $destino, $fecha);
 $trayectos_vuelta = [];
 
-if ($es_ida_vuelta && $fecha_vuelta !== '') {
-    $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, $fecha_vuelta);
+if ($es_ida_vuelta) {
+    if ($fecha_vuelta !== '') {
+        $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, $fecha_vuelta);
+    }
+
+    if (empty($trayectos_vuelta)) {
+        $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, '');
+    }
 }
 
 // 2. Obtener las promociones activas
@@ -339,6 +345,8 @@ if ($id_pasajero_gestionado) {
                     <?= htmlspecialchars($destino, ENT_QUOTES, 'UTF-8') ?> <i class="fa-solid fa-arrow-right"></i> <?= htmlspecialchars($origen, ENT_QUOTES, 'UTF-8') ?>
                     <?php if ($fecha_vuelta !== ''): ?>
                         | <?= htmlspecialchars($fecha_vuelta, ENT_QUOTES, 'UTF-8') ?>
+                    <?php else: ?>
+                        | <span>selecciona fecha de vuelta</span>
                     <?php endif; ?>
                 </p>
 

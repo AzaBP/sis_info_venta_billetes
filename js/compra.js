@@ -118,7 +118,8 @@ async function seleccionarTren(id_viaje, tipo_tren, precio, continuarConIdaVuelt
         idaPendiente = { id_viaje, tipo_tren, precio };
 
         if (!hasReturnOptions) {
-            alert(tr('sin_vuelta_disponible', 'No hay trenes de vuelta disponibles para esta búsqueda.'));
+            alert(tr('sin_vuelta_disponible', 'No se pudo cargar la vuelta. Se intentará mostrar opciones disponibles.'));
+            abrirModalVuelta();
             return;
         }
 
