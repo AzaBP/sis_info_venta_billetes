@@ -93,7 +93,7 @@ try {
         <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
         <nav class="nav">
             <a href="index.php" data-i18n="inicio">Inicio</a>
-            <a href="billetes_web.php" data-i18n="billetes">Billetes</a>
+            <a href="mis_billetes.php" data-i18n="mis_billetes">Mis billetes</a>
             <div class="dropdown">
                 <a href="#"><i class="fa-solid fa-earth-europe"></i> <span data-i18n="idiomas">Idiomas</span> <i class="fa-solid fa-caret-down"></i></a>
                 <div class="dropdown-content">
