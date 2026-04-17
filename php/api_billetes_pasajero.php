@@ -69,7 +69,13 @@ try {
             'estado' => (string)($doc['estado'] ?? 'confirmado'),
             'fecha_compra' => (string)($doc['fecha_compra'] ?? ''),
             'precio_pagado' => isset($doc['precio_pagado']) ? (float)$doc['precio_pagado'] : null,
-            'numero_asiento' => isset($doc['numero_asiento']) ? (int)$doc['numero_asiento'] : (isset($doc['id_asiento']) ? (int)$doc['id_asiento'] : null)
+            'numero_asiento' => isset($doc['numero_asiento']) ? (int)$doc['numero_asiento'] : (isset($doc['id_asiento']) ? (int)$doc['id_asiento'] : null),
+            'vagon' => isset($doc['vagon']) ? (int)$doc['vagon'] : null,
+            'tipo_tren' => (string)($doc['tipo_tren'] ?? ''),
+            'pasajero_nombre' => (string)($doc['pasajero_nombre'] ?? ''),
+            'pasajero_apellidos' => (string)($doc['pasajero_apellidos'] ?? ''),
+            'pasajero_documento' => (string)($doc['pasajero_documento'] ?? ''),
+            'pasajero_email' => (string)($doc['pasajero_email'] ?? '')
         ];
     }
 
@@ -83,9 +89,10 @@ try {
         $placeholders = implode(',', array_fill(0, count($listaIds), '?'));
 
         $sql = "SELECT v.id_viaje, v.fecha, v.hora_salida, v.hora_llegada,
-                       r.origen, r.destino
+                   r.origen, r.destino, t.modelo AS tipo_tren
                 FROM viaje v
                 JOIN ruta r ON r.id_ruta = v.id_ruta
+            JOIN tren t ON t.id_tren = v.id_tren
                 WHERE v.id_viaje IN ($placeholders)";
 
         $stmtViajes = $pdo->prepare($sql);
@@ -110,9 +117,15 @@ try {
             'numero_asiento' => $b['numero_asiento'],
             'origen' => $detalleViaje['origen'] ?? '',
             'destino' => $detalleViaje['destino'] ?? '',
+            'tipo_tren' => $b['tipo_tren'] !== '' ? $b['tipo_tren'] : ($detalleViaje['tipo_tren'] ?? ''),
             'fecha_viaje' => $detalleViaje['fecha'] ?? '',
             'hora_salida' => $detalleViaje['hora_salida'] ?? '',
-            'hora_llegada' => $detalleViaje['hora_llegada'] ?? ''
+            'hora_llegada' => $detalleViaje['hora_llegada'] ?? '',
+            'vagon' => $b['vagon'],
+            'pasajero_nombre' => $b['pasajero_nombre'],
+            'pasajero_apellidos' => $b['pasajero_apellidos'],
+            'pasajero_documento' => $b['pasajero_documento'],
+            'pasajero_email' => $b['pasajero_email']
         ];
     }
 

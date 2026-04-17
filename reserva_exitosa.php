@@ -60,6 +60,7 @@ $precioTotal = $valida ? (float)($reserva['precio_total'] ?? 0) : 0;
 
             <div class="actions">
                 <a class="btn-primary" href="php/descargar_billetes.php?token=<?php echo urlencode($token); ?>">Descargar PDF de billetes</a>
+                <a class="btn-secondary" href="mis_billetes.php">Ver mis billetes</a>
                 <a class="btn-secondary" href="perfil_pasajero.php">Ir a mi perfil</a>
                 <a class="btn-secondary" href="index.php">Volver al inicio</a>
             </div>

@@ -144,7 +144,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
     <script>
     window.misBilletesConfig = {
         apiUrl: 'php/api_billetes_pasajero.php',
-        downloadUrl: 'php/descargar_billetes.php'
+        downloadUrl: 'php/descargar_billete.php'
     };
     </script>
     <script src="js/mis_billetes.js?v=<?php echo urlencode($assetVersion); ?>"></script>

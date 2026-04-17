@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const ruta = `${ticket.origen || ''} → ${ticket.destino || ''}`.trim();
         const pasajero = `${ticket.pasajero_nombre || ''} ${ticket.pasajero_apellidos || ''}`.trim();
         const qrcodeText = ticket.codigo_billete ? ticket.codigo_billete : 'QR';
+        const downloadUrl = `${config.downloadUrl || 'php/descargar_billete.php'}?id_mongo=${encodeURIComponent(ticket.id_mongo || '')}`;
 
         return `
             <article class="ticket-row${esPasado ? ' expired' : ''}">
@@ -55,9 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <i class="fa-solid fa-qrcode fa-2x"></i>
                         <span>${escapeHtml(qrcodeText)}</span>
                     </div>
-                    <p style="margin:0; color:#5c6b85; font-size:0.85rem; text-align:right; max-width:180px;">
-                        El PDF con QR se descarga desde la confirmación de reserva.
-                    </p>
+                    <a class="btn-link" href="${downloadUrl}">
+                        <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+                    </a>
                 </div>
             </article>
         `;
