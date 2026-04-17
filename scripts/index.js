@@ -56,6 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const fechaVuelta = document.createElement("input");
             fechaVuelta.type = "date";
             fechaVuelta.id = "fecha-vuelta";
+            fechaVuelta.name = "fecha_vuelta";
+            fechaVuelta.required = true;
             dateContainer.appendChild(fechaVuelta);
         }
 

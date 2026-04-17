@@ -1,10 +1,16 @@
 // ================= CONFIGURACION GLOBAL =================
 const totalPasajeros = Math.max(1, Math.min(4, parseInt(window.compraConfig?.totalPasajeros || 1, 10)));
 const pasajeroPrincipal = window.compraConfig?.pasajeroPrincipal || {};
+const tripType = String(window.compraConfig?.tripType || 'oneway');
+const esIdaVuelta = tripType === 'roundtrip';
+const hasReturnOptions = Boolean(window.compraConfig?.hasReturnOptions);
 
 let viajeSeleccionado = null;
+let viajeVueltaSeleccionado = null;
 let precioBaseViaje = 0;
+let precioBaseViajeVuelta = 0;
 let precioFinalConDescuento = 0;
+let idaPendiente = null;
 
 let estado = {
     pasoActual: 1,
@@ -48,10 +54,82 @@ function sumaPreciosAsientos() {
     return estado.asientosSeleccionados.reduce((acc, s) => acc + (Number(s.precio) || 0), 0);
 }
 
-// ================= PASO 1: SELECCION DE TREN =================
-function seleccionarTren(id_viaje, tipo_tren, precio) {
+function abrirModalVuelta() {
+    const modal = document.getElementById('returnTripModal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.setAttribute('aria-hidden', 'false');
+}
+
+function cerrarModalVuelta() {
+    const modal = document.getElementById('returnTripModal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden', 'true');
+}
+
+function seleccionarTrenVuelta(id_viaje, tipo_tren, precio) {
     if (typeof tipo_tren === 'number') {
         precio = tipo_tren;
+    }
+    viajeVueltaSeleccionado = id_viaje;
+    precioBaseViajeVuelta = parseFloat(precio) || 0;
+    cerrarModalVuelta();
+
+    if (idaPendiente) {
+        const ida = idaPendiente;
+        idaPendiente = null;
+        seleccionarTren(ida.id_viaje, ida.tipo_tren, ida.precio, true);
+    }
+}
+
+async function cargarAsientosOcupados(idViajeIda, idViajeVuelta = null) {
+    const idsOcupados = new Set();
+
+    const cargar = async (idViaje) => {
+        const res = await fetch(`./php/api_asientos_ocupados.php?id_viaje=${idViaje}`);
+        const data = await res.json();
+        if (data.exito && data.ocupados) {
+            data.ocupados.forEach((item) => {
+                const asientoReal = item.numero_asiento !== undefined ? item.numero_asiento : item;
+                idsOcupados.add(String(asientoReal).padStart(3, '0'));
+            });
+        }
+    };
+
+    await cargar(idViajeIda);
+    if (idViajeVuelta) {
+        await cargar(idViajeVuelta);
+    }
+
+    idsOcupados.forEach((numFormateado) => {
+        const asientoHtml = document.querySelector(`.seat[data-seat='${numFormateado}']`);
+        if (asientoHtml) asientoHtml.classList.add('occupied');
+    });
+}
+
+// ================= PASO 1: SELECCION DE TREN =================
+async function seleccionarTren(id_viaje, tipo_tren, precio, continuarConIdaVuelta = false) {
+    if (typeof tipo_tren === 'number') {
+        precio = tipo_tren;
+    }
+
+    if (esIdaVuelta && !continuarConIdaVuelta) {
+        idaPendiente = { id_viaje, tipo_tren, precio };
+
+        if (!hasReturnOptions) {
+            alert(tr('sin_vuelta_disponible', 'No hay trenes de vuelta disponibles para esta búsqueda.'));
+            return;
+        }
+
+        abrirModalVuelta();
+        return;
+    }
+
+    if (esIdaVuelta && !viajeVueltaSeleccionado) {
+        alert(tr('selecciona_vuelta_antes', 'Debes seleccionar primero un tren de vuelta.'));
+        abrirModalVuelta();
+        return;
     }
 
     viajeSeleccionado = id_viaje;
@@ -91,19 +169,11 @@ function seleccionarTren(id_viaje, tipo_tren, precio) {
 
     actualizarEstadoFlechas();
 
-    fetch(`./php/api_asientos_ocupados.php?id_viaje=${id_viaje}`)
-        .then(res => res.json())
-        .then(data => {
-            if (data.exito && data.ocupados) {
-                data.ocupados.forEach(item => {
-                    let asientoReal = item.numero_asiento !== undefined ? item.numero_asiento : item;
-                    let numFormateado = String(asientoReal).padStart(3, '0');
-                    let asientoHtml = document.querySelector(`.seat[data-seat='${numFormateado}']`);
-                    if (asientoHtml) asientoHtml.classList.add('occupied');
-                });
-            }
-        })
-        .catch(err => console.error('Error cargando asientos ocupados:', err));
+    try {
+        await cargarAsientosOcupados(id_viaje, esIdaVuelta ? viajeVueltaSeleccionado : null);
+    } catch (err) {
+        console.error('Error cargando asientos ocupados:', err);
+    }
 
     irAPaso(2);
 }
@@ -207,7 +277,10 @@ function seleccionarAsiento(elementoHtml, numero_asiento) {
     if (elementoHtml.classList.contains('occupied')) return;
 
     const wagon = parseInt(elementoHtml.getAttribute('data-wagon') || `${estado.vagonActual}`, 10);
-    const precioAsiento = (parseFloat(precioBaseViaje) || 0) + (wagon === 1 ? 15 : 0);
+    const suplementoClase = wagon === 1 ? 15 : 0;
+    const precioIda = (parseFloat(precioBaseViaje) || 0) + suplementoClase;
+    const precioVuelta = esIdaVuelta ? ((parseFloat(precioBaseViajeVuelta) || 0) + suplementoClase) : 0;
+    const precioAsiento = precioIda + precioVuelta;
 
     const idxExistente = estado.asientosSeleccionados.findIndex(s => s.numero === numero_asiento);
     if (idxExistente >= 0) {
@@ -307,7 +380,15 @@ function cargarDatosResumen() {
     const summarySeat = document.getElementById('summarySeat');
     const summaryBasePrice = document.getElementById('summaryBasePrice');
 
-    if (summaryTrain) summaryTrain.textContent = 'Tren #' + String(viajeSeleccionado).padStart(4, '0');
+    if (summaryTrain) {
+        if (esIdaVuelta && viajeVueltaSeleccionado) {
+            summaryTrain.textContent =
+                'Ida #' + String(viajeSeleccionado).padStart(4, '0') +
+                ' | Vuelta #' + String(viajeVueltaSeleccionado).padStart(4, '0');
+        } else {
+            summaryTrain.textContent = 'Tren #' + String(viajeSeleccionado).padStart(4, '0');
+        }
+    }
     if (summarySeat) {
         summarySeat.textContent = estado.asientosSeleccionados
             .map(s => `${tr('vagon', 'Vagón')} ${s.wagon} - ${tr('asiento', 'Asiento')} ${s.numero}`)
@@ -392,6 +473,7 @@ function confirmarReserva() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             id_viaje: viajeSeleccionado,
+            id_viaje_vuelta: esIdaVuelta ? viajeVueltaSeleccionado : null,
             asientos: estado.asientosSeleccionados.map((s) => ({
                 numero_asiento: s.numero,
                 vagon: s.wagon,
@@ -436,6 +518,24 @@ function confirmarReserva() {
 
 // ================= INICIALIZACION =================
 document.addEventListener('DOMContentLoaded', function () {
+    window.seleccionarTrenVuelta = seleccionarTrenVuelta;
+    window.cerrarModalVuelta = cerrarModalVuelta;
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            cerrarModalVuelta();
+        }
+    });
+
+    const returnModal = document.getElementById('returnTripModal');
+    if (returnModal) {
+        returnModal.addEventListener('click', function (e) {
+            if (e.target === returnModal) {
+                cerrarModalVuelta();
+            }
+        });
+    }
+
     document.querySelectorAll('.seat').forEach(asiento => {
         asiento.addEventListener('click', function () {
             if (this.classList.contains('occupied')) return;

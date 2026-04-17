@@ -18,40 +18,55 @@ $pdo = $conexion->conectar();
 $origen = isset($_GET['origen']) ? trim($_GET['origen']) : '';
 $destino = isset($_GET['destino']) ? trim($_GET['destino']) : '';
 $fecha = isset($_GET['fecha']) ? trim($_GET['fecha']) : '';
+$trip = isset($_GET['trip']) ? trim($_GET['trip']) : 'oneway';
+$es_ida_vuelta = ($trip === 'roundtrip');
+$fecha_vuelta = isset($_GET['fecha_vuelta']) ? trim($_GET['fecha_vuelta']) : '';
+$fecha_vuelta = $es_ida_vuelta ? $fecha_vuelta : '';
 $pasajeros = isset($_GET['pasajeros']) ? intval($_GET['pasajeros']) : 1;
 $pasajeros = max(1, min(4, $pasajeros));
 
-$where = [];
-$params = [];
-if ($origen !== '') {
-    $where[] = 'r.origen ILIKE :origen';
-    $params[':origen'] = $origen;
-}
-if ($destino !== '') {
-    $where[] = 'r.destino ILIKE :destino';
-    $params[':destino'] = $destino;
-}
-if ($fecha !== '') {
-    $where[] = 'v.fecha = :fecha';
-    $params[':fecha'] = $fecha;
+function buscarTrayectos(PDO $pdo, string $origen, string $destino, string $fecha): array {
+    $where = [];
+    $params = [];
+
+    if ($origen !== '') {
+        $where[] = 'r.origen ILIKE :origen';
+        $params[':origen'] = $origen;
+    }
+    if ($destino !== '') {
+        $where[] = 'r.destino ILIKE :destino';
+        $params[':destino'] = $destino;
+    }
+    if ($fecha !== '') {
+        $where[] = 'v.fecha = :fecha';
+        $params[':fecha'] = $fecha;
+    }
+
+    $sql = "SELECT 
+                v.id_viaje, v.fecha, v.hora_salida, v.hora_llegada, v.precio as precio_base, v.estado as estado_viaje,
+                t.modelo as tipo_tren, t.id_tren as codigo_tren,
+                r.origen, 
+                r.destino
+            FROM VIAJE v
+            JOIN TREN t ON v.id_tren = t.id_tren
+            JOIN RUTA r ON v.id_ruta = r.id_ruta";
+    if (!empty($where)) {
+        $sql .= ' WHERE ' . implode(' AND ', $where);
+    }
+    $sql .= ' ORDER BY v.hora_salida ASC';
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$sql = "SELECT 
-            v.id_viaje, v.fecha, v.hora_salida, v.hora_llegada, v.precio as precio_base, v.estado as estado_viaje,
-            t.modelo as tipo_tren, t.id_tren as codigo_tren,
-            r.origen, 
-            r.destino
-        FROM VIAJE v
-        JOIN TREN t ON v.id_tren = t.id_tren
-        JOIN RUTA r ON v.id_ruta = r.id_ruta";
-if (!empty($where)) {
-    $sql .= ' WHERE ' . implode(' AND ', $where);
-}
-$sql .= ' ORDER BY v.hora_salida ASC';
+$trayectos = buscarTrayectos($pdo, $origen, $destino, $fecha);
+$trayectos_vuelta = [];
 
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$trayectos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+if ($es_ida_vuelta && $fecha_vuelta !== '') {
+    $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, $fecha_vuelta);
+}
 
 // 2. Obtener las promociones activas
 
@@ -237,6 +252,12 @@ if ($id_pasajero_gestionado) {
                 $dia_mes = date('d/m', strtotime($f));
                 // Construimos la URL para recargar la página con esa nueva fecha manteniendo el resto de datos
                 $url_dia = "?origen=" . urlencode($origen) . "&destino=" . urlencode($destino) . "&pasajeros=" . $pasajeros . "&fecha=" . $f;
+                if ($es_ida_vuelta) {
+                    $url_dia .= "&trip=roundtrip";
+                    if ($fecha_vuelta !== '') {
+                        $url_dia .= "&fecha_vuelta=" . urlencode($fecha_vuelta);
+                    }
+                }
             ?>
                 <a href="<?= $url_dia ?>" style="flex: 1; min-width: 90px; text-align: center; padding: 12px 5px; border-radius: 8px; text-decoration: none; border: 2px solid <?= $es_activa ? '#0a2a66' : '#e0e0e0' ?>; background-color: <?= $es_activa ? '#f4f6f8' : 'white' ?>; color: #333; transition: all 0.2s;">
                     <div style="font-size: 0.85rem; color: #666; margin-bottom: 5px;"><?= $dia_semana ?> <?= $dia_mes ?></div>
@@ -305,6 +326,71 @@ if ($id_pasajero_gestionado) {
             <?php endif; ?>
             </div>
         </section>
+
+        <div id="returnTripModal" class="return-modal hidden" aria-hidden="true">
+            <div class="return-modal-content">
+                <div class="return-modal-header">
+                    <h3><i class="fa-solid fa-repeat"></i> Selecciona tu tren de vuelta</h3>
+                    <button type="button" class="return-modal-close" onclick="cerrarModalVuelta()" aria-label="Cerrar">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <p class="return-modal-subtitle">
+                    <?= htmlspecialchars($destino, ENT_QUOTES, 'UTF-8') ?> <i class="fa-solid fa-arrow-right"></i> <?= htmlspecialchars($origen, ENT_QUOTES, 'UTF-8') ?>
+                    <?php if ($fecha_vuelta !== ''): ?>
+                        | <?= htmlspecialchars($fecha_vuelta, ENT_QUOTES, 'UTF-8') ?>
+                    <?php endif; ?>
+                </p>
+
+                <div class="return-train-list">
+                    <?php if (empty($trayectos_vuelta)): ?>
+                        <div class="no-return-trains">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <p>No hay trenes de vuelta para la fecha seleccionada.</p>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($trayectos_vuelta as $trayectoVuelta):
+                            $hora_salida_v = date('H:i', strtotime($trayectoVuelta['hora_salida']));
+                            $hora_llegada_v = date('H:i', strtotime($trayectoVuelta['hora_llegada']));
+                            $dteStartV = new DateTime($trayectoVuelta['hora_salida']);
+                            $dteEndV = new DateTime($trayectoVuelta['hora_llegada']);
+                            $duracionV = $dteStartV->diff($dteEndV)->format('%hh %Imin');
+                            $precioV = number_format($trayectoVuelta['precio_base'], 2, ',', '');
+                            $origenCodeV = strtoupper(substr(trim((string)$trayectoVuelta['origen']), 0, 3));
+                            $destinoCodeV = strtoupper(substr(trim((string)$trayectoVuelta['destino']), 0, 3));
+                            $isFullV = ($trayectoVuelta['estado_viaje'] === 'completado');
+                        ?>
+                            <div class="ticket-card return-card <?= $isFullV ? 'full-train' : '' ?>">
+                                <div class="col-train-info">
+                                    <span class="train-type type-<?= strtolower($trayectoVuelta['tipo_tren']) ?>"><?= strtoupper($trayectoVuelta['tipo_tren']) ?></span>
+                                    <span class="train-id"><?= htmlspecialchars(str_pad($trayectoVuelta['codigo_tren'], 4, '0', STR_PAD_LEFT)) ?></span>
+                                    <div class="amenities"><i class="fa-solid fa-train"></i></div>
+                                </div>
+                                <div class="col-schedule">
+                                    <div class="time-group"><span class="hour"><?= $hora_salida_v ?></span><span class="city"><?= htmlspecialchars($origenCodeV, ENT_QUOTES, 'UTF-8') ?></span></div>
+                                    <div class="duration-line"><span class="duration-text"><?= $duracionV ?></span><div class="line"><i class="fa-solid fa-train"></i></div></div>
+                                    <div class="time-group"><span class="hour"><?= $hora_llegada_v ?></span><span class="city"><?= htmlspecialchars($destinoCodeV, ENT_QUOTES, 'UTF-8') ?></span></div>
+                                </div>
+                                <div class="col-price">
+                                    <?php if ($isFullV): ?>
+                                        <div class="price-full">Completo</div>
+                                        <button class="btn-select" disabled>Agotado</button>
+                                    <?php else: ?>
+                                        <div class="price"><?= $precioV ?> €</div>
+                                        <button
+                                            type="button"
+                                            class="btn-select"
+                                            onclick="seleccionarTrenVuelta(<?= $trayectoVuelta['id_viaje'] ?>, '<?= $trayectoVuelta['tipo_tren'] ?>', <?= $trayectoVuelta['precio_base'] ?>)">
+                                            Elegir vuelta
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
 
         <section id="sectionSeats" class="booking-section hidden">
             <div class="seat-header">
@@ -537,6 +623,12 @@ if ($id_pasajero_gestionado) {
     <script>
     window.compraConfig = {
         totalPasajeros: <?php echo (int)$pasajeros; ?>,
+        tripType: <?php echo json_encode($trip); ?>,
+        fechaIda: <?php echo json_encode($fecha); ?>,
+        fechaVuelta: <?php echo json_encode($fecha_vuelta); ?>,
+        origen: <?php echo json_encode($origen); ?>,
+        destino: <?php echo json_encode($destino); ?>,
+        hasReturnOptions: <?php echo !empty($trayectos_vuelta) ? 'true' : 'false'; ?>,
         pasajeroPrincipal: {
             nombre: <?php echo json_encode((string)($usuarioSesion['nombre'] ?? '')); ?>,
             apellidos: <?php echo json_encode((string)($usuarioSesion['apellido'] ?? '')); ?>,

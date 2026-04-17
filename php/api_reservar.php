@@ -35,6 +35,10 @@ try {
         responderJson(400, ['error' => 'Faltan datos para la reserva.']);
     }
 
+    $idViajeIda = (int)$input['id_viaje'];
+    $idViajeVuelta = isset($input['id_viaje_vuelta']) ? (int)$input['id_viaje_vuelta'] : 0;
+    $esIdaVuelta = $idViajeVuelta > 0;
+
     if (!isset($_SESSION['usuario']['id_usuario'])) {
         responderJson(401, ['error' => 'Sesion no valida.']);
     }
@@ -116,11 +120,21 @@ try {
          JOIN tren t ON t.id_tren = v.id_tren
          WHERE v.id_viaje = :id_viaje LIMIT 1'
     );
-    $stmtViaje->execute([':id_viaje' => (int)$input['id_viaje']]);
-    $viaje = $stmtViaje->fetch(PDO::FETCH_ASSOC);
+    $stmtViaje->execute([':id_viaje' => $idViajeIda]);
+    $viajeIda = $stmtViaje->fetch(PDO::FETCH_ASSOC);
 
-    if (!$viaje) {
+    if (!$viajeIda) {
         responderJson(404, ['error' => 'Viaje no encontrado.']);
+    }
+
+    $viajeVuelta = null;
+    if ($esIdaVuelta) {
+        $stmtViaje->execute([':id_viaje' => $idViajeVuelta]);
+        $viajeVuelta = $stmtViaje->fetch(PDO::FETCH_ASSOC);
+
+        if (!$viajeVuelta) {
+            responderJson(404, ['error' => 'Viaje de vuelta no encontrado.']);
+        }
     }
 
     $mgo = new ConexionMongo();
@@ -132,7 +146,7 @@ try {
 
     foreach ($asientos as $asiento) {
         $duplicado = $coleccion->findOne([
-            'id_viaje' => (int)$input['id_viaje'],
+            'id_viaje' => $idViajeIda,
             'numero_asiento' => (int)$asiento['numero_asiento'],
             'estado' => 'confirmado',
         ]);
@@ -142,35 +156,79 @@ try {
                 'error' => 'Uno de los asientos seleccionados ya ha sido reservado. Refresca y elige otro asiento.'
             ]);
         }
+
+        if ($esIdaVuelta) {
+            $duplicadoVuelta = $coleccion->findOne([
+                'id_viaje' => $idViajeVuelta,
+                'numero_asiento' => (int)$asiento['numero_asiento'],
+                'estado' => 'confirmado',
+            ]);
+
+            if ($duplicadoVuelta) {
+                responderJson(409, [
+                    'error' => 'Uno de los asientos seleccionados ya esta reservado en la vuelta. Refresca y elige otro asiento.'
+                ]);
+            }
+        }
     }
 
     $fechaCompra = date('Y-m-d H:i:s');
     $precioTotal = isset($input['precio_total']) ? (float)$input['precio_total'] : 0.0;
-    $precioPorBillete = count($asientos) > 0 ? $precioTotal / count($asientos) : 0.0;
+    $factorTrayectos = $esIdaVuelta ? 2 : 1;
+    $precioPorBillete = count($asientos) > 0 ? $precioTotal / (count($asientos) * $factorTrayectos) : 0.0;
 
     $documentos = [];
     foreach ($asientos as $i => $asiento) {
         $pasajero = $pasajeros[$i];
+        $precioIda = $asiento['precio'] !== null
+            ? ((float)$asiento['precio'] / $factorTrayectos)
+            : (float)$precioPorBillete;
+
         $documentos[] = [
-            'id_viaje' => (int)$input['id_viaje'],
+            'id_viaje' => $idViajeIda,
             'numero_asiento' => (int)$asiento['numero_asiento'],
             'id_pasajero' => $idPasajeroComprador,
             'vagon' => $asiento['vagon'],
             'estado' => 'confirmado',
+            'tramo' => 'ida',
             'fecha_compra' => $fechaCompra,
-            'fecha_viaje' => (string)($viaje['fecha'] ?? ''),
-            'hora_salida' => (string)($viaje['hora_salida'] ?? ''),
-            'hora_llegada' => (string)($viaje['hora_llegada'] ?? ''),
-            'origen' => (string)($viaje['origen'] ?? ''),
-            'destino' => (string)($viaje['destino'] ?? ''),
-            'tipo_tren' => (string)($viaje['tipo_tren'] ?? ''),
-            'precio_pagado' => $asiento['precio'] !== null ? (float)$asiento['precio'] : (float)$precioPorBillete,
+            'fecha_viaje' => (string)($viajeIda['fecha'] ?? ''),
+            'hora_salida' => (string)($viajeIda['hora_salida'] ?? ''),
+            'hora_llegada' => (string)($viajeIda['hora_llegada'] ?? ''),
+            'origen' => (string)($viajeIda['origen'] ?? ''),
+            'destino' => (string)($viajeIda['destino'] ?? ''),
+            'tipo_tren' => (string)($viajeIda['tipo_tren'] ?? ''),
+            'precio_pagado' => $precioIda,
             'codigo_billete' => generarCodigoBillete(),
             'pasajero_nombre' => $pasajero['nombre'],
             'pasajero_apellidos' => $pasajero['apellidos'],
             'pasajero_documento' => $pasajero['documento'],
             'pasajero_email' => $pasajero['email'],
         ];
+
+        if ($esIdaVuelta && $viajeVuelta) {
+            $documentos[] = [
+                'id_viaje' => $idViajeVuelta,
+                'numero_asiento' => (int)$asiento['numero_asiento'],
+                'id_pasajero' => $idPasajeroComprador,
+                'vagon' => $asiento['vagon'],
+                'estado' => 'confirmado',
+                'tramo' => 'vuelta',
+                'fecha_compra' => $fechaCompra,
+                'fecha_viaje' => (string)($viajeVuelta['fecha'] ?? ''),
+                'hora_salida' => (string)($viajeVuelta['hora_salida'] ?? ''),
+                'hora_llegada' => (string)($viajeVuelta['hora_llegada'] ?? ''),
+                'origen' => (string)($viajeVuelta['origen'] ?? ''),
+                'destino' => (string)($viajeVuelta['destino'] ?? ''),
+                'tipo_tren' => (string)($viajeVuelta['tipo_tren'] ?? ''),
+                'precio_pagado' => $precioIda,
+                'codigo_billete' => generarCodigoBillete(),
+                'pasajero_nombre' => $pasajero['nombre'],
+                'pasajero_apellidos' => $pasajero['apellidos'],
+                'pasajero_documento' => $pasajero['documento'],
+                'pasajero_email' => $pasajero['email'],
+            ];
+        }
     }
 
     $resultado = $coleccion->insertMany($documentos);
@@ -193,7 +251,8 @@ try {
     $_SESSION['ultima_reserva'] = [
         'token' => $token,
         'creado_en' => time(),
-        'id_viaje' => (int)$input['id_viaje'],
+        'id_viaje' => $idViajeIda,
+        'id_viaje_vuelta' => $idViajeVuelta > 0 ? $idViajeVuelta : null,
         'precio_total' => $precioTotal,
         'billetes' => $billetesSesion,
     ];

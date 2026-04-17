@@ -247,6 +247,76 @@
     opacity: 0.7;
 }
 
+.return-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 15, 35, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 24px;
+}
+
+.return-modal-content {
+    width: min(1100px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+}
+
+.return-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.return-modal-header h3 {
+    margin: 0;
+    color: #0a2a66;
+}
+
+.return-modal-close {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: #eef2f7;
+    color: #0a2a66;
+    cursor: pointer;
+}
+
+.return-modal-subtitle {
+    margin: 8px 0 16px;
+    color: #475569;
+    font-weight: 600;
+}
+
+.return-train-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.return-card {
+    margin-bottom: 0;
+}
+
+.no-return-trains {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff7ed;
+    color: #9a3412;
+    border: 1px solid #fed7aa;
+    border-radius: 10px;
+    padding: 14px;
+}
+
 .passengers-forms-container {
     display: grid;
     gap: 22px;
