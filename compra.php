@@ -31,11 +31,11 @@ function buscarTrayectos(PDO $pdo, string $origen, string $destino, string $fech
 
     if ($origen !== '') {
         $where[] = 'r.origen ILIKE :origen';
-        $params[':origen'] = $origen;
+        $params[':origen'] = '%' . $origen . '%';
     }
     if ($destino !== '') {
         $where[] = 'r.destino ILIKE :destino';
-        $params[':destino'] = $destino;
+        $params[':destino'] = '%' . $destino . '%';
     }
     if ($fecha !== '') {
         $where[] = 'v.fecha = :fecha';
