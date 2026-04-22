@@ -24,10 +24,16 @@ $fecha_vuelta = isset($_GET['fecha_vuelta']) ? trim($_GET['fecha_vuelta']) : '';
 $fecha_vuelta = $es_ida_vuelta ? $fecha_vuelta : '';
 $pasajeros = isset($_GET['pasajeros']) ? intval($_GET['pasajeros']) : 1;
 $pasajeros = max(1, min(4, $pasajeros));
+$id_viaje_seleccionado = isset($_GET['id_viaje']) ? (int)$_GET['id_viaje'] : 0;
 
-function buscarTrayectos(PDO $pdo, string $origen, string $destino, string $fecha): array {
+function buscarTrayectos(PDO $pdo, string $origen, string $destino, string $fecha, int $idViaje = 0): array {
     $where = [];
     $params = [];
+
+    if ($idViaje > 0) {
+        $where[] = 'v.id_viaje = :id_viaje';
+        $params[':id_viaje'] = $idViaje;
+    }
 
     if ($origen !== '') {
         $where[] = 'r.origen ILIKE :origen';
@@ -61,16 +67,23 @@ function buscarTrayectos(PDO $pdo, string $origen, string $destino, string $fech
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$trayectos = buscarTrayectos($pdo, $origen, $destino, $fecha);
+$trayectos = buscarTrayectos($pdo, $origen, $destino, $fecha, $id_viaje_seleccionado);
 $trayectos_vuelta = [];
+
+if ($id_viaje_seleccionado > 0 && !empty($trayectos)) {
+    // Si venimos de rutas_destino, consolidamos el resumen con el viaje concreto.
+    $origen = (string)$trayectos[0]['origen'];
+    $destino = (string)$trayectos[0]['destino'];
+    $fecha = (string)$trayectos[0]['fecha'];
+}
 
 if ($es_ida_vuelta) {
     if ($fecha_vuelta !== '') {
-        $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, $fecha_vuelta);
+        $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, $fecha_vuelta, 0);
     }
 
     if (empty($trayectos_vuelta)) {
-        $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, '');
+        $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, '', 0);
     }
 }
 
