@@ -258,7 +258,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 clientError.textContent = 'Error al buscar el usuario.';
                 clientError.classList.remove('hidden');
             });
-    });
 });
 
 // Event listeners para el modal de modificación de billete
