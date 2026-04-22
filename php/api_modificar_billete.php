@@ -30,13 +30,11 @@ $pasajero_email = isset($data['pasajero_email']) ? trim($data['pasajero_email'])
 
 // Validar según el tipo de modificación
 if ($modificar_datos) {
-    // Modificar solo datos del pasajero
     if (!$localizador || !$id_pasajero) {
         echo json_encode(['error' => 'Datos incompletos para la modificación']);
         exit;
     }
 } else {
-    // Modificar viaje y/o asiento
     if (!$localizador || !$id_pasajero || !$id_viaje_nuevo || !$numero_asiento_nuevo) {
         echo json_encode(['error' => 'Datos incompletos para la modificación']);
         exit;
@@ -88,22 +86,26 @@ if ($modificar_datos) {
 $id_viaje_anterior = (int)($billete['id_viaje'] ?? 0);
 $numero_asiento_anterior = isset($billete['numero_asiento']) ? (int)$billete['numero_asiento'] : 0;
 
-// Verificar que el nuevo asiento esté disponible
-$stmt = $pdo->prepare('SELECT v.id_tren FROM VIAJE v WHERE v.id_viaje = :id_viaje');
+
+// --- SOLUCIÓN: Validamos la disponibilidad real consultando MongoDB ---
+$asientoOcupadoMongo = $collection->findOne([
+    'id_viaje' => $id_viaje_nuevo,
+    'numero_asiento' => $numero_asiento_nuevo,
+    'estado' => ['$ne' => 'cancelado']
+]);
+
+if ($asientoOcupadoMongo && (string)$asientoOcupadoMongo['_id'] !== (string)$billete['_id']) {
+    echo json_encode(['error' => 'El asiento seleccionado ya está ocupado en este viaje.']);
+    exit;
+}
+
+// Obtener el tren del nuevo viaje desde PostgreSQL
+$stmt = $pdo->prepare('SELECT id_tren FROM VIAJE WHERE id_viaje = :id_viaje');
 $stmt->execute([':id_viaje' => $id_viaje_nuevo]);
 $viajeNuevo = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$viajeNuevo) {
     echo json_encode(['error' => 'Viaje no encontrado']);
-    exit;
-}
-
-$stmt = $pdo->prepare('SELECT estado FROM ASiento WHERE numero_asiento = :numero_asiento AND id_tren = :id_tren');
-$stmt->execute([':numero_asiento' => $numero_asiento_nuevo, ':id_tren' => $viajeNuevo['id_tren']]);
-$asientoNuevo = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$asientoNuevo || $asientoNuevo['estado'] !== 'disponible') {
-    echo json_encode(['error' => 'El nuevo asiento no está disponible']);
     exit;
 }
 
@@ -113,11 +115,11 @@ $stmt->execute([':id_viaje' => $id_viaje_nuevo]);
 $precioViaje = $stmt->fetch(PDO::FETCH_ASSOC);
 $precio_nuevo = $precioViaje ? (float)$precioViaje['precio'] : 0;
 
-// TRANSACCIÓN: Liberar asiento anterior y ocupar el nuevo
+// TRANSACCIÓN: Actualizar los estados en la tabla ASIENTO de PostgreSQL (Manteniendo tu lógica original)
 try {
     $pdo->beginTransaction();
     
-    // 1. Liberar asiento anterior (si existe y es diferente)
+    // 1. Liberar asiento anterior en PostgreSQL
     if ($id_viaje_anterior > 0 && $numero_asiento_anterior > 0 && 
         ($id_viaje_anterior !== $id_viaje_nuevo || $numero_asiento_anterior !== $numero_asiento_nuevo)) {
         
@@ -126,7 +128,7 @@ try {
         $viajeAnterior = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($viajeAnterior) {
-            $stmt = $pdo->prepare('UPDATE ASiento SET estado = \'disponible\' WHERE numero_asiento = :numero_asiento AND id_tren = :id_tren');
+            $stmt = $pdo->prepare("UPDATE ASIENTO SET estado = 'disponible' WHERE numero_asiento = :numero_asiento AND id_tren = :id_tren");
             $stmt->execute([
                 ':numero_asiento' => $numero_asiento_anterior,
                 ':id_tren' => $viajeAnterior['id_tren']
@@ -134,8 +136,9 @@ try {
         }
     }
     
-    // 2. Ocupar el nuevo asiento
-    $stmt = $pdo->prepare('UPDATE ASiento SET estado = \'ocupado\' WHERE numero_asiento = :numero_asiento AND id_tren = :id_tren');
+    // 2. Ocupar el nuevo asiento en PostgreSQL
+    // Hacemos el UPDATE directamente sin bloquear la compra si no encuentra la fila
+    $stmt = $pdo->prepare("UPDATE ASIENTO SET estado = 'ocupado' WHERE numero_asiento = :numero_asiento AND id_tren = :id_tren");
     $stmt->execute([
         ':numero_asiento' => $numero_asiento_nuevo,
         ':id_tren' => $viajeNuevo['id_tren']
@@ -144,7 +147,7 @@ try {
     $pdo->commit();
 } catch (Exception $e) {
     $pdo->rollBack();
-    echo json_encode(['error' => 'Error al actualizar los asientos: ' . $e->getMessage()]);
+    echo json_encode(['error' => 'Error al actualizar PostgreSQL: ' . $e->getMessage()]);
     exit;
 }
 
