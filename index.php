@@ -30,6 +30,11 @@ try {
 }
 
 ?>
+<script>
+    // Pasamos las promociones de PHP a JavaScript
+    const promocionesDisponibles = <?php echo json_encode($promociones_index); ?>;
+</script>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -270,7 +275,55 @@ try {
     </script>
     <script src="scripts/session_menu.js"></script>
     <script src="scripts/index.js"></script>
+<div id="promo-popup-container"></div>
 
+<script>
+function mostrarPromoAleatoria() {
+    if (!promocionesDisponibles || promocionesDisponibles.length === 0) return;
+
+    const container = document.getElementById('promo-popup-container');
+    
+    // Elegimos una promo al azar
+    const indice = Math.floor(Math.random() * promocionesDisponibles.length);
+    const promo = promocionesDisponibles[indice];
+
+    // Creamos el elemento
+    const popup = document.createElement('div');
+    popup.className = 'promo-popup';
+    popup.innerHTML = `
+        <span class="promo-close" onclick="this.parentElement.remove()">×</span>
+        <div class="promo-header">¡Oferta Especial! 🚅</div>
+        <div class="promo-body">
+            Usa el código <strong>${promo.codigo}</strong> y obtén un 
+            <strong>${promo.descuento_porcentaje}%</strong> de descuento.
+        </div>
+    `;
+
+    container.appendChild(popup);
+
+    // Se quita automáticamente a los 6 segundos
+    setTimeout(() => {
+        popup.classList.add('fade-out');
+        setTimeout(() => popup.remove(), 500);
+    }, 6000);
+}
+
+// Configuración de los "momentos random"
+function programarSiguientePromo() {
+    // Aparecerá entre cada 10 y 20 segundos para no agobiar
+    const tiempoAleatorio = Math.floor(Math.random() * (20000 - 10000 + 1)) + 10000;
+    
+    setTimeout(() => {
+        mostrarPromoAleatoria();
+        programarSiguientePromo(); // Se vuelve a llamar a sí misma
+    }, tiempoAleatorio);
+}
+
+// Empezar el ciclo a los 5 segundos de entrar en la web
+if (promocionesDisponibles.length > 0) {
+    setTimeout(programarSiguientePromo, 5000);
+}
+</script>
 
 </body>
 </html>
