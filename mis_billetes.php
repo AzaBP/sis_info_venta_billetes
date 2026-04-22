@@ -29,6 +29,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
     <title>Mis billetes - TrainWeb</title>
     <link rel="stylesheet" href="css/index.css?v=<?php echo urlencode($assetVersion); ?>">
     <link rel="stylesheet" href="css/session_menu.css?v=<?php echo urlencode($assetVersion); ?>">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
     <style>
         body { background: #eef3fb; }
         .my-tickets-page { max-width: 1240px; margin: 0 auto; padding: 28px 20px 48px; }
@@ -55,9 +56,34 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
             box-shadow: 0 10px 26px rgba(16, 39, 82, 0.08);
             padding: 16px 18px;
             border-left: 6px solid #1f4fa6;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
+        .ticket-row:hover { box-shadow: 0 14px 34px rgba(16, 39, 82, 0.12); }
         .ticket-row.expired { border-left-color: #8a93a8; opacity: 0.82; }
-        .ticket-route { display: flex; flex-direction: column; gap: 7px; }
+        .ticket-row.expanded {
+            grid-template-columns: 1fr;
+            background: #f5f8fc;
+            border-left-color: #0a2a66;
+        }
+        .ticket-details-expanded { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #d8e0ef; }
+        .ticket-row.expanded .ticket-details-expanded { display: block; }
+        .ticket-row.expanded .ticket-route,
+        .ticket-row.expanded .ticket-meta,
+        .ticket-row.expanded .ticket-actions { grid-column: 1 / -1; }
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 16px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #d8e0ef;
+        }
+        .qr-container canvas { border: 2px solid #0a2a66; padding: 8px; background: white; max-width: 240px; }
+        .qr-info { font-size: 0.85rem; color: #5c6b85; text-align: center; }
         .ticket-route h3 { margin: 0; color: #12213d; font-size: 1.08rem; }
         .ticket-route p, .ticket-meta p { margin: 0; color: #5c6b85; font-size: 0.92rem; }
         .ticket-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
@@ -87,7 +113,34 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
             gap: 8px;
             white-space: nowrap;
             margin-top: -2px;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
         }
+        .btn-link:hover { background: #1f4fa6; }
+        .ticket-row.expanded {
+            grid-template-columns: 1fr;
+            background: #f5f8fc;
+            border-left-color: #0a2a66;
+        }
+        .ticket-details-expanded { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #d8e0ef; }
+        .ticket-row.expanded .ticket-details-expanded { display: block; }
+        .ticket-row.expanded .ticket-route,
+        .ticket-row.expanded .ticket-meta,
+        .ticket-row.expanded .ticket-actions { grid-column: 1 / -1; }
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0;
+            padding: 16px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #d8e0ef;
+        }
+        .qr-container canvas { border: 2px solid #d8e0ef; padding: 8px; background: white; }
+        .qr-info { font-size: 0.85rem; color: #5c6b85; text-align: center; }
         @media (max-width: 920px) {
             .ticket-row { grid-template-columns: 1fr; }
             .ticket-actions { align-items: flex-start; justify-content: flex-start; }
@@ -126,6 +179,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
 
         <div id="ticketsState" class="tickets-loading">Cargando tus billetes...</div>
         <div id="ticketsList" class="tickets-list" hidden></div>
+        <div id="ticketDetail" class="ticket-detail" hidden></div>
     </main>
 
     <script src="scripts/i18n.js?v=<?php echo urlencode($assetVersion); ?>"></script>

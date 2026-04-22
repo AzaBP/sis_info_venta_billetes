@@ -69,6 +69,7 @@ function buscarTrayectos(PDO $pdo, string $origen, string $destino, string $fech
 
 $trayectos = buscarTrayectos($pdo, $origen, $destino, $fecha, $id_viaje_seleccionado);
 $trayectos_vuelta = [];
+$mensaje_vuelta = null;
 
 if ($id_viaje_seleccionado > 0 && !empty($trayectos)) {
     // Si venimos de rutas_destino, consolidamos el resumen con el viaje concreto.
@@ -83,7 +84,14 @@ if ($es_ida_vuelta) {
     }
 
     if (empty($trayectos_vuelta)) {
-        $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, '', 0);
+        // Buscar vuelta posterior a la fecha de ida
+        $fecha_siguiente = date('Y-m-d', strtotime($fecha . ' +1 day'));
+        $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, $fecha_siguiente, 0);
+        
+        // Si tampoco hay después, mostrar mensaje
+        if (empty($trayectos_vuelta)) {
+            $mensaje_vuelta = "Lo sentimos, no hay trenes disponibles {$destino} → {$origen} posteriores a {$fecha}. Puedes reservar solo la ida.";
+        }
     }
 }
 
@@ -367,7 +375,7 @@ if ($id_pasajero_gestionado) {
                     <?php if (empty($trayectos_vuelta)): ?>
                         <div class="no-return-trains">
                             <i class="fa-solid fa-circle-exclamation"></i>
-                            <p>No hay trenes de vuelta para la fecha seleccionada.</p>
+                            <p><?php echo htmlspecialchars($mensaje_vuelta ?? 'No hay trenes de vuelta para la fecha seleccionada.', ENT_QUOTES, 'UTF-8'); ?></p>
                         </div>
                     <?php else: ?>
                         <?php foreach ($trayectos_vuelta as $trayectoVuelta):
@@ -416,6 +424,17 @@ if ($id_pasajero_gestionado) {
         <section id="sectionSeats" class="booking-section hidden">
             <div class="seat-header">
                 <h3><span data-i18n="selecciona_plaza_en">Selecciona tu plaza en</span> <span id="lblTrenSeleccionado">--</span></h3>
+                
+                <?php if ($es_ida_vuelta): ?>
+                <div style="margin: 15px 0; padding: 12px; background: #f5f8fc; border-radius: 8px; border: 1px solid #d8e0ef;">
+                    <p style="margin: 0 0 10px; font-weight: 600; color: #0a2a66;">Selecciona asientos para:</p>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" id="btnTramoIda" class="tramo-btn active" onclick="cambiarTramo('ida')" style="flex: 1; padding: 10px; background: #0a2a66; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Ida</button>
+                        <button type="button" id="btnTramoVuelta" class="tramo-btn" onclick="cambiarTramo('vuelta')" style="flex: 1; padding: 10px; background: #e7eefb; color: #0a2a66; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Vuelta</button>
+                    </div>
+                </div>
+                <?php endif; ?>
+                
                 <div class="wagon-navigator">
                     <button class="nav-arrow" id="btnPrev" onclick="cambiarVagon(-1)"><i class="fa-solid fa-chevron-left"></i></button>
                     <span class="wagon-title"><span data-i18n="vagon">Vagón</span> <span id="currentWagonNum">1</span></span>

@@ -38,6 +38,82 @@ try {
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/session_menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .calendar-container {
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 10px;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        .calendar-header h3 { margin: 0; color: #0a2a66; font-size: 1.1rem; }
+        .calendar-nav {
+            background: #0a2a66;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .calendar-nav:hover { background: #1f4fa6; }
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        .weekday {
+            text-align: center;
+            font-weight: 700;
+            color: #0a2a66;
+            font-size: 0.85rem;
+            padding: 6px;
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #f0f5fb;
+            border: 1px solid #d8e0ef;
+            color: #0a2a66;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .calendar-day:not(.past):not(.empty):hover { background: #e7eefb; transform: scale(1.05); }
+        .calendar-day.past { background: #e8eef6; color: #9aa1b1; cursor: not-allowed; opacity: 0.6; }
+        .calendar-day.empty { cursor: default; background: transparent; border: none; }
+        .calendar-day.available { border-color: #17632A; border-width: 2px; }
+        .calendar-day.today { background: #0a2a66; color: white; }
+        .calendar-day.selected { background: #17632A; color: white; border-width: 2px; border-color: #0a2a66; }
+        .available-indicator {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 6px;
+            height: 6px;
+            background: #17632A;
+            border-radius: 50%;
+        }
+        .calendar-day.today .available-indicator { background: white; }
+    </style>
 </head>
 <body>
 
@@ -111,7 +187,7 @@ try {
 
                 <!-- Fechas dinámicas -->
                 <div class="date-type" id="date-container">
-                    <input type="date" id="fecha-ida" name="fecha" required>
+                    <input type="date" id="fecha-ida" name="fecha" required style="width:100%;">
                 </div>
 
                 <select name="pasajeros">
@@ -255,6 +331,7 @@ try {
         <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
     <script src="scripts/i18n_index.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n_index.js'); ?>"></script>
+    <script src="scripts/calendar-enhanced.js?v=<?php echo @filemtime(__DIR__ . '/scripts/calendar-enhanced.js'); ?>"></script>
     <script>
         const tracks = document.querySelectorAll('.offers-track, .popular-track');
         const nextBtns = document.querySelectorAll('.next');

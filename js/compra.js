@@ -16,10 +16,11 @@ let estado = {
     pasoActual: 1,
     trenSeleccionado: null,
     precioBase: 0,
-    asientosSeleccionados: [], // [{ numero, wagon, precio }]
+    asientosSeleccionados: [], // [{ numero, wagon, precio, tramo: 'ida'|'vuelta' }]
     datosPasajeros: [],
     vagonActual: 1,
-    maxVagones: 3
+    maxVagones: 3,
+    tramoActual: 'ida' // para ida-vuelta, qué tramo se está seleccionando
 };
 
 function tr(key, fallback, params = {}) {
@@ -51,7 +52,12 @@ function formatearEuros(valor) {
 }
 
 function sumaPreciosAsientos() {
-    return estado.asientosSeleccionados.reduce((acc, s) => acc + (Number(s.precio) || 0), 0);
+    if (!esIdaVuelta) {
+        return estado.asientosSeleccionados.reduce((acc, s) => acc + (Number(s.precio) || 0), 0);
+    }
+    
+    const asientosActuales = estado.asientosSeleccionados.filter(s => s.tramo === estado.tramoActual);
+    return asientosActuales.reduce((acc, s) => acc + (Number(s.precio) || 0), 0);
 }
 
 function abrirModalVuelta() {
@@ -232,6 +238,49 @@ function irAPaso(numeroPaso) {
 }
 
 // ================= PASO 2: ASIENTOS =================
+function cambiarTramo(tramo) {
+    if (!esIdaVuelta) return;
+    
+    estado.tramoActual = tramo;
+    
+    const btnIda = document.getElementById('btnTramoIda');
+    const btnVuelta = document.getElementById('btnTramoVuelta');
+    
+    if (btnIda) {
+        if (tramo === 'ida') {
+            btnIda.style.background = '#0a2a66';
+            btnIda.style.color = 'white';
+        } else {
+            btnIda.style.background = '#e7eefb';
+            btnIda.style.color = '#0a2a66';
+        }
+    }
+    
+    if (btnVuelta) {
+        if (tramo === 'vuelta') {
+            btnVuelta.style.background = '#0a2a66';
+            btnVuelta.style.color = 'white';
+        } else {
+            btnVuelta.style.background = '#e7eefb';
+            btnVuelta.style.color = '#0a2a66';
+        }
+    }
+    
+    // Actualizar selección visual de asientos
+    document.querySelectorAll('.seat:not(.occupied)').forEach(s => {
+        s.classList.remove('selected');
+        const asiento = s.getAttribute('data-seat');
+        const estaSeleccionado = estado.asientosSeleccionados.some(
+            a => a.numero === asiento && a.tramo === tramo
+        );
+        if (estaSeleccionado) {
+            s.classList.add('selected');
+        }
+    });
+    
+    refrescarResumenAsientosSeleccionados();
+}
+
 function cambiarVagon(direccion) {
     let nuevoVagon = estado.vagonActual + direccion;
     if (nuevoVagon < 1 || nuevoVagon > estado.maxVagones) return;
@@ -258,20 +307,36 @@ function refrescarResumenAsientosSeleccionados() {
     const displayPrice = document.getElementById('displayPrice');
     const btnToPassengerData = document.getElementById('btnToPassengerData');
 
-    if (estado.asientosSeleccionados.length === 0) {
+    const asientosTramoActual = esIdaVuelta 
+        ? estado.asientosSeleccionados.filter(s => s.tramo === estado.tramoActual)
+        : estado.asientosSeleccionados;
+
+    if (asientosTramoActual.length === 0) {
         if (displaySeat) displaySeat.textContent = tr('ninguno', 'Ninguno');
         if (displayPrice) displayPrice.textContent = '0,00 €';
         if (btnToPassengerData) btnToPassengerData.disabled = true;
         return;
     }
 
-    const seatsText = estado.asientosSeleccionados
+    const seatsText = asientosTramoActual
         .map(s => `${tr('vagon', 'Vagón')} ${s.wagon} - ${s.numero}`)
         .join(' | ');
 
     if (displaySeat) displaySeat.textContent = seatsText;
     if (displayPrice) displayPrice.textContent = formatearEuros(sumaPreciosAsientos());
-    if (btnToPassengerData) btnToPassengerData.disabled = estado.asientosSeleccionados.length !== totalPasajeros;
+    
+    // Verificar si se tienen asientos suficientes en TODOS los tramos para ida-vuelta
+    if (esIdaVuelta) {
+        const asientosIda = estado.asientosSeleccionados.filter(s => s.tramo === 'ida').length;
+        const asientosVuelta = estado.asientosSeleccionados.filter(s => s.tramo === 'vuelta').length;
+        if (btnToPassengerData) {
+            btnToPassengerData.disabled = asientosIda !== totalPasajeros || asientosVuelta !== totalPasajeros;
+        }
+    } else {
+        if (btnToPassengerData) {
+            btnToPassengerData.disabled = estado.asientosSeleccionados.length !== totalPasajeros;
+        }
+    }
 }
 
 function seleccionarAsiento(elementoHtml, numero_asiento) {
@@ -279,11 +344,22 @@ function seleccionarAsiento(elementoHtml, numero_asiento) {
 
     const wagon = parseInt(elementoHtml.getAttribute('data-wagon') || `${estado.vagonActual}`, 10);
     const suplementoClase = wagon === 1 ? 15 : 0;
-    const precioIda = (parseFloat(precioBaseViaje) || 0) + suplementoClase;
-    const precioVuelta = esIdaVuelta ? ((parseFloat(precioBaseViajeVuelta) || 0) + suplementoClase) : 0;
-    const precioAsiento = precioIda + precioVuelta;
+    
+    let precioAsiento = 0;
+    if (!esIdaVuelta) {
+        precioAsiento = (parseFloat(precioBaseViaje) || 0) + suplementoClase;
+    } else {
+        if (estado.tramoActual === 'ida') {
+            precioAsiento = (parseFloat(precioBaseViaje) || 0) + suplementoClase;
+        } else {
+            precioAsiento = (parseFloat(precioBaseViajeVuelta) || 0) + suplementoClase;
+        }
+    }
 
-    const idxExistente = estado.asientosSeleccionados.findIndex(s => s.numero === numero_asiento);
+    const idxExistente = estado.asientosSeleccionados.findIndex(s => 
+        s.numero === numero_asiento && s.tramo === estado.tramoActual
+    );
+    
     if (idxExistente >= 0) {
         estado.asientosSeleccionados.splice(idxExistente, 1);
         elementoHtml.classList.remove('selected');
@@ -291,7 +367,8 @@ function seleccionarAsiento(elementoHtml, numero_asiento) {
         return;
     }
 
-    if (estado.asientosSeleccionados.length >= totalPasajeros) {
+    const asientosTramoActual = estado.asientosSeleccionados.filter(s => s.tramo === estado.tramoActual);
+    if (asientosTramoActual.length >= totalPasajeros) {
         alert(tr('max_asientos', 'Solo puedes seleccionar {n} asientos.', { n: totalPasajeros }));
         return;
     }
@@ -299,7 +376,8 @@ function seleccionarAsiento(elementoHtml, numero_asiento) {
     estado.asientosSeleccionados.push({
         numero: numero_asiento,
         wagon,
-        precio: precioAsiento
+        precio: precioAsiento,
+        tramo: estado.tramoActual
     });
     elementoHtml.classList.add('selected');
 
@@ -456,9 +534,29 @@ function recalcularPrecio() {
 
 // ================= PASO 5: PAGO Y RESERVA =================
 function confirmarReserva() {
-    if (!viajeSeleccionado || estado.asientosSeleccionados.length !== totalPasajeros) {
+    if (!viajeSeleccionado) {
         alert(tr('faltan_datos_reserva', 'Faltan datos para la reserva.'));
         return;
+    }
+
+    // Validar que hay asientos seleccionados
+    if (esIdaVuelta) {
+        const asientosIda = estado.asientosSeleccionados.filter(s => s.tramo === 'ida').length;
+        const asientosVuelta = estado.asientosSeleccionados.filter(s => s.tramo === 'vuelta').length;
+        
+        if (asientosIda !== totalPasajeros) {
+            alert(tr('faltan_asientos_ida', 'Debes seleccionar {n} asientos de ida.', { n: totalPasajeros }));
+            return;
+        }
+        if (asientosVuelta !== totalPasajeros) {
+            alert(tr('faltan_asientos_vuelta', 'Debes seleccionar {n} asientos de vuelta.', { n: totalPasajeros }));
+            return;
+        }
+    } else {
+        if (estado.asientosSeleccionados.length !== totalPasajeros) {
+            alert(tr('faltan_datos_reserva', 'Faltan datos para la reserva.'));
+            return;
+        }
     }
 
     if (!validarYGuardarDatosPasajeros()) {
@@ -478,7 +576,8 @@ function confirmarReserva() {
             asientos: estado.asientosSeleccionados.map((s) => ({
                 numero_asiento: s.numero,
                 vagon: s.wagon,
-                precio: s.precio
+                precio: s.precio,
+                tramo: s.tramo
             })),
             pasajeros: estado.datosPasajeros,
             precio_total: precioFinalConDescuento
