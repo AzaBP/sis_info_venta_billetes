@@ -33,25 +33,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return raw.replace(/[^a-zA-Z0-9_-]/g, '_');
     }
 
+    function buildQrPayloadLikePdf(ticket) {
+        const pasajero = `${ticket.pasajero_nombre || ''} ${ticket.pasajero_apellidos || ''}`.trim();
+        const precio = Number(ticket.precio_pagado || 0).toFixed(2);
+        return [
+            'TrainWeb Billete',
+            `Codigo: ${ticket.codigo_billete || ''}`,
+            `Pasajero: ${pasajero}`,
+            `Documento: ${ticket.pasajero_documento || ''}`,
+            `Ruta: ${ticket.origen || ''} -> ${ticket.destino || ''}`,
+            `Fecha viaje: ${ticket.fecha_viaje || ''}`,
+            `Hora: ${ticket.hora_salida || ''} - ${ticket.hora_llegada || ''}`,
+            `Asiento: ${ticket.numero_asiento || ''}`,
+            `Vagon: ${ticket.vagon || ''}`,
+            `Precio: ${precio} EUR`
+        ].join('\n');
+    }
+
     function generateQRCode(ticket) {
         const ticketKey = buildTicketKey(ticket);
         const qrId = `qr_${ticketKey}`;
-        const qrPayload = JSON.stringify({
-            codigo: ticket.codigo_billete || '',
-            pasajero: `${ticket.pasajero_nombre || ''} ${ticket.pasajero_apellidos || ''}`.trim(),
-            origen: ticket.origen || '',
-            destino: ticket.destino || '',
-            fecha: ticket.fecha_viaje || '',
-            salida: ticket.hora_salida || '',
-            llegada: ticket.hora_llegada || '',
-            asiento: ticket.numero_asiento || '',
-            vagon: ticket.vagon || '',
-        });
-        const encodedPayload = encodeURIComponent(qrPayload);
 
         return `
             <div class="qr-container">
-                <div id="${qrId}" class="qr-target" data-qr-payload="${encodedPayload}"></div>
+                <div id="${qrId}" class="qr-target"></div>
                 <p class="qr-info">Código QR - Escanea en el mostrador</p>
             </div>
         `;
@@ -135,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const qrEl = modalBody.querySelector('.qr-target');
             if (!qrEl || qrEl.childElementCount > 0) return;
-            const qrData = decodeURIComponent(qrEl.getAttribute('data-qr-payload') || ticketId);
+            const qrData = buildQrPayloadLikePdf(ticket);
             try {
                 if (typeof QRCode !== 'function') {
                     qrEl.innerHTML = '<span style="color:#8e2e2e;font-size:0.85rem;">No se pudo cargar QR</span>';

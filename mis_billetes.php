@@ -27,8 +27,8 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis billetes - TrainWeb</title>
-    <link rel="stylesheet" href="css/index.css?v=<?php echo urlencode($assetVersion); ?>">
-    <link rel="stylesheet" href="css/session_menu.css?v=<?php echo urlencode($assetVersion); ?>">
+    <link rel="stylesheet" href="css/index.css?v=<?php echo urlencode((string)@filemtime(__DIR__ . '/css/index.css')); ?>">
+    <link rel="stylesheet" href="css/session_menu.css?v=<?php echo urlencode((string)@filemtime(__DIR__ . '/css/session_menu.css')); ?>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body { background: #eef3fb; }
@@ -61,6 +61,13 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
         }
         .ticket-row:hover { box-shadow: 0 14px 34px rgba(16, 39, 82, 0.12); }
         .ticket-row.expired { border-left-color: #8a93a8; opacity: 0.82; }
+        .ticket-modal-header {
+            margin-bottom: 14px;
+        }
+        .ticket-modal-header h3 {
+            margin: 0;
+            color: #12213d;
+        }
         .ticket-details-grid {
             display: grid;
             grid-template-columns: 1fr auto;
@@ -216,6 +223,6 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
         downloadUrl: 'php/descargar_billete.php'
     };
     </script>
-    <script src="js/mis_billetes.js?v=<?php echo urlencode($assetVersion); ?>"></script>
+    <script src="js/mis_billetes.js?v=<?php echo urlencode((string)@filemtime(__DIR__ . '/js/mis_billetes.js')); ?>"></script>
 </body>
 </html>
