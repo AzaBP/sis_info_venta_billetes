@@ -164,7 +164,7 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
 
             <h3 class="section-subtitle"><i class="fa-solid fa-headset"></i> Atención al Cliente (Requiere buscar cliente)</h3>
             <div class="actions-grid disabled" id="clientActionsBox">
-                <button class="action-btn" id="btnIniciarVenta"><i class="fa-solid fa-cart-plus"></i><span>Nueva venta</span></button>
+                <button class="action-btn" id="btnIniciarVenta" onclick="iniciarNuevaVenta()"><i class="fa-solid fa-cart-plus"></i><span>Nueva venta</span></button>
                 <!-- Modal de venta vendedor -->
                 <style>
                     .modal-vendedor {
@@ -392,6 +392,24 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+
+        // Función para iniciar nueva venta (redirige a la interfaz completa)
+        function iniciarNuevaVenta() {
+            if (typeof clienteBuscado === 'undefined' || !clienteBuscado) {
+                alert('Por favor, busca y selecciona un cliente usando su DNI antes de iniciar una venta.');
+                return;
+            }
+            
+            // Redirigir a la nueva interfaz de venta con los datos del cliente
+            const params = new URLSearchParams({
+                id_cliente: clienteBuscado.id_usuario || clienteBuscado.id_pasajero,
+                nombre: clienteBuscado.nombre + (clienteBuscado.apellido ? ' ' + clienteBuscado.apellido : ''),
+                dni: clienteBuscado.dni || '',
+                email: clienteBuscado.email || ''
+            });
+            
+            window.location.href = 'venta_billete_vendedor.php?' + params.toString();
         }
     </script>
 </body>
