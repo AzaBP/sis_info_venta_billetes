@@ -184,13 +184,49 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = `compra.php?id_pasajero_gestionado=${idPasajero}&origen=${encodeURIComponent(origen)}&destino=${encodeURIComponent(destino)}&fecha=${encodeURIComponent(fecha)}`;
         });
     }
+
+            // Re-inicializar event listeners cuando se vuelva a abrir el modal de nueva venta
+            const modalNuevaVenta = document.getElementById('modalNuevaVenta');
+            if (modalNuevaVenta) {
+                window._nuevaVentaListenersReady = true;
+            }
 });
 
-// Función auxiliar para los botones de acción
-function openModal(tipo) {
-    if (!clienteBuscado) {
-        alert('Primero busca un cliente.');
-        return;
+// Función auxiliar para reasignar event listeners si es necesario
+function ensureNuevaVentaListeners() {
+    if (window._nuevaVentaListenersReady) return;
+    
+    const selectOrigen = document.getElementById('origenVenta');
+    const selectDestino = document.getElementById('destinoVenta');
+    if (selectOrigen && selectDestino) {
+        selectOrigen.addEventListener('change', function() {
+            const origen = this.value;
+            if (!origen) {
+                selectDestino.innerHTML = '<option value="">Seleccionar destino...</option>';
+                selectDestino.disabled = true;
+                return;
+            }
+            
+            fetch('php/api_origenes_destinos.php')
+                .then(r => r.json())
+                .then(data => {
+                    selectDestino.innerHTML = '<option value="">Seleccionar destino...</option>';
+                    if (data.destinos) {
+                        data.destinos.forEach(d => {
+                            if (d !== origen) {
+                                const option = document.createElement('option');
+                                option.value = d;
+                                option.textContent = d;
+                                selectDestino.appendChild(option);
+                            }
+                        });
+                    }
+                    selectDestino.disabled = false;
+                });
+        });
     }
-    alert(`Abriendo proceso de ${tipo.toUpperCase()} para el cliente: ${clienteBuscado.nombre} (DNI: ${clienteBuscado.dni}, Email: ${clienteBuscado.email})`);
+    
+    window._nuevaVentaListenersReady = true;
 }
+
+// Función para los botones de acción

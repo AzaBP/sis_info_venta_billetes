@@ -104,11 +104,31 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
             background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;
         }
         .modal-vendedor .modal-content {
-            background: #fff; border-radius: 12px; padding: 32px 28px 24px 28px; min-width: 380px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            background: #fff; border-radius: 12px; padding: 32px 28px 24px 28px; min-width: 380px; max-width: 95vw; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Estilizar el scrollbar para Webkit */
+        .modal-vendedor .modal-content::-webkit-scrollbar {
+            width: 10px;
+        }
+        .modal-vendedor .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .modal-vendedor .modal-content::-webkit-scrollbar-thumb {
+            background: #0a2a66;
+            border-radius: 10px;
+        }
+        .modal-vendedor .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #051852;
         }
         .modal-vendedor .close-modal {
-            position: absolute; right: 18px; top: 12px; font-size: 2rem; color: #888; cursor: pointer;
+            position: absolute; right: 18px; top: 12px; font-size: 2rem; color: #888; cursor: pointer; z-index: 1;
         }
         .modal-vendedor label { display: block; margin: 10px 0 6px 0; }
         .modal-vendedor input, .modal-vendedor select, .modal-vendedor button { margin-bottom: 10px; }
@@ -420,6 +440,11 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
             const hoy = new Date().toISOString().split('T')[0];
             document.getElementById('fechaVenta').min = hoy;
             document.getElementById('fechaVenta').value = hoy;
+            
+            // Asegurar que los event listeners están configurados
+            if (typeof ensureNuevaVentaListeners === 'function') {
+                ensureNuevaVentaListeners();
+            }
         }
         
         // Función para cargar orígenes en el modal de nueva venta

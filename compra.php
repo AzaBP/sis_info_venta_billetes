@@ -14,23 +14,30 @@ require_once 'php/Conexion.php';
 $conexion = new Conexion();
 $pdo = $conexion->conectar();
 
-// Si viene un pasajero gestionado, procesar primero y permitir acceso aunque haya empleado en sesión
+// ... después de iniciar sesión y conectar a la BD ...
+
+$id_pasajero_gestionado = $_SESSION['cliente_gestionado'] ?? ($_GET['id_pasajero_gestionado'] ?? null);
+
+// Si el vendedor está gestionando a alguien, cargamos los datos de ESE pasajero
 if ($id_pasajero_gestionado) {
     $stmt = $pdo->prepare('SELECT p.id_pasajero, u.nombre, u.apellido, u.email FROM PASAJERO p JOIN USUARIO u ON p.id_usuario = u.id_usuario WHERE p.id_pasajero = :id_pasajero');
     $stmt->execute([':id_pasajero' => $id_pasajero_gestionado]);
     $pasajero = $stmt->fetch(PDO::FETCH_ASSOC);
+    
     if ($pasajero) {
+        // "Engañamos" al sistema para que crea que el usuario activo es el pasajero
         $usuarioSesion = [
-            'id_usuario' => null,
-            'tipo_usuario' => 'pasajero',
+            'id_usuario' => null, // Opcional
+            'tipo_usuario' => 'pasajero', 
             'nombre' => $pasajero['nombre'],
             'apellido' => $pasajero['apellido'],
             'email' => $pasajero['email'],
-            'id_pasajero' => $pasajero['id_pasajero']
+            'id_pasajero' => $pasajero['id_pasajero'] // ESTO ES LO IMPORTANTE
         ];
-        $nombreSesion = $pasajero['nombre'];
+        // Guardamos en sesión para que las APIs de guardado lo vean
+        $_SESSION['id_pasajero_compra'] = $pasajero['id_pasajero'];
     }
-} else {
+}else {
     // Solo verificar empleado si NO hay pasajero gestionado
     if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') === 'empleado') {
         header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));

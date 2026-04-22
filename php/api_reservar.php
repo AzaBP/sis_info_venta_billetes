@@ -124,12 +124,20 @@ try {
         throw new RuntimeException('Conexion SQL no disponible');
     }
 
-    $stmtPasajero = $pdo->prepare('SELECT id_pasajero FROM pasajero WHERE id_usuario = :id_usuario LIMIT 1');
-    $stmtPasajero->execute([':id_usuario' => (int)$_SESSION['usuario']['id_usuario']]);
-    $idPasajeroComprador = (int)$stmtPasajero->fetchColumn();
+    // 1. Priorizar id_pasajero_compra (vendedor comprando para cliente)
+    // 2. Si no existe, buscar por id_usuario del usuario en sesión (cliente normal)
+    $idPasajeroComprador = 0;
+    
+    if (isset($_SESSION['id_pasajero_compra']) && (int)$_SESSION['id_pasajero_compra'] > 0) {
+        $idPasajeroComprador = (int)$_SESSION['id_pasajero_compra'];
+    } else {
+        $stmtPasajero = $pdo->prepare('SELECT id_pasajero FROM pasajero WHERE id_usuario = :id_usuario LIMIT 1');
+        $stmtPasajero->execute([':id_usuario' => (int)$_SESSION['usuario']['id_usuario']]);
+        $idPasajeroComprador = (int)$stmtPasajero->fetchColumn();
+    }
 
     if ($idPasajeroComprador <= 0) {
-        responderJson(403, ['error' => 'Usuario sin perfil de pasajero.']);
+        responderJson(403, ['error' => 'Usuario sin perfil de pasajero. Por favor, contacta con administración.']);
     }
 
     $stmtViaje = $pdo->prepare(
