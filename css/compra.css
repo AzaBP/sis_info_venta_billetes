@@ -308,13 +308,43 @@
 
 .no-return-trains {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
     background: #fff7ed;
     color: #9a3412;
     border: 1px solid #fed7aa;
     border-radius: 10px;
     padding: 14px;
+}
+
+.no-return-message {
+    margin: 0;
+    line-height: 1.4;
+}
+
+.no-return-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 320px;
+    margin: 4px auto 0;
+}
+
+.no-return-actions .btn-select {
+    width: 100%;
+    max-width: none;
+    min-height: 42px;
+    padding: 10px 16px;
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
 }
 
 .passengers-forms-container {

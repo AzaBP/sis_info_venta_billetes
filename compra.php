@@ -67,6 +67,34 @@ function buscarTrayectos(PDO $pdo, string $origen, string $destino, string $fech
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function buscarTrayectosPosteriores(PDO $pdo, string $origen, string $destino, string $fechaReferencia): array {
+    if ($fechaReferencia === '') {
+        return [];
+    }
+
+    $sql = "SELECT 
+                v.id_viaje, v.fecha, v.hora_salida, v.hora_llegada, v.precio as precio_base, v.estado as estado_viaje,
+                t.modelo as tipo_tren, t.id_tren as codigo_tren,
+                r.origen, 
+                r.destino
+            FROM VIAJE v
+            JOIN TREN t ON v.id_tren = t.id_tren
+            JOIN RUTA r ON v.id_ruta = r.id_ruta
+            WHERE r.origen ILIKE :origen
+              AND r.destino ILIKE :destino
+              AND v.fecha > :fecha_referencia
+            ORDER BY v.fecha ASC, v.hora_salida ASC";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        ':origen' => '%' . $origen . '%',
+        ':destino' => '%' . $destino . '%',
+        ':fecha_referencia' => $fechaReferencia,
+    ]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 $trayectos = buscarTrayectos($pdo, $origen, $destino, $fecha, $id_viaje_seleccionado);
 $trayectos_vuelta = [];
 $mensaje_vuelta = null;
@@ -79,19 +107,18 @@ if ($id_viaje_seleccionado > 0 && !empty($trayectos)) {
 }
 
 if ($es_ida_vuelta) {
+    $fechaReferenciaVuelta = $fecha_vuelta !== '' ? $fecha_vuelta : $fecha;
+
     if ($fecha_vuelta !== '') {
         $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, $fecha_vuelta, 0);
     }
 
+    if (empty($trayectos_vuelta) && $fechaReferenciaVuelta !== '') {
+        $trayectos_vuelta = buscarTrayectosPosteriores($pdo, $destino, $origen, $fechaReferenciaVuelta);
+    }
+
     if (empty($trayectos_vuelta)) {
-        // Buscar vuelta posterior a la fecha de ida
-        $fecha_siguiente = date('Y-m-d', strtotime($fecha . ' +1 day'));
-        $trayectos_vuelta = buscarTrayectos($pdo, $destino, $origen, $fecha_siguiente, 0);
-        
-        // Si tampoco hay después, mostrar mensaje
-        if (empty($trayectos_vuelta)) {
-            $mensaje_vuelta = "Lo sentimos, no hay trenes disponibles {$destino} → {$origen} posteriores a {$fecha}. Puedes reservar solo la ida.";
-        }
+        $mensaje_vuelta = "Lo sentimos, no hay trenes disponibles {$destino} → {$origen} posteriores a {$fechaReferenciaVuelta}. Puedes reservar solo la ida.";
     }
 }
 
@@ -375,15 +402,15 @@ if ($id_pasajero_gestionado) {
                     <?php if (empty($trayectos_vuelta)): ?>
                         <div class="no-return-trains">
                             <i class="fa-solid fa-circle-exclamation"></i>
-                            <p><?php echo htmlspecialchars($mensaje_vuelta ?? 'No hay trenes de vuelta para la fecha seleccionada.', ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="no-return-message"><?php echo htmlspecialchars($mensaje_vuelta ?? 'No hay trenes de vuelta para la fecha seleccionada.', ENT_QUOTES, 'UTF-8'); ?></p>
                             <?php if (!empty($mensaje_vuelta)): ?>
-                                <div style="display:flex; gap:10px; justify-content:center; margin-top:14px; flex-wrap:wrap;">
+                                <div class="no-return-actions">
                                     <button
                                         type="button"
                                         class="btn-select"
                                         onclick="reservarSoloIdaDesdeModal()"
                                     >Reservar solo ida</button>
-                                    <a href="index.php" class="btn-select" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Volver al inicio</a>
+                                    <a href="index.php" class="btn-select">Volver al inicio</a>
                                 </div>
                             <?php endif; ?>
                         </div>

@@ -60,6 +60,10 @@ function sumaPreciosAsientos() {
     return asientosActuales.reduce((acc, s) => acc + (Number(s.precio) || 0), 0);
 }
 
+function sumaPreciosAsientosTotales() {
+    return estado.asientosSeleccionados.reduce((acc, s) => acc + (Number(s.precio) || 0), 0);
+}
+
 function abrirModalVuelta() {
     const modal = document.getElementById('returnTripModal');
     if (!modal) return;
@@ -89,6 +93,8 @@ function reservarSoloIdaDesdeModal() {
 
     window.location.href = `compra.php?${params.toString()}`;
 }
+
+window.reservarSoloIdaDesdeModal = reservarSoloIdaDesdeModal;
 
 function seleccionarTrenVuelta(id_viaje, tipo_tren, precio) {
     if (typeof tipo_tren === 'number') {
@@ -138,12 +144,6 @@ async function seleccionarTren(id_viaje, tipo_tren, precio, continuarConIdaVuelt
 
     if (esIdaVuelta && !continuarConIdaVuelta) {
         idaPendiente = { id_viaje, tipo_tren, precio };
-
-        if (!hasReturnOptions) {
-            alert(tr('sin_vuelta_disponible', 'No se pudo cargar la vuelta. Se intentará mostrar opciones disponibles.'));
-            abrirModalVuelta();
-            return;
-        }
 
         abrirModalVuelta();
         return;
@@ -205,9 +205,18 @@ async function seleccionarTren(id_viaje, tipo_tren, precio, continuarConIdaVuelt
 function irAPaso(numeroPaso) {
     if (numeroPaso > 1 && !estado.trenSeleccionado) return;
 
-    if (numeroPaso >= 3 && estado.asientosSeleccionados.length !== totalPasajeros) {
-        alert(tr('selecciona_todos_asientos', 'Debes seleccionar {n} asientos.', { n: totalPasajeros }));
-        return;
+    if (numeroPaso >= 3) {
+        if (esIdaVuelta) {
+            const asientosIda = estado.asientosSeleccionados.filter(s => s.tramo === 'ida').length;
+            const asientosVuelta = estado.asientosSeleccionados.filter(s => s.tramo === 'vuelta').length;
+            if (asientosIda !== totalPasajeros || asientosVuelta !== totalPasajeros) {
+                alert(tr('selecciona_todos_asientos', 'Debes seleccionar {n} asientos por tramo.', { n: totalPasajeros }));
+                return;
+            }
+        } else if (estado.asientosSeleccionados.length !== totalPasajeros) {
+            alert(tr('selecciona_todos_asientos', 'Debes seleccionar {n} asientos.', { n: totalPasajeros }));
+            return;
+        }
     }
 
     if (numeroPaso >= 4 && !validarYGuardarDatosPasajeros()) {
@@ -296,6 +305,8 @@ function cambiarTramo(tramo) {
     
     refrescarResumenAsientosSeleccionados();
 }
+
+window.cambiarTramo = cambiarTramo;
 
 function cambiarVagon(direccion) {
     let nuevoVagon = estado.vagonActual + direccion;
@@ -489,13 +500,13 @@ function cargarDatosResumen() {
             .map(s => `${tr('vagon', 'Vagón')} ${s.wagon} - ${tr('asiento', 'Asiento')} ${s.numero}`)
             .join(' | ');
     }
-    if (summaryBasePrice) summaryBasePrice.textContent = formatearEuros(sumaPreciosAsientos());
+    if (summaryBasePrice) summaryBasePrice.textContent = formatearEuros(sumaPreciosAsientosTotales());
 
     calcularPrecioFinal();
 }
 
 function calcularPrecioFinal() {
-    const totalBase = sumaPreciosAsientos();
+    const totalBase = sumaPreciosAsientosTotales();
     let descuento = 0;
 
     const msg = document.getElementById('promoMsg');
