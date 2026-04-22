@@ -74,6 +74,22 @@ function cerrarModalVuelta() {
     modal.setAttribute('aria-hidden', 'true');
 }
 
+function reservarSoloIdaDesdeModal() {
+    const cfg = window.compraConfig || {};
+    const params = new URLSearchParams();
+    params.set('trip', 'oneway');
+    params.set('origen', String(cfg.origen || ''));
+    params.set('destino', String(cfg.destino || ''));
+    params.set('fecha', String(cfg.fechaIda || ''));
+    params.set('pasajeros', String(cfg.totalPasajeros || 1));
+
+    if (idaPendiente && idaPendiente.id_viaje) {
+        params.set('id_viaje', String(idaPendiente.id_viaje));
+    }
+
+    window.location.href = `compra.php?${params.toString()}`;
+}
+
 function seleccionarTrenVuelta(id_viaje, tipo_tren, precio) {
     if (typeof tipo_tren === 'number') {
         precio = tipo_tren;
@@ -619,6 +635,7 @@ function confirmarReserva() {
 // ================= INICIALIZACION =================
 document.addEventListener('DOMContentLoaded', function () {
     window.seleccionarTrenVuelta = seleccionarTrenVuelta;
+    window.reservarSoloIdaDesdeModal = reservarSoloIdaDesdeModal;
     window.cerrarModalVuelta = cerrarModalVuelta;
 
     document.addEventListener('keydown', function (e) {

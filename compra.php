@@ -376,6 +376,16 @@ if ($id_pasajero_gestionado) {
                         <div class="no-return-trains">
                             <i class="fa-solid fa-circle-exclamation"></i>
                             <p><?php echo htmlspecialchars($mensaje_vuelta ?? 'No hay trenes de vuelta para la fecha seleccionada.', ENT_QUOTES, 'UTF-8'); ?></p>
+                            <?php if (!empty($mensaje_vuelta)): ?>
+                                <div style="display:flex; gap:10px; justify-content:center; margin-top:14px; flex-wrap:wrap;">
+                                    <button
+                                        type="button"
+                                        class="btn-select"
+                                        onclick="reservarSoloIdaDesdeModal()"
+                                    >Reservar solo ida</button>
+                                    <a href="index.php" class="btn-select" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">Volver al inicio</a>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     <?php else: ?>
                         <?php foreach ($trayectos_vuelta as $trayectoVuelta):
