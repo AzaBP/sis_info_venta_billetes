@@ -22,9 +22,25 @@ $id_mongo = isset($data['id_mongo']) ? trim($data['id_mongo']) : '';
 $id_viaje_nuevo = isset($data['id_viaje']) ? (int)$data['id_viaje'] : 0;
 $numero_asiento_nuevo = isset($data['numero_asiento']) ? (int)$data['numero_asiento'] : 0;
 
-if (!$localizador || !$id_pasajero || !$id_viaje_nuevo || !$numero_asiento_nuevo) {
-    echo json_encode(['error' => 'Datos incompletos para la modificación']);
-    exit;
+// Datos del pasajero para modificar
+$modificar_datos = isset($data['modificar_datos']) && $data['modificar_datos'] === true;
+$pasajero_nombre = isset($data['pasajero_nombre']) ? trim($data['pasajero_nombre']) : '';
+$pasajero_apellidos = isset($data['pasajero_apellidos']) ? trim($data['pasajero_apellidos']) : '';
+$pasajero_email = isset($data['pasajero_email']) ? trim($data['pasajero_email']) : '';
+
+// Validar según el tipo de modificación
+if ($modificar_datos) {
+    // Modificar solo datos del pasajero
+    if (!$localizador || !$id_pasajero) {
+        echo json_encode(['error' => 'Datos incompletos para la modificación']);
+        exit;
+    }
+} else {
+    // Modificar viaje y/o asiento
+    if (!$localizador || !$id_pasajero || !$id_viaje_nuevo || !$numero_asiento_nuevo) {
+        echo json_encode(['error' => 'Datos incompletos para la modificación']);
+        exit;
+    }
 }
 
 // Buscar el billete en MongoDB
@@ -46,6 +62,25 @@ if (!$billete) {
 $estadoActual = isset($billete['estado']) ? $billete['estado'] : 'confirmado';
 if ($estadoActual === 'cancelado') {
     echo json_encode(['error' => 'No se puede modificar un billete cancelado']);
+    exit;
+}
+
+// Si solo se modifican los datos del pasajero
+if ($modificar_datos) {
+    $updateData = [
+        'pasajero_nombre' => $pasajero_nombre,
+        'pasajero_apellidos' => $pasajero_apellidos,
+        'pasajero_email' => $pasajero_email,
+        'fecha_modificacion' => new MongoDB\BSON\UTCDateTime()
+    ];
+    
+    $collection->updateOne($filter, ['$set' => $updateData]);
+    
+    echo json_encode([
+        'ok' => true,
+        'mensaje' => 'Datos del pasajero modificados correctamente',
+        'localizador' => $localizador
+    ]);
     exit;
 }
 

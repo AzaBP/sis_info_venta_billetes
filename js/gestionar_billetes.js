@@ -2,15 +2,19 @@
 let billeteSeleccionado = null;
 let viajeModificarSeleccionado = null;
 
-// Mostrar modal de gestión de billetes
+// Mostrar modal de gestión de billetes (sin parámetro = mostrar todos los billetes)
 function mostrarModalGestionarBilletes(tipoAccion) {
     if (typeof clienteBuscado === 'undefined' || !clienteBuscado) {
         alert('Por favor, busca y selecciona un cliente primero.');
         return;
     }
 
-    // Guardar la acción que se quiere realizar
-    window._accionPendiente = tipoAccion;
+    // Guardar la acción que se quiere realizar (opcional)
+    if (tipoAccion) {
+        window._accionPendiente = tipoAccion;
+    } else {
+        window._accionPendiente = null;
+    }
 
     // Mostrar el modal
     document.getElementById('modalGestionarBilletes').classList.remove('hidden');
@@ -19,15 +23,10 @@ function mostrarModalGestionarBilletes(tipoAccion) {
     document.getElementById('resultadoBusqueda').innerHTML = '';
     document.getElementById('inputLocalizador').value = '';
 
-    // Actualizar título según la acción
-    const titulos = {
-        'modificar': 'Modificar Billete',
-        'cancelar': 'Cancelar Reserva',
-        'factura': 'Generar Factura'
-    };
-    document.getElementById('tituloGestionarBilletes').textContent = titulos[tipoAccion] || 'Gestionar Billetes';
+    // Título general si no hay acción específica
+    document.getElementById('tituloGestionarBilletes').textContent = 'Gestión de Billetes del Cliente';
 
-    // Cargar todos los billets del cliente
+    // Cargar todos los billete del cliente
     cargarBilletesCliente();
 }
 
@@ -239,22 +238,139 @@ function abrirModalModificarBillete() {
     if (!billeteSeleccionado) return;
 
     document.getElementById('modalModificarBillete').classList.remove('hidden');
-    document.getElementById('modificarPaso1').classList.remove('hidden');
-    document.getElementById('modificarPaso2').classList.add('hidden');
-    document.getElementById('resultadosViajesModificar').innerHTML = '';
+    document.getElementById('modificarOpciones').classList.remove('hidden');
+    document.getElementById('modificarAsientoPaso').classList.add('hidden');
+    document.getElementById('modificarDatosPaso').classList.add('hidden');
     document.getElementById('resultadoModificacion').innerHTML = '';
 
     // Mostrar información del billete a modificar
     document.getElementById('infoBilleteAModificar').innerHTML = `
-        <p><strong>Billete actual:</strong> ${billeteSeleccionado.codigo_billete}</p>
+        <p><strong>Localizador:</strong> ${billeteSeleccionado.codigo_billete}</p>
         <p><strong>Asiento actual:</strong> ${billeteSeleccionado.numero_asiento}</p>
     `;
+}
 
-    // Pre-rellenar la fecha con la fecha del viaje actual
-    // Esto requeriría obtener la fecha del viaje, por ahora usamos la fecha actual
-    const hoy = new Date().toISOString().split('T')[0];
-    const inputFecha = document.querySelector('#formBuscarViajesModificar input[name="fecha"]');
-    if (inputFecha) inputFecha.value = hoy;
+// Función para cargar los asientos del viaje actual del billete
+function cargarAsientosParaModificacion() {
+    const idViaje = billeteSeleccionado.id_viaje;
+    if (!idViaje) {
+        alert('No se pudo obtener el ID del viaje.');
+        return;
+    }
+
+    fetch('php/api_asientos_todos.php?id_viaje=' + idViaje)
+        .then(r => r.json())
+        .then(data => {
+            const asientos = data.asientos || [];
+            document.getElementById('modificarOpciones').classList.add('hidden');
+            document.getElementById('modificarAsientoPaso').classList.remove('hidden');
+            
+            // Mostrar info del viaje
+            const viajeInfo = data.viaje ? `${data.viaje.origen} → ${data.viaje.destino} (${data.viaje.fecha})` : 'Viaje actual';
+            document.getElementById('infoViajeModificar').innerHTML = `<strong>${viajeInfo}</strong><br>Asiento actual: ${billeteSeleccionado.numero_asiento}`;
+
+            const grid = document.getElementById('asientosGridModificar');
+            grid.innerHTML = '';
+            
+            if (asientos.length === 0) {
+                grid.innerHTML = '<span style="grid-column: span 8; color: #c00;">No hay asientos disponibles.</span>';
+            } else {
+                asientos.forEach(a => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'asiento-btn';
+                    btn.textContent = a.numero_asiento;
+                    
+                    // Deshabilitar si no está disponible o es el mismo asiento
+                    if (a.estado !== 'disponible') {
+                        btn.disabled = true;
+                        btn.title = 'Ocupado';
+                    } else if (a.numero_asiento === billeteSeleccionado.numero_asiento) {
+                        btn.title = 'Asiento actual';
+                    }
+                    
+                    btn.onclick = function() {
+                        if (btn.disabled) return;
+                        document.querySelectorAll('#asientosGridModificar .asiento-btn').forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                        document.getElementById('inputAsientoModificar').value = a.numero_asiento;
+                    };
+                    grid.appendChild(btn);
+                });
+            }
+            document.getElementById('inputAsientoModificar').value = '';
+        })
+        .catch(err => {
+            alert('Error al cargar los asientos.');
+        });
+}
+
+// Función para mostrar el formulario de modificación de datos
+function mostrarFormularioModificarDatos() {
+    // Obtener datos actuales del billete desde el servidor
+    const idPasajero = clienteBuscado.id_pasajero || clienteBuscado.id_usuario;
+    
+    fetch('php/api_buscar_billete_localizador.php?localizador=' + encodeURIComponent(billeteSeleccionado.codigo_billete) + '&id_pasajero=' + idPasajero)
+        .then(r => r.json())
+        .then(data => {
+            if (data.error || !data.billete) {
+                alert('Error al obtener los datos del billete.');
+                return;
+            }
+            
+            const b = data.billete;
+            document.getElementById('modificarOpciones').classList.add('hidden');
+            document.getElementById('modificarDatosPaso').classList.remove('hidden');
+            
+            // Rellenar el formulario con los datos actuales
+            document.getElementById('modificarNombre').value = b.pasajero_nombre || '';
+            document.getElementById('modificarApellidos').value = b.pasajero_apellidos || '';
+            document.getElementById('modificarEmail').value = b.pasajero_email || '';
+        })
+        .catch(err => {
+            alert('Error al obtener los datos del billete.');
+        });
+}
+
+// Guardar los datos modificados del pasajero
+function guardarDatosModificadosPasajero(e) {
+    e.preventDefault();
+    
+    const nombre = document.getElementById('modificarNombre').value;
+    const apellidos = document.getElementById('modificarApellidos').value;
+    const email = document.getElementById('modificarEmail').value;
+    
+    const idPasajero = clienteBuscado.id_pasajero || clienteBuscado.id_usuario;
+    
+    fetch('php/api_modificar_billete.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            localizador: billeteSeleccionado.codigo_billete,
+            id_pasajero: idPasajero,
+            id_mongo: billeteSeleccionado.id_mongo,
+            modificar_datos: true,
+            pasajero_nombre: nombre,
+            pasajero_apellidos: apellidos,
+            pasajero_email: email
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        const resultado = document.getElementById('resultadoModificacion');
+        if (data.ok) {
+            resultado.innerHTML = '<p style="color: #17632A;"><strong>Datos modificados correctamente.</strong></p>';
+            setTimeout(() => {
+                cerrarModalModificarBillete();
+                cerrarModalGestionarBilletes();
+            }, 1500);
+        } else {
+            resultado.innerHTML = '<p style="color: #c00;"><strong>Error:</strong> ' + data.error + '</p>';
+        }
+    })
+    .catch(err => {
+        document.getElementById('resultadoModificacion').innerHTML = '<p style="color: #c00;">Error al modificar los datos.</p>';
+    });
 }
 
 // Cerrar modal de modificación
@@ -324,10 +440,10 @@ function seleccionarViajeModificar(id_viaje) {
         });
 }
 
-// Confirmar modificación del billete
+// Confirmar modificación del billete (solo cambio de asiento)
 function confirmarModificacionBillete() {
-    if (!billeteSeleccionado || !viajeModificarSeleccionado) {
-        alert('Selecciona un viaje y un asiento.');
+    if (!billeteSeleccionado) {
+        alert('Selecciona un billete primero.');
         return;
     }
 
@@ -346,7 +462,7 @@ function confirmarModificacionBillete() {
             localizador: billeteSeleccionado.codigo_billete,
             id_pasajero: idPasajero,
             id_mongo: billeteSeleccionado.id_mongo,
-            id_viaje: viajeModificarSeleccionado.id_viaje,
+            id_viaje: billeteSeleccionado.id_viaje, // Mantener el mismo viaje
             numero_asiento: parseInt(nuevoAsiento)
         })
     })
@@ -354,7 +470,7 @@ function confirmarModificacionBillete() {
     .then(data => {
         const resultado = document.getElementById('resultadoModificacion');
         if (data.ok) {
-            resultado.innerHTML = '<p style="color: #17632A;"><strong>Billete modificado correctamente.</strong></p>';
+            resultado.innerHTML = '<p style="color: #17632A;"><strong>Asiento modificado correctamente.</strong></p>';
             setTimeout(() => {
                 cerrarModalModificarBillete();
                 cerrarModalGestionarBilletes();

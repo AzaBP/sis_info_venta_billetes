@@ -3,15 +3,40 @@ session_start();
 
 $usuarioSesion = $_SESSION['usuario'] ?? null;
 $nombreSesion = $usuarioSesion['nombre'] ?? '';
+
+// --- CLIENTE GESTIONADO POR VENDEDOR (debe procesarse ANTES de la verificación de empleado) ---
+// Aceptar id_pasajero_gestionado por GET (desde vendedor) o por SESIÓN
+$id_pasajero_gestionado = $_SESSION['cliente_gestionado'] ?? ($_GET['id_pasajero_gestionado'] ?? null);
+
 require_once __DIR__ . '/php/auth_helpers.php';
-if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') === 'empleado') {
-    header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
-    exit;
-}
 require_once 'php/Conexion.php';
 
 $conexion = new Conexion();
 $pdo = $conexion->conectar();
+
+// Si viene un pasajero gestionado, procesar primero y permitir acceso aunque haya empleado en sesión
+if ($id_pasajero_gestionado) {
+    $stmt = $pdo->prepare('SELECT p.id_pasajero, u.nombre, u.apellido, u.email FROM PASAJERO p JOIN USUARIO u ON p.id_usuario = u.id_usuario WHERE p.id_pasajero = :id_pasajero');
+    $stmt->execute([':id_pasajero' => $id_pasajero_gestionado]);
+    $pasajero = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($pasajero) {
+        $usuarioSesion = [
+            'id_usuario' => null,
+            'tipo_usuario' => 'pasajero',
+            'nombre' => $pasajero['nombre'],
+            'apellido' => $pasajero['apellido'],
+            'email' => $pasajero['email'],
+            'id_pasajero' => $pasajero['id_pasajero']
+        ];
+        $nombreSesion = $pasajero['nombre'];
+    }
+} else {
+    // Solo verificar empleado si NO hay pasajero gestionado
+    if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') === 'empleado') {
+        header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
+        exit;
+    }
+}
 
 
 // 1. Obtener trayectos filtrados por parámetros GET
@@ -164,47 +189,32 @@ $promociones = $stmt_promos->fetchAll(PDO::FETCH_ASSOC);
 
 // 3. Obtener los abonos ACTIVOS del pasajero actual
 $abonos_usuario = [];
-if (isset($_SESSION['usuario']['id_usuario'])) {
+$id_pasajero_actual = null;
+
+// Determinar el id_pasajero actual (ya sea de sesión normal o pasajero gestionado)
+if (isset($usuarioSesion['id_pasajero']) && $usuarioSesion['id_pasajero']) {
+    $id_pasajero_actual = $usuarioSesion['id_pasajero'];
+} elseif (isset($_SESSION['usuario']['id_usuario'])) {
+    // Si no hay pasajero gestionado, obtener de la tabla PASAJERO
     $id_usuario = $_SESSION['usuario']['id_usuario'];
-    
-    // Obtener ID del pasajero
     $stmtPasajero = $pdo->prepare("SELECT id_pasajero FROM PASAJERO WHERE id_usuario = :id_usuario");
     $stmtPasajero->execute([':id_usuario' => $id_usuario]);
-    $pasajero = $stmtPasajero->fetch(PDO::FETCH_ASSOC);
-
-    if ($pasajero) {
-        // Hemos quitado la columna 'estado' de la condición
-        $sql_abonos = "SELECT id_abono, tipo, viajes_restantes 
-                       FROM ABONO 
-                       WHERE id_pasajero = :id_pasajero 
-                         AND fecha_fin >= CURRENT_DATE 
-                         AND (viajes_restantes > 0 OR viajes_restantes IS NULL)";
-                         
-        $stmt_abonos = $pdo->prepare($sql_abonos);
-        $stmt_abonos->execute([':id_pasajero' => $pasajero['id_pasajero']]);
-        $abonos_usuario = $stmt_abonos->fetchAll(PDO::FETCH_ASSOC);
+    $pasajeroData = $stmtPasajero->fetch(PDO::FETCH_ASSOC);
+    if ($pasajeroData) {
+        $id_pasajero_actual = $pasajeroData['id_pasajero'];
     }
 }
-// --- CLIENTE GESTIONADO POR VENDEDOR ---
-// Aceptar id_pasajero_gestionado por GET (desde vendedor) o por SESIÓN
-$id_pasajero_gestionado = $_SESSION['cliente_gestionado'] ?? ($_GET['id_pasajero_gestionado'] ?? null);
-if ($id_pasajero_gestionado) {
-    // Sobrescribir sesión de usuario para el flujo de compra
-    $stmt = $pdo->prepare('SELECT p.id_pasajero, u.nombre, u.apellido, u.email FROM PASAJERO p JOIN USUARIO u ON p.id_usuario = u.id_usuario WHERE p.id_pasajero = :id_pasajero');
-    $stmt->execute([':id_pasajero' => $id_pasajero_gestionado]);
-    $pasajero = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($pasajero) {
-        $usuarioSesion = [
-            'id_usuario' => null, // No se usa
-            'tipo_usuario' => 'pasajero',
-            'nombre' => $pasajero['nombre'],
-            'apellido' => $pasajero['apellido'],
-            'email' => $pasajero['email'],
-            'id_pasajero' => $pasajero['id_pasajero']
-        ];
-        // Opcional: mostrar aviso de compra gestionada
-        $nombreSesion = $pasajero['nombre'];
-    }
+
+if ($id_pasajero_actual) {
+    $sql_abonos = "SELECT id_abono, tipo, viajes_restantes 
+                   FROM ABONO 
+                   WHERE id_pasajero = :id_pasajero 
+                     AND fecha_fin >= CURRENT_DATE 
+                     AND (viajes_restantes > 0 OR viajes_restantes IS NULL)";
+                     
+    $stmt_abonos = $pdo->prepare($sql_abonos);
+    $stmt_abonos->execute([':id_pasajero' => $id_pasajero_actual]);
+    $abonos_usuario = $stmt_abonos->fetchAll(PDO::FETCH_ASSOC);
 }
 
 ?>

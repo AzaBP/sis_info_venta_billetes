@@ -67,6 +67,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// Event listeners para el modal de modificación de billete
+document.addEventListener('DOMContentLoaded', () => {
+    // Cerrar modal de modificación
+    const btnCerrarModificar = document.getElementById('cerrarModificarBillete');
+    if (btnCerrarModificar) {
+        btnCerrarModificar.addEventListener('click', () => {
+            cerrarModalModificarBillete();
+        });
+    }
+    
+    // Botón modificar datos del pasajero
+    const btnModificarDatos = document.getElementById('btnModificarDatos');
+    if (btnModificarDatos) {
+        btnModificarDatos.addEventListener('click', () => {
+            mostrarFormularioModificarDatos();
+        });
+    }
+    
+    // Botón cambiar asiento
+    const btnModificarAsiento = document.getElementById('btnModificarAsiento');
+    if (btnModificarAsiento) {
+        btnModificarAsiento.addEventListener('click', () => {
+            cargarAsientosParaModificacion();
+        });
+    }
+    
+    // Botón confirmar modificación de asiento
+    const btnConfirmarModificacion = document.getElementById('btnConfirmarModificacion');
+    if (btnConfirmarModificacion) {
+        btnConfirmarModificacion.addEventListener('click', () => {
+            confirmarModificacionBillete();
+        });
+    }
+    
+    // Formulario de modificación de datos del pasajero
+    const formModificarDatos = document.getElementById('formModificarDatosPasajero');
+    if (formModificarDatos) {
+        formModificarDatos.addEventListener('submit', (e) => {
+            guardarDatosModificadosPasajero(e);
+        });
+    }
+});
+
 // Función auxiliar para los botones de acción
 function openModal(tipo) {
     if (!clienteBuscado) {

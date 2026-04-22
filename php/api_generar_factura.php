@@ -8,13 +8,29 @@ require_once __DIR__ . '/Conexion.php';
 
 $usuario = $_SESSION['usuario'] ?? null;
 
-// Verificar que sea empleado (vendedor o admin)
-if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'empleado') {
+// Verificar que sea empleado (vendedor o admin) O que venga una solicitud válida con id_pasajero
+// Permitir acceso si hay un empleado en sesión O si se proporciona un id_pasajero válido
+$acceso_valido = false;
+if ($usuario && ($usuario['tipo_usuario'] ?? '') === 'empleado') {
+    $acceso_valido = true;
+} elseif (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    if (isset($data['id_pasajero']) && $data['id_pasajero'] > 0) {
+        $acceso_valido = true;
+    }
+}
+
+if (!$acceso_valido) {
     echo json_encode(['error' => 'No autorizado']);
     exit;
 }
 
+// Leer los datos del cuerpo de la petición
 $data = json_decode(file_get_contents('php://input'), true);
+if (!$data) {
+    echo json_encode(['error' => 'Datos inválidos']);
+    exit;
+}
 
 $localizador = isset($data['localizador']) ? trim($data['localizador']) : '';
 $id_pasajero = isset($data['id_pasajero']) ? (int)$data['id_pasajero'] : (isset($data['id_usuario']) ? (int)$data['id_usuario'] : 0);
@@ -70,7 +86,15 @@ try {
     $asiento = isset($billete['numero_asiento']) ? (int)$billete['numero_asiento'] : '';
     $precio = (float)($billete['precio_final'] ?? $billete['precio_pagado'] ?? 0);
     $descuento = (float)($billete['descuento'] ?? 0);
-    $fecha_compra = isset($billete['fecha_compra']) ? $billete['fecha_compra']->toDateTime()->format('d/m/Y H:i') : '';
+    // Manejar fecha_compra que puede ser objeto MongoDB Date o string
+$fecha_compra = '';
+if (isset($billete['fecha_compra'])) {
+    if (is_object($billete['fecha_compra']) && method_exists($billete['fecha_compra'], 'toDateTime')) {
+        $fecha_compra = $billete['fecha_compra']->toDateTime()->format('d/m/Y H:i');
+    } else {
+        $fecha_compra = (string)$billete['fecha_compra'];
+    }
+}
     
     // Datos de facturación
     $factura = isset($billete['factura']) ? $billete['factura'] : [];
