@@ -14,18 +14,18 @@ if (!$db) {
     exit;
 }
 
-// Obtener parámetros
-$id_usuario = isset($_GET['id_usuario']) ? (int)$_GET['id_usuario'] : 0;
+// Obtener parámetros - aceptar id_pasajero o id_usuario
+$id_pasajero = isset($_GET['id_pasajero']) ? (int)$_GET['id_pasajero'] : (isset($_GET['id_usuario']) ? (int)$_GET['id_usuario'] : 0);
 
-if (!$id_usuario) {
-    echo json_encode(['error' => 'ID de usuario requerido']);
+if (!$id_pasajero) {
+    echo json_encode(['error' => 'ID de pasajero requerido']);
     exit;
 }
 
-// Buscar todos los billetes del cliente en MongoDB
+// Buscar todos los billete del cliente en MongoDB
 $collection = $db->selectCollection('billetes');
 $cursor = $collection->find(
-    ['id_pasajero' => $id_usuario],
+    ['id_pasajero' => $id_pasajero],
     ['sort' => ['fecha_compra' => -1]]
 );
 

@@ -17,10 +17,10 @@ if (!$usuario || ($usuario['tipo_usuario'] ?? '') !== 'empleado') {
 $data = json_decode(file_get_contents('php://input'), true);
 
 $localizador = isset($data['localizador']) ? trim($data['localizador']) : '';
-$id_usuario = isset($data['id_usuario']) ? (int)$data['id_usuario'] : 0;
+$id_pasajero = isset($data['id_pasajero']) ? (int)$data['id_pasajero'] : (isset($data['id_usuario']) ? (int)$data['id_usuario'] : 0);
 $enviar_correo = isset($data['enviar_correo']) ? (bool)$data['enviar_correo'] : false;
 
-if (!$localizador || !$id_usuario) {
+if (!$localizador || !$id_pasajero) {
     echo json_encode(['error' => 'Datos incompletos']);
     exit;
 }
@@ -37,7 +37,7 @@ try {
     $collection = $db->selectCollection('billetes');
     $billete = $collection->findOne([
         'codigo_billete' => $localizador,
-        'id_pasajero' => $id_usuario
+        'id_pasajero' => $id_pasajero
     ]);
     
     if (!$billete) {

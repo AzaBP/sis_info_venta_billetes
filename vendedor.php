@@ -394,22 +394,32 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
             }
         }
 
-        // Función para iniciar nueva venta (redirige a la interfaz completa)
+        // Función para iniciar nueva venta (redirige a compra.php como cliente gestionado)
         function iniciarNuevaVenta() {
             if (typeof clienteBuscado === 'undefined' || !clienteBuscado) {
                 alert('Por favor, busca y selecciona un cliente usando su DNI antes de iniciar una venta.');
                 return;
             }
             
-            // Redirigir a la nueva interfaz de venta con los datos del cliente
-            const params = new URLSearchParams({
-                id_cliente: clienteBuscado.id_usuario || clienteBuscado.id_pasajero,
-                nombre: clienteBuscado.nombre + (clienteBuscado.apellido ? ' ' + clienteBuscado.apellido : ''),
-                dni: clienteBuscado.dni || '',
-                email: clienteBuscado.email || ''
-            });
+            const idPasajero = clienteBuscado.id_pasajero;
+            if (!idPasajero) {
+                alert('El cliente no tiene un ID de pasajero válido.');
+                return;
+            }
             
-            window.location.href = 'venta_billete_vendedor.php?' + params.toString();
+            // Guardar en sesión el cliente gestionado y redirigir a compra.php
+            fetch('php/api_iniciar_venta_vendedor.php?id_pasajero=' + idPasajero)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                    } else {
+                        alert('Error al iniciar la venta: ' + (data.error || 'Error desconocido'));
+                    }
+                })
+                .catch(err => {
+                    alert('Error de conexión al iniciar la venta.');
+                });
         }
     </script>
 </body>

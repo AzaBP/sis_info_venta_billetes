@@ -39,10 +39,14 @@ function cerrarModalGestionarBilletes() {
 
 // Cargar todos los billetes del cliente
 function cargarBilletesCliente() {
-    const idUsuario = clienteBuscado.id_usuario || clienteBuscado.id_pasajero;
-    if (!idUsuario) return;
+    // Priorizar id_pasajero ya que MongoDB busca por ese campo
+    const idPasajero = clienteBuscado.id_pasajero || clienteBuscado.id_usuario;
+    if (!idPasajero) {
+        document.getElementById('contenidoListaBilletes').innerHTML = '<p style="color: #c00;">Error: No se encontró el ID del pasajero.</p>';
+        return;
+    }
 
-    fetch('php/api_billetes_cliente.php?id_usuario=' + idUsuario)
+    fetch('php/api_billetes_cliente.php?id_pasajero=' + idPasajero)
         .then(r => r.json())
         .then(data => {
             const contenedor = document.getElementById('contenidoListaBilletes');
@@ -84,14 +88,14 @@ function cargarBilletesCliente() {
 // Buscar billete por localizador
 function buscarBilletePorLocalizador() {
     const localizador = document.getElementById('inputLocalizador').value.trim();
-    const idUsuario = clienteBuscado.id_usuario || clienteBuscado.id_pasajero;
+    const idPasajero = clienteBuscado.id_pasajero || clienteBuscado.id_usuario;
 
     if (!localizador) {
         document.getElementById('resultadoBusqueda').innerHTML = '<p style="color: #c00;">Introduce un localizador.</p>';
         return;
     }
 
-    fetch('php/api_buscar_billete_localizador.php?localizador=' + encodeURIComponent(localizador) + '&id_usuario=' + idUsuario)
+    fetch('php/api_buscar_billete_localizador.php?localizador=' + encodeURIComponent(localizador) + '&id_pasajero=' + idPasajero)
         .then(r => r.json())
         .then(data => {
             const resultado = document.getElementById('resultadoBusqueda');
@@ -165,7 +169,7 @@ function ejecutarAccionBillete(tipo) {
         return;
     }
 
-    const idUsuario = clienteBuscado.id_usuario || clienteBuscado.id_pasajero;
+    const idPasajero = clienteBuscado.id_pasajero || clienteBuscado.id_usuario;
 
     if (tipo === 'cancelar') {
         if (!confirm('¿Estás seguro de que quieres cancelar este billete? Se liberará el asiento.')) {
@@ -177,7 +181,7 @@ function ejecutarAccionBillete(tipo) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 localizador: billeteSeleccionado.codigo_billete,
-                id_usuario: idUsuario,
+                id_pasajero: idPasajero,
                 id_mongo: billeteSeleccionado.id_mongo
             })
         })
@@ -204,7 +208,7 @@ function ejecutarAccionBillete(tipo) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 localizador: billeteSeleccionado.codigo_billete,
-                id_usuario: idUsuario,
+                id_pasajero: idPasajero,
                 enviar_correo: false
             })
         })
@@ -333,14 +337,14 @@ function confirmarModificacionBillete() {
         return;
     }
 
-    const idUsuario = clienteBuscado.id_usuario || clienteBuscado.id_pasajero;
+    const idPasajero = clienteBuscado.id_pasajero || clienteBuscado.id_usuario;
 
     fetch('php/api_modificar_billete.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             localizador: billeteSeleccionado.codigo_billete,
-            id_usuario: idUsuario,
+            id_pasajero: idPasajero,
             id_mongo: billeteSeleccionado.id_mongo,
             id_viaje: viajeModificarSeleccionado.id_viaje,
             numero_asiento: parseInt(nuevoAsiento)

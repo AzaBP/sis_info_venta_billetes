@@ -14,17 +14,17 @@ if (!$db) {
     exit;
 }
 
-// Obtener parámetros
+// Obtener parámetros - aceptar id_pasajero o id_usuario
 $localizador = isset($_GET['localizador']) ? trim($_GET['localizador']) : '';
-$id_usuario = isset($_GET['id_usuario']) ? (int)$_GET['id_usuario'] : 0;
+$id_pasajero = isset($_GET['id_pasajero']) ? (int)$_GET['id_pasajero'] : (isset($_GET['id_usuario']) ? (int)$_GET['id_usuario'] : 0);
 
 if (!$localizador) {
     echo json_encode(['error' => 'Localizador requerido']);
     exit;
 }
 
-if (!$id_usuario) {
-    echo json_encode(['error' => 'ID de usuario requerido']);
+if (!$id_pasajero) {
+    echo json_encode(['error' => 'ID de pasajero requerido']);
     exit;
 }
 
@@ -32,7 +32,7 @@ if (!$id_usuario) {
 $collection = $db->selectCollection('billetes');
 $billete = $collection->findOne([
     'codigo_billete' => $localizador,
-    'id_pasajero' => $id_usuario
+    'id_pasajero' => $id_pasajero
 ]);
 
 if (!$billete) {
