@@ -58,6 +58,11 @@ if (!$fila) {
 // Guardamos el precio de forma segura
 $precio_final = $fila['precio'];
 
+// Generar código de billete (localizador)
+function generarCodigoBillete(): string {
+    return 'TW-' . date('YmdHis') . '-' . strtoupper(bin2hex(random_bytes(3)));
+}
+
 // Insertar billete en mongo
 try {
     // Si tienes un archivo de conexión a Mongo (ej: ConexionMongo.php), requiérelo aquí.
@@ -70,14 +75,19 @@ try {
     // Seleccionamos base de datos y colección
     $coleccionBilletes = $mongoClient->gestion_ferroviaria->billetes;
     
+    // Generar el código del billete
+    $codigoBillete = generarCodigoBillete();
+    
     // Preparamos el documento a insertar
     $documentoBillete = [
+        'codigo_billete' => $codigoBillete,
         'id_pasajero' => (int)$id_pasajero,
         'id_viaje' => (int)$id_viaje,
         'numero_asiento' => (int)$numero_asiento,
         'fecha_compra' => new MongoDB\BSON\UTCDateTime(), // Guarda la fecha actual en formato Mongo
         'descuento' => (float)$descuento,
         'precio_final' => (float)$precio_final,
+        'estado' => 'confirmado',
         'factura' => [
             'nombre' => $facturaNombre,
             'nif' => $facturaNif,
@@ -93,7 +103,8 @@ try {
     echo json_encode([
         'ok' => true, 
         'precio_final' => $precio_final,
-        'id_billete_mongo' => (string)$resultado->getInsertedId()
+        'id_billete_mongo' => (string)$resultado->getInsertedId(),
+        'codigo_billete' => $codigoBillete
     ]);
 
 } catch (Exception $e) {

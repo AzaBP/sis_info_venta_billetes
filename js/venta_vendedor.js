@@ -185,7 +185,14 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(r=>r.json())
     .then(data => {
-      document.getElementById('compraResultado').innerHTML = data.ok ? '<b style="color:#17632A">¡Compra realizada correctamente!</b>' : `<b style="color:#c00">Error:</b> ${data.error}`;
+      if (data.ok) {
+        const mensaje = data.codigo_billete 
+          ? `<b style="color:#17632A">¡Compra realizada correctamente!</b><br><br><strong>Localizador:</strong> ${data.codigo_billete}<br><small>Este localizador es necesario para gestionar el billete (modificación, cancelación o factura).</small>`
+          : '<b style="color:#17632A">¡Compra realizada correctamente!</b>';
+        document.getElementById('compraResultado').innerHTML = mensaje;
+      } else {
+        document.getElementById('compraResultado').innerHTML = `<b style="color:#c00">Error:</b> ${data.error}`;
+      }
       if (btn) btn.disabled = false;
     })
     .catch(() => { 

@@ -261,9 +261,73 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                     </div>
                 </div>
                 <script src="js/venta_vendedor.js"></script>
-                <button class="action-btn" onclick="openModal('cambio')"><i class="fa-solid fa-repeat"></i><span>Cambio billete</span></button>
-                <button class="action-btn" onclick="alert('Funcionalidad en construccion')"><i class="fa-solid fa-ban"></i><span>Cancelar reserva</span></button>
-                <button class="action-btn" onclick="alert('Factura enviada')"><i class="fa-solid fa-file-invoice"></i><span>Reenviar factura</span></button>
+                <button class="action-btn" id="btnModificarBillete"><i class="fa-solid fa-pen-to-square"></i><span>Modificar billete</span></button>
+                <button class="action-btn" id="btnCancelarReserva"><i class="fa-solid fa-ban"></i><span>Cancelar reserva</span></button>
+                <button class="action-btn" id="btnGenerarFactura"><i class="fa-solid fa-file-invoice"></i><span>Generar factura</span></button>
+            </div>
+
+            <!-- Modal de gestión de billetes del cliente -->
+            <div id="modalGestionarBilletes" class="modal-vendedor hidden">
+                <div class="modal-content" style="max-width: 600px;">
+                    <span class="close-modal" id="cerrarGestionarBilletes">&times;</span>
+                    <h2 id="tituloGestionarBilletes">Gestionar Billetes del Cliente</h2>
+                    
+                    <!-- Buscador por localizador -->
+                    <div id="buscadorLocalizador" style="margin-bottom: 20px;">
+                        <label>Buscar por localizador:</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="inputLocalizador" placeholder="Ej: TW-20260422-ABC123" style="flex: 1; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+                            <button type="button" id="btnBuscarLocalizador" style="padding: 8px 16px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer;">Buscar</button>
+                        </div>
+                        <div id="resultadoBusqueda" style="margin-top: 10px;"></div>
+                    </div>
+
+                    <!-- Lista de billetes del cliente -->
+                    <div id="listaBilletesCliente" style="max-height: 300px; overflow-y: auto;">
+                        <h4>Billetes del cliente</h4>
+                        <div id="contenidoListaBilletes">
+                            <p style="color: #666;">Busca un billete por localizador o espera a que se carguen todos los billetes.</p>
+                        </div>
+                    </div>
+
+                    <!-- Acciones del billete -->
+                    <div id="accionesBillete" class="hidden" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <h4 id="tituloAccionesBillete">Acciones</h4>
+                        <div id="infoBilleteSeleccionado" style="margin-bottom: 15px;"></div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button type="button" id="btnAccionModificar" style="padding: 10px 20px; background: #ffc107; color: #333; border: none; border-radius: 5px; cursor: pointer;"><i class="fa-solid fa-pen-to-square"></i> Modificar</button>
+                            <button type="button" id="btnAccionCancelar" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;"><i class="fa-solid fa-ban"></i> Cancelar</button>
+                            <button type="button" id="btnAccionFactura" style="padding: 10px 20px; background: #17a2b8; color: white; border: none; border-radius: 5px; cursor: pointer;"><i class="fa-solid fa-file-invoice"></i> Generar Factura</button>
+                        </div>
+                    </div>
+
+                    <!-- Modal de modificación de billete -->
+                    <div id="modalModificarBillete" class="modal-vendedor hidden" style="background: rgba(0,0,0,0.5);">
+                        <div class="modal-content" style="max-width: 500px;">
+                            <span class="close-modal" id="cerrarModificarBillete">&times;</span>
+                            <h2>Modificar Billete</h2>
+                            <div id="infoBilleteAModificar" style="margin-bottom: 15px; padding: 10px; background: #e9ecef; border-radius: 5px;"></div>
+                            <div id="modificarPaso1">
+                                <h3>Seleccionar nuevo viaje</h3>
+                                <form id="formBuscarViajesModificar">
+                                    <label>Origen: <input type="text" name="origen" required></label>
+                                    <label>Destino: <input type="text" name="destino" required></label>
+                                    <label>Fecha: <input type="date" name="fecha" required></label>
+                                    <button type="submit">Buscar viajes</button>
+                                </form>
+                                <div id="resultadosViajesModificar"></div>
+                            </div>
+                            <div id="modificarPaso2" class="hidden">
+                                <h3>Seleccionar nuevo asiento</h3>
+                                <div id="infoViajeModificar"></div>
+                                <div id="asientosGridModificar" class="asientos-grid"></div>
+                                <input type="hidden" id="inputAsientoModificar">
+                                <button type="button" id="btnConfirmarModificacion" style="margin-top: 15px; padding: 10px 20px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer;">Confirmar modificación</button>
+                            </div>
+                            <div id="resultadoModificacion" style="margin-top: 15px;"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="mini-list-container disabled" id="recentTripsBox">
@@ -331,6 +395,6 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
         }
     </script>
 </body>
-</body>
-<script src="js/vendedor.js"></script>
 </html>
+<script src="js/vendedor.js"></script>
+<script src="js/gestionar_billetes.js"></script>
