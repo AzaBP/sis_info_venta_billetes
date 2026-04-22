@@ -113,13 +113,39 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
         .modal-vendedor label { display: block; margin: 10px 0 6px 0; }
         .modal-vendedor input, .modal-vendedor select, .modal-vendedor button { margin-bottom: 10px; }
         .modal-vendedor h2 { margin-top: 0; color: #0a2a66; }
-        .modal-vendedor .asientos-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin: 18px 0; }
-        .modal-vendedor .asiento-btn {
-            background: #e9ecef; border: 1px solid #bbb; border-radius: 6px; padding: 8px 0; cursor: pointer;
-            font-weight: bold; color: #0a2a66; transition: background 0.2s, border 0.2s;
+        
+        /* Asientos mejorados estilo compra.php */
+        .modal-vendedor .asientos-grid {
+            display: flex; flex-direction: column; gap: 8px; margin: 18px 0; max-height: 350px; overflow-y: auto; padding: 10px; background: #f8f9fa; border-radius: 8px;
         }
-        .modal-vendedor .asiento-btn.selected { background: #0a2a66; color: #fff; border-color: #0a2a66; }
-        .modal-vendedor .asiento-btn:disabled { background: #eee; color: #aaa; border-color: #ddd; cursor: not-allowed; }
+        .modal-vendedor .asiento-fila {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .modal-vendedor .asiento-numero {
+            width: 45px; text-align: center; font-size: 0.75rem; color: #666;
+        }
+        .modal-vendedor .asiento-btn {
+            width: 40px; height: 40px; background: white; border: 2px solid #bbb; border-radius: 6px;
+            cursor: pointer; font-weight: 600; color: #555; font-size: 0.85rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .modal-vendedor .asiento-btn:hover:not(:disabled) {
+            border-color: #0a2a66; background: #e7eefb;
+        }
+        .modal-vendedor .asiento-btn.selected {
+            background: #0a2a66; color: white; border-color: #0a2a66;
+            box-shadow: 0 2px 6px rgba(10, 42, 102, 0.4);
+        }
+        .modal-vendedor .asiento-btn:disabled {
+            background: #d6d6d6; color: #888; border-color: #bbb; cursor: not-allowed;
+        }
+        .modal-vendedor .asiento-btn.current-seat {
+            background: #e9ecef; color: #0a2a66; border: 2px dashed #0a2a66;
+        }
+        .modal-vendedor .pasillo {
+            width: 30px; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 0.7rem;
+        }
     </style>
 </head>
 <body>
@@ -272,6 +298,36 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                             <div id="resultadoModificacion" style="margin-top: 15px;"></div>
                         </div>
                     </div>
+                    
+                    <!-- Modal de nueva venta: búsqueda de destinos -->
+                    <div id="modalNuevaVenta" class="modal-vendedor hidden" style="background: rgba(0,0,0,0.5);">
+                        <div class="modal-content" style="max-width: 500px;">
+                            <span class="close-modal" id="cerrarModalNuevaVenta">&times;</span>
+                            <h2><i class="fa-solid fa-cart-plus"></i> Nueva Venta</h2>
+                            <p style="color: #666; margin-bottom: 20px;">Selecciona el destino para el cliente: <strong id="nombreClienteVenta"></strong></p>
+                            
+                            <form id="formBuscarViajesVenta">
+                                <label>Origen:</label>
+                                <select id="origenVenta" name="origen" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;">
+                                    <option value="">Seleccionar origen...</option>
+                                </select>
+                                
+                                <label>Destino:</label>
+                                <select id="destinoVenta" name="destino" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;" disabled>
+                                    <option value="">Seleccionar destino...</option>
+                                </select>
+                                
+                                <label>Fecha:</label>
+                                <input type="date" id="fechaVenta" name="fecha" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;">
+                                
+                                <button type="submit" style="width: 100%; padding: 12px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
+                                    <i class="fa-solid fa-magnifying-glass"></i> Buscar Viajes
+                                </button>
+                            </form>
+                            
+                            <div id="resultadosViajesVenta" style="margin-top: 15px;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -339,7 +395,7 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
             }
         }
 
-        // Función para iniciar nueva venta (redirige a compra.php con cliente por GET)
+        // Función para iniciar nueva venta (mostrar modal de búsqueda de destinos)
         function iniciarNuevaVenta() {
             if (typeof clienteBuscado === 'undefined' || !clienteBuscado) {
                 alert('Por favor, busca y selecciona un cliente usando su DNI antes de iniciar una venta.');
@@ -352,10 +408,110 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                 return;
             }
             
-            // Redirigir a compra.php con el id_pasajero como parámetro GET
-            // El parámetro id_pasajero_gestionado indica que es una venta gestionada por vendedor
-            window.location.href = 'compra.php?id_pasajero_gestionado=' + idPasajero;
+            // Mostrar modal de nueva venta
+            document.getElementById('nombreClienteVenta').textContent = clienteBuscado.nombre;
+            document.getElementById('modalNuevaVenta').classList.remove('hidden');
+            document.getElementById('resultadosViajesVenta').innerHTML = '';
+            
+            // Cargar orígenes disponibles
+            cargarOrigenesVenta();
+            
+            // Establecer fecha mínima (hoy)
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fechaVenta').min = hoy;
+            document.getElementById('fechaVenta').value = hoy;
         }
+        
+        // Función para cargar orígenes en el modal de nueva venta
+        function cargarOrigenesVenta() {
+            fetch('php/api_origenes_destinos.php')
+                .then(r => r.json())
+                .then(data => {
+                    const selectOrigen = document.getElementById('origenVenta');
+                    const selectDestino = document.getElementById('destinoVenta');
+                    
+                    // Limpiar y añadir opción por defecto
+                    selectOrigen.innerHTML = '<option value="">Seleccionar origen...</option>';
+                    selectDestino.innerHTML = '<option value="">Seleccionar destino...</option>';
+                    selectDestino.disabled = true;
+                    
+                    if (data.origenes) {
+                        data.origenes.forEach(o => {
+                            const option = document.createElement('option');
+                            option.value = o;
+                            option.textContent = o;
+                            selectOrigen.appendChild(option);
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error('Error al cargar orígenes:', err);
+                });
+        }
+        
+        // Event listener para cambio de origen (actualizar destinos)
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectOrigen = document.getElementById('origenVenta');
+            const selectDestino = document.getElementById('destinoVenta');
+            
+            if (selectOrigen && selectDestino) {
+                selectOrigen.addEventListener('change', function() {
+                    const origen = this.value;
+                    if (!origen) {
+                        selectDestino.innerHTML = '<option value="">Seleccionar destino...</option>';
+                        selectDestino.disabled = true;
+                        return;
+                    }
+                    
+                    // Cargar destinos disponibles (excluyendo el origen)
+                    fetch('php/api_origenes_destinos.php')
+                        .then(r => r.json())
+                        .then(data => {
+                            selectDestino.innerHTML = '<option value="">Seleccionar destino...</option>';
+                            if (data.destinos) {
+                                data.destinos.forEach(d => {
+                                    if (d !== origen) {
+                                        const option = document.createElement('option');
+                                        option.value = d;
+                                        option.textContent = d;
+                                        selectDestino.appendChild(option);
+                                    }
+                                });
+                            }
+                            selectDestino.disabled = false;
+                        });
+                });
+            }
+            
+            // Cerrar modal de nueva venta
+            const btnCerrarNuevaVenta = document.getElementById('cerrarModalNuevaVenta');
+            if (btnCerrarNuevaVenta) {
+                btnCerrarNuevaVenta.addEventListener('click', () => {
+                    document.getElementById('modalNuevaVenta').classList.add('hidden');
+                });
+            }
+            
+            // Buscar viajes desde el modal de nueva venta
+            const formBuscarViajesVenta = document.getElementById('formBuscarViajesVenta');
+            if (formBuscarViajesVenta) {
+                formBuscarViajesVenta.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const datos = new FormData(this);
+                    const origen = datos.get('origen');
+                    const destino = datos.get('destino');
+                    const fecha = datos.get('fecha');
+                    
+                    if (!origen || !destino || !fecha) {
+                        document.getElementById('resultadosViajesVenta').innerHTML = '<p style="color: #c00;">Por favor, completa todos los campos.</p>';
+                        return;
+                    }
+                    
+                    // Buscar viajes y redirigir a compra.php con parámetros
+                    const idPasajero = clienteBuscado.id_pasajero;
+                    window.location.href = `compra.php?id_pasajero_gestionado=${idPasajero}&origen=${encodeURIComponent(origen)}&destino=${encodeURIComponent(destino)}&fecha=${encodeURIComponent(fecha)}`;
+                });
+            }
+        });
     </script>
 </body>
 </html>

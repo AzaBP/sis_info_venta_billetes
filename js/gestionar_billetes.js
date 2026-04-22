@@ -273,9 +273,31 @@ function cargarAsientosParaModificacion() {
             grid.innerHTML = '';
             
             if (asientos.length === 0) {
-                grid.innerHTML = '<span style="grid-column: span 8; color: #c00;">No hay asientos disponibles.</span>';
+                grid.innerHTML = '<p style="color: #c00; text-align: center;">No hay asientos disponibles.</p>';
             } else {
-                asientos.forEach(a => {
+                // Ordenar asientos por número
+                asientos.sort((a, b) => a.numero_asiento - b.numero_asiento);
+                
+                // Crear filas de 8 asientos (4 + pasillo + 4)
+                let filaActual = null;
+                let contadorFila = 0;
+                
+                asientos.forEach((a, index) => {
+                    // Nueva fila cada 8 asientos
+                    if (index % 8 === 0) {
+                        filaActual = document.createElement('div');
+                        filaActual.className = 'asiento-fila';
+                        grid.appendChild(filaActual);
+                    }
+                    
+                    // Añadir pasillo después del 4º asiento
+                    if (index % 8 === 4 && index > 0) {
+                        const pasillo = document.createElement('div');
+                        pasillo.className = 'pasillo';
+                        pasillo.innerHTML = '│';
+                        filaActual.appendChild(pasillo);
+                    }
+                    
                     const btn = document.createElement('button');
                     btn.type = 'button';
                     btn.className = 'asiento-btn';
@@ -286,7 +308,8 @@ function cargarAsientosParaModificacion() {
                         btn.disabled = true;
                         btn.title = 'Ocupado';
                     } else if (a.numero_asiento === billeteSeleccionado.numero_asiento) {
-                        btn.title = 'Asiento actual';
+                        btn.classList.add('current-seat');
+                        btn.title = 'Tu asiento actual';
                     }
                     
                     btn.onclick = function() {
@@ -295,7 +318,7 @@ function cargarAsientosParaModificacion() {
                         btn.classList.add('selected');
                         document.getElementById('inputAsientoModificar').value = a.numero_asiento;
                     };
-                    grid.appendChild(btn);
+                    filaActual.appendChild(btn);
                 });
             }
             document.getElementById('inputAsientoModificar').value = '';
