@@ -66,23 +66,33 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
             background: #f5f8fc;
             border-left-color: #0a2a66;
         }
-        .ticket-details-expanded { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #d8e0ef; }
+        .ticket-details-expanded { display: none; margin-top: 10px; padding-top: 12px; border-top: 1px solid #d8e0ef; }
         .ticket-row.expanded .ticket-details-expanded { display: block; }
         .ticket-row.expanded .ticket-route,
         .ticket-row.expanded .ticket-meta,
         .ticket-row.expanded .ticket-actions { grid-column: 1 / -1; }
+        .ticket-details-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: start;
+        }
+        .ticket-details-info p { margin: 0 0 6px; color: #334155; }
+        .ticket-detail-actions { display: flex; gap: 10px; margin-top: 10px; }
         .qr-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            margin: 12px 0;
-            padding: 16px;
+            gap: 8px;
+            margin: 0;
+            padding: 10px;
             background: white;
             border-radius: 10px;
             border: 1px solid #d8e0ef;
+            min-width: 210px;
         }
-        .qr-container canvas { border: 2px solid #0a2a66; padding: 8px; background: white; max-width: 240px; }
+        .qr-container .qr-target { min-height: 170px; min-width: 170px; display: inline-flex; align-items: center; justify-content: center; }
+        .qr-container canvas { border: 2px solid #0a2a66; padding: 6px; background: white; max-width: 190px; }
         .qr-info { font-size: 0.85rem; color: #5c6b85; text-align: center; }
         .ticket-route h3 { margin: 0; color: #12213d; font-size: 1.08rem; }
         .ticket-route p, .ticket-meta p { margin: 0; color: #5c6b85; font-size: 0.92rem; }
@@ -118,32 +128,12 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
             font-size: 0.9rem;
         }
         .btn-link:hover { background: #1f4fa6; }
-        .ticket-row.expanded {
-            grid-template-columns: 1fr;
-            background: #f5f8fc;
-            border-left-color: #0a2a66;
-        }
-        .ticket-details-expanded { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #d8e0ef; }
-        .ticket-row.expanded .ticket-details-expanded { display: block; }
-        .ticket-row.expanded .ticket-route,
-        .ticket-row.expanded .ticket-meta,
-        .ticket-row.expanded .ticket-actions { grid-column: 1 / -1; }
-        .qr-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            margin: 12px 0;
-            padding: 16px;
-            background: white;
-            border-radius: 10px;
-            border: 1px solid #d8e0ef;
-        }
-        .qr-container canvas { border: 2px solid #d8e0ef; padding: 8px; background: white; }
         .qr-info { font-size: 0.85rem; color: #5c6b85; text-align: center; }
         @media (max-width: 920px) {
             .ticket-row { grid-template-columns: 1fr; }
             .ticket-actions { align-items: flex-start; justify-content: flex-start; }
+            .ticket-details-grid { grid-template-columns: 1fr; }
+            .qr-container { width: 100%; min-width: 0; }
         }
     </style>
 </head>

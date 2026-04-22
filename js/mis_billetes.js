@@ -25,7 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${number.toFixed(2)} EUR`;
     }
 
+    function buildTicketKey(ticket) {
+        const raw = String(ticket.id_mongo || ticket.codigo_billete || ticket.id_viaje || Date.now());
+        return raw.replace(/[^a-zA-Z0-9_-]/g, '_');
+    }
+
     function generateQRCode(ticket) {
+        const ticketKey = buildTicketKey(ticket);
+        const qrId = `qr_${ticketKey}`;
         const qrPayload = JSON.stringify({
             codigo: ticket.codigo_billete || '',
             pasajero: `${ticket.pasajero_nombre || ''} ${ticket.pasajero_apellidos || ''}`.trim(),
@@ -37,10 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
             asiento: ticket.numero_asiento || '',
             vagon: ticket.vagon || '',
         });
+        const encodedPayload = encodeURIComponent(qrPayload);
 
         return `
             <div class="qr-container">
-                <div id="qr_${ticket.id_mongo || ticket.codigo_billete}" style="display:inline-block;"></div>
+                <div id="${qrId}" class="qr-target" data-qr-payload="${encodedPayload}"></div>
                 <p class="qr-info">Código QR - Escanea en el mostrador</p>
             </div>
         `;
@@ -50,23 +58,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const fechaViaje = ticket.fecha_viaje || '';
         const esPasado = fechaViaje ? (new Date(fechaViaje) < new Date(new Date().toDateString())) : false;
         const ruta = `${ticket.origen || ''} → ${ticket.destino || ''}`.trim();
+        const ticketKey = buildTicketKey(ticket);
         const pasajero = `${ticket.pasajero_nombre || ''} ${ticket.pasajero_apellidos || ''}`.trim();
 
         return `
-            <article class="ticket-row" data-ticket-id="${escapeHtml(ticket.id_mongo || '')}">
+            <article class="ticket-row" data-ticket-id="${escapeHtml(ticketKey)}">
                 <div class="ticket-route">
                     <div class="ticket-badges">
                         <span class="badge badge-soft">${escapeHtml(ticket.tipo_tren || 'Tren')}</span>
                         <span class="badge ${esPasado ? 'badge-soft' : 'badge-ok'}">${esPasado ? 'Finalizado' : 'Activo'}</span>
                     </div>
                     <h3>${escapeHtml(ruta)}</h3>
-                    <p><strong>Pasajero:</strong> ${escapeHtml(pasajero || 'N/D')}</p>
                 </div>
 
                 <div class="ticket-meta">
                     <p><strong>Fecha:</strong> ${escapeHtml(fechaViaje)}</p>
                     <p><strong>Horario:</strong> ${escapeHtml((ticket.hora_salida || '') + ' - ' + (ticket.hora_llegada || ''))}</p>
-                    <p><strong>Asiento:</strong> ${escapeHtml(ticket.numero_asiento || '')}${ticket.vagon ? ` · Vagón ${escapeHtml(ticket.vagon)}` : ''}</p>
                 </div>
 
                 <div class="ticket-actions">
@@ -76,11 +83,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div class="ticket-details-expanded">
-                    <p><strong>Código billete:</strong> ${escapeHtml(ticket.codigo_billete || '')}</p>
-                    <p><strong>Precio:</strong> ${formatMoney(ticket.precio_pagado)}</p>
-                    <p><strong>Documento:</strong> ${escapeHtml(ticket.pasajero_documento || 'N/D')}</p>
-                    ${generateQRCode(ticket)}
-                    <div style="display:flex; gap:10px; margin-top:12px;">
+                    <div class="ticket-details-grid">
+                        <div class="ticket-details-info">
+                            <p><strong>Código billete:</strong> ${escapeHtml(ticket.codigo_billete || '')}</p>
+                            <p><strong>Pasajero:</strong> ${escapeHtml(pasajero || 'N/D')}</p>
+                            <p><strong>Documento:</strong> ${escapeHtml(ticket.pasajero_documento || 'N/D')}</p>
+                            <p><strong>Asiento:</strong> ${escapeHtml(ticket.numero_asiento || '')}${ticket.vagon ? ` · Vagón ${escapeHtml(ticket.vagon)}` : ''}</p>
+                            <p><strong>Precio:</strong> ${formatMoney(ticket.precio_pagado)}</p>
+                        </div>
+                        ${generateQRCode(ticket)}
+                    </div>
+                    <div class="ticket-detail-actions">
                         <a class="btn-link" href="${config.downloadUrl || 'php/descargar_billete.php'}?id_mongo=${encodeURIComponent(ticket.id_mongo || '')}">
                             <i class="fa-solid fa-file-pdf"></i> Descargar PDF
                         </a>
@@ -130,12 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const qrEl = document.getElementById(`qr_${ticketId}`);
                 if (qrEl && qrEl.innerHTML === '') {
-                    const qrData = row.querySelector('.ticket-details-expanded')?.textContent || ticketId;
+                    const qrData = decodeURIComponent(qrEl.getAttribute('data-qr-payload') || ticketId);
                     try {
                         new QRCode(qrEl, {
-                            text: qrData.substring(0, 2000),
-                            width: 200,
-                            height: 200,
+                            text: qrData,
+                            width: 170,
+                            height: 170,
                             colorDark: '#0a2a66',
                             colorLight: '#ffffff',
                             correctLevel: QRCode.CorrectLevel.H

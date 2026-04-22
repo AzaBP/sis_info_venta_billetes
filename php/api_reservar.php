@@ -43,22 +43,38 @@ try {
         responderJson(401, ['error' => 'Sesion no valida.']);
     }
 
-    $asientos = [];
+    $asientosIda = [];
+    $asientosVuelta = [];
     if (isset($input['asientos']) && is_array($input['asientos']) && count($input['asientos']) > 0) {
         foreach ($input['asientos'] as $a) {
             $num = isset($a['numero_asiento']) ? (int)$a['numero_asiento'] : 0;
             if ($num <= 0) {
                 responderJson(400, ['error' => 'Hay asientos no validos en la reserva.']);
             }
-            $asientos[] = [
+            $tramo = strtolower(trim((string)($a['tramo'] ?? ($esIdaVuelta ? '' : 'ida'))));
+            if ($esIdaVuelta && $tramo !== 'ida' && $tramo !== 'vuelta') {
+                responderJson(400, ['error' => 'Debes seleccionar asientos separados para ida y vuelta.']);
+            }
+
+            $asiento = [
                 'numero_asiento' => $num,
                 'vagon' => isset($a['vagon']) ? (int)$a['vagon'] : null,
                 'precio' => isset($a['precio']) ? (float)$a['precio'] : null,
             ];
+
+            if ($esIdaVuelta) {
+                if ($tramo === 'ida') {
+                    $asientosIda[] = $asiento;
+                } else {
+                    $asientosVuelta[] = $asiento;
+                }
+            } else {
+                $asientosIda[] = $asiento;
+            }
         }
     } elseif (isset($input['numero_asiento'])) {
         // Compatibilidad con formato antiguo (1 pasajero)
-        $asientos[] = [
+        $asientosIda[] = [
             'numero_asiento' => (int)$input['numero_asiento'],
             'vagon' => null,
             'precio' => isset($input['precio']) ? (float)$input['precio'] : null,
@@ -96,8 +112,11 @@ try {
         ];
     }
 
-    if (count($asientos) !== count($pasajeros)) {
-        responderJson(400, ['error' => 'El numero de asientos debe coincidir con el numero de pasajeros.']);
+    if (count($asientosIda) !== count($pasajeros)) {
+        responderJson(400, ['error' => 'El numero de asientos de ida debe coincidir con el numero de pasajeros.']);
+    }
+    if ($esIdaVuelta && count($asientosVuelta) !== count($pasajeros)) {
+        responderJson(400, ['error' => 'El numero de asientos de vuelta debe coincidir con el numero de pasajeros.']);
     }
 
     $pdo = (new Conexion())->conectar();
@@ -144,7 +163,7 @@ try {
     }
     $coleccion = $db->selectCollection('billetes');
 
-    foreach ($asientos as $asiento) {
+    foreach ($asientosIda as $i => $asiento) {
         $duplicado = $coleccion->findOne([
             'id_viaje' => $idViajeIda,
             'numero_asiento' => (int)$asiento['numero_asiento'],
@@ -158,9 +177,13 @@ try {
         }
 
         if ($esIdaVuelta) {
+            $asientoVuelta = $asientosVuelta[$i] ?? null;
+            if ($asientoVuelta === null) {
+                responderJson(400, ['error' => 'No se pudo mapear el asiento de vuelta para un pasajero.']);
+            }
             $duplicadoVuelta = $coleccion->findOne([
                 'id_viaje' => $idViajeVuelta,
-                'numero_asiento' => (int)$asiento['numero_asiento'],
+                'numero_asiento' => (int)$asientoVuelta['numero_asiento'],
                 'estado' => 'confirmado',
             ]);
 
@@ -174,21 +197,21 @@ try {
 
     $fechaCompra = date('Y-m-d H:i:s');
     $precioTotal = isset($input['precio_total']) ? (float)$input['precio_total'] : 0.0;
-    $factorTrayectos = $esIdaVuelta ? 2 : 1;
-    $precioPorBillete = count($asientos) > 0 ? $precioTotal / (count($asientos) * $factorTrayectos) : 0.0;
+    $totalBilletes = count($asientosIda) + ($esIdaVuelta ? count($asientosVuelta) : 0);
+    $precioPorBillete = $totalBilletes > 0 ? $precioTotal / $totalBilletes : 0.0;
 
     $documentos = [];
-    foreach ($asientos as $i => $asiento) {
+    foreach ($asientosIda as $i => $asientoIda) {
         $pasajero = $pasajeros[$i];
-        $precioIda = $asiento['precio'] !== null
-            ? ((float)$asiento['precio'] / $factorTrayectos)
+        $precioIda = $asientoIda['precio'] !== null
+            ? (float)$asientoIda['precio']
             : (float)$precioPorBillete;
 
         $documentos[] = [
             'id_viaje' => $idViajeIda,
-            'numero_asiento' => (int)$asiento['numero_asiento'],
+            'numero_asiento' => (int)$asientoIda['numero_asiento'],
             'id_pasajero' => $idPasajeroComprador,
-            'vagon' => $asiento['vagon'],
+            'vagon' => $asientoIda['vagon'],
             'estado' => 'confirmado',
             'tramo' => 'ida',
             'fecha_compra' => $fechaCompra,
@@ -207,11 +230,16 @@ try {
         ];
 
         if ($esIdaVuelta && $viajeVuelta) {
+            $asientoVuelta = $asientosVuelta[$i];
+            $precioVuelta = $asientoVuelta['precio'] !== null
+                ? (float)$asientoVuelta['precio']
+                : (float)$precioPorBillete;
+
             $documentos[] = [
                 'id_viaje' => $idViajeVuelta,
-                'numero_asiento' => (int)$asiento['numero_asiento'],
+                'numero_asiento' => (int)$asientoVuelta['numero_asiento'],
                 'id_pasajero' => $idPasajeroComprador,
-                'vagon' => $asiento['vagon'],
+                'vagon' => $asientoVuelta['vagon'],
                 'estado' => 'confirmado',
                 'tramo' => 'vuelta',
                 'fecha_compra' => $fechaCompra,
@@ -221,7 +249,7 @@ try {
                 'origen' => (string)($viajeVuelta['origen'] ?? ''),
                 'destino' => (string)($viajeVuelta['destino'] ?? ''),
                 'tipo_tren' => (string)($viajeVuelta['tipo_tren'] ?? ''),
-                'precio_pagado' => $precioIda,
+                'precio_pagado' => $precioVuelta,
                 'codigo_billete' => generarCodigoBillete(),
                 'pasajero_nombre' => $pasajero['nombre'],
                 'pasajero_apellidos' => $pasajero['apellidos'],

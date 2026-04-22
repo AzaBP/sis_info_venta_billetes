@@ -25,6 +25,7 @@ $fecha_vuelta = $es_ida_vuelta ? $fecha_vuelta : '';
 $pasajeros = isset($_GET['pasajeros']) ? intval($_GET['pasajeros']) : 1;
 $pasajeros = max(1, min(4, $pasajeros));
 $id_viaje_seleccionado = isset($_GET['id_viaje']) ? (int)$_GET['id_viaje'] : 0;
+$assetsVersionCompra = (string)@filemtime(__FILE__);
 
 function buscarTrayectos(PDO $pdo, string $origen, string $destino, string $fecha, int $idViaje = 0): array {
     $where = [];
@@ -216,11 +217,11 @@ if ($id_pasajero_gestionado) {
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/index.css?v=<?php echo urlencode((string)@filemtime(__DIR__ . '/css/index.css')); ?>">
     
-    <link rel="stylesheet" href="css/session_menu.css">
+    <link rel="stylesheet" href="css/session_menu.css?v=<?php echo urlencode((string)@filemtime(__DIR__ . '/css/session_menu.css')); ?>">
     
-    <link rel="stylesheet" href="css/compra.css">
+    <link rel="stylesheet" href="css/compra.css?v=<?php echo urlencode((string)@filemtime(__DIR__ . '/css/compra.css')); ?>">
 </head>
 <body>
 
@@ -463,11 +464,11 @@ if ($id_pasajero_gestionado) {
                 <h3><span data-i18n="selecciona_plaza_en">Selecciona tu plaza en</span> <span id="lblTrenSeleccionado">--</span></h3>
                 
                 <?php if ($es_ida_vuelta): ?>
-                <div style="margin: 15px 0; padding: 12px; background: #f5f8fc; border-radius: 8px; border: 1px solid #d8e0ef;">
-                    <p style="margin: 0 0 10px; font-weight: 600; color: #0a2a66;">Selecciona asientos para:</p>
-                    <div style="display: flex; gap: 10px;">
-                        <button type="button" id="btnTramoIda" class="tramo-btn active" onclick="cambiarTramo('ida')" style="flex: 1; padding: 10px; background: #0a2a66; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Ida</button>
-                        <button type="button" id="btnTramoVuelta" class="tramo-btn" onclick="cambiarTramo('vuelta')" style="flex: 1; padding: 10px; background: #e7eefb; color: #0a2a66; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Vuelta</button>
+                <div class="seat-leg-switcher">
+                    <p>Selecciona asientos para:</p>
+                    <div class="seat-leg-buttons">
+                        <button type="button" id="btnTramoIda" class="tramo-btn active" onclick="cambiarTramo('ida')">Ida</button>
+                        <button type="button" id="btnTramoVuelta" class="tramo-btn" onclick="cambiarTramo('vuelta')">Vuelta</button>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -713,7 +714,7 @@ if ($id_pasajero_gestionado) {
         }
     };
     </script>
-    <script src="js/compra.js"></script>
+    <script src="js/compra.js?v=<?php echo urlencode((string)@filemtime(__DIR__ . '/js/compra.js')); ?>"></script>
     <script>
     // --- Formato y validación de pago seguro ---
     document.addEventListener('DOMContentLoaded', function() {

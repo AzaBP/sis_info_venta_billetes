@@ -56,6 +56,41 @@
 
 /* MAPA ASIENTOS */
 .seat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.seat-leg-switcher {
+    margin: 15px 0;
+    padding: 12px;
+    background: #f5f8fc;
+    border-radius: 8px;
+    border: 1px solid #d8e0ef;
+    min-width: 260px;
+}
+
+.seat-leg-switcher p {
+    margin: 0 0 10px;
+    font-weight: 600;
+    color: #0a2a66;
+}
+
+.seat-leg-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.tramo-btn {
+    flex: 1;
+    padding: 10px;
+    background: #e7eefb;
+    color: #0a2a66;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.tramo-btn.active {
+    background: #0a2a66;
+    color: #fff;
+}
 .wagon-navigator {
     display: flex;
     align-items: center;
@@ -309,7 +344,7 @@
 .no-return-trains {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 12px;
     background: #fff7ed;
     color: #9a3412;
@@ -321,6 +356,7 @@
 .no-return-message {
     margin: 0;
     line-height: 1.4;
+    text-align: left;
 }
 
 .no-return-actions {
@@ -328,8 +364,8 @@
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    max-width: 320px;
-    margin: 4px auto 0;
+    max-width: 360px;
+    margin: 6px 0 0;
 }
 
 .no-return-actions .btn-select {
@@ -345,6 +381,18 @@
     justify-content: center;
     align-items: center;
     text-decoration: none;
+}
+
+@media (max-width: 900px) {
+    .seat-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .seat-leg-switcher {
+        min-width: 0;
+    }
 }
 
 .passengers-forms-container {
