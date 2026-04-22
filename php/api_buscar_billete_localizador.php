@@ -58,6 +58,16 @@ if ($id_viaje > 0) {
     $viajeInfo = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+
+$fechaCompra = '';
+if (isset($billete['fecha_compra'])) {
+    if (is_object($billete['fecha_compra']) && method_exists($billete['fecha_compra'], 'toDateTime')) {
+        $fechaCompra = $billete['fecha_compra']->toDateTime()->format('Y-m-d H:i:s');
+    } else {
+        $fechaCompra = (string)$billete['fecha_compra'];
+    }
+}
+
 // Devolver información del billete
 echo json_encode([
     'ok' => true,
@@ -67,7 +77,7 @@ echo json_encode([
         'id_viaje' => $id_viaje,
         'numero_asiento' => isset($billete['numero_asiento']) ? (int)$billete['numero_asiento'] : null,
         'estado' => (string)($billete['estado'] ?? 'confirmado'),
-        'fecha_compra' => isset($billete['fecha_compra']) ? $billete['fecha_compra']->toDateTime()->format('Y-m-d H:i:s') : '',
+        'fecha_compra' => $fechaCompra,
         'precio_pagado' => isset($billete['precio_final']) ? (float)$billete['precio_final'] : (isset($billete['precio_pagado']) ? (float)$billete['precio_pagado'] : null),
         'descuento' => isset($billete['descuento']) ? (float)$billete['descuento'] : 0,
         'pasajero_nombre' => (string)($billete['pasajero_nombre'] ?? ''),
