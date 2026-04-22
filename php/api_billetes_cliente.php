@@ -38,20 +38,30 @@ foreach ($cursor as $doc) {
         $idsViaje[$idViaje] = true;
     }
     
-    $billetes[] = [
-        'id_mongo' => isset($doc['_id']) ? (string)$doc['_id'] : '',
-        'codigo_billete' => (string)($doc['codigo_billete'] ?? ''),
-        'id_viaje' => $idViaje,
-        'numero_asiento' => isset($doc['numero_asiento']) ? (int)$doc['numero_asiento'] : null,
-        'estado' => (string)($doc['estado'] ?? 'confirmado'),
-        'fecha_compra' => isset($doc['fecha_compra']) ? $doc['fecha_compra']->toDateTime()->format('Y-m-d H:i:s') : '',
-        'precio_pagado' => isset($doc['precio_final']) ? (float)$doc['precio_final'] : (isset($doc['precio_pagado']) ? (float)$doc['precio_pagado'] : null),
-        'descuento' => isset($doc['descuento']) ? (float)$doc['descuento'] : 0,
-        'pasajero_nombre' => (string)($doc['pasajero_nombre'] ?? ''),
-        'pasajero_apellidos' => (string)($doc['pasajero_apellidos'] ?? ''),
-        'pasajero_documento' => (string)($doc['pasajero_documento'] ?? ''),
-        'pasajero_email' => (string)($doc['pasajero_email'] ?? '')
-    ];
+    // Manejar fecha_compra que puede ser objeto MongoDB Date o string
+$fechaCompra = '';
+if (isset($doc['fecha_compra'])) {
+    if (is_object($doc['fecha_compra']) && method_exists($doc['fecha_compra'], 'toDateTime')) {
+        $fechaCompra = $doc['fecha_compra']->toDateTime()->format('Y-m-d H:i:s');
+    } else {
+        $fechaCompra = (string)$doc['fecha_compra'];
+    }
+}
+
+$billetes[] = [
+    'id_mongo' => isset($doc['_id']) ? (string)$doc['_id'] : '',
+    'codigo_billete' => (string)($doc['codigo_billete'] ?? ''),
+    'id_viaje' => $idViaje,
+    'numero_asiento' => isset($doc['numero_asiento']) ? (int)$doc['numero_asiento'] : null,
+    'estado' => (string)($doc['estado'] ?? 'confirmado'),
+    'fecha_compra' => $fechaCompra,
+    'precio_pagado' => isset($doc['precio_final']) ? (float)$doc['precio_final'] : (isset($doc['precio_pagado']) ? (float)$doc['precio_pagado'] : null),
+    'descuento' => isset($doc['descuento']) ? (float)$doc['descuento'] : 0,
+    'pasajero_nombre' => (string)($doc['pasajero_nombre'] ?? ''),
+    'pasajero_apellidos' => (string)($doc['pasajero_apellidos'] ?? ''),
+    'pasajero_documento' => (string)($doc['pasajero_documento'] ?? ''),
+    'pasajero_email' => (string)($doc['pasajero_email'] ?? '')
+];
 }
 
 // Obtener información de los viajes

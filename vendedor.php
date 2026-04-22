@@ -394,7 +394,7 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
             }
         }
 
-        // Función para iniciar nueva venta (redirige a compra.php como cliente gestionado)
+        // Función para iniciar nueva venta (redirige a compra.php con cliente por GET)
         function iniciarNuevaVenta() {
             if (typeof clienteBuscado === 'undefined' || !clienteBuscado) {
                 alert('Por favor, busca y selecciona un cliente usando su DNI antes de iniciar una venta.');
@@ -407,19 +407,9 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                 return;
             }
             
-            // Guardar en sesión el cliente gestionado y redirigir a compra.php
-            fetch('php/api_iniciar_venta_vendedor.php?id_pasajero=' + idPasajero)
-                .then(r => r.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.href = data.redirect;
-                    } else {
-                        alert('Error al iniciar la venta: ' + (data.error || 'Error desconocido'));
-                    }
-                })
-                .catch(err => {
-                    alert('Error de conexión al iniciar la venta.');
-                });
+            // Redirigir a compra.php con el id_pasajero como parámetro GET
+            // El parámetro id_pasajero_gestionado indica que es una venta gestionada por vendedor
+            window.location.href = 'compra.php?id_pasajero_gestionado=' + idPasajero;
         }
     </script>
 </body>

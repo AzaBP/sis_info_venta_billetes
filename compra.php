@@ -186,7 +186,8 @@ if (isset($_SESSION['usuario']['id_usuario'])) {
     }
 }
 // --- CLIENTE GESTIONADO POR VENDEDOR ---
-$id_pasajero_gestionado = $_SESSION['cliente_gestionado'] ?? null;
+// Aceptar id_pasajero_gestionado por GET (desde vendedor) o por SESIÓN
+$id_pasajero_gestionado = $_SESSION['cliente_gestionado'] ?? ($_GET['id_pasajero_gestionado'] ?? null);
 if ($id_pasajero_gestionado) {
     // Sobrescribir sesión de usuario para el flujo de compra
     $stmt = $pdo->prepare('SELECT p.id_pasajero, u.nombre, u.apellido, u.email FROM PASAJERO p JOIN USUARIO u ON p.id_usuario = u.id_usuario WHERE p.id_pasajero = :id_pasajero');
