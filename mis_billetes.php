@@ -29,7 +29,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
     <title>Mis billetes - TrainWeb</title>
     <link rel="stylesheet" href="css/index.css?v=<?php echo urlencode($assetVersion); ?>">
     <link rel="stylesheet" href="css/session_menu.css?v=<?php echo urlencode($assetVersion); ?>">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body { background: #eef3fb; }
         .my-tickets-page { max-width: 1240px; margin: 0 auto; padding: 28px 20px 48px; }
@@ -61,16 +61,6 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
         }
         .ticket-row:hover { box-shadow: 0 14px 34px rgba(16, 39, 82, 0.12); }
         .ticket-row.expired { border-left-color: #8a93a8; opacity: 0.82; }
-        .ticket-row.expanded {
-            grid-template-columns: 1fr;
-            background: #f5f8fc;
-            border-left-color: #0a2a66;
-        }
-        .ticket-details-expanded { display: none; margin-top: 10px; padding-top: 12px; border-top: 1px solid #d8e0ef; }
-        .ticket-row.expanded .ticket-details-expanded { display: block; }
-        .ticket-row.expanded .ticket-route,
-        .ticket-row.expanded .ticket-meta,
-        .ticket-row.expanded .ticket-actions { grid-column: 1 / -1; }
         .ticket-details-grid {
             display: grid;
             grid-template-columns: 1fr auto;
@@ -129,6 +119,42 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
         }
         .btn-link:hover { background: #1f4fa6; }
         .qr-info { font-size: 0.85rem; color: #5c6b85; text-align: center; }
+
+        .ticket-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 15, 35, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2200;
+            padding: 24px;
+        }
+        .ticket-modal.hidden { display: none; }
+        .ticket-modal-content {
+            width: min(760px, 100%);
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+        }
+        .ticket-modal-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .ticket-modal-close {
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 50%;
+            background: #eef2f7;
+            color: #0a2a66;
+            cursor: pointer;
+        }
         @media (max-width: 920px) {
             .ticket-row { grid-template-columns: 1fr; }
             .ticket-actions { align-items: flex-start; justify-content: flex-start; }
@@ -169,8 +195,19 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
 
         <div id="ticketsState" class="tickets-loading">Cargando tus billetes...</div>
         <div id="ticketsList" class="tickets-list" hidden></div>
-        <div id="ticketDetail" class="ticket-detail" hidden></div>
     </main>
+
+    <div id="ticketModal" class="ticket-modal hidden" aria-hidden="true">
+        <div class="ticket-modal-content">
+            <div class="ticket-modal-top">
+                <h3 style="margin:0; color:#0a2a66;">Detalles del billete</h3>
+                <button type="button" id="ticketModalClose" class="ticket-modal-close" aria-label="Cerrar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="ticketModalBody"></div>
+        </div>
+    </div>
 
     <script src="scripts/i18n.js?v=<?php echo urlencode($assetVersion); ?>"></script>
     <script>

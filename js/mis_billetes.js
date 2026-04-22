@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const state = document.getElementById('ticketsState');
     const list = document.getElementById('ticketsList');
+    const modal = document.getElementById('ticketModal');
+    const modalBody = document.getElementById('ticketModalBody');
+    const modalCloseBtn = document.getElementById('ticketModalClose');
     const config = window.misBilletesConfig || {};
-    let expandedTicketId = null;
+    const ticketsById = new Map();
 
     function setState(message, isError = false) {
         if (!state) return;
@@ -59,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const esPasado = fechaViaje ? (new Date(fechaViaje) < new Date(new Date().toDateString())) : false;
         const ruta = `${ticket.origen || ''} → ${ticket.destino || ''}`.trim();
         const ticketKey = buildTicketKey(ticket);
-        const pasajero = `${ticket.pasajero_nombre || ''} ${ticket.pasajero_apellidos || ''}`.trim();
+        ticketsById.set(ticketKey, ticket);
 
         return `
             <article class="ticket-row" data-ticket-id="${escapeHtml(ticketKey)}">
@@ -77,88 +80,98 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div class="ticket-actions">
-                    <button class="btn-link btn-expand">
-                        <i class="fa-solid fa-chevron-down"></i> Ver detalles
+                    <button class="btn-link btn-open-modal" type="button">
+                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i> Ver detalles
                     </button>
-                </div>
-
-                <div class="ticket-details-expanded">
-                    <div class="ticket-details-grid">
-                        <div class="ticket-details-info">
-                            <p><strong>Código billete:</strong> ${escapeHtml(ticket.codigo_billete || '')}</p>
-                            <p><strong>Pasajero:</strong> ${escapeHtml(pasajero || 'N/D')}</p>
-                            <p><strong>Documento:</strong> ${escapeHtml(ticket.pasajero_documento || 'N/D')}</p>
-                            <p><strong>Asiento:</strong> ${escapeHtml(ticket.numero_asiento || '')}${ticket.vagon ? ` · Vagón ${escapeHtml(ticket.vagon)}` : ''}</p>
-                            <p><strong>Precio:</strong> ${formatMoney(ticket.precio_pagado)}</p>
-                        </div>
-                        ${generateQRCode(ticket)}
-                    </div>
-                    <div class="ticket-detail-actions">
-                        <a class="btn-link" href="${config.downloadUrl || 'php/descargar_billete.php'}?id_mongo=${encodeURIComponent(ticket.id_mongo || '')}">
-                            <i class="fa-solid fa-file-pdf"></i> Descargar PDF
-                        </a>
-                    </div>
                 </div>
             </article>
         `;
     }
 
+    function renderTicketModal(ticket) {
+        const pasajero = `${ticket.pasajero_nombre || ''} ${ticket.pasajero_apellidos || ''}`.trim();
+        const ruta = `${ticket.origen || ''} → ${ticket.destino || ''}`.trim();
+
+        return `
+            <div class="ticket-modal-header">
+                <h3>${escapeHtml(ruta)}</h3>
+            </div>
+            <div class="ticket-details-grid">
+                <div class="ticket-details-info">
+                    <p><strong>Código billete:</strong> ${escapeHtml(ticket.codigo_billete || '')}</p>
+                    <p><strong>Pasajero:</strong> ${escapeHtml(pasajero || 'N/D')}</p>
+                    <p><strong>Documento:</strong> ${escapeHtml(ticket.pasajero_documento || 'N/D')}</p>
+                    <p><strong>Fecha:</strong> ${escapeHtml(ticket.fecha_viaje || '')}</p>
+                    <p><strong>Horario:</strong> ${escapeHtml((ticket.hora_salida || '') + ' - ' + (ticket.hora_llegada || ''))}</p>
+                    <p><strong>Asiento:</strong> ${escapeHtml(ticket.numero_asiento || '')}${ticket.vagon ? ` · Vagón ${escapeHtml(ticket.vagon)}` : ''}</p>
+                    <p><strong>Precio:</strong> ${formatMoney(ticket.precio_pagado)}</p>
+                </div>
+                ${generateQRCode(ticket)}
+            </div>
+            <div class="ticket-detail-actions">
+                <a class="btn-link" href="${config.downloadUrl || 'php/descargar_billete.php'}?id_mongo=${encodeURIComponent(ticket.id_mongo || '')}">
+                    <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+                </a>
+            </div>
+        `;
+    }
+
+    function closeModal() {
+        if (!modal) return;
+        modal.classList.add('hidden');
+        modal.setAttribute('aria-hidden', 'true');
+        if (modalBody) modalBody.innerHTML = '';
+    }
+
+    function openModal(ticketId) {
+        if (!modal || !modalBody) return;
+        const ticket = ticketsById.get(ticketId);
+        if (!ticket) return;
+
+        modalBody.innerHTML = renderTicketModal(ticket);
+        modal.classList.remove('hidden');
+        modal.setAttribute('aria-hidden', 'false');
+
+        setTimeout(() => {
+            const qrEl = modalBody.querySelector('.qr-target');
+            if (!qrEl || qrEl.childElementCount > 0) return;
+            const qrData = decodeURIComponent(qrEl.getAttribute('data-qr-payload') || ticketId);
+            try {
+                if (typeof QRCode !== 'function') {
+                    qrEl.innerHTML = '<span style="color:#8e2e2e;font-size:0.85rem;">No se pudo cargar QR</span>';
+                    return;
+                }
+                new QRCode(qrEl, {
+                    text: qrData,
+                    width: 170,
+                    height: 170,
+                    colorDark: '#0a2a66',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            } catch (e) {
+                console.error('Error generating QR code:', e);
+            }
+        }, 30);
+    }
+
     function attachTicketListeners() {
         document.querySelectorAll('.ticket-row').forEach((row) => {
             const ticketId = row.getAttribute('data-ticket-id');
-            const btn = row.querySelector('.btn-expand');
+            const btn = row.querySelector('.btn-open-modal');
 
             row.addEventListener('click', (e) => {
                 if (e.target.closest('a')) return;
-                toggleExpand(row, ticketId);
+                openModal(ticketId);
             });
 
             if (btn) {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    toggleExpand(row, ticketId);
+                    openModal(ticketId);
                 });
             }
         });
-    }
-
-    function toggleExpand(row, ticketId) {
-        const isExpanded = row.classList.contains('expanded');
-
-        document.querySelectorAll('.ticket-row.expanded').forEach((r) => {
-            r.classList.remove('expanded');
-            const btn = r.querySelector('.btn-expand');
-            if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-chevron-down"></i> Ver detalles';
-            }
-        });
-
-        if (!isExpanded) {
-            row.classList.add('expanded');
-            const btn = row.querySelector('.btn-expand');
-            if (btn) {
-                btn.innerHTML = '<i class="fa-solid fa-chevron-up"></i> Ocultar detalles';
-            }
-
-            setTimeout(() => {
-                const qrEl = document.getElementById(`qr_${ticketId}`);
-                if (qrEl && qrEl.innerHTML === '') {
-                    const qrData = decodeURIComponent(qrEl.getAttribute('data-qr-payload') || ticketId);
-                    try {
-                        new QRCode(qrEl, {
-                            text: qrData,
-                            width: 170,
-                            height: 170,
-                            colorDark: '#0a2a66',
-                            colorLight: '#ffffff',
-                            correctLevel: QRCode.CorrectLevel.H
-                        });
-                    } catch (e) {
-                        console.error('Error generating QR code:', e);
-                    }
-                }
-            }, 100);
-        }
     }
 
     async function loadTickets() {
@@ -183,6 +196,18 @@ document.addEventListener('DOMContentLoaded', () => {
             setState(error.message || 'No se pudieron cargar tus billetes.', true);
         }
     }
+
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeModal);
+    }
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
 
     loadTickets();
 });

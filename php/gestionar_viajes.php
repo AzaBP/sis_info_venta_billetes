@@ -25,6 +25,19 @@ $pdo = (new Conexion())->conectar();
 $mensaje_exito = '';
 $mensaje_error = '';
 
+$sort = $_GET['sort'] ?? 'fecha_hora';
+$dir = strtolower($_GET['dir'] ?? 'desc');
+$dir = $dir === 'asc' ? 'asc' : 'desc';
+
+$sortMap = [
+    'id' => 'v.id_viaje',
+    'trayecto' => 'r.origen',
+    'fecha_hora' => 'v.fecha',
+    'precio' => 'v.precio',
+    'estado' => 'v.estado',
+];
+$sortSql = $sortMap[$sort] ?? 'v.fecha';
+
 // 2. OBTENER EL ID DEL VENDEDOR ACTUAL
 $id_vendedor = null;
 try {
@@ -99,11 +112,17 @@ try {
     if($stmtMaq) $maquinistas = $stmtMaq->fetchAll(PDO::FETCH_ASSOC);
 
     // CORREGIDO: Seleccionamos las columnas correctas para pintar la tabla
+    $orderBy = " ORDER BY {$sortSql} " . strtoupper($dir);
+    if ($sort === 'fecha_hora') {
+        $orderBy = " ORDER BY v.fecha " . strtoupper($dir) . ", v.hora_salida " . strtoupper($dir);
+    } elseif ($sort === 'trayecto') {
+        $orderBy = " ORDER BY r.origen " . strtoupper($dir) . ", r.destino " . strtoupper($dir);
+    }
+
     $sqlViajes = "SELECT v.id_viaje, r.origen, r.destino, v.fecha, v.hora_salida, v.hora_llegada, v.precio, v.estado,
                          v.id_ruta, v.id_tren, v.id_maquinista 
                   FROM VIAJE v
-                  JOIN RUTA r ON v.id_ruta = r.id_ruta
-                  ORDER BY v.fecha DESC, v.hora_salida DESC";
+                  JOIN RUTA r ON v.id_ruta = r.id_ruta" . $orderBy;
     $viajes = $pdo->query($sqlViajes)->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {}
@@ -171,6 +190,15 @@ try {
         th { background-color: #f8f9fa; color: var(--primary-color); font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
         tr:hover { background-color: #f1f4f8; }
         .actions-cell { display: flex; gap: 8px; }
+        .th-sort {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: inherit;
+        }
+        .th-sort .sort-icon { opacity: 0.45; }
+        .th-sort.active .sort-icon { opacity: 1; }
 
         .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; color: white; display: inline-block; text-align: center; }
         .bg-programado { background: #17a2b8; }
@@ -281,11 +309,36 @@ try {
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Trayecto</th>
-                            <th>Fecha y Hora</th>
-                            <th>Precio</th>
-                            <th>Estado</th>
+                            <th>
+                                <?php $nextDir = ($sort === 'id' && $dir === 'asc') ? 'desc' : 'asc'; ?>
+                                <a class="th-sort <?= $sort === 'id' ? 'active' : '' ?>" href="?sort=id&dir=<?= $nextDir ?>">
+                                    ID <i class="fa-solid <?= ($sort === 'id' && $dir === 'asc') ? 'fa-sort-up' : 'fa-sort-down' ?> sort-icon"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <?php $nextDir = ($sort === 'trayecto' && $dir === 'asc') ? 'desc' : 'asc'; ?>
+                                <a class="th-sort <?= $sort === 'trayecto' ? 'active' : '' ?>" href="?sort=trayecto&dir=<?= $nextDir ?>">
+                                    Trayecto <i class="fa-solid <?= ($sort === 'trayecto' && $dir === 'asc') ? 'fa-sort-up' : 'fa-sort-down' ?> sort-icon"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <?php $nextDir = ($sort === 'fecha_hora' && $dir === 'asc') ? 'desc' : 'asc'; ?>
+                                <a class="th-sort <?= $sort === 'fecha_hora' ? 'active' : '' ?>" href="?sort=fecha_hora&dir=<?= $nextDir ?>">
+                                    Fecha y Hora <i class="fa-solid <?= ($sort === 'fecha_hora' && $dir === 'asc') ? 'fa-sort-up' : 'fa-sort-down' ?> sort-icon"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <?php $nextDir = ($sort === 'precio' && $dir === 'asc') ? 'desc' : 'asc'; ?>
+                                <a class="th-sort <?= $sort === 'precio' ? 'active' : '' ?>" href="?sort=precio&dir=<?= $nextDir ?>">
+                                    Precio <i class="fa-solid <?= ($sort === 'precio' && $dir === 'asc') ? 'fa-sort-up' : 'fa-sort-down' ?> sort-icon"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <?php $nextDir = ($sort === 'estado' && $dir === 'asc') ? 'desc' : 'asc'; ?>
+                                <a class="th-sort <?= $sort === 'estado' ? 'active' : '' ?>" href="?sort=estado&dir=<?= $nextDir ?>">
+                                    Estado <i class="fa-solid <?= ($sort === 'estado' && $dir === 'asc') ? 'fa-sort-up' : 'fa-sort-down' ?> sort-icon"></i>
+                                </a>
+                            </th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
