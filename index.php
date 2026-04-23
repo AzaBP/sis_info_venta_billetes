@@ -203,29 +203,6 @@ try {
             </div>
         </section>
 
-        <section class="offers-section">
-            <div class="carousel">
-                <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
-                <div class="offers-track">
-                    
-                    <?php foreach ($promociones_index as $promo): ?>
-                        <div class="offer-card" style="background: #fdf5e6; border-left: 5px solid #f39c12; padding: 20px; min-width: 250px; border-radius: 8px; text-align: center;">
-                            <i class="fa-solid fa-tag" style="font-size: 2rem; color: #f39c12; margin-bottom: 10px;"></i>
-                            <h3 class="promo-discount" data-discount="<?= floatval($promo['descuento_porcentaje']) ?>" style="margin: 5px 0;">-<?= floatval($promo['descuento_porcentaje']) ?>% Dto.</h3>
-                            <p style="font-size: 0.9rem;"><span data-i18n="usa_codigo">Usa el código</span>:<br><strong style="font-size: 1.2rem; background: #fff; padding: 5px; border-radius: 4px; border: 1px dashed #f39c12; display: inline-block; margin-top: 5px;"><?= htmlspecialchars($promo['codigo']) ?></strong></p>
-                            <p style="font-size: 0.8rem; color: #666; margin-bottom: 0;"><span data-i18n="valido_hasta">Válido hasta</span>: <?= date('d/m/Y', strtotime($promo['fecha_fin'])) ?></p>
-                        </div>
-                    <?php endforeach; ?>
-
-                    <?php if (empty($promociones_index) && empty($abonos_index)): ?>
-                        <p style="padding: 20px;" data-i18n="sin_ofertas">Actualmente no hay ofertas disponibles. ¡Vuelve pronto!</p>
-                    <?php endif; ?>
-
-                </div>
-                <button class="next"><i class="fa-solid fa-chevron-right"></i></button>
-            </div>
-        </section>
-
     </main>
 
     <!-- FOOTER -->
