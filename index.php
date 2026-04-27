@@ -184,21 +184,18 @@ try {
 
                     <?php foreach ($abonos_index as $abono): ?>
                         <?php
-                        // Asignar imagen basada en el tipo de abono
-                        $imagen = '';
-                        switch (strtolower($abono['tipo_codigo'] ?? '')) {
-                            case 'mensual':
-                                $imagen = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'; // Imagen de tarjeta mensual
-                                break;
-                            case 'anual':
-                                $imagen = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'; // Imagen de abono anual
-                                break;
-                            case 'joven':
-                                $imagen = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'; // Imagen para jóvenes
-                                break;
-                            default:
-                                $imagen = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'; // Imagen genérica de tren
-                        }
+                        // Array de imágenes random de trenes y compras
+                        $imagenes = [
+                            'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80', // Tren
+                            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80', // Tren moderno
+                            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80', // Viaje en tren
+                            'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80', // Estación
+                            'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80', // Compra online
+                            'https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80', // Shopping
+                            'https://images.unsplash.com/photo-1472851294608-062f824d29cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80', // Tren en paisaje
+                            'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'  // Compra
+                        ];
+                        $imagen = $imagenes[array_rand($imagenes)];
                         // Descripción extendida
                         $descripcion_extendida = htmlspecialchars($abono['descripcion']) . ' Ideal para viajes frecuentes con descuentos exclusivos y flexibilidad total.';
                         ?>
