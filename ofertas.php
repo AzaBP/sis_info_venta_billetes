@@ -353,14 +353,14 @@ try {
                         <?php
                         // Array de imágenes random de trenes y compras
                         $imagenes = [
-                            'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-                            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-                            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-                            'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-                            'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-                            'https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-                            'https://images.unsplash.com/photo-1472851294608-062f824d29cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
-                            'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'
+                            'https://images.pexels.com/photos/33064779/pexels-photo-33064779.jpeg', // Tren
+                            'https://images.pexels.com/photos/18377906/pexels-photo-18377906.jpeg', // Tren moderno
+                            'https://images.pexels.com/photos/27617418/pexels-photo-27617418.jpeg', 
+                            'https://images.pexels.com/photos/4881129/pexels-photo-4881129.jpeg', 
+                            'https://images.pexels.com/photos/18505677/pexels-photo-18505677.jpeg',
+                            'https://images.pexels.com/photos/31016263/pexels-photo-31016263.jpeg' ,
+                            'https://images.pexels.com/photos/29248079/pexels-photo-29248079.jpeg',
+                            'https://images.pexels.com/photos/34172748/pexels-photo-34172748.jpeg'
                         ];
                         $imagen = $imagenes[array_rand($imagenes)];
                         ?>

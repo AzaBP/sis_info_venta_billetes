@@ -186,8 +186,8 @@ try {
                         <?php
                         // Array de imágenes random de trenes y compras
                         $imagenes = [
-                            'https://images.pexels.com/photos/33064779/pexels-photo-33064779.jpeg', // Tren
-                            'https://images.pexels.com/photos/18377906/pexels-photo-18377906.jpeg', // Tren moderno
+                            'https://images.pexels.com/photos/33064779/pexels-photo-33064779.jpeg', 
+                            'https://images.pexels.com/photos/18377906/pexels-photo-18377906.jpeg', 
                             'https://images.pexels.com/photos/27617418/pexels-photo-27617418.jpeg', 
                             'https://images.pexels.com/photos/4881129/pexels-photo-4881129.jpeg', 
                             'https://images.pexels.com/photos/18505677/pexels-photo-18505677.jpeg',
