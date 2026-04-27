@@ -190,12 +190,10 @@ try {
                             'https://images.pexels.com/photos/18377906/pexels-photo-18377906.jpeg', // Tren moderno
                             'https://images.pexels.com/photos/27617418/pexels-photo-27617418.jpeg', 
                             'https://images.pexels.com/photos/4881129/pexels-photo-4881129.jpeg', 
-                            'https://images.pexels.com/photos/18505677/pexels-photo-18505677.jpeg', 
-                            'https://www.pexels.com/es-es/foto/entrenar-tren-transporte-publico-espana-16048233/', 
+                            'https://images.pexels.com/photos/18505677/pexels-photo-18505677.jpeg, 
                             'https://images.pexels.com/photos/32325534/pexels-photo-32325534.jpeg', 
                             'https://images.pexels.com/photos/31016263/pexels-photo-31016263.jpeg' ,
                             'https://images.pexels.com/photos/29248079/pexels-photo-29248079.jpeg',
-                            'https://www.pexels.com/es-es/foto/37089601/' ,
                             'https://images.pexels.com/photos/34172748/pexels-photo-34172748.jpeg'
                         ];
                         $imagen = $imagenes[array_rand($imagenes)];
