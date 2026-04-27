@@ -183,14 +183,38 @@ try {
                 <div class="offers-track">
 
                     <?php foreach ($abonos_index as $abono): ?>
-                        <div class="offer-card" style="background: #fff; border-top: 5px solid #0a2a66; padding: 20px; min-width: 250px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                            <i class="<?= htmlspecialchars($abono['icono'] ?? 'fa-solid fa-ticket') ?>" style="font-size: 2rem; color: #0a2a66; margin-bottom: 10px;"></i>
-                            <h3 style="margin: 5px 0;"><?= htmlspecialchars($abono['nombre']) ?></h3>
-                            <p style="font-size: 0.9rem; color: #555; height: 40px; overflow: hidden;"><?= htmlspecialchars($abono['descripcion']) ?></p>
-                            <div style="font-size: 1.5rem; font-weight: bold; color: #17632A; margin: 10px 0;">
-                                <?= number_format($abono['precio'], 2, ',', '.') ?> €
+                        <?php
+                        // Asignar imagen basada en el tipo de abono
+                        $imagen = '';
+                        switch (strtolower($abono['tipo_codigo'] ?? '')) {
+                            case 'mensual':
+                                $imagen = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'; // Imagen de tarjeta mensual
+                                break;
+                            case 'anual':
+                                $imagen = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'; // Imagen de abono anual
+                                break;
+                            case 'joven':
+                                $imagen = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'; // Imagen para jóvenes
+                                break;
+                            default:
+                                $imagen = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'; // Imagen genérica de tren
+                        }
+                        // Descripción extendida
+                        $descripcion_extendida = htmlspecialchars($abono['descripcion']) . ' Ideal para viajes frecuentes con descuentos exclusivos y flexibilidad total.';
+                        ?>
+                        <div class="offer-card" style="background: #fff; border: 1px solid #ddd; border-radius: 12px; overflow: hidden; min-width: 280px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center;">
+                            <img src="<?= $imagen ?>" alt="<?= htmlspecialchars($abono['nombre']) ?>" style="width: 100%; height: 150px; object-fit: cover;">
+                            <div style="padding: 20px;">
+                                <h3 style="margin: 0 0 10px 0; color: #0a2a66; font-size: 1.2rem;"><?= htmlspecialchars($abono['nombre']) ?></h3>
+                                <p style="font-size: 0.9rem; color: #555; margin: 0 0 15px 0; line-height: 1.4;"><?= $descripcion_extendida ?></p>
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #17632A; margin-bottom: 15px;">
+                                    <?= number_format($abono['precio'], 2, ',', '.') ?> €
+                                </div>
+                                <div style="display: flex; gap: 10px; justify-content: center;">
+                                    <a href="ofertas.php" class="btn-info" style="background: #6c757d; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">Más información</a>
+                                    <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-comprar" style="background: #0a2a66; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">Comprar</a>
+                                </div>
                             </div>
-                            <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-popular" data-i18n="comprar" style="display: block; width: 100%; box-sizing: border-box;">Comprar</a>
                         </div>
                     <?php endforeach; ?>
 
