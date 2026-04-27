@@ -49,42 +49,309 @@ try {
     
     <style>
         /* Ajustes específicos para las tarjetas de ofertas en esta página */
-        body { margin: 0; padding: 0; background-color: #f4f7fb; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #f4f7fb 0%, #e8ecf1 100%); min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
         
-        .offers-main { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .page-header { text-align: center; margin-bottom: 50px; }
-        .page-header h1 { color: #0a2a66; font-size: 2.5rem; margin-bottom: 10px; }
-        .page-header p { color: #666; font-size: 1.1rem; }
+        .offers-main { max-width: 1300px; margin: 0 auto; padding: 40px 20px; }
+        
+        /* HEADER DE PÁGINA */
+        .page-header { 
+            text-align: center; margin-bottom: 60px; 
+            background: linear-gradient(135deg, #0a2a66 0%, #1252f3 100%); 
+            padding: 60px 20px; 
+            border-radius: 16px; 
+            color: white;
+            box-shadow: 0 10px 30px rgba(10, 42, 102, 0.15);
+        }
+        .page-header h1 { font-size: 3rem; margin-bottom: 15px; font-weight: 700; }
+        .page-header p { font-size: 1.2rem; opacity: 0.95; }
 
-        .section-title { color: #0a2a66; border-bottom: 3px solid #1252f3; display: inline-block; padding-bottom: 5px; margin-bottom: 30px; }
+        /* SECTION TITLES */
+        .section-title { 
+            color: #0a2a66; 
+            font-size: 1.8rem;
+            margin-bottom: 40px; 
+            padding-bottom: 15px;
+            border-bottom: 4px solid #1252f3;
+            display: inline-block;
+        }
         
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-bottom: 60px; }
-        
-        /* TARJETAS DE PROMOCIONES */
-        .promo-card { background: white; border-radius: 12px; padding: 25px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-top: 5px solid #3156fc; position: relative; overflow: hidden; }
-        .promo-card .descuento { font-size: 3rem; font-weight: bold; color: #3156fc; margin: 10px 0; }
-        .promo-card .codigo { display: inline-block; background: #f8f9fa; border: 2px dashed #ccc; padding: 10px 20px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; color: #333; margin-bottom: 15px; border-radius: 5px; }
-        .promo-card .info-extra { font-size: 0.85rem; color: #666; margin-bottom: 20px; display: flex; flex-direction: column; gap: 5px; }
+        /* GRID CONTAINERS */
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 30px; 
+            margin-bottom: 80px; 
+        }
         
         /* TARJETAS DE ABONOS */
-        .abono-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: transform 0.3s; }
-        .abono-card:hover { transform: translateY(-5px); }
-        .abono-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .abono-icon { width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0; }
-        .abono-title { margin: 0; font-size: 1.3rem; color: #0a2a66; }
+        .abono-card { 
+            background: white; 
+            border-radius: 16px; 
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08); 
+            display: flex; 
+            flex-direction: column; 
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .abono-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+            border-color: #1252f3;
+        }
+        
+        .abono-image { 
+            width: 100%; 
+            height: 180px; 
+            object-fit: cover; 
+            display: block;
+        }
+        
+        .abono-content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+        
+        .abono-header { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            margin-bottom: 20px;
+        }
+        .abono-icon { 
+            width: 50px; 
+            height: 50px; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-size: 1.5rem; 
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .abono-title { 
+            margin: 0; 
+            font-size: 1.4rem; 
+            color: #0a2a66; 
+            font-weight: 600;
+        }
         
         .abono-body { flex-grow: 1; }
-        .abono-desc { color: #555; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; }
+        .abono-desc { 
+            color: #666; 
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            margin-bottom: 20px;
+        }
         
-        .abono-price-box { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px solid #e1e5eb; }
-        .abono-price { font-size: 2rem; font-weight: bold; color: #02002f; }
+        .abono-price-box { 
+            background: linear-gradient(135deg, #f8f9fa 0%, #f0f3f7 100%); 
+            padding: 18px; 
+            border-radius: 12px; 
+            text-align: center; 
+            margin-bottom: 25px; 
+            border: 2px solid #e1e5eb;
+        }
+        .abono-price { 
+            font-size: 2.2rem; 
+            font-weight: 700; 
+            color: #02002f;
+        }
+        .abono-price-label {
+            display: block; 
+            font-size: 0.8rem; 
+            color: #999; 
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* TARJETAS DE PROMOCIONES */
+        .promo-card { 
+            background: white; 
+            border-radius: 16px; 
+            padding: 30px; 
+            text-align: center; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08); 
+            position: relative; 
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .promo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #3156fc 0%, #1252f3 100%);
+        }
+        .promo-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+            border-color: #3156fc;
+        }
+        
+        .promo-title {
+            color: #0a2a66;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            margin-top: 0;
+            font-weight: 600;
+        }
+        
+        .promo-descuento-box {
+            background: linear-gradient(135deg, #3156fc 0%, #1252f3 100%);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .promo-descuento { 
+            font-size: 3.5rem; 
+            font-weight: 800; 
+            display: block;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .promo-descuento-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .promo-codigo { 
+            display: inline-block; 
+            background: linear-gradient(135deg, #f8f9fa 0%, #f0f3f7 100%);
+            border: 2px dashed #3156fc; 
+            padding: 12px 24px; 
+            font-size: 1.3rem; 
+            font-weight: 700;
+            letter-spacing: 2px; 
+            color: #0a2a66; 
+            margin-bottom: 20px; 
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .promo-info-extra { 
+            font-size: 0.9rem; 
+            color: #666; 
+            margin-bottom: 25px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px;
+        }
+        
+        .promo-info-badge {
+            display: inline-block;
+            background: #e8f0fe;
+            color: #0a2a66;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            width: fit-content;
+            margin: 0 auto;
+        }
         
         /* BOTONES COMUNES */
-        .btn-action { display: block; width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.3s; text-align: center; text-decoration: none; box-sizing: border-box; }
-        .btn-copy { background: #3156fc; color: white; }
-        .btn-copy:hover { background: #c82333; }
-        .btn-buy { background: #1602fc; color: white; }
-        .btn-buy:hover { background: #1010d6c5; }
+        .btn-action { 
+            display: block; 
+            width: 100%; 
+            padding: 14px; 
+            border: none; 
+            border-radius: 10px; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            text-align: center; 
+            text-decoration: none; 
+            box-sizing: border-box;
+        }
+        
+        .btn-buy { 
+            background: linear-gradient(135deg, #1602fc 0%, #3156fc 100%);
+            color: white;
+        }
+        .btn-buy:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(22, 2, 252, 0.3);
+        }
+        
+        .btn-copy { 
+            background: linear-gradient(135deg, #3156fc 0%, #1252f3 100%);
+            color: white;
+        }
+        .btn-copy:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(49, 86, 252, 0.3);
+        }
+        
+        /* FOOTER MEJORADO */
+        .footer {
+            background: linear-gradient(135deg, #0a2a66 0%, #1252f3 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            border-top: 4px solid #fff;
+        }
+        
+        .footer-bottom {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            text-align: left;
+        }
+        
+        .footer-column {
+            padding: 20px 0;
+        }
+        
+        .footer-column h3,
+        .footer-column h4 {
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+        }
+        
+        .footer-column p {
+            margin: 0;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .footer-column a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+        
+        .footer-column a:hover {
+            opacity: 1;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 2rem; }
+            .page-header p { font-size: 1rem; }
+            .grid-container { grid-template-columns: 1fr; gap: 20px; }
+            .section-title { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -138,29 +405,46 @@ try {
                     <p style="color: #666;" data-i18n="no_abonos_venta">No hay abonos a la venta en este momento.</p>
                 <?php else: ?>
                     <?php foreach ($abonos as $a): ?>
+                        <?php
+                        // Array de imágenes random de trenes y compras
+                        $imagenes = [
+                            'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+                            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+                            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+                            'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+                            'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+                            'https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+                            'https://images.unsplash.com/photo-1472851294608-062f824d29cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80',
+                            'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80'
+                        ];
+                        $imagen = $imagenes[array_rand($imagenes)];
+                        ?>
                         <div class="abono-card" style="border-top: 5px solid <?= htmlspecialchars($a['color']) ?>;">
+                            <img src="<?= $imagen ?>" alt="<?= htmlspecialchars($a['nombre']) ?>" class="abono-image">
                             
-                            <div class="abono-header">
-                                <div class="abono-icon" style="background-color: <?= htmlspecialchars($a['color']) ?>;">
-                                    <i class="fa-solid <?= htmlspecialchars($a['icono']) ?>"></i>
+                            <div class="abono-content">
+                                <div class="abono-header">
+                                    <div class="abono-icon" style="background-color: <?= htmlspecialchars($a['color']) ?>;">
+                                        <i class="fa-solid <?= htmlspecialchars($a['icono']) ?>"></i>
+                                    </div>
+                                    <h3 class="abono-title js-i18n-abono-name" data-i18n-abono-code="<?= htmlspecialchars($a['tipo_codigo']) ?>"><?= htmlspecialchars($a['nombre']) ?></h3>
                                 </div>
-                                <h3 class="abono-title js-i18n-abono-name" data-i18n-abono-code="<?= htmlspecialchars($a['tipo_codigo']) ?>"><?= htmlspecialchars($a['nombre']) ?></h3>
-                            </div>
-                            
-                            <div class="abono-body">
-                                <p class="abono-desc js-i18n-abono-desc" data-i18n-abono-code="<?= htmlspecialchars($a['tipo_codigo']) ?>">
-                                    <?= nl2br(htmlspecialchars($a['descripcion'])) ?>
-                                </p>
-                            </div>
+                                
+                                <div class="abono-body">
+                                    <p class="abono-desc js-i18n-abono-desc" data-i18n-abono-code="<?= htmlspecialchars($a['tipo_codigo']) ?>">
+                                        <?= nl2br(htmlspecialchars($a['descripcion'])) ?>
+                                    </p>
+                                </div>
 
-                            <div class="abono-price-box">
-                                <span style="display:block; font-size: 0.85rem; color:#666; margin-bottom: 5px;" data-i18n="precio_final">Precio final</span>
-                                <div class="abono-price"><?= number_format($a['precio'], 2, ',', '.') ?> €</div>
+                                <div class="abono-price-box">
+                                    <span class="abono-price-label" data-i18n="precio_final">Precio final</span>
+                                    <div class="abono-price"><?= number_format($a['precio'], 2, ',', '.') ?> €</div>
+                                </div>
+                                
+                                <a href="comprar_abono.php?tipo=<?= $a['tipo_codigo'] ?>" class="btn-action btn-buy">
+                                    <i class="fa-solid fa-cart-shopping"></i> <span data-i18n="comprar_abono">Comprar Abono</span>
+                                </a>
                             </div>
-                            
-                            <a href="comprar_abono.php?tipo=<?= $a['tipo_codigo'] ?>" class="btn-action btn-buy">
-                                <i class="fa-solid fa-cart-shopping"></i> <span data-i18n="comprar_abono">Comprar Abono</span>
-                            </a>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -175,17 +459,25 @@ try {
                 <?php else: ?>
                     <?php foreach ($promociones as $p): ?>
                         <div class="promo-card">
-                            <h3 style="margin-top:0; color:#333;" data-i18n="cupon_descuento">Cupón Descuento</h3>
+                            <h3 class="promo-title" data-i18n="cupon_descuento">Cupón Descuento</h3>
                             
-                            <div class="descuento">-<?= (float)$p['descuento_porcentaje'] ?>%</div>
-                            <div class="codigo" id="codigo-<?= $p['codigo'] ?>"><?= htmlspecialchars($p['codigo']) ?></div>
+                            <div class="promo-descuento-box">
+                                <span class="promo-descuento">-<?= (float)$p['descuento_porcentaje'] ?>%</span>
+                                <div class="promo-descuento-label">Descuento</div>
+                            </div>
                             
-                            <div class="info-extra">
-                                <span><i class="fa-regular fa-calendar-xmark"></i> <span data-i18n="valido_hasta">Válido hasta</span>: <strong><?= date('d/m/Y', strtotime($p['fecha_fin'])) ?></strong></span>
+                            <div class="promo-codigo" id="codigo-<?= $p['codigo'] ?>"><?= htmlspecialchars($p['codigo']) ?></div>
+                            
+                            <div class="promo-info-extra">
+                                <span><i class="fa-regular fa-calendar"></i> <span data-i18n="valido_hasta">Válido hasta</span>: <strong><?= date('d/m/Y', strtotime($p['fecha_fin'])) ?></strong></span>
                                 <?php if (!empty($p['usos_maximos'])): ?>
-                                    <span><i class="fa-solid fa-users"></i> <span data-i18n="usos_restantes">Usos restantes</span>: <strong><?= $p['usos_maximos'] - $p['usos_actuales'] ?></strong> <span data-i18n="of_word">de</span> <?= $p['usos_maximos'] ?></span>
+                                    <div class="promo-info-badge">
+                                        <i class="fa-solid fa-users"></i> <?= $p['usos_maximos'] - $p['usos_actuales'] ?> <span data-i18n="usos_restantes">usos restantes</span>
+                                    </div>
                                 <?php else: ?>
-                                    <span><i class="fa-solid fa-infinity"></i> <span data-i18n="usos_ilimitados">Usos ilimitados</span></span>
+                                    <div class="promo-info-badge">
+                                        <i class="fa-solid fa-infinity"></i> <span data-i18n="usos_ilimitados">Usos ilimitados</span>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                             
@@ -200,7 +492,34 @@ try {
     </main>
 
     <footer class="footer">
-        <div class="footer-bottom" data-i18n="footer_copyright">&copy; 2026 TrainWeb</div>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>TrainWeb</h3>
+                <p data-i18n="footer_descripcion">Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
+            </div>
+            <div class="footer-column">
+                <h4 data-i18n="footer-services">Servicios</h4>
+                <a href="#"><i class="fa-solid fa-ticket"></i> <span data-i18n="footer-billetes">Billetes</span></a>
+                <a href="#"><i class="fa-solid fa-clock"></i> <span data-i18n="footer-horarios">Horarios</span></a>
+                <a href="ofertas.php"><i class="fa-solid fa-tags"></i> <span data-i18n="footer-ofertas">Ofertas</span></a>
+                <a href="#"><i class="fa-solid fa-headset"></i> <span data-i18n="footer-atencion">Atención al cliente</span></a>
+            </div>
+            <div class="footer-column">
+                <h4 data-i18n="footer-legal">Información legal</h4>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="footer-aviso">Aviso legal</span></a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> <span data-i18n="footer-privacidad">Privacidad</span></a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> <span data-i18n="footer-cookies">Cookies</span></a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> <span data-i18n="footer-terminos">Términos y condiciones</span></a>
+            </div>
+            <div class="footer-column">
+                <h4 data-i18n="footer-social">Redes sociales</h4>
+                <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+            </div>
+        </div>
+        <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
 
     <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
