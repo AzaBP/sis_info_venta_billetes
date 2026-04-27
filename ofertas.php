@@ -353,14 +353,18 @@ try {
                         <?php
                         // Array de imágenes random de trenes y compras
                         $imagenes = [
-                            'https://images.pexels.com/photos/33064779/pexels-photo-33064779.jpeg', // Tren
-                            'https://images.pexels.com/photos/18377906/pexels-photo-18377906.jpeg', // Tren moderno
+                            'https://images.pexels.com/photos/33064779/pexels-photo-33064779.jpeg',
+                            'https://images.pexels.com/photos/18377906/pexels-photo-18377906.jpeg', 
                             'https://images.pexels.com/photos/27617418/pexels-photo-27617418.jpeg', 
                             'https://images.pexels.com/photos/4881129/pexels-photo-4881129.jpeg', 
                             'https://images.pexels.com/photos/18505677/pexels-photo-18505677.jpeg',
                             'https://images.pexels.com/photos/31016263/pexels-photo-31016263.jpeg' ,
                             'https://images.pexels.com/photos/29248079/pexels-photo-29248079.jpeg',
-                            'https://images.pexels.com/photos/34172748/pexels-photo-34172748.jpeg'
+                            'https://images.pexels.com/photos/34172748/pexels-photo-34172748.jpeg',
+                            'https://images.pexels.com/photos/10652773/pexels-photo-10652773.jpeg',
+                            'https://images.pexels.com/photos/31500815/pexels-photo-31500815.jpeg',
+                            'https://images.pexels.com/photos/31500816/pexels-photo-31500816.jpeg',
+                            'https://images.pexels.com/photos/837359/pexels-photo-837359.jpeg'
                         ];
                         $imagen = $imagenes[array_rand($imagenes)];
                         ?>
