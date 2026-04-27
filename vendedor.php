@@ -272,82 +272,84 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
                         </div>
                     </div>
 
-                    <!-- Modal de modificación de billete -->
-                    <div id="modalModificarBillete" class="modal-vendedor hidden" style="background: rgba(0,0,0,0.5);">
-                        <div class="modal-content" style="max-width: 600px;">
-                            <span class="close-modal" id="cerrarModificarBillete">&times;</span>
-                            <h2>Modificar Billete</h2>
-                            <div id="infoBilleteAModificar" style="margin-bottom: 15px; padding: 10px; background: #e9ecef; border-radius: 5px;"></div>
-                            
-                            <!-- Opciones de modificación -->
-                            <div id="modificarOpciones">
-                                <h3>¿Qué desea modificar?</h3>
-                                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
-                                    <button type="button" id="btnModificarDatos" style="padding: 12px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                        <i class="fa-solid fa-user"></i> Datos del Pasajero
-                                    </button>
-                                    <button type="button" id="btnModificarAsiento" style="padding: 12px 20px; background: #ffc107; color: #333; border: none; border-radius: 5px; cursor: pointer;">
-                                        <i class="fa-solid fa-chair"></i> Cambiar Asiento
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <!-- Paso: Cambiar asiento -->
-                            <div id="modificarAsientoPaso" class="hidden" style="margin-top: 20px;">
-                                <h3>Seleccionar nuevo asiento</h3>
-                                <div id="infoViajeModificar" style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px;"></div>
-                                <div id="asientosGridModificar" class="asientos-grid" style="max-height: 300px; overflow-y: auto;"></div>
-                                <input type="hidden" id="inputAsientoModificar">
-                                <button type="button" id="btnConfirmarModificacion" style="margin-top: 15px; padding: 10px 20px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer;">Confirmar cambio de asiento</button>
-                            </div>
-                            
-                            <!-- Paso: Modificar datos del pasajero -->
-                            <div id="modificarDatosPaso" class="hidden" style="margin-top: 20px;">
-                                <h3>Modificar datos del pasajero</h3>
-                                <form id="formModificarDatosPasajero">
-                                    <label>Nombre:</label>
-                                    <input type="text" id="modificarNombre" name="nombre" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;">
-                                    <label>Apellidos:</label>
-                                    <input type="text" id="modificarApellidos" name="apellidos" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;">
-                                    <label>Email:</label>
-                                    <input type="email" id="modificarEmail" name="email" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;">
-                                    <button type="submit" style="padding: 10px 20px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar cambios</button>
-                                </form>
-                            </div>
-                            
-                            <div id="resultadoModificacion" style="margin-top: 15px;"></div>
+
+                </div>
+            </div>
+
+            <!-- Modal de modificación de billete -->
+            <div id="modalModificarBillete" class="modal-vendedor hidden" style="background: rgba(0,0,0,0.5);">
+                <div class="modal-content" style="max-width: 600px;">
+                    <span class="close-modal" id="cerrarModificarBillete">&times;</span>
+                    <h2>Modificar Billete</h2>
+                    <div id="infoBilleteAModificar" style="margin-bottom: 15px; padding: 10px; background: #e9ecef; border-radius: 5px;"></div>
+                    
+                    <!-- Opciones de modificación -->
+                    <div id="modificarOpciones">
+                        <h3>¿Qué desea modificar?</h3>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                            <button type="button" id="btnModificarDatos" style="padding: 12px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                <i class="fa-solid fa-user"></i> Datos del Pasajero
+                            </button>
+                            <button type="button" id="btnModificarAsiento" style="padding: 12px 20px; background: #ffc107; color: #333; border: none; border-radius: 5px; cursor: pointer;">
+                                <i class="fa-solid fa-chair"></i> Cambiar Asiento
+                            </button>
                         </div>
                     </div>
                     
-                    <!-- Modal de nueva venta: búsqueda de destinos -->
-                    <div id="modalNuevaVenta" class="modal-vendedor hidden" style="background: rgba(0,0,0,0.5);">
-                        <div class="modal-content" style="max-width: 500px;">
-                            <span class="close-modal" id="cerrarModalNuevaVenta">&times;</span>
-                            <h2><i class="fa-solid fa-cart-plus"></i> Nueva Venta</h2>
-                            <p style="color: #666; margin-bottom: 20px;">Selecciona el destino para el cliente: <strong id="nombreClienteVenta"></strong></p>
-                            
-                            <form id="formBuscarViajesVenta">
-                                <label>Origen:</label>
-                                <select id="origenVenta" name="origen" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;">
-                                    <option value="">Seleccionar origen...</option>
-                                </select>
-                                
-                                <label>Destino:</label>
-                                <select id="destinoVenta" name="destino" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;" disabled>
-                                    <option value="">Seleccionar destino...</option>
-                                </select>
-                                
-                                <label>Fecha:</label>
-                                <input type="date" id="fechaVenta" name="fecha" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;">
-                                
-                                <button type="submit" style="width: 100%; padding: 12px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
-                                    <i class="fa-solid fa-magnifying-glass"></i> Buscar Viajes
-                                </button>
-                            </form>
-                            
-                            <div id="resultadosViajesVenta" style="margin-top: 15px;"></div>
-                        </div>
+                    <!-- Paso: Cambiar asiento -->
+                    <div id="modificarAsientoPaso" class="hidden" style="margin-top: 20px;">
+                        <h3>Seleccionar nuevo asiento</h3>
+                        <div id="infoViajeModificar" style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px;"></div>
+                        <div id="asientosGridModificar" class="asientos-grid" style="max-height: 300px; overflow-y: auto;"></div>
+                        <input type="hidden" id="inputAsientoModificar">
+                        <button type="button" id="btnConfirmarModificacion" style="margin-top: 15px; padding: 10px 20px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer;">Confirmar cambio de asiento</button>
                     </div>
+                    
+                    <!-- Paso: Modificar datos del pasajero -->
+                    <div id="modificarDatosPaso" class="hidden" style="margin-top: 20px;">
+                        <h3>Modificar datos del pasajero</h3>
+                        <form id="formModificarDatosPasajero">
+                            <label>Nombre:</label>
+                            <input type="text" id="modificarNombre" name="nombre" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;">
+                            <label>Apellidos:</label>
+                            <input type="text" id="modificarApellidos" name="apellidos" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;">
+                            <label>Email:</label>
+                            <input type="email" id="modificarEmail" name="email" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;">
+                            <button type="submit" style="padding: 10px 20px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer;">Guardar cambios</button>
+                        </form>
+                    </div>
+                    
+                    <div id="resultadoModificacion" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+            
+            <!-- Modal de nueva venta: búsqueda de destinos -->
+            <div id="modalNuevaVenta" class="modal-vendedor hidden" style="background: rgba(0,0,0,0.5);">
+                <div class="modal-content" style="max-width: 500px;">
+                    <span class="close-modal" id="cerrarModalNuevaVenta">&times;</span>
+                    <h2><i class="fa-solid fa-cart-plus"></i> Nueva Venta</h2>
+                    <p style="color: #666; margin-bottom: 20px;">Selecciona el destino para el cliente: <strong id="nombreClienteVenta"></strong></p>
+                    
+                    <form id="formBuscarViajesVenta">
+                        <label>Origen:</label>
+                        <select id="origenVenta" name="origen" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;">
+                            <option value="">Seleccionar origen...</option>
+                        </select>
+                        
+                        <label>Destino:</label>
+                        <select id="destinoVenta" name="destino" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;" disabled>
+                            <option value="">Seleccionar destino...</option>
+                        </select>
+                        
+                        <label>Fecha:</label>
+                        <input type="date" id="fechaVenta" name="fecha" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;">
+                        
+                        <button type="submit" style="width: 100%; padding: 12px; background: #0a2a66; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
+                            <i class="fa-solid fa-magnifying-glass"></i> Buscar Viajes
+                        </button>
+                    </form>
+                    
+                    <div id="resultadosViajesVenta" style="margin-top: 15px;"></div>
                 </div>
             </div>
             
