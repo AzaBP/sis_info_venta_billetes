@@ -289,61 +289,6 @@ try {
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(49, 86, 252, 0.3);
         }
-        
-        /* FOOTER MEJORADO */
-        .footer {
-            background: linear-gradient(135deg, #0a2a66 0%, #1252f3 100%);
-            color: white;
-            text-align: center;
-            padding: 30px 20px;
-            margin-top: 60px;
-            border-top: 4px solid #fff;
-        }
-        
-        .footer-bottom {
-            font-size: 0.95rem;
-            opacity: 0.9;
-        }
-        
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            text-align: left;
-        }
-        
-        .footer-column {
-            padding: 20px 0;
-        }
-        
-        .footer-column h3,
-        .footer-column h4 {
-            margin: 0 0 15px 0;
-            font-size: 1.1rem;
-        }
-        
-        .footer-column p {
-            margin: 0;
-            opacity: 0.9;
-            line-height: 1.6;
-        }
-        
-        .footer-column a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: white;
-            text-decoration: none;
-            margin: 10px 0;
-            opacity: 0.9;
-            transition: opacity 0.3s;
-        }
-        
-        .footer-column a:hover {
-            opacity: 1;
-        }
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
