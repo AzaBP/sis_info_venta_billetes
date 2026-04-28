@@ -252,7 +252,7 @@ body {
 
 .carousel {
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .popular-track,
@@ -274,8 +274,6 @@ body {
 .next {
     position: absolute;
     top: 45%;
-    left: 10px;
-    right: 10px;
     background: rgba(10,42,102,0.85);
     color: white;
     border: none;
@@ -283,14 +281,15 @@ body {
     height: 42px;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 20;
+    z-index: 50;
     box-shadow: 0 2px 12px rgba(0,0,0,0.18);
     transition: box-shadow 0.2s, background 0.2s;
-    /* Las flechas se superponen al fondo, no se cortan */
+    /* Las posiciones left/right se sobrescriben inline para sobresalir */
+}
 }
 
-.prev { left: 10px; right: auto; }
-.next { right: 10px; left: auto; }
+.prev { left: -32px; }
+.next { right: -32px; }
 
 .prev:hover,
 .next:hover {
