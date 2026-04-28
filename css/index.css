@@ -290,8 +290,8 @@ body {
     opacity: 0.9;
 }
 
-.prev { left: -30px; }
-.next { right: -30px; }
+.prev { left: -20px; }
+.next { right: -20px; }
 
 .prev:hover,
 .next:hover {
