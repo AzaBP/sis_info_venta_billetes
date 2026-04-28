@@ -270,9 +270,11 @@ body {
 }
 
 /* Flechas */
+.prev,
+.next {
     position: absolute;
     top: 45%;
-    background: rgba(10,42,102,0.55); /* Más opaco */
+    background: rgba(10,42,102,0.85);
     color: white;
     border: none;
     width: 42px;
@@ -286,8 +288,8 @@ body {
 }
 }
 
-.prev { left: -21px; }
-.next { right: -21px; }
+.prev { left: -20px; }
+.next { right: -20px; }
 
 .prev:hover,
 .next:hover {
@@ -407,7 +409,8 @@ body {
 .input-group {
     position: relative;
 }
-
+    background: #0a2a66;
+    opacity: 1;
 .suggestions {
     position: absolute;
     top: 100%;
@@ -420,9 +423,9 @@ body {
     overflow-y: auto;
     z-index: 2001;
     box-shadow: 0 8px 24px rgba(10,42,102,0.12);
-}
+.prev { left: -21px; }
 
-.suggestions div {
+.next { right: -21px; }
     padding: 10px;
     cursor: pointer;
     transition: background 0.2s;
