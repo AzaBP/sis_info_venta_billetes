@@ -85,10 +85,10 @@ try {
 </head>
 <body>
 <header class="header">
-    <div class="logo">
+    <a href="index.php" class="logo">
         <i class="fa-solid fa-train"></i> TrainWeb
         <span style="font-size: .8rem; opacity: .8; font-weight: normal; margin-left: 10px;">| Mantenimiento</span>
-    </div>
+    </a>
     <nav class="nav">
         <div class="profile-dropdown">
             <button id="profileNavBtn" class="profile-nav-btn" title="Ver datos personales">

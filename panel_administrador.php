@@ -168,7 +168,7 @@ try {
 </head>
 <body>
 <header class="header">
-    <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+    <a href="index.php" class="logo"><i class="fa-solid fa-train"></i> TrainWeb</a>
     <nav class="nav">
         <?php if ($adminSimple): ?>
             <a href="admin_logout.php">Cerrar sesion</a>

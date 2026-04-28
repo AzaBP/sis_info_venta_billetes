@@ -171,10 +171,10 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
 <body>
 
     <header class="header">
-        <div class="logo">
+        <a href="index.php" class="logo">
             <i class="fa-solid fa-train"></i> TrainWeb 
             <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; margin-left: 10px; vertical-align: middle; position: relative; bottom: 2px;">| Portal Vendedor</span>
-        </div>
+        </a>
         <nav class="nav">
             <div class="user-display" style="color: white; margin-right: 20px; font-weight: 500; display: flex; align-items: center; gap: 6px;">
                 <i class="fa-solid fa-id-badge" style="font-size: 1.2rem;"></i> 

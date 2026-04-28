@@ -244,10 +244,10 @@ if ($id_pasajero_actual) {
 <body>
 
     <header class="header">
-        <div class="logo">
+        <a href="index.php" class="logo">
             <i class="fa-solid fa-train"></i> TrainWeb 
             <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; margin-left: 10px;">| <span data-i18n="area_cliente">Área de Cliente</span></span>
-        </div>
+        </a>
         
         <nav class="nav">
             <a href="index.php" data-i18n="inicio">Inicio</a>

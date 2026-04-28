@@ -51,7 +51,7 @@ $precio_final = isset($precios[$tipo_abono]) ? $precios[$tipo_abono] : '0.00';
 </head>
 <body>
     <header class="header">
-        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+        <a href="index.php" class="logo"><i class="fa-solid fa-train"></i> TrainWeb</a>
         <nav class="nav">
             <a href="index.php">Inicio</a>
             <a href="compra.html">Billetes</a>

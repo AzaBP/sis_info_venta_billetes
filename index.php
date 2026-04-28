@@ -48,7 +48,7 @@ try {
 
     <!-- HEADER -->
     <header class="header">
-        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+        <a href="index.php" class="logo"><i class="fa-solid fa-train"></i> TrainWeb</a>
         <nav class="nav">
             <a href="mis_billetes.php" data-i18n="mis_billetes">Mis billetes</a>
             <div class="dropdown">

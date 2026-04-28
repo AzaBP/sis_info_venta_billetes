@@ -89,7 +89,7 @@ try {
 </head>
 <body style="background: #f4f6f8;">
     <header class="header">
-        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+        <a href="index.php" class="logo"><i class="fa-solid fa-train"></i> TrainWeb</a>
         <nav class="nav"><a href="index.php">Inicio</a><a href="ofertas.php">Ofertas</a></nav>
     </header>
 

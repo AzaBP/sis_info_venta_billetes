@@ -62,7 +62,7 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
 
     <!-- HEADER -->
     <header class="header">
-        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+        <a href="index.php" class="logo"><i class="fa-solid fa-train"></i> TrainWeb</a>
         <nav class="nav">
             <a href="index.php" data-i18n="inicio">Inicio</a>
             <a href="mis_billetes.php" data-i18n="mis_billetes">Mis billetes</a>

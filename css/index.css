@@ -25,6 +25,8 @@ body {
 .logo {
     font-size: 1.6rem;
     font-weight: 600;
+    color: inherit;
+    text-decoration: none;
 }
 
 .nav {
@@ -290,8 +292,8 @@ body {
     opacity: 0.9;
 }
 
-.prev { left: -12px; }
-.next { right: -12px; }
+.prev { left: -20px; }
+.next { right: -20px; }
 
 .prev:hover,
 .next:hover {

@@ -63,10 +63,10 @@ try {
 </head>
 <body class="maquinista-page">
 <header class="header">
-    <div class="logo">
+    <a href="index.php" class="logo">
         <i class="fa-solid fa-train"></i> TrainWeb
         <span class="sub-brand">| Maquinista</span>
-    </div>
+    </a>
     <nav class="nav">
         <div class="user-display">
             <i class="fa-solid fa-user-gear"></i>

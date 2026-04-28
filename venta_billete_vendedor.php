@@ -186,10 +186,10 @@ if ($nombreCompleto === '') $nombreCompleto = 'Vendedor Desconocido';
 <body>
 
     <header class="header">
-        <div class="logo">
+        <a href="index.php" class="logo">
             <i class="fa-solid fa-train"></i> TrainWeb 
             <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal; margin-left: 10px;">| Venta de Billete</span>
-        </div>
+        </a>
         <nav class="nav">
             <a href="vendedor.php"><i class="fa-solid fa-arrow-left"></i> Volver al panel</a>
         </nav>

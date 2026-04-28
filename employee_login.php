@@ -96,7 +96,7 @@ $attempt = trim($_GET['attempt'] ?? '');
 <body>
 
     <header class="header">
-        <div class="logo"><i class="fa-solid fa-train"></i> TrainWeb</div>
+        <a href="index.php" class="logo"><i class="fa-solid fa-train"></i> TrainWeb</a>
         <nav class="nav"></nav>
         <div class="user-actions" id="userActions"></div>
     </header>
