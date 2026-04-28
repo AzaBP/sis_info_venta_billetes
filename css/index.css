@@ -253,6 +253,7 @@ body {
 .carousel {
     position: relative;
     overflow: visible;
+    padding: 0 8px;
 }
 
 .popular-track,
@@ -284,16 +285,24 @@ body {
     z-index: 50;
     box-shadow: 0 2px 12px rgba(0,0,0,0.18);
     transition: box-shadow 0.2s, background 0.2s;
-    /* Las posiciones left/right se sobrescriben inline para sobresalir */
-}
+    display: grid;
+    place-items: center;
+    opacity: 0.9;
 }
 
-.prev { left: -20px; }
-.next { right: -20px; }
+.prev { left: -30px; }
+.next { right: -30px; }
 
 .prev:hover,
 .next:hover {
     background: rgba(10,42,102,0.65);
+    opacity: 1;
+}
+
+.prev i,
+.next i {
+    font-size: 16px;
+    line-height: 1;
 }
 
 /* ================= TARJETAS ================= */
@@ -409,8 +418,7 @@ body {
 .input-group {
     position: relative;
 }
-    background: #0a2a66;
-    opacity: 1;
+
 .suggestions {
     position: absolute;
     top: 100%;
@@ -423,9 +431,9 @@ body {
     overflow-y: auto;
     z-index: 2001;
     box-shadow: 0 8px 24px rgba(10,42,102,0.12);
-.prev { left: -25px; }
+}
 
-.next { right: -21px; }
+.suggestions div {
     padding: 10px;
     cursor: pointer;
     transition: background 0.2s;
