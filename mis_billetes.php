@@ -161,6 +161,15 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
             background: #eef2f7;
             color: #0a2a66;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 1;
+        }
+        .ticket-modal-close:hover {
+            background: #dde5f0;
         }
         @media (max-width: 920px) {
             .ticket-row { grid-template-columns: 1fr; }
@@ -209,7 +218,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
             <div class="ticket-modal-top">
                 <h3 style="margin:0; color:#0a2a66;">Detalles del billete</h3>
                 <button type="button" id="ticketModalClose" class="ticket-modal-close" aria-label="Cerrar">
-                    <i class="fa-solid fa-xmark"></i>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div id="ticketModalBody"></div>
