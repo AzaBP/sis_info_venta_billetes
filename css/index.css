@@ -270,11 +270,9 @@ body {
 }
 
 /* Flechas */
-.prev,
-.next {
     position: absolute;
     top: 45%;
-    background: rgba(10,42,102,0.85);
+    background: rgba(10,42,102,0.55); /* Más opaco */
     color: white;
     border: none;
     width: 42px;
@@ -288,8 +286,8 @@ body {
 }
 }
 
-.prev { left: -32px; }
-.next { right: -32px; }
+.prev { left: -21px; }
+.next { right: -21px; }
 
 .prev:hover,
 .next:hover {
