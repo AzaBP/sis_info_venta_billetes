@@ -281,11 +281,13 @@ body {
     height: 42px;
     border-radius: 50%;
     cursor: pointer;
-    z-index: 5;
+    z-index: 10;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    transition: box-shadow 0.2s, background 0.2s;
 }
 
-.prev { left: -20px; }
-.next { right: -20px; }
+.prev { left: -32px; }
+.next { right: -32px; }
 
 .prev:hover,
 .next:hover {
