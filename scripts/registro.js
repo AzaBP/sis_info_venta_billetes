@@ -310,6 +310,10 @@ if(error){
     if(error === "aceptar_politicas"){
         mensajeDiv.textContent = "⚠️ Debes aceptar los términos y la política de privacidad para continuar.";
     }
+
+    if(error === "datos_incompletos"){
+        mensajeDiv.textContent = "⚠️ Faltan datos obligatorios en el formulario de registro.";
+    }
 }
 
 // ==========================

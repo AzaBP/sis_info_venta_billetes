@@ -10,11 +10,12 @@ require_once __DIR__ . '/php/Utils/Mailer.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $nombre = $_POST['nombre'];
-    $apellido = $_POST['apellido'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $telefono = $_POST['telefono'];
+    $nombre = trim((string)($_POST['nombre'] ?? ''));
+    $apellido = trim((string)($_POST['apellido'] ?? ''));
+    $email = trim((string)($_POST['email'] ?? ''));
+    $passwordPlano = (string)($_POST['password'] ?? '');
+    $password = password_hash($passwordPlano, PASSWORD_DEFAULT);
+    $telefono = trim((string)($_POST['telefono'] ?? ''));
     $tipoUsuario = "pasajero";
 
     $aceptaTerminos = isset($_POST['terminos']);
@@ -26,20 +27,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    $fechaNacimiento = $_POST['nacimiento'];
-    $genero = $_POST['genero'];
-    $tipoDocumento = $_POST['tipo_documento'];
-    $numeroDocumento = $_POST['numero_documento'];
-    $calle = $_POST['calle'];
-    $ciudad = $_POST['ciudad'];
-    $codigoPostal = $_POST['codigo_postal'];
-    $pais = $_POST['pais'];
+    $fechaNacimiento = trim((string)($_POST['nacimiento'] ?? ''));
+    $genero = trim((string)($_POST['genero'] ?? ''));
+    $tipoDocumento = trim((string)($_POST['tipo_documento'] ?? ''));
+    $numeroDocumento = trim((string)($_POST['numero_documento'] ?? ''));
+    $calle = trim((string)($_POST['calle'] ?? ''));
+    $ciudad = trim((string)($_POST['ciudad'] ?? ''));
+    $codigoPostal = trim((string)($_POST['codigo_postal'] ?? ''));
+    $pais = trim((string)($_POST['pais'] ?? ''));
+
+    if (
+        $nombre === '' || $apellido === '' || $email === '' || $passwordPlano === '' || $telefono === '' ||
+        $fechaNacimiento === '' || $genero === '' || $tipoDocumento === '' || $numeroDocumento === '' ||
+        $calle === '' || $ciudad === '' || $codigoPostal === '' || $pais === ''
+    ) {
+        header("Location: registro.html?error=datos_incompletos&step=1");
+        exit;
+    }
 
     $usuarioDAO = new UsuarioDAO();
 
     // 🔎 Verificar si el email ya existe
     if ($usuarioDAO->existeEmail($email)) {
-        header("Location: registro.html?error=usuario_existente");
+        header("Location: registro.html?error=usuario_existente&step=2");
         exit;
     }
 
@@ -57,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $idUsuario = $usuarioDAO->insertar($usuario);
 
     if (!$idUsuario) {
-        header("Location: registro.html?error=error_usuario");
+        header("Location: registro.html?error=error_usuario&step=1");
         exit;
     }
 
@@ -95,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: verificar_email.php?email=" . urlencode($email));
         exit;
     } else {
-        header("Location: registro.html?error=error_pasajero");
+        header("Location: registro.html?error=error_pasajero&step=1");
         exit;
     }
 }

@@ -43,7 +43,7 @@ class PasajeroDAO {
             return true;
 
         } catch (PDOException $e) {
-            echo "Error al insertar pasajero: " . $e->getMessage();
+            error_log("Error al insertar pasajero: " . $e->getMessage());
             return false;
         }
     }
