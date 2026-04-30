@@ -49,6 +49,7 @@
 
                 <div class="login-form-container">
                     <form class="login-form" id="loginForm" method="POST" action="procesar_inicio_sesion.php">
+                        <div id="login-mensaje" class="login-mensaje" style="display:none; margin-bottom:12px; color:#b00020; background:#ffecec; padding:10px; border-radius:6px;"></div>
                         <label for="username">Correo o usuario</label>
                         <input type="text" id="username" name="username" placeholder="ejemplo@correo.com" required>
 
@@ -66,6 +67,28 @@
             </div>
         </section>
     </main>
+
+    <script>
+        (function(){
+            const params = new URLSearchParams(window.location.search);
+            const mensajeDiv = document.getElementById('login-mensaje');
+            if (!mensajeDiv) return;
+            const err = params.get('error');
+            if (err === 'email_no_verificado') {
+                mensajeDiv.textContent = 'Tu correo no está verificado. Revisa tu bandeja y usa el código que te enviamos.';
+                mensajeDiv.style.display = 'block';
+            } else if (err === 'credenciales') {
+                mensajeDiv.textContent = 'Correo o contraseña incorrectos.';
+                mensajeDiv.style.display = 'block';
+            } else if (err === 'campos_vacios') {
+                mensajeDiv.textContent = 'Rellena todos los campos.';
+                mensajeDiv.style.display = 'block';
+            } else if (err === 'interno') {
+                mensajeDiv.textContent = 'Error interno. Intenta de nuevo más tarde.';
+                mensajeDiv.style.display = 'block';
+            }
+        })();
+    </script>
 
     <!-- FOOTER -->
     <footer class="footer">

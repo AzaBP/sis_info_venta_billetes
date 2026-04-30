@@ -27,7 +27,7 @@ try {
         exit;
     }
 
-    $sql = "SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.password, u.tipo_usuario, e.tipo_empleado
+    $sql = "SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.password, u.tipo_usuario, u.email_verificado, e.tipo_empleado
             FROM usuario u
             LEFT JOIN empleado e ON e.id_usuario = u.id_usuario
             WHERE u.email = :identificador
@@ -39,6 +39,12 @@ try {
 
     if (!$usuario || !password_verify($password, $usuario['password'])) {
         header('Location: inicio_sesion.html?error=credenciales');
+        exit;
+    }
+
+    // Bloquear inicio de sesión si el correo no está verificado
+    if (isset($usuario['email_verificado']) && !$usuario['email_verificado']) {
+        header('Location: inicio_sesion.html?error=email_no_verificado');
         exit;
     }
 
