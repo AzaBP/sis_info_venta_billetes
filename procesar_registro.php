@@ -51,7 +51,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate fechaNacimiento is a valid date (expecting YYYY-MM-DD from <input type="date">)
     $dt = DateTime::createFromFormat('Y-m-d', $fechaNacimiento);
     $dt_errors = DateTime::getLastErrors();
-    if (!$dt || $dt_errors['warning_count'] > 0 || $dt_errors['error_count'] > 0) {
+    $warningCount = 0;
+    $errorCount = 0;
+    if (is_array($dt_errors)) {
+        $warningCount = isset($dt_errors['warning_count']) ? (int)$dt_errors['warning_count'] : 0;
+        $errorCount = isset($dt_errors['error_count']) ? (int)$dt_errors['error_count'] : 0;
+    }
+
+    if (!$dt || $warningCount > 0 || $errorCount > 0) {
         error_log('[REGISTRO] Fecha de nacimiento inválida: ' . $fechaNacimiento);
         header("Location: registro.html?error=fecha_invalida&step=1");
         exit;
