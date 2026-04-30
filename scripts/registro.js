@@ -12,6 +12,48 @@ const progressFill = document.querySelector('.progress-fill');
 let currentStep = 1;
 
 // ==========================
+// SESSION STORAGE - PERSIST FORM DATA
+// ==========================
+
+const STORAGE_KEY = 'trainweb_registro_datos';
+
+function guardarDatosFormulario() {
+    const datos = {};
+    const inputs = registerForm.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        if (input.name) {
+            datos[input.name] = input.type === 'checkbox' ? input.checked : input.value;
+        }
+    });
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+}
+
+function recuperarDatosFormulario() {
+    const datosGuardados = sessionStorage.getItem(STORAGE_KEY);
+    if (datosGuardados) {
+        try {
+            const datos = JSON.parse(datosGuardados);
+            const inputs = registerForm.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                if (input.name && input.name in datos) {
+                    if (input.type === 'checkbox') {
+                        input.checked = datos[input.name];
+                    } else {
+                        input.value = datos[input.name];
+                    }
+                }
+            });
+        } catch (e) {
+            console.error('Error al recuperar datos del formulario:', e);
+        }
+    }
+}
+
+function limpiarDatosFormulario() {
+    sessionStorage.removeItem(STORAGE_KEY);
+}
+
+// ==========================
 // PROGRESS BAR
 // ==========================
 
@@ -109,6 +151,8 @@ allInputs.forEach(input=>{
 
     input.addEventListener("input",()=>{
 
+        guardarDatosFormulario();
+
         const value = input.value.trim();
         let error = "";
 
@@ -195,6 +239,10 @@ allInputs.forEach(input=>{
 
     });
 
+    input.addEventListener("change",()=>{
+        guardarDatosFormulario();
+    });
+
 });
 
 // ==========================
@@ -221,6 +269,7 @@ nextBtn.addEventListener("click",(e)=>{
 
         if(!valid) return;
 
+        guardarDatosFormulario();
         currentStep++;
         showStep(currentStep);
     }
@@ -242,6 +291,7 @@ nextBtn.addEventListener("click",(e)=>{
 
 prevBtn.addEventListener("click",()=>{
     if(currentStep > 1){
+        guardarDatosFormulario();
         currentStep--;
         showStep(currentStep);
     }
@@ -315,6 +365,14 @@ if(error){
         mensajeDiv.textContent = "⚠️ Faltan datos obligatorios en el formulario de registro.";
     }
 }
+
+// Recuperar datos guardados en sessionStorage al cargar la página
+recuperarDatosFormulario();
+
+// Limpiar datos cuando se envía el formulario exitosamente
+registerForm.addEventListener('submit', () => {
+    limpiarDatosFormulario();
+});
 
 // ==========================
 // PASSWORD STRENGTH
