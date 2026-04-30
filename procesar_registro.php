@@ -115,7 +115,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($resultado) {
         // Generar código de verificación y enviar por email
-        $caracteresCodigo = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        // Avoid ambiguous characters like O/0 and I/1 so the code is easier to read.
+        $caracteresCodigo = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
         $codigo = '';
         for ($i = 0; $i < 6; $i++) {
             $codigo .= $caracteresCodigo[random_int(0, strlen($caracteresCodigo) - 1)];

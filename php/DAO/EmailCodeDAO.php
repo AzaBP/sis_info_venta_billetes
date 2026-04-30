@@ -25,10 +25,12 @@ class EmailCodeDAO {
     public function validarCodigo($email, $codigo, $tipo = 'verification') {
         // Normalize inputs
         $email = trim((string)$email);
-        $codigo = strtoupper(trim((string)$codigo));
+        $codigo = strtoupper((string)$codigo);
+        // Remove spaces and separators so copied codes still validate.
+        $codigo = preg_replace('/[^A-Z0-9]/', '', $codigo);
 
         // Use case-insensitive match for codigo to avoid user input case issues
-        $sql = "SELECT id, id_usuario, usado, expires_at FROM email_verificaciones WHERE email = :email AND UPPER(codigo) = :codigo AND tipo = :tipo LIMIT 1";
+        $sql = "SELECT id, id_usuario, usado, expires_at FROM email_verificaciones WHERE email = :email AND REGEXP_REPLACE(UPPER(codigo), '[^A-Z0-9]', '', 'g') = :codigo AND tipo = :tipo LIMIT 1";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':email'=>$email, ':codigo'=>$codigo, ':tipo'=>$tipo]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
