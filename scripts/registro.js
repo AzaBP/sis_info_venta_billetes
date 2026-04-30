@@ -290,6 +290,8 @@ nextBtn.addEventListener("click",(e)=>{
 
     else{
 
+        e.preventDefault();
+
         const pass = document.getElementById("contrasena").value;
         const confirm = document.getElementById("confirmar_contraseña").value;
 
