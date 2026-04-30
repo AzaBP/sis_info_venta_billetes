@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $newsletter = isset($_POST['newsletter']);
 
     if (!$aceptaTerminos || !$aceptaPrivacidad) {
-        header("Location: registro.html?error=aceptar_politicas");
+        header("Location: registro.html?error=aceptar_politicas&step=4");
         exit;
     }
 

@@ -278,6 +278,15 @@ togglePasswordButtons.forEach(btn => {
 
 const params = new URLSearchParams(window.location.search);
 const error = params.get("error");
+const requestedStep = parseInt(params.get("step"), 10);
+
+if (!Number.isNaN(requestedStep) && requestedStep >= 1 && requestedStep <= 4) {
+    currentStep = requestedStep;
+}
+
+if (error === "aceptar_politicas") {
+    currentStep = 4;
+}
 
 const mensajeDiv = document.getElementById("mensaje-error");
 
@@ -296,6 +305,10 @@ if(error){
 
     if(error === "error_pasajero"){
         mensajeDiv.textContent = "⚠️ Error al crear el perfil del pasajero.";
+    }
+
+    if(error === "aceptar_politicas"){
+        mensajeDiv.textContent = "⚠️ Debes aceptar los términos y la política de privacidad para continuar.";
     }
 }
 
@@ -374,4 +387,4 @@ function actualizarTip(id, valido) {
 }
 
 // INIT
-showStep(1);
+showStep(currentStep);
