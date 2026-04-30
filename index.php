@@ -298,6 +298,8 @@ function mostrarPromoAleatoria() {
         <div class="promo-body">
             Usa el código <strong>${promo.codigo}</strong> y obtén un 
             <strong>${promo.descuento_porcentaje}%</strong> de descuento.
+            
+            <a href="ofertas.php">ir a promociones</a>
         </div>
     `;
 
