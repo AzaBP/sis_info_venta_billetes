@@ -121,12 +121,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $codigo .= $caracteresCodigo[random_int(0, strlen($caracteresCodigo) - 1)];
         }
         $emailCodeDAO = new EmailCodeDAO();
+        $codigoId = $emailCodeDAO->crearCodigo($idUsuario, $email, $codigo, 'verification');
+        if (!$codigoId) {
+            error_log('[REGISTRO] No se pudo guardar el código de verificación para email=' . $email . ' id_usuario=' . $idUsuario);
+            header("Location: registro.html?error=error_codigo_verificacion&step=4");
+            exit;
+        }
+
+        error_log('[REGISTRO] Código de verificación guardado id=' . $codigoId . ' email=' . $email . ' codigo=' . $codigo);
+
         $nombreHtml = htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8');
         $body = "<p>Hola $nombreHtml,</p><p>Tu código de verificación es <b>$codigo</b>. Válido 1 hora.</p>";
 
         $mailer = new Mailer();
         $subject = 'Verifica tu email';
-        $body = "<p>Hola $nombre,</p><p>Tu código de verificación es <b>$codigo</b>. Válido 1 hora.</p>";
         $mailer->send($email, $nombre . ' ' . $apellido, $subject, $body);
 
         header("Location: verificar_email.php?email=" . urlencode($email));
