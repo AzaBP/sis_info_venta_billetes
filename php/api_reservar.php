@@ -29,6 +29,8 @@ try {
 
     require_once __DIR__ . '/ConexionMongo.php';
     require_once __DIR__ . '/Conexion.php';
+    require_once __DIR__ . '/Utils/Mailer.php';
+    require_once __DIR__ . '/Utils/BilletePdf.php';
 
     $input = json_decode(file_get_contents('php://input'), true);
     if (!is_array($input) || !isset($input['id_viaje'])) {
@@ -292,6 +294,46 @@ try {
         'precio_total' => $precioTotal,
         'billetes' => $billetesSesion,
     ];
+
+    $primerBillete = $billetesSesion[0] ?? null;
+    if (is_array($primerBillete)) {
+        $emailDestino = trim((string)($primerBillete['pasajero_email'] ?? ''));
+        $nombreDestino = trim((string)($primerBillete['pasajero_nombre'] ?? '') . ' ' . (string)($primerBillete['pasajero_apellidos'] ?? ''));
+
+        if ($emailDestino !== '') {
+            try {
+                $pdfContent = BilletePdf::generarContenido($primerBillete);
+                $nombreArchivo = BilletePdf::generarNombreArchivo($primerBillete);
+
+                $mailer = new Mailer();
+                $subject = 'Tu billete PDF de TrainWeb';
+                $body = '<p>Hola ' . htmlspecialchars($nombreDestino, ENT_QUOTES, 'UTF-8') . ',</p>'
+                    . '<p>Adjuntamos el PDF de tu billete para que puedas descargarlo y presentarlo en embarque.</p>'
+                    . '<p>Si compraste varios billetes, este correo contiene el del primer pasajero de la reserva.</p>';
+
+                $sent = $mailer->send(
+                    $emailDestino,
+                    $nombreDestino,
+                    $subject,
+                    $body,
+                    '',
+                    [[
+                        'filename' => $nombreArchivo,
+                        'mime' => 'application/pdf',
+                        'content' => $pdfContent,
+                    ]]
+                );
+
+                if (!$sent) {
+                    error_log(sprintf('[MAIL ERROR] No se pudo enviar el PDF del primer billete a %s (reserva %s)', $emailDestino, $token));
+                } else {
+                    error_log(sprintf('[MAIL OK] PDF del primer billete enviado a %s (reserva %s)', $emailDestino, $token));
+                }
+            } catch (Throwable $mailError) {
+                error_log(sprintf('[MAIL ERROR] Fallo generando/enviando PDF para %s: %s', $emailDestino, $mailError->getMessage()));
+            }
+        }
+    }
 
     responderJson(200, [
         'exito' => true,

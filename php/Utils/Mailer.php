@@ -37,7 +37,7 @@ class Mailer {
         return null;
     }
 
-    public function send($toEmail, $toName, $subject, $bodyHtml, $bodyText = '') {
+    public function send($toEmail, $toName, $subject, $bodyHtml, $bodyText = '', array $attachments = []) {
         $configIssue = $this->getConfigIssue();
         if ($configIssue !== null) {
             error_log('Mailer config invalida: completa ' . $configIssue);
@@ -64,6 +64,25 @@ class Mailer {
                 $mail->Subject = $subject;
                 $mail->Body    = $bodyHtml;
                 if (!empty($bodyText)) $mail->AltBody = $bodyText;
+
+                foreach ($attachments as $attachment) {
+                    if (!is_array($attachment)) {
+                        continue;
+                    }
+
+                    $filename = (string)($attachment['filename'] ?? 'adjunto.bin');
+                    $mimeType = (string)($attachment['mime'] ?? 'application/octet-stream');
+
+                    if (!empty($attachment['path']) && is_string($attachment['path']) && file_exists($attachment['path'])) {
+                        $mail->addAttachment($attachment['path'], $filename, 'base64', $mimeType);
+                        continue;
+                    }
+
+                    if (array_key_exists('content', $attachment)) {
+                        $content = (string)$attachment['content'];
+                        $mail->addStringAttachment($content, $filename, 'base64', $mimeType);
+                    }
+                }
 
                 return $mail->send();
             } catch (\Exception $e) {
