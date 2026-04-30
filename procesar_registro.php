@@ -45,6 +45,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
+    // Log non-sensitive POST fields to help debug insertion errors (avoid logging raw password)
+    error_log('[REGISTRO] POST data: nombre=' . $nombre . ' email=' . $email . ' telefono=' . $telefono . ' nacimiento=' . $fechaNacimiento);
+
+    // Validate fechaNacimiento is a valid date (expecting YYYY-MM-DD from <input type="date">)
+    $dt = DateTime::createFromFormat('Y-m-d', $fechaNacimiento);
+    $dt_errors = DateTime::getLastErrors();
+    if (!$dt || $dt_errors['warning_count'] > 0 || $dt_errors['error_count'] > 0) {
+        error_log('[REGISTRO] Fecha de nacimiento inválida: ' . $fechaNacimiento);
+        header("Location: registro.html?error=fecha_invalida&step=1");
+        exit;
+    }
+
+    // Normalize date to Y-m-d (safe for Postgres DATE)
+    $fechaNacimiento = $dt->format('Y-m-d');
+
     $usuarioDAO = new UsuarioDAO();
 
     // 🔎 Verificar si el email ya existe
