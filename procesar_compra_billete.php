@@ -59,7 +59,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mailer = new Mailer();
         $subject = 'Tu código de billete';
         $body = "<p>Hola {$user['nombre']},</p><p>Tu código de billete es <b>$codigo</b>. Guárdalo para mostrar en el embarque.</p>";
-        $mailer->send($user['email'], $user['nombre'].' '.$user['apellido'], $subject, $body);
+        $sent = $mailer->send($user['email'], $user['nombre'].' '.$user['apellido'], $subject, $body);
+        if (!$sent) {
+            // Registrar fallo explícito para facilitar depuración
+            $msg = sprintf("[MAIL ERROR] Failed to send ticket to %s (user id: %d) at %s\n", $user['email'], $id_pasajero, date('Y-m-d H:i:s'));
+            error_log($msg);
+        } else {
+            $msg = sprintf("[MAIL OK] Ticket sent to %s (user id: %d) at %s\n", $user['email'], $id_pasajero, date('Y-m-d H:i:s'));
+            error_log($msg);
+        }
     }
 
     header('Location: vendedor.php?exito=billete_comprado');
