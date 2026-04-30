@@ -115,9 +115,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($resultado) {
         // Generar código de verificación y enviar por email
-        $codigo = substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6);
+        $caracteresCodigo = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $codigo = '';
+        for ($i = 0; $i < 6; $i++) {
+            $codigo .= $caracteresCodigo[random_int(0, strlen($caracteresCodigo) - 1)];
+        }
         $emailCodeDAO = new EmailCodeDAO();
-        $emailCodeDAO->crearCodigo($idUsuario, $email, $codigo, 'verification');
+        $nombreHtml = htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8');
+        $body = "<p>Hola $nombreHtml,</p><p>Tu código de verificación es <b>$codigo</b>. Válido 1 hora.</p>";
 
         $mailer = new Mailer();
         $subject = 'Verifica tu email';

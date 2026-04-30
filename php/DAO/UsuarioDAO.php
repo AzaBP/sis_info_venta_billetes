@@ -34,7 +34,7 @@ class UsuarioDAO {
             return $stmt->fetchColumn();
 
         } catch (PDOException $e) {
-            echo "Error al insertar: " . $e->getMessage();
+            error_log('UsuarioDAO::insertar - Error al insertar: ' . $e->getMessage());
             return false;
         }
     }
@@ -63,7 +63,7 @@ class UsuarioDAO {
             return null;
 
         } catch (PDOException $e) {
-            echo "Error al obtener: " . $e->getMessage();
+            error_log('UsuarioDAO::obtenerPorId - Error: ' . $e->getMessage());
             return null;
         }
     }
@@ -91,7 +91,7 @@ class UsuarioDAO {
             return $usuarios;
 
         } catch (PDOException $e) {
-            echo "Error al obtener todos: " . $e->getMessage();
+            error_log('UsuarioDAO::obtenerTodos - Error: ' . $e->getMessage());
             return [];
         }
     }
@@ -121,7 +121,7 @@ class UsuarioDAO {
             ]);
 
         } catch (PDOException $e) {
-            echo "Error al actualizar: " . $e->getMessage();
+            error_log('UsuarioDAO::actualizar - Error: ' . $e->getMessage());
             return false;
         }
     }
@@ -135,7 +135,7 @@ class UsuarioDAO {
             return $stmt->execute([':id' => $id]);
 
         } catch (PDOException $e) {
-            echo "Error al eliminar: " . $e->getMessage();
+            error_log('UsuarioDAO::eliminar - Error: ' . $e->getMessage());
             return false;
         }
     }
