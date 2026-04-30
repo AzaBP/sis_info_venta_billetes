@@ -42,6 +42,12 @@ $error = $_GET['error'] ?? '';
                     </div>
                 <?php endif; ?>
 
+                <?php if ($error === 'smtp_config'): ?>
+                    <div class="error-message">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Falta configurar SMTP con valores reales en `.env` o en Docker Compose.
+                    </div>
+                <?php endif; ?>
+
                 <?php if ($error === 'conexion'): ?>
                     <div class="error-message">
                         <i class="fa-solid fa-database"></i> Error de conexión con la base de datos. Inténtalo más tarde.

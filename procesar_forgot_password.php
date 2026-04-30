@@ -25,11 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    $mailer = new Mailer();
+    if ($mailer->getConfigIssue() !== null) {
+        header('Location: olvidaste_contrasena.php?error=smtp_config');
+        exit;
+    }
+
     $codigo = substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6);
     $emailCodeDAO = new EmailCodeDAO();
     $codigoId = $emailCodeDAO->crearCodigo((int)$row['id_usuario'], (string)$row['email'], $codigo, 'password_reset');
 
-    $mailer = new Mailer();
     $subject = 'Código para restablecer contraseña';
     $body = "<p>Hola {$row['nombre']},</p><p>Tu código para restablecer la contraseña es <b>$codigo</b>. Válido 1 hora.</p>";
     $sent = $mailer->send((string)$row['email'], trim(((string)$row['nombre']) . ' ' . ((string)$row['apellido'])), $subject, $body);

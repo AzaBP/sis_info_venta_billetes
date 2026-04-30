@@ -66,13 +66,13 @@ services:
       - postgres
       - mongo
     environment:
-      - SMTP_HOST=${SMTP_HOST:-smtp.tudominio.com}
-      - SMTP_USER=${SMTP_USER:-no-reply@tudominio.com}
-      - SMTP_PASS=${SMTP_PASS:-tu_password_o_api_key}
-      - SMTP_PORT=${SMTP_PORT:-587}
-      - SMTP_SECURE=${SMTP_SECURE:-tls}
-      - SMTP_FROM=${SMTP_FROM:-no-reply@tudominio.com}
-      - SMTP_FROM_NAME=${SMTP_FROM_NAME:-SISTEMA BILLETES}
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_USER=yousrajebari333@gmail.com
+      - SMTP_PASS=nqas suli uezy xqma
+      - SMTP_PORT=587
+      - SMTP_SECURE=tls
+      - SMTP_FROM=yousrajebari333@gmail.com
+      - SMTP_FROM_NAME=SISTEMA BILLETES
     volumes:
       - ./:/var/www/html
       - vendor_data:/var/www/html/vendor
