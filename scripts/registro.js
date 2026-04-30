@@ -11,6 +11,20 @@ const progressFill = document.querySelector('.progress-fill');
 
 let currentStep = 1;
 
+function mostrarErrorTerminos(mensaje) {
+    const errorBox = document.getElementById('terms-error');
+    if (!errorBox) return;
+    errorBox.textContent = mensaje;
+    errorBox.style.display = 'block';
+}
+
+function limpiarErrorTerminos() {
+    const errorBox = document.getElementById('terms-error');
+    if (!errorBox) return;
+    errorBox.textContent = '';
+    errorBox.style.display = 'none';
+}
+
 // ==========================
 // SESSION STORAGE - PERSIST FORM DATA
 // ==========================
@@ -289,28 +303,11 @@ nextBtn.addEventListener("click",(e)=>{
         const privacidad = document.querySelector('input[name="privacidad"]').checked;
 
         if(!terminos || !privacidad){
-            // Mostrar indicador visual al lado del botón
-            const btnNext = document.getElementById('nextBtn');
-            const existingIndicator = btnNext.querySelector('.terms-required-indicator');
-            
-            if(!existingIndicator){
-                const indicator = document.createElement('span');
-                indicator.className = 'terms-required-indicator';
-                indicator.innerHTML = ' <i class="fa-solid fa-exclamation-circle"></i> Debes aceptar ambos términos';
-                indicator.style.marginLeft = '8px';
-                indicator.style.color = '#dc3545';
-                indicator.style.fontSize = '0.9em';
-                btnNext.appendChild(indicator);
-                
-                // Remover indicador después de 3 segundos
-                setTimeout(() => {
-                    if(existingIndicator || btnNext.querySelector('.terms-required-indicator')){
-                        (existingIndicator || btnNext.querySelector('.terms-required-indicator')).remove();
-                    }
-                }, 3000);
-            }
+            mostrarErrorTerminos('Debes aceptar los términos y la política de privacidad para continuar.');
             return;
         }
+
+        limpiarErrorTerminos();
 
         registerForm.submit();
     }
@@ -323,6 +320,16 @@ prevBtn.addEventListener("click",()=>{
         currentStep--;
         showStep(currentStep);
     }
+});
+
+document.querySelectorAll('input[name="terminos"], input[name="privacidad"]').forEach(input => {
+    input.addEventListener('change', () => {
+        const terminos = document.querySelector('input[name="terminos"]').checked;
+        const privacidad = document.querySelector('input[name="privacidad"]').checked;
+        if (terminos && privacidad) {
+            limpiarErrorTerminos();
+        }
+    });
 });
 
 // ==========================
