@@ -68,6 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $msg = sprintf("[MAIL OK] Ticket sent to %s (user id: %d) at %s\n", $user['email'], $id_pasajero, date('Y-m-d H:i:s'));
             error_log($msg);
         }
+    } else {
+        $msg = sprintf("[MAIL SKIP] No recipient email found for passenger id: %d at %s\n", $id_pasajero, date('Y-m-d H:i:s'));
+        error_log($msg);
     }
 
     header('Location: vendedor.php?exito=billete_comprado');
