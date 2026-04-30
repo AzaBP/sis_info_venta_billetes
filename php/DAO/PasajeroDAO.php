@@ -23,22 +23,26 @@ class PasajeroDAO {
             (:id_usuario, :fecha_nacimiento, :genero, :tipo_documento, :numero_documento,
              :calle, :ciudad, :codigo_postal, :pais, :acepta_terminos, :acepta_privacidad, :newsletter)";
 
+
             $stmt = $this->pdo->prepare($sql);
 
-            $stmt->execute([
-                ':id_usuario' => $pasajero->getIdUsuario(),
-                ':fecha_nacimiento' => $pasajero->getFechaNacimiento(),
-                ':genero' => $pasajero->getGenero(),
-                ':tipo_documento' => $pasajero->getTipoDocumento(),
-                ':numero_documento' => $pasajero->getNumeroDocumento(),
-                ':calle' => $pasajero->getCalle(),
-                ':ciudad' => $pasajero->getCiudad(),
-                ':codigo_postal' => $pasajero->getCodigoPostal(),
-                ':pais' => $pasajero->getPais(),
-                ':acepta_terminos' => $pasajero->getAceptaTerminos(),
-                ':acepta_privacidad' => $pasajero->getAceptaPrivacidad(),
-                ':newsletter' => $pasajero->getNewsletter()
-            ]);
+            // Bind values explicitly. Cast booleans to proper PDO::PARAM_BOOL to avoid empty-string errors.
+            $stmt->bindValue(':id_usuario', $pasajero->getIdUsuario(), PDO::PARAM_INT);
+            $stmt->bindValue(':fecha_nacimiento', $pasajero->getFechaNacimiento(), PDO::PARAM_STR);
+            $stmt->bindValue(':genero', $pasajero->getGenero(), PDO::PARAM_STR);
+            $stmt->bindValue(':tipo_documento', $pasajero->getTipoDocumento(), PDO::PARAM_STR);
+            $stmt->bindValue(':numero_documento', $pasajero->getNumeroDocumento(), PDO::PARAM_STR);
+            $stmt->bindValue(':calle', $pasajero->getCalle(), PDO::PARAM_STR);
+            $stmt->bindValue(':ciudad', $pasajero->getCiudad(), PDO::PARAM_STR);
+            $stmt->bindValue(':codigo_postal', $pasajero->getCodigoPostal(), PDO::PARAM_STR);
+            $stmt->bindValue(':pais', $pasajero->getPais(), PDO::PARAM_STR);
+
+            // Ensure boolean values are explicitly bound as booleans
+            $stmt->bindValue(':acepta_terminos', (bool)$pasajero->getAceptaTerminos(), PDO::PARAM_BOOL);
+            $stmt->bindValue(':acepta_privacidad', (bool)$pasajero->getAceptaPrivacidad(), PDO::PARAM_BOOL);
+            $stmt->bindValue(':newsletter', (bool)$pasajero->getNewsletter(), PDO::PARAM_BOOL);
+
+            $stmt->execute();
 
             return true;
 
