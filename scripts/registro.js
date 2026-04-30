@@ -284,6 +284,34 @@ nextBtn.addEventListener("click",(e)=>{
             return;
         }
 
+        // Validar términos y privacidad en cliente
+        const terminos = document.querySelector('input[name="terminos"]').checked;
+        const privacidad = document.querySelector('input[name="privacidad"]').checked;
+
+        if(!terminos || !privacidad){
+            // Mostrar indicador visual al lado del botón
+            const btnNext = document.getElementById('nextBtn');
+            const existingIndicator = btnNext.querySelector('.terms-required-indicator');
+            
+            if(!existingIndicator){
+                const indicator = document.createElement('span');
+                indicator.className = 'terms-required-indicator';
+                indicator.innerHTML = ' <i class="fa-solid fa-exclamation-circle"></i> Debes aceptar ambos términos';
+                indicator.style.marginLeft = '8px';
+                indicator.style.color = '#dc3545';
+                indicator.style.fontSize = '0.9em';
+                btnNext.appendChild(indicator);
+                
+                // Remover indicador después de 3 segundos
+                setTimeout(() => {
+                    if(existingIndicator || btnNext.querySelector('.terms-required-indicator')){
+                        (existingIndicator || btnNext.querySelector('.terms-required-indicator')).remove();
+                    }
+                }, 3000);
+            }
+            return;
+        }
+
         registerForm.submit();
     }
 

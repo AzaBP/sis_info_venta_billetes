@@ -292,43 +292,9 @@
     <script src="scripts/session_menu.js"></script>
     <script src="scripts/registro.js?v=20260430a"></script>
     <script>
-        (function () {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('error') === 'aceptar_politicas') {
-                const mensaje = document.getElementById('mensaje-error');
-                if (mensaje) {
-                    mensaje.textContent = 'Debes aceptar los términos y la política de privacidad para continuar.';
-                    mensaje.style.display = 'block';
-                    mensaje.classList.add('error');
-                }
-
-                // Fallback por si el JS de pasos no se ha actualizado en caché.
-                const allSteps = document.querySelectorAll('.form-step');
-                const allTrackSteps = document.querySelectorAll('.step');
-                allSteps.forEach((step) => step.classList.remove('active'));
-                if (allSteps[3]) {
-                    allSteps[3].classList.add('active');
-                }
-                allTrackSteps.forEach((step, index) => {
-                    step.classList.remove('active', 'completed');
-                    if (index < 3) step.classList.add('completed');
-                    if (index === 3) step.classList.add('active');
-                });
-                const progressFill = document.querySelector('.progress-fill');
-                if (progressFill) {
-                    progressFill.style.width = '100%';
-                }
-                const prevBtn = document.getElementById('prevBtn');
-                if (prevBtn) {
-                    prevBtn.style.display = 'flex';
-                }
-                const nextBtn = document.getElementById('nextBtn');
-                if (nextBtn) {
-                    nextBtn.innerHTML = 'Crear Cuenta';
-                    nextBtn.type = 'submit';
-                }
-            }
-        })();
+        // NOTA: La validación de términos y privacidad ahora se realiza en cliente (scripts/registro.js)
+        // para evitar recargar la página y perder los datos del formulario.
+        // Si por algún motivo llegara aquí desde el servidor, la validación en cliente lo debería prevenir.
     </script>
 </body>
 </html>

@@ -48,13 +48,19 @@
                 </div>
 
                 <div class="login-form-container">
+                    <!-- MENSAJE DE ÉXITO -->
+                    <div id="success-mensaje" style="display:none; margin-bottom:12px; color:#0b5f0b; background:#e8f5e9; padding:10px; border-radius:6px; border-left:4px solid #2e7d32;">
+                        <i class="fa-solid fa-check-circle"></i> <span id="success-text"></span>
+                    </div>
+                    
                     <form class="login-form" id="loginForm" method="POST" action="procesar_inicio_sesion.php">
-                        <div id="login-mensaje" class="login-mensaje" style="display:none; margin-bottom:12px; color:#b00020; background:#ffecec; padding:10px; border-radius:6px;"></div>
                         <label for="username">Correo o usuario</label>
                         <input type="text" id="username" name="username" placeholder="ejemplo@correo.com" required>
+                        <div id="error-username" class="error-campo" style="display:none; color:#dc3545; font-size:0.85em; margin-top:4px;"></div>
 
-                        <label for="password">Contraseña</label>
+                        <label for="password" style="margin-top:12px;">Contraseña</label>
                         <input type="password" id="password" name="password" placeholder="********" required>
+                        <div id="error-password" class="error-campo" style="display:none; color:#dc3545; font-size:0.85em; margin-top:4px;"></div>
 
                         <div class="form-actions">
                             <label class="remember"><input type="checkbox" name="remember"> Recuérdame</label>
@@ -71,21 +77,63 @@
     <script>
         (function(){
             const params = new URLSearchParams(window.location.search);
-            const mensajeDiv = document.getElementById('login-mensaje');
-            if (!mensajeDiv) return;
+            const successDiv = document.getElementById('success-mensaje');
+            const errorUsername = document.getElementById('error-username');
+            const errorPassword = document.getElementById('error-password');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            
             const err = params.get('error');
-            if (err === 'email_no_verificado') {
-                mensajeDiv.textContent = 'Tu correo no está verificado. Revisa tu bandeja y usa el código que te enviamos.';
-                mensajeDiv.style.display = 'block';
-            } else if (err === 'credenciales') {
-                mensajeDiv.textContent = 'Correo o contraseña incorrectos.';
-                mensajeDiv.style.display = 'block';
+            const verificado = params.get('verificado');
+            
+            // MOSTRAR MENSAJE DE ÉXITO
+            if (verificado === 'ok') {
+                if (successDiv) {
+                    document.getElementById('success-text').textContent = '¡Correo verificado correctamente! Ya puedes iniciar sesión.';
+                    successDiv.style.display = 'block';
+                }
+                // Limpiar URL sin recargar
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+            
+            // MOSTRAR ERRORES DEBAJO DE CAMPOS
+            if (err === 'email_no_existe') {
+                if (errorUsername && usernameInput) {
+                    errorUsername.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Correo no registrado';
+                    errorUsername.style.display = 'block';
+                    usernameInput.style.borderColor = '#dc3545';
+                    usernameInput.style.backgroundColor = '#fff5f5';
+                }
+            } else if (err === 'password_incorrecta') {
+                if (errorPassword && passwordInput) {
+                    errorPassword.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Contraseña incorrecta';
+                    errorPassword.style.display = 'block';
+                    passwordInput.style.borderColor = '#dc3545';
+                    passwordInput.style.backgroundColor = '#fff5f5';
+                }
+            } else if (err === 'email_no_verificado') {
+                if (errorUsername && usernameInput) {
+                    errorUsername.innerHTML = '<i class="fa-solid fa-exclamation-circle"></i> Tu correo no está verificado. Revisa tu bandeja.';
+                    errorUsername.style.display = 'block';
+                    usernameInput.style.borderColor = '#ffc107';
+                    usernameInput.style.backgroundColor = '#fffbf0';
+                }
             } else if (err === 'campos_vacios') {
-                mensajeDiv.textContent = 'Rellena todos los campos.';
-                mensajeDiv.style.display = 'block';
+                if (errorUsername && usernameInput && !usernameInput.value.trim()) {
+                    errorUsername.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> El correo es requerido';
+                    errorUsername.style.display = 'block';
+                    usernameInput.style.borderColor = '#dc3545';
+                }
+                if (errorPassword && passwordInput && !passwordInput.value.trim()) {
+                    errorPassword.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> La contraseña es requerida';
+                    errorPassword.style.display = 'block';
+                    passwordInput.style.borderColor = '#dc3545';
+                }
             } else if (err === 'interno') {
-                mensajeDiv.textContent = 'Error interno. Intenta de nuevo más tarde.';
-                mensajeDiv.style.display = 'block';
+                if (errorUsername) {
+                    errorUsername.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Error interno. Intenta de nuevo más tarde.';
+                    errorUsername.style.display = 'block';
+                }
             }
         })();
     </script>

@@ -23,6 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $newsletter = isset($_POST['newsletter']);
 
     if (!$aceptaTerminos || !$aceptaPrivacidad) {
+        // Silenciosamente rechazar si faltan términos/privacidad
+        // (La validación en cliente debe prevenir esto)
         header("Location: registro.html?error=aceptar_politicas&step=4");
         exit;
     }

@@ -37,8 +37,15 @@ try {
     $stmt->execute([':identificador' => $identificador]);
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$usuario || !password_verify($password, $usuario['password'])) {
-        header('Location: inicio_sesion.html?error=credenciales');
+    if (!$usuario) {
+        // Email no existe
+        header('Location: inicio_sesion.html?error=email_no_existe');
+        exit;
+    }
+
+    if (!password_verify($password, $usuario['password'])) {
+        // Contraseña incorrecta
+        header('Location: inicio_sesion.html?error=password_incorrecta');
         exit;
     }
 
