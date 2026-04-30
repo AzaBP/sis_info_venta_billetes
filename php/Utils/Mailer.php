@@ -47,6 +47,8 @@ class Mailer {
         if ($this->usePHPMailer) {
             try {
                 $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+                // Ensure UTF-8 everywhere
+                $mail->CharSet = 'UTF-8';
                 //Server settings
                 $mail->isSMTP();
                 $mail->Host = $this->config['host'];
@@ -73,9 +75,23 @@ class Mailer {
         // Fallback: usar mail() nativo
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type: text/html; charset=UTF-8" . "\r\n";
-        $headers .= "From: " . ($this->config['from_name'] ?? '') . " <" . ($this->config['from_email'] ?? '') . ">" . "\r\n";
+        $headers .= "Content-Transfer-Encoding: 8bit" . "\r\n";
+        // Encode the From name and subject for proper UTF-8 display in simple mail()
+        $fromName = (string)($this->config['from_name'] ?? '');
+        if (function_exists('mb_encode_mimeheader')) {
+            $fromNameEnc = mb_encode_mimeheader($fromName, 'UTF-8');
+        } else {
+            $fromNameEnc = $fromName;
+        }
+        $headers .= "From: " . $fromNameEnc . " <" . ($this->config['from_email'] ?? '') . ">" . "\r\n";
         $message = $bodyHtml;
-        $result = mail($toEmail, $subject, $message, $headers);
+        // Encode subject if mbstring available
+        if (function_exists('mb_encode_mimeheader')) {
+            $subjectEnc = mb_encode_mimeheader($subject, 'UTF-8');
+        } else {
+            $subjectEnc = $subject;
+        }
+        $result = mail($toEmail, $subjectEnc, $message, $headers);
         if (!$result) {
             error_log('Mailer error (mail fallback): fallo al enviar a ' . $toEmail);
         }
