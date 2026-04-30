@@ -177,7 +177,7 @@ try {
 
         <!-- OFERTAS / PROMOCIONES -->
         <section class="offers-section">
-            <h2 data-i18n="abonos_promociones">Abonos y Promociones</h2>
+            <h2 data-i18n="abonos_promociones">Abonos</h2>
             <div class="carousel">
                 <button class="prev"><i class="fa-solid fa-chevron-left"></i></button>
                 <div class="offers-track">
@@ -299,7 +299,7 @@ function mostrarPromoAleatoria() {
             Usa el código <strong>${promo.codigo}</strong> y obtén un 
             <strong>${promo.descuento_porcentaje}%</strong> de descuento.
             
-            <a href="ofertas.php">ir a promociones</a>
+            <a href="ofertas.php">Ver más en ofertas</a>
         </div>
     `;
 
