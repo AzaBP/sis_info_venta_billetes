@@ -2,6 +2,8 @@
 // Procesa la compra de billete para un pasajero gestionado por el vendedor
 require_once 'php/Conexion.php';
 $pdo = (new Conexion())->conectar();
+require_once 'php/Utils/Mailer.php';
+require_once 'php/DAO/EmailCodeDAO.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_pasajero = (int)($_POST['id_pasajero'] ?? 0);
@@ -44,6 +46,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ':id_viaje' => $viaje['id_viaje'],
         ':numero_asiento' => $numero_asiento
     ]);
+
+    // Enviar código al email del pasajero
+    $stmt = $pdo->prepare('SELECT u.email, u.nombre, u.apellido FROM usuario u JOIN pasajero p ON p.id_usuario = u.id_usuario WHERE p.id_pasajero = :id_pasajero LIMIT 1');
+    $stmt->execute([':id_pasajero' => $id_pasajero]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($user && !empty($user['email'])) {
+        $codigo = substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8);
+        $emailCodeDAO = new EmailCodeDAO();
+        $emailCodeDAO->crearCodigo($id_pasajero, $user['email'], $codigo, 'ticket');
+
+        $mailer = new Mailer();
+        $subject = 'Tu código de billete';
+        $body = "<p>Hola {$user['nombre']},</p><p>Tu código de billete es <b>$codigo</b>. Guárdalo para mostrar en el embarque.</p>";
+        $mailer->send($user['email'], $user['nombre'].' '.$user['apellido'], $subject, $body);
+    }
 
     header('Location: vendedor.php?exito=billete_comprado');
     exit;

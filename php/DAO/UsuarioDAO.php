@@ -140,6 +140,16 @@ class UsuarioDAO {
         }
     }
 
+    public function setEmailVerified($id, $valor = true) {
+        try {
+            $sql = "UPDATE usuario SET email_verificado = :valor WHERE id_usuario = :id";
+            $stmt = $this->pdo->prepare($sql);
+            return $stmt->execute([':valor' => $valor, ':id' => $id]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
     public function existeEmail($email) {
 
         try {

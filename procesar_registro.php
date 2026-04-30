@@ -5,6 +5,8 @@ require_once __DIR__ . '/php/DAO/PasajeroDAO.php';
 require_once __DIR__ . '/php/VO/Usuario.php';
 require_once __DIR__ . '/php/VO/Pasajero.php';
 require_once __DIR__ . '/php/Conexion.php';
+require_once __DIR__ . '/php/DAO/EmailCodeDAO.php';
+require_once __DIR__ . '/php/Utils/Mailer.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -75,7 +77,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $resultado = $pasajeroDAO->insertar($pasajero);
 
     if ($resultado) {
-        header("Location: inicio_sesion.html?registro=ok");
+        // Generar código de verificación y enviar por email
+        $codigo = substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6);
+        $emailCodeDAO = new EmailCodeDAO();
+        $emailCodeDAO->crearCodigo($idUsuario, $email, $codigo, 'verification');
+
+        $mailer = new Mailer();
+        $subject = 'Verifica tu email';
+        $body = "<p>Hola $nombre,</p><p>Tu código de verificación es <b>$codigo</b>. Válido 1 hora.</p>";
+        $mailer->send($email, $nombre . ' ' . $apellido, $subject, $body);
+
+        header("Location: verificar_email.php?email=" . urlencode($email));
         exit;
     } else {
         header("Location: registro.html?error=error_pasajero");

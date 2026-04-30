@@ -1,6 +1,7 @@
 {
     "require": {
         "mongodb/mongodb": "^2.0",
-        "tecnickcom/tcpdf": "^6.11"
+        "tecnickcom/tcpdf": "^6.11",
+        "phpmailer/phpmailer": "^6.8"
     }
 }
