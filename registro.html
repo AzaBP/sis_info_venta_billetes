@@ -5,6 +5,7 @@
     <title>TrainWeb - Registro</title>
     <link rel="stylesheet" href="css/registro.css">
     <link rel="stylesheet" href="css/session_menu.css">
+    <link rel="stylesheet" href="css/legal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -217,17 +218,17 @@
                         <div class="step-content">
                             <div class="terms-box">
                                 <label class="checkbox-custom">
-                                    <input type="checkbox" name="terminos" required>
+                                    <input type="checkbox" name="terminos" value="1" required>
                                     <span class="checkmark"></span>
-                                    Acepto los <a href="#" class="link-term">Términos y Condiciones</a>
+                                    Acepto los <a href="terminos_y_condiciones.php" class="link-term" target="_blank" rel="noopener">Términos y Condiciones</a>
                                 </label>
                                 <label class="checkbox-custom">
-                                    <input type="checkbox" name="privacidad" required>
+                                    <input type="checkbox" name="privacidad" value="1" required>
                                     <span class="checkmark"></span>
-                                    Acepto la <a href="#" class="link-term">Política de Privacidad</a>
+                                    Acepto la <a href="politica_privacidad.php" class="link-term" target="_blank" rel="noopener">Política de Privacidad</a>
                                 </label>
                                 <label class="checkbox-custom">
-                                    <input type="checkbox" name="newsletter">
+                                    <input type="checkbox" name="newsletter" value="1">
                                     <span class="checkmark"></span>
                                     Deseo recibir ofertas y promociones
                                 </label>
@@ -273,9 +274,9 @@
             <div class="footer-column">
                 <h4>Información legal</h4>
                 <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
-                <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
+                <a href="politica_privacidad.php"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
                 <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
-                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+                <a href="terminos_y_condiciones.php"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
             </div>
             <div class="footer-column">
                 <h4>Redes sociales</h4>
@@ -290,6 +291,18 @@
 
     <script src="scripts/session_menu.js"></script>
     <script src="scripts/registro.js"></script>
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('error') === 'aceptar_politicas') {
+                const mensaje = document.getElementById('mensaje-error');
+                if (mensaje) {
+                    mensaje.textContent = 'Debes aceptar los términos y la política de privacidad para continuar.';
+                    mensaje.style.display = 'block';
+                }
+            }
+        })();
+    </script>
 </body>
 </html>
 

@@ -33,6 +33,8 @@ $pdf->SetMargins(12, 12, 12);
 $pdf->SetAutoPageBreak(true, 12);
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
+$pdf->SetDefaultMonospacedFont('helvetica');
+$pdf->SetTextColor(24, 39, 62);
 
 foreach ($billetes as $idx => $b) {
     $pdf->AddPage();
@@ -71,28 +73,50 @@ foreach ($billetes as $idx => $b) {
         'module_height' => 1,
     ];
 
-    $pdf->SetFont('helvetica', 'B', 16);
-    $pdf->Cell(0, 8, 'TrainWeb - Billete', 0, 1, 'L');
-    $pdf->Ln(2);
+    $pdf->SetFillColor(10, 42, 102);
+    $pdf->RoundedRect(12, 12, 186, 18, 3, '1111', 'F');
+    $pdf->SetTextColor(255, 255, 255);
+    $pdf->SetFont('helvetica', 'B', 18);
+    $pdf->SetXY(16, 16);
+    $pdf->Cell(0, 7, 'TrainWeb', 0, 1, 'L');
+    $pdf->SetFont('helvetica', '', 9.5);
+    $pdf->SetXY(16, 23);
+    $pdf->Cell(0, 5, 'Billete digital minimalista y listo para embarque', 0, 1, 'L');
 
-    $pdf->write2DBarcode($qrPayload ?: $codigo, 'QRCODE,H', 155, 14, 40, 40, $style, 'N');
+    $pdf->SetTextColor(24, 39, 62);
+    $pdf->SetFillColor(248, 251, 255);
+    $pdf->RoundedRect(12, 36, 186, 239, 4, '1111', 'F');
 
-    $pdf->SetFont('helvetica', '', 11);
-    $html = '
-        <table cellpadding="4" cellspacing="0" border="0">
-            <tr><td><b>Billete:</b></td><td>' . e((string)($idx + 1)) . '</td></tr>
-            <tr><td><b>Codigo:</b></td><td>' . e($codigo) . '</td></tr>
-            <tr><td><b>Pasajero:</b></td><td>' . e($pasajero) . '</td></tr>
-            <tr><td><b>Documento:</b></td><td>' . e($documento) . '</td></tr>
-            <tr><td><b>Ruta:</b></td><td>' . e($origen . ' -> ' . $destino) . '</td></tr>
-            <tr><td><b>Fecha viaje:</b></td><td>' . e($fechaViaje) . '</td></tr>
-            <tr><td><b>Hora:</b></td><td>' . e($horaSalida . ' - ' . $horaLlegada) . '</td></tr>
-            <tr><td><b>Asiento:</b></td><td>' . e($asiento) . '</td></tr>
-            <tr><td><b>Vagon:</b></td><td>' . e($vagon) . '</td></tr>
-            <tr><td><b>Precio:</b></td><td>' . e($precio . ' EUR') . '</td></tr>
-        </table>';
+    $pdf->write2DBarcode($qrPayload ?: $codigo, 'QRCODE,H', 150, 46, 40, 40, $style, 'N');
 
-    $pdf->writeHTML($html, true, false, true, false, '');
+    $pdf->SetFont('helvetica', 'B', 14);
+    $pdf->SetXY(16, 48);
+    $pdf->Cell(0, 8, 'Billete #' . e((string)($idx + 1)) . '  ·  ' . e($codigo), 0, 1, 'L');
+
+    $pdf->SetFont('helvetica', '', 10.5);
+    $rows = [
+        ['Pasajero', $pasajero],
+        ['Documento', $documento],
+        ['Ruta', $origen . ' → ' . $destino],
+        ['Fecha', $fechaViaje],
+        ['Horario', $horaSalida . ' - ' . $horaLlegada],
+        ['Asiento', $asiento . ' / Vagon ' . $vagon],
+        ['Precio', $precio . ' EUR'],
+    ];
+
+    $y = 60;
+    foreach ($rows as [$label, $value]) {
+        $pdf->SetXY(18, $y);
+        $pdf->SetTextColor(92, 107, 133);
+        $pdf->Cell(28, 7, $label, 0, 0, 'L');
+        $pdf->SetTextColor(24, 39, 62);
+        $pdf->MultiCell(90, 7, $value, 0, 'L', false, 1, 50, $y, true);
+        $y += 15;
+    }
+
+    $pdf->SetXY(150, 96);
+    $pdf->SetFont('helvetica', 'I', 9);
+    $pdf->MultiCell(40, 18, 'QR para control rápido en embarque.', 0, 'C', false, 1, 150, 96, true);
 }
 
 $pdf->Output('billetes_trainweb.pdf', 'D');

@@ -17,6 +17,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $telefono = $_POST['telefono'];
     $tipoUsuario = "pasajero";
 
+    $aceptaTerminos = isset($_POST['terminos']);
+    $aceptaPrivacidad = isset($_POST['privacidad']);
+    $newsletter = isset($_POST['newsletter']);
+
+    if (!$aceptaTerminos || !$aceptaPrivacidad) {
+        header("Location: registro.html?error=aceptar_politicas");
+        exit;
+    }
+
     $fechaNacimiento = $_POST['nacimiento'];
     $genero = $_POST['genero'];
     $tipoDocumento = $_POST['tipo_documento'];
@@ -25,10 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ciudad = $_POST['ciudad'];
     $codigoPostal = $_POST['codigo_postal'];
     $pais = $_POST['pais'];
-
-    $aceptaTerminos = true;
-    $aceptaPrivacidad = true;
-    $newsletter = true;
 
     $usuarioDAO = new UsuarioDAO();
 

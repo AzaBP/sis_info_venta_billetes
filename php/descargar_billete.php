@@ -94,19 +94,20 @@ try {
     $pdf->SetAutoPageBreak(true, 12);
     $pdf->setPrintHeader(false);
     $pdf->setPrintFooter(false);
+    $pdf->SetTextColor(24, 39, 62);
     $pdf->AddPage();
 
     $pdf->SetFillColor(10, 42, 102);
-    $pdf->Rect(12, 12, 186, 22, 'F');
+    $pdf->RoundedRect(12, 12, 186, 20, 3, '1111', 'F');
     $pdf->SetTextColor(255, 255, 255);
     $pdf->SetFont('helvetica', 'B', 18);
-    $pdf->SetXY(16, 17);
-    $pdf->Cell(0, 8, 'TrainWeb - Billete', 0, 1, 'L');
-    $pdf->SetFont('helvetica', '', 10);
-    $pdf->SetXY(16, 24);
-    $pdf->Cell(0, 5, 'Reserva confirmada y lista para embarque', 0, 1, 'L');
+    $pdf->SetXY(16, 16);
+    $pdf->Cell(0, 7, 'TrainWeb', 0, 1, 'L');
+    $pdf->SetFont('helvetica', '', 9.5);
+    $pdf->SetXY(16, 23);
+    $pdf->Cell(0, 5, 'Billete digital minimalista y listo para embarque', 0, 1, 'L');
 
-    $pdf->SetTextColor(10, 42, 102);
+    $pdf->SetTextColor(24, 39, 62);
     $pdf->SetDrawColor(216, 224, 239);
 
     $style = [
@@ -120,42 +121,39 @@ try {
     ];
 
     $pdf->SetFillColor(248, 251, 255);
-    $pdf->RoundedRect(12, 40, 118, 92, 4, '1111', 'F');
-    $pdf->RoundedRect(134, 40, 64, 92, 4, '1111', 'F');
-    $pdf->write2DBarcode($qrPayload ?: $codigo, 'QRCODE,H', 145, 48, 42, 42, $style, 'N');
+    $pdf->RoundedRect(12, 38, 186, 239, 4, '1111', 'F');
+    $pdf->write2DBarcode($qrPayload ?: $codigo, 'QRCODE,H', 150, 46, 40, 40, $style, 'N');
 
-    $pdf->SetFont('helvetica', 'B', 12);
-    $pdf->SetXY(16, 46);
-    $pdf->Cell(0, 6, 'Datos del billete', 0, 1, 'L');
+    $pdf->SetFont('helvetica', 'B', 14);
+    $pdf->SetXY(16, 48);
+    $pdf->Cell(0, 8, 'Billete · ' . $codigo, 0, 1, 'L');
 
     $infoRows = [
-        ['Codigo', $codigo],
         ['Pasajero', $pasajero],
         ['Documento', $documentoIdentidad],
+        ['Ruta', $origen . ' → ' . $destino],
+        ['Fecha', $fechaViaje],
+        ['Horario', $horaSalida . ' - ' . $horaLlegada],
         ['Tipo de tren', $tipoTren],
-        ['Ruta', $origen . ' -> ' . $destino],
-        ['Fecha viaje', $fechaViaje],
-        ['Hora', $horaSalida . ' - ' . $horaLlegada],
-        ['Asiento', $asiento],
-        ['Vagon', $vagon],
+        ['Asiento', $asiento . ' / Vagon ' . $vagon],
         ['Precio', $precio . ' EUR'],
     ];
 
-    $y = 54;
+    $y = 62;
     $pdf->SetFont('helvetica', '', 10.5);
     foreach ($infoRows as [$label, $value]) {
-        $pdf->SetXY(16, $y);
+        $pdf->SetXY(18, $y);
         $pdf->SetTextColor(92, 107, 133);
-        $pdf->Cell(28, 6, $label . ':', 0, 0, 'L');
+        $pdf->Cell(28, 7, $label . ':', 0, 0, 'L');
         $pdf->SetTextColor(18, 33, 61);
-        $pdf->MultiCell(90, 6, $value, 0, 'L', false, 1, 44, $y, true, 0, false, true, 6, 'M');
-        $y += 8;
+        $pdf->MultiCell(88, 7, $value, 0, 'L', false, 1, 48, $y, true, 0, false, true, 7, 'M');
+        $y += 15;
     }
 
     $pdf->SetTextColor(92, 107, 133);
     $pdf->SetFont('helvetica', 'I', 9);
-    $pdf->SetXY(138, 90);
-    $pdf->MultiCell(54, 14, 'Escanea el QR para mostrar estos datos en cualquier lector compatible.', 0, 'C', false, 1, 138, 90, true);
+    $pdf->SetXY(150, 96);
+    $pdf->MultiCell(40, 18, 'Escanea el QR para control rápido en embarque.', 0, 'C', false, 1, 150, 96, true);
 
     $pdf->Output('billete_' . preg_replace('/[^A-Za-z0-9_\-]/', '_', $codigo) . '.pdf', 'D');
     exit;
