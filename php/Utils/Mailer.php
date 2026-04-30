@@ -21,6 +21,21 @@ class Mailer {
     }
 
     public function send($toEmail, $toName, $subject, $bodyHtml, $bodyText = '') {
+        $host = trim((string)($this->config['host'] ?? ''));
+        $username = trim((string)($this->config['username'] ?? ''));
+        $password = trim((string)($this->config['password'] ?? ''));
+        $fromEmail = trim((string)($this->config['from_email'] ?? ''));
+
+        // Evitar intentos con placeholders de ejemplo
+        if (
+            $host === '' || $username === '' || $password === '' || $fromEmail === '' ||
+            $host === 'smtp.example.com' || $username === 'usuario@example.com' ||
+            $password === 'tu_password' || $fromEmail === 'no-reply@example.com'
+        ) {
+            error_log('Mailer config invalida: completa SMTP_HOST, SMTP_USER, SMTP_PASS y SMTP_FROM');
+            return false;
+        }
+
         if ($this->usePHPMailer) {
             try {
                 $mail = new \PHPMailer\PHPMailer\PHPMailer(true);

@@ -36,6 +36,18 @@ $error = $_GET['error'] ?? '';
                     </div>
                 <?php endif; ?>
 
+                <?php if ($error === 'envio'): ?>
+                    <div class="error-message">
+                        <i class="fa-solid fa-circle-exclamation"></i> No se pudo enviar el correo. Revisa la configuración SMTP e inténtalo de nuevo.
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($error === 'conexion'): ?>
+                    <div class="error-message">
+                        <i class="fa-solid fa-database"></i> Error de conexión con la base de datos. Inténtalo más tarde.
+                    </div>
+                <?php endif; ?>
+
                 <form action="procesar_forgot_password.php" method="post" class="recovery-form">
                     <label for="email"><i class="fa-solid fa-envelope"></i> Correo electrónico</label>
                     <input 
