@@ -295,42 +295,73 @@ try {
         'billetes' => $billetesSesion,
     ];
 
-    $primerBillete = $billetesSesion[0] ?? null;
-    if (is_array($primerBillete)) {
-        $emailDestino = trim((string)($primerBillete['pasajero_email'] ?? ''));
-        $nombreDestino = trim((string)($primerBillete['pasajero_nombre'] ?? '') . ' ' . (string)($primerBillete['pasajero_apellidos'] ?? ''));
+    // Enviar PDF(s) a cada pasajero de la reserva.
+    // Si un pasajero tiene varios billetes (ida/vuelta), se adjuntan todos en un solo correo.
+    if (count($billetesSesion) > 0) {
+        $billetesPorPasajero = [];
+        foreach ($billetesSesion as $billete) {
+            $emailDestino = trim((string)($billete['pasajero_email'] ?? ''));
+            if ($emailDestino === '') {
+                continue;
+            }
 
-        if ($emailDestino !== '') {
-            try {
-                $pdfContent = BilletePdf::generarContenido($primerBillete);
-                $nombreArchivo = BilletePdf::generarNombreArchivo($primerBillete);
+            $nombreDestino = trim((string)($billete['pasajero_nombre'] ?? '') . ' ' . (string)($billete['pasajero_apellidos'] ?? ''));
+            $documentoDestino = strtoupper(trim((string)($billete['pasajero_documento'] ?? '')));
+            $key = strtolower($emailDestino) . '|' . $documentoDestino . '|' . strtolower($nombreDestino);
 
-                $mailer = new Mailer();
-                $subject = 'Tu billete PDF de TrainWeb';
-                $body = '<p>Hola ' . htmlspecialchars($nombreDestino, ENT_QUOTES, 'UTF-8') . ',</p>'
-                    . '<p>Adjuntamos el PDF de tu billete para que puedas descargarlo y presentarlo en embarque.</p>'
-                    . '<p>Si compraste varios billetes, este correo contiene el del primer pasajero de la reserva.</p>';
+            if (!isset($billetesPorPasajero[$key])) {
+                $billetesPorPasajero[$key] = [
+                    'email' => $emailDestino,
+                    'nombre' => $nombreDestino,
+                    'billetes' => [],
+                ];
+            }
 
-                $sent = $mailer->send(
-                    $emailDestino,
-                    $nombreDestino,
-                    $subject,
-                    $body,
-                    '',
-                    [[
-                        'filename' => $nombreArchivo,
-                        'mime' => 'application/pdf',
-                        'content' => $pdfContent,
-                    ]]
-                );
+            $billetesPorPasajero[$key]['billetes'][] = $billete;
+        }
 
-                if (!$sent) {
-                    error_log(sprintf('[MAIL ERROR] No se pudo enviar el PDF del primer billete a %s (reserva %s)', $emailDestino, $token));
-                } else {
-                    error_log(sprintf('[MAIL OK] PDF del primer billete enviado a %s (reserva %s)', $emailDestino, $token));
+        if (count($billetesPorPasajero) > 0) {
+            $mailer = new Mailer();
+            foreach ($billetesPorPasajero as $pasajeroData) {
+                $emailDestino = $pasajeroData['email'];
+                $nombreDestino = $pasajeroData['nombre'];
+                $attachments = [];
+
+                try {
+                    foreach ($pasajeroData['billetes'] as $billetePasajero) {
+                        $attachments[] = [
+                            'filename' => BilletePdf::generarNombreArchivo($billetePasajero),
+                            'mime' => 'application/pdf',
+                            'content' => BilletePdf::generarContenido($billetePasajero),
+                        ];
+                    }
+
+                    if (count($attachments) === 0) {
+                        continue;
+                    }
+
+                    $subject = 'Tus billetes PDF de TrainWeb';
+                    $body = '<p>Hola ' . htmlspecialchars($nombreDestino, ENT_QUOTES, 'UTF-8') . ',</p>'
+                        . '<p>Adjuntamos ' . count($attachments) . ' PDF(s) de tus billetes para esta reserva.</p>'
+                        . '<p>Guárdalos para presentarlos en embarque.</p>';
+
+                    $sent = $mailer->send(
+                        $emailDestino,
+                        $nombreDestino,
+                        $subject,
+                        $body,
+                        '',
+                        $attachments
+                    );
+
+                    if (!$sent) {
+                        error_log(sprintf('[MAIL ERROR] No se pudieron enviar %d PDF(s) a %s (reserva %s)', count($attachments), $emailDestino, $token));
+                    } else {
+                        error_log(sprintf('[MAIL OK] Enviados %d PDF(s) a %s (reserva %s)', count($attachments), $emailDestino, $token));
+                    }
+                } catch (Throwable $mailError) {
+                    error_log(sprintf('[MAIL ERROR] Fallo generando/enviando PDF(s) para %s: %s', $emailDestino, $mailError->getMessage()));
                 }
-            } catch (Throwable $mailError) {
-                error_log(sprintf('[MAIL ERROR] Fallo generando/enviando PDF para %s: %s', $emailDestino, $mailError->getMessage()));
             }
         }
     }
