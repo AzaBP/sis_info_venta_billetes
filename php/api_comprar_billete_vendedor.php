@@ -3,6 +3,8 @@
 header('Content-Type: application/json');
 session_start();
 require_once 'Conexion.php';
+require_once __DIR__ . '/Utils/Mailer.php';
+require_once __DIR__ . '/Utils/BilletePdf.php';
 $pdo = (new Conexion())->conectar();
 
 $data = json_decode(file_get_contents('php://input'), true);
@@ -45,8 +47,14 @@ if (!$asiento || $asiento['estado'] !== 'disponible') {
 $stmt = $pdo->prepare('UPDATE ASIENTO SET estado = \'ocupado\' WHERE numero_asiento = :numero_asiento AND id_tren = :id_tren');
 $stmt->execute([':numero_asiento'=>$numero_asiento, ':id_tren'=>$viaje['id_tren']]);
 
-// Comprobar que el viaje existe y obtener su precio
-$stmt = $pdo->prepare('SELECT id_tren, precio FROM VIAJE WHERE id_viaje = :id_viaje');
+// Comprobar que el viaje existe y obtener sus datos completos para el PDF
+$stmt = $pdo->prepare('
+    SELECT v.id_tren, v.precio, v.fecha, v.hora_salida, v.hora_llegada, r.origen, r.destino, t.modelo AS tipo_tren
+    FROM VIAJE v
+    JOIN RUTA r ON v.id_ruta = r.id_ruta
+    JOIN TREN t ON t.id_tren = v.id_tren
+    WHERE v.id_viaje = :id_viaje
+');
 $stmt->execute([':id_viaje' => $id_viaje]);
 $fila = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -99,12 +107,58 @@ try {
     // Insertamos el documento
     $resultado = $coleccionBilletes->insertOne($documentoBillete);
     
+    // Enviar el billete PDF al correo de facturación si existe
+    $mailEnviado = false;
+    $correoDestino = trim((string)$facturaEmail);
+
+    if ($correoDestino !== '') {
+        try {
+            $mailer = new Mailer();
+            $pdfPayload = [
+                'codigo_billete' => $codigoBillete,
+                'pasajero_nombre' => trim((string)$facturaNombre) !== '' ? trim((string)$facturaNombre) : 'Cliente',
+                'pasajero_apellidos' => '',
+                'pasajero_documento' => (string)$facturaNif,
+                'pasajero_email' => $correoDestino,
+                'origen' => (string)($fila['origen'] ?? ''),
+                'destino' => (string)($fila['destino'] ?? ''),
+                'fecha_viaje' => (string)($fila['fecha'] ?? ''),
+                'hora_salida' => (string)($fila['hora_salida'] ?? ''),
+                'hora_llegada' => (string)($fila['hora_llegada'] ?? ''),
+                'numero_asiento' => (int)$numero_asiento,
+                'vagon' => null,
+                'precio_pagado' => (float)$precio_final,
+                'tipo_tren' => (string)($fila['tipo_tren'] ?? 'Tren'),
+            ];
+
+            $attachment = [[
+                'filename' => BilletePdf::generarNombreArchivo($pdfPayload),
+                'mime' => 'application/pdf',
+                'content' => BilletePdf::generarContenido($pdfPayload),
+            ]];
+
+            $subject = 'Tu billete PDF de TrainWeb';
+            $body = '<p>Hola ' . htmlspecialchars((string)$facturaNombre, ENT_QUOTES, 'UTF-8') . ',</p>'
+                . '<p>Adjuntamos el PDF de tu billete para esta compra.</p>'
+                . '<p>Guárdalo para presentarlo en embarque.</p>';
+
+            $mailEnviado = $mailer->send($correoDestino, (string)$facturaNombre, $subject, $body, '', $attachment);
+
+            if (!$mailEnviado) {
+                error_log('[MAIL ERROR] No se pudo enviar el PDF de la compra por vendedor a ' . $correoDestino . ' (billete ' . $codigoBillete . ')');
+            }
+        } catch (Throwable $mailError) {
+            error_log('[MAIL ERROR] Fallo al generar/enviar el PDF de la compra por vendedor: ' . $mailError->getMessage());
+        }
+    }
+
     // Devolvemos el éxito al Javascript (incluyendo el ID generado por Mongo si quieres)
     echo json_encode([
         'ok' => true, 
         'precio_final' => $precio_final,
         'id_billete_mongo' => (string)$resultado->getInsertedId(),
-        'codigo_billete' => $codigoBillete
+        'codigo_billete' => $codigoBillete,
+        'mail_enviado' => $mailEnviado
     ]);
 
 } catch (Exception $e) {
