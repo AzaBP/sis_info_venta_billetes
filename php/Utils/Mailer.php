@@ -6,7 +6,7 @@ if (file_exists($autoloadPath)) {
 }
 
 // Comprobar si PHPMailer está disponible
-$hasPHPMailer = class_exists('\\PHPMailer\\PHPMailer\\PHPMailer');
+$hasPHPMailer = class_exists('PHPMailer\\PHPMailer\\PHPMailer');
 
 class Mailer {
     private $config;
@@ -14,7 +14,7 @@ class Mailer {
 
     public function __construct() {
         $this->config = require __DIR__ . '/../config_mail.php';
-        $this->usePHPMailer = \class_exists('\\PHPMailer\\PHPMailer\\PHPMailer');
+        $this->usePHPMailer = class_exists('PHPMailer\\PHPMailer\\PHPMailer');
         if (!$this->usePHPMailer) {
             error_log('PHPMailer no disponible: usando mail() como fallback');
         }
@@ -23,7 +23,7 @@ class Mailer {
     public function send($toEmail, $toName, $subject, $bodyHtml, $bodyText = '') {
         if ($this->usePHPMailer) {
             try {
-                $mail = new \\PHPMailer\\PHPMailer\\PHPMailer(true);
+                $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
                 //Server settings
                 $mail->isSMTP();
                 $mail->Host = $this->config['host'];
@@ -41,7 +41,7 @@ class Mailer {
                 if (!empty($bodyText)) $mail->AltBody = $bodyText;
 
                 return $mail->send();
-            } catch (\\Exception $e) {
+            } catch (\Exception $e) {
                 error_log('Mailer error (PHPMailer): ' . $e->getMessage());
                 return false;
             }
