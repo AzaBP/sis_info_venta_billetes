@@ -23,13 +23,28 @@ class EmailCodeDAO {
     }
 
     public function validarCodigo($email, $codigo, $tipo = 'verification') {
-        $sql = "SELECT id, id_usuario, usado, expires_at FROM email_verificaciones WHERE email = :email AND codigo = :codigo AND tipo = :tipo LIMIT 1";
+        // Normalize inputs
+        $email = trim((string)$email);
+        $codigo = strtoupper(trim((string)$codigo));
+
+        // Use case-insensitive match for codigo to avoid user input case issues
+        $sql = "SELECT id, id_usuario, usado, expires_at FROM email_verificaciones WHERE email = :email AND UPPER(codigo) = :codigo AND tipo = :tipo LIMIT 1";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':email'=>$email, ':codigo'=>$codigo, ':tipo'=>$tipo]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$row) return false;
-        if ($row['usado']) return false;
-        if (strtotime($row['expires_at']) < time()) return false;
+
+        if (!$row) {
+            error_log("EmailCodeDAO::validarCodigo - No matching code for email={$email} tipo={$tipo} codigo={$codigo}");
+            return false;
+        }
+        if (!empty($row['usado'])) {
+            error_log("EmailCodeDAO::validarCodigo - Code already used id={$row['id']}");
+            return false;
+        }
+        if (isset($row['expires_at']) && strtotime($row['expires_at']) < time()) {
+            error_log("EmailCodeDAO::validarCodigo - Code expired id={$row['id']} expires_at={$row['expires_at']}");
+            return false;
+        }
         return $row;
     }
 
