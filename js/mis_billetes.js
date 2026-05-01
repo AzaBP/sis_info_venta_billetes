@@ -186,9 +186,22 @@ document.addEventListener('DOMContentLoaded', () => {
             // Listener actualizado para el botón de cancelar
             if (btnCancel) {
                 btnCancel.addEventListener('click', (e) => {
-                    e.stopPropagation(); 
-                    const codigoBillete = btnCancel.getAttribute('data-codigo');
-                    abrirModalCancelacion(codigoBillete);
+                    e.stopPropagation();
+                    const b = ticketsById.get(ticketId);
+
+                    // Mensaje de confirmación detallado
+                    const mensaje = `¿Estás seguro de que deseas cancelar este billete?
+                    
+                    Viaje: ${b.origen} ➔ ${b.destino}
+                    Fecha: ${b.fecha_viaje}
+                    Hora: ${b.hora_salida.slice(0, 5)}h
+                    Asiento: ${b.numero_asiento}
+
+                    Esta acción no se puede deshacer.`;
+
+                    if (confirm(mensaje)) {
+                        cancelTicket(b.codigo_billete);
+                    }
                 });
             }
         });

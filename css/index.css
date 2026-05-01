@@ -504,3 +504,47 @@ body {
     color: #9ca3af;
     font-size: 1.2rem;
 }
+
+/* --- Rediseño de botones en Mis Billetes --- */
+
+/* Ajustamos el contenedor para que respire mejor */
+.ticket-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Estilo base más discreto para los botones */
+.btn-ticket {
+    padding: 6px 15px !important; /* Menos altura */
+    font-size: 0.85rem !important; /* Texto un poco más pequeño */
+    font-weight: 500;
+    border-radius: 5px !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent !important; /* Fondo transparente por defecto */
+    height: auto !important;
+    width: auto !important;
+    min-width: 100px;
+}
+
+/* Botón Ver Detalles: Azul elegante solo en el borde */
+.btn-details {
+    border: 1px solid #0a2a66 !important;
+    color: #0a2a66 !important;
+}
+
+.btn-details:hover {
+    background: #0a2a66 !important;
+    color: white !important;
+}
+
+/* Botón Cancelar: Rojo elegante solo en el borde */
+.btn-cancel {
+    border: 1px solid #dc2626 !important;
+    color: #dc2626 !important;
+}
+
+.btn-cancel:hover {
+    background: #dc2626 !important;
+    color: white !important;
+}
