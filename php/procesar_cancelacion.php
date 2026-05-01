@@ -46,8 +46,7 @@ try {
     }
 
     // 3. Liberar el asiento correspondiente en PostgreSQL
-    // (Asumo que tienes métodos getNumeroAsiento() en VO/Billete y setEstado() en VO/Asiento)
-    $numero_asiento = $billete->getNumeroAsiento(); 
+    $numero_asiento = $billete->getIdAsiento();
     
     $asientoDAO = new AsientoDAO();
     $asiento = $asientoDAO->obtenerPorId($numero_asiento);
