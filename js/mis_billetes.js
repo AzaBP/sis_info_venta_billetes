@@ -62,39 +62,45 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    function renderTicketCompact(ticket) {
-        const fechaViaje = ticket.fecha_viaje || '';
-        const esPasado = fechaViaje ? (new Date(fechaViaje) < new Date(new Date().toDateString())) : false;
-        const ruta = `${ticket.origen || ''} → ${ticket.destino || ''}`.trim();
-        const ticketKey = buildTicketKey(ticket);
-        ticketsById.set(ticketKey, ticket);
+    function renderTicketCompact(b) {
+        const key = buildTicketKey(b);
+        ticketsById.set(key, b);
+        
+        const statusClass = (b.estado || '').toLowerCase();
+        const isCanceled = statusClass === 'cancelado';
+
+        // Formateamos la fecha para que sea más visual (Ej: 12 may)
+        let fechaFormateada = b.fecha_viaje;
+        if (b.fecha_viaje) {
+            const d = new Date(b.fecha_viaje);
+            if (!isNaN(d.getTime())) {
+                fechaFormateada = d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+            }
+        }
 
         return `
-            <article class="ticket-row" data-ticket-id="${escapeHtml(ticketKey)}">
-                <div class="ticket-route">
-                    <div class="ticket-badges">
-                        <span class="badge badge-soft">${escapeHtml(ticket.tipo_tren || 'Tren')}</span>
-                        <span class="badge ${esPasado ? 'badge-soft' : 'badge-ok'}">${esPasado ? 'Finalizado' : 'Activo'}</span>
+            <div class="ticket-item ${statusClass}" data-key="${key}">
+                <div class="ticket-content">
+                    <div class="ticket-main-row">
+                        <span class="ticket-route"><strong>${escapeHtml(b.origen)}</strong> &rarr; <strong>${escapeHtml(b.destino)}</strong></span>
+                        <span class="ticket-status-pill ${statusClass}">${escapeHtml(b.estado)}</span>
                     </div>
-                    <h3>${escapeHtml(ruta)}</h3>
-                </div>
-
-                <div class="ticket-meta">
-                    <p><strong>Fecha:</strong> ${escapeHtml(fechaViaje)}</p>
-                    <p><strong>Horario:</strong> ${escapeHtml((ticket.hora_salida || '') + ' - ' + (ticket.hora_llegada || ''))}</p>
+                    
+                    <div class="ticket-info-grid">
+                        <div class="info-pill"><i class="fa-regular fa-calendar"></i> ${escapeHtml(fechaFormateada)}</div>
+                        <div class="info-pill"><i class="fa-regular fa-clock"></i> ${escapeHtml(String(b.hora_salida).slice(0,5))}h</div>
+                        <div class="info-pill"><i class="fa-solid fa-chair"></i> Asiento ${escapeHtml(b.numero_asiento)}</div>
+                        <div class="info-pill"><i class="fa-solid fa-user"></i> ${escapeHtml(b.pasajero_nombre || 'Pasajero')}</div>
+                    </div>
                 </div>
 
                 <div class="ticket-actions">
-                    <button class="btn-link btn-open-modal" type="button">
-                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i> Ver detalles
-                    </button>
-                    ${!esPasado ? `
-                    <button class="btn-link btn-cancel-ticket" type="button" data-codigo="${escapeHtml(ticket.codigo_billete || '')}" style="background-color: #8e2e2e; margin-top: 6px;">
-                        <i class="fa-solid fa-trash"></i> Cancelar
-                    </button>
+                    <button class="btn-minimal btn-details" data-key="${key}">Ver detalles</button>
+                    ${!isCanceled ? `
+                        <button class="btn-minimal btn-cancel" data-key="${key}">Cancelar</button>
                     ` : ''}
                 </div>
-            </article>
+            </div>
         `;
     }
 
