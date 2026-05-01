@@ -183,18 +183,96 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // Nuevo listener para el botón de cancelar
+            // Listener actualizado para el botón de cancelar
             if (btnCancel) {
-                btnCancel.addEventListener('click', async (e) => {
-                    e.stopPropagation(); // Evita que se abra el modal al pulsar cancelar
+                btnCancel.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
                     const codigoBillete = btnCancel.getAttribute('data-codigo');
-                    
-                    if (confirm(`¿Estás seguro de que deseas cancelar el billete ${codigoBillete}?\nEsta acción liberará tu asiento y no se puede deshacer.`)) {
-                        await procesarCancelacion(codigoBillete);
-                    }
+                    abrirModalCancelacion(codigoBillete);
                 });
             }
         });
+    }
+
+    // --- NUEVAS FUNCIONES PARA EL FLUJO DE CANCELACIÓN ---
+
+    function abrirModalCancelacion(codigoBillete) {
+        const modal = document.getElementById('ticketModal');
+        const modalBody = document.getElementById('ticketModalBody');
+        const modalTitle = modal.querySelector('.ticket-modal-top h3');
+        
+        if (modalTitle) modalTitle.textContent = 'Confirmar Cancelación';
+
+        // Inyectamos el diseño de confirmación dentro del modal
+        modalBody.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; color: #8e2e2e; margin-bottom: 15px;"></i>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                    ¿Estás seguro de que deseas cancelar el billete <strong>${escapeHtml(codigoBillete)}</strong>?<br>
+                    Esta acción liberará tu asiento y no se puede deshacer.
+                </p>
+                <div style="display: flex; justify-content: center; gap: 15px;">
+                    <button id="btnConfirmarSi" style="background-color: #8e2e2e; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: opacity 0.2s;">Sí, cancelar billete</button>
+                    <button id="btnConfirmarNo" style="background-color: #e0e0e0; color: #333; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background 0.2s;">No, mantener billete</button>
+                </div>
+            </div>
+        `;
+
+        modal.classList.remove('hidden');
+
+        // Botón SÍ: Muestra un loader y llama al servidor
+        document.getElementById('btnConfirmarSi').addEventListener('click', async () => {
+            modalBody.innerHTML = '<p style="text-align:center; font-size: 1.2rem; padding: 30px;">Procesando cancelación <i class="fa-solid fa-spinner fa-spin"></i></p>';
+            await procesarCancelacion(codigoBillete, modalBody);
+        });
+
+        // Botón NO: Cierra el modal
+        document.getElementById('btnConfirmarNo').addEventListener('click', () => {
+            modal.classList.add('hidden');
+            if (modalTitle) modalTitle.textContent = 'Detalles del billete';
+        });
+    }
+
+    async function procesarCancelacion(codigoBillete, modalBody) {
+        try {
+            // AHORA SÍ: Enviamos JSON como espera procesar_cancelacion.php
+            const response = await fetch('php/procesar_cancelacion.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ codigo: codigoBillete })
+            });
+
+            const data = await response.json();
+
+            // AHORA SÍ: Leemos 'success' y 'message'
+            if (data.success) { 
+                modalBody.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <i class="fa-solid fa-circle-check" style="font-size: 3rem; color: #2e8e36; margin-bottom: 15px;"></i>
+                        <p style="font-size: 1.1rem;">Tu billete ha sido cancelado y el asiento ha sido liberado.</p>
+                        <button onclick="document.getElementById('ticketModal').classList.add('hidden')" style="margin-top: 20px; padding: 8px 20px; cursor: pointer; border-radius: 5px; border: 1px solid #ccc; background: white;">Cerrar</button>
+                    </div>
+                `;
+                loadTickets(); // Recarga la lista para que desaparezca visualmente
+            } else {
+                modalBody.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <i class="fa-solid fa-circle-xmark" style="font-size: 3rem; color: #8e2e2e; margin-bottom: 15px;"></i>
+                        <p style="font-size: 1.1rem;">No se pudo cancelar: <br><strong>${escapeHtml(data.message || 'Error desconocido')}</strong></p>
+                        <button onclick="document.getElementById('ticketModal').classList.add('hidden')" style="margin-top: 20px; padding: 8px 20px; cursor: pointer; border-radius: 5px; border: 1px solid #ccc; background: white;">Volver</button>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Error de red:', error);
+            modalBody.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; color: #8e2e2e; margin-bottom: 15px;"></i>
+                    <p style="font-size: 1.1rem;">Error de conexión al intentar cancelar el billete.</p>
+                    <button onclick="document.getElementById('ticketModal').classList.add('hidden')" style="margin-top: 20px; padding: 8px 20px; cursor: pointer; border-radius: 5px; border: 1px solid #ccc; background: white;">Cerrar</button>
+                </div>
+            `;
+        }
     }
 
     async function loadTickets() {
