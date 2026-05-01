@@ -37,7 +37,8 @@ try {
     // Si en tu clase VO/Billete.php tienes un método setFechaCancelacion, puedes descomentar la siguiente línea:
     // $billete->setFechaCancelacion(date('Y-m-d H:i:s'));
     
-    $actualizadoMongo = $billeteDAO->actualizar($billete);
+    // Le pasamos primero el ID del billete y luego el objeto modificado
+    $actualizadoMongo = $billeteDAO->actualizar($billete->getIdBillete(), $billete);
 
     if (!$actualizadoMongo) {
         echo json_encode(['success' => false, 'message' => 'No se pudo actualizar el estado del billete en MongoDB.']);
