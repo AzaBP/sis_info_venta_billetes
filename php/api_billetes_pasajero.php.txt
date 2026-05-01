@@ -55,7 +55,7 @@ try {
     // Buscar los billetes del pasajero que NO estén cancelados
     $cursor = $collection->find(
         [
-            'id_pasajero' => (int)$idPasajero, 
+            'id_pasajero' => (int)$id_pasajero, 
             'estado' => ['$ne' => 'cancelado'] // Filtro: estado NO ES IGUAL a 'cancelado'
         ],
         ['sort' => ['fecha_compra' => -1]]
