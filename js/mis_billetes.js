@@ -88,6 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="btn-link btn-open-modal" type="button">
                         <i class="fa-solid fa-up-right-and-down-left-from-center"></i> Ver detalles
                     </button>
+                    ${!esPasado ? `
+                    <button class="btn-link btn-cancel-ticket" type="button" data-codigo="${escapeHtml(ticket.codigo_billete || '')}" style="background-color: #8e2e2e; margin-top: 6px;">
+                        <i class="fa-solid fa-trash"></i> Cancelar
+                    </button>
+                    ` : ''}
                 </div>
             </article>
         `;
@@ -164,9 +169,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.ticket-row').forEach((row) => {
             const ticketId = row.getAttribute('data-ticket-id');
             const btn = row.querySelector('.btn-open-modal');
+            const btnCancel = row.querySelector('.btn-cancel-ticket');
 
             row.addEventListener('click', (e) => {
-                if (e.target.closest('a')) return;
+                if (e.target.closest('a') || e.target.closest('.btn-cancel-ticket')) return;
                 openModal(ticketId);
             });
 
@@ -176,7 +182,44 @@ document.addEventListener('DOMContentLoaded', () => {
                     openModal(ticketId);
                 });
             }
+
+            // Nuevo listener para el botón de cancelar
+            if (btnCancel) {
+                btnCancel.addEventListener('click', async (e) => {
+                    e.stopPropagation(); // Evita que se abra el modal al pulsar cancelar
+                    const codigoBillete = btnCancel.getAttribute('data-codigo');
+                    
+                    if (confirm(`¿Estás seguro de que deseas cancelar el billete ${codigoBillete}?\nEsta acción liberará tu asiento y no se puede deshacer.`)) {
+                        await procesarCancelacion(codigoBillete);
+                    }
+                });
+            }
         });
+    }
+
+    // Nueva función para enviar la petición al servidor
+    async function procesarCancelacion(codigoBillete) {
+        try {
+            const formData = new FormData();
+            formData.append('codigo_billete', codigoBillete);
+
+            const response = await fetch('php/procesar_cancelacion.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.exito) {
+                alert('Tu billete ha sido cancelado y el asiento ha sido liberado.');
+                loadTickets(); // Recargamos la lista automáticamente
+            } else {
+                alert('No se pudo cancelar: ' + (data.error || 'Error desconocido.'));
+            }
+        } catch (error) {
+            console.error('Error en la petición de cancelación:', error);
+            alert('Error de conexión al intentar cancelar el billete.');
+        }
     }
 
     async function loadTickets() {
