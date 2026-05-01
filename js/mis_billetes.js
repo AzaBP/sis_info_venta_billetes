@@ -6,6 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalCloseBtn = document.getElementById('ticketModalClose');
     const config = window.misBilletesConfig || {};
     const ticketsById = new Map();
+    // Nuevas variables para el modal de confirmación
+    const confirmModal = document.getElementById('confirmCancelModal');
+    const btnCancelNo = document.getElementById('btnCancelNo');
+    const btnCancelYes = document.getElementById('btnCancelYes');
+    let ticketIdAPreparar = null;
 
     function setState(message, isError = false) {
         if (!state) return;
@@ -199,9 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     Esta acción no se puede deshacer.`;
 
-                    if (confirm(mensaje)) {
-                        cancelTicket(b.codigo_billete);
-                    }
+                    abrirModalCancelacion(b.codigo_billete);
                 });
             }
         });
@@ -324,4 +327,56 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     loadTickets();
+
+    // Función global para abrir el modal (asignada a window para ser accesible)
+    window.prepararCancelacion = function(codigo) {
+        ticketIdAPreparar = codigo;
+        const msg = document.getElementById('confirmCancelMessage');
+        if (msg) {
+            msg.innerHTML = `Estás a punto de cancelar el billete <strong>${codigo}</strong>.<br>¿Deseas continuar?`;
+        }
+        if (confirmModal) confirmModal.classList.add('active');
+    };
+
+    // Evento para cerrar el modal
+    if (btnCancelNo) {
+        btnCancelNo.addEventListener('click', () => {
+            confirmModal.classList.remove('active');
+            ticketIdAPreparar = null;
+        });
+    }
+
+    // Evento para ejecutar la cancelación
+    if (btnCancelYes) {
+        btnCancelYes.addEventListener('click', async () => {
+            if (!ticketIdAPreparar) return;
+
+            btnCancelYes.disabled = true;
+            btnCancelYes.textContent = "Procesando...";
+
+            try {
+                const response = await fetch('php/procesar_cancelacion.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codigo: ticketIdAPreparar })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    confirmModal.classList.remove('active');
+                    // Recargar la lista o la página
+                    location.reload(); 
+                } else {
+                    alert("Error: " + data.message);
+                    btnCancelYes.disabled = false;
+                    btnCancelYes.textContent = "Sí, cancelar billete";
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                btnCancelYes.disabled = false;
+                btnCancelYes.textContent = "Sí, cancelar billete";
+            }
+        });
+    }
 });
