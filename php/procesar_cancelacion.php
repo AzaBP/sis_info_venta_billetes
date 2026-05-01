@@ -19,7 +19,7 @@ if (empty($codigo_billete)) {
 try {
     // 1. Instanciar el DAO de MongoDB y buscar el billete
     $billeteDAO = new BilleteMongoDB();
-    $billete = $billeteDAO->obtenerPorId($codigo_billete);
+    $billete = $billeteDAO->obtenerPorCodigo($codigo_billete);
 
     if (!$billete) {
         echo json_encode(['success' => false, 'message' => 'No se ha encontrado ningún billete con ese código.']);

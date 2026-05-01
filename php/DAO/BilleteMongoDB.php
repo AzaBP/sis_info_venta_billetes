@@ -44,6 +44,25 @@ class BilleteMongoDB {
         }
     }
 
+    // OBTENER POR CÓDIGO DE BILLETE LOCALIZADOR (TW-...)
+    public function obtenerPorCodigo($codigo) {
+        try {
+            if (!$this->collection) {
+                throw new RuntimeException('Conexion Mongo no disponible');
+            }
+            // Buscamos por el campo codigo_billete sin convertir a ObjectId
+            $documento = $this->collection->findOne(['codigo_billete' => $codigo]);
+            if ($documento) {
+                return $this->documentoABillete($documento);
+            }
+            return null;
+        } catch (Exception $e) {
+            // Usamos error_log en lugar de echo para no corromper las respuestas JSON de la API
+            error_log("Error al obtener por código: " . $e->getMessage());
+            return null;
+        }
+    }
+
     // OBTENER TODOS
     public function obtenerTodos() {
         try {
