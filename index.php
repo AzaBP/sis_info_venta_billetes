@@ -228,6 +228,18 @@ try {
             </div>
         </section>
 
+        <section class="cancel-section" style="padding: 40px 20px; background-color: #eef2f7; text-align: center; margin: 40px auto; max-width: 800px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <h2 style="color: #0a2a66; margin-bottom: 10px;"><i class="fa-solid fa-ticket-simple"></i> ¿Necesitas cancelar tu billete?</h2>
+            <p style="color: #666; margin-bottom: 20px;">Introduce el código localizador de tu billete para proceder con la cancelación automática.</p>
+            
+            <div style="display: flex; justify-content: center; gap: 10px; max-width: 500px; margin: 0 auto;">
+                <input type="text" id="codigo_cancelacion" placeholder="Ej: 69c126f8..." style="flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;">
+                <button id="btn_cancelar_billete" class="btn-primary" style="padding: 12px 24px; border: none; border-radius: 6px; background-color: #0a2a66; color: white; font-weight: bold; cursor: pointer; transition: background 0.3s;">Cancelar viaje</button>
+            </div>
+            
+            <div id="cancel_msg" style="display: none; margin-top: 15px; padding: 10px; border-radius: 6px; font-weight: bold;"></div>
+        </section>
+
     </main>
 
     <!-- FOOTER -->
@@ -277,6 +289,7 @@ try {
     </script>
     <script src="scripts/session_menu.js"></script>
     <script src="scripts/index.js"></script>
+    <script src="scripts/cancelacion.js"></script>
 <div id="promo-popup-container"></div>
 
 <script>
