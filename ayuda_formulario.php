@@ -175,13 +175,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form action="ayuda_formulario.php" method="POST">
                     <div class="form-group">
                         <label for="nombre" data-i18n="form_nombre">Nombre completo</label>
-                        <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre..." data-i18n-placeholder="form_placeholder_nombre">
+                        <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" data-i18n-placeholder="form_placeholder_nombre">
                     </div>
                     
                     <div class="form-group">
                         <label for="email" data-i18n="form_email">Correo electrónico</label>
                         <input type="email" id="email" name="email" required 
-                               placeholder="tu@email.com" 
+                               placeholder="ejemplo@correo.com" 
                                pattern="[^@\s]+@[^@\s]+\.[^@\s]+" 
                                title="Por favor, introduce un correo válido (ejemplo@dominio.com)"
                                data-i18n-placeholder="form_placeholder_email">
@@ -202,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label for="mensaje" data-i18n="form_mensaje">Mensaje</label>
                         <textarea id="mensaje" name="mensaje" required 
-                                  placeholder="Quiero poner un 10 a Azahara, Yousra y Chema por su gran trabajo." 
+                                  placeholder="Escribe aquí tu mensaje..." 
                                   data-i18n-placeholder="form_placeholder_mensaje"></textarea>
                     </div>
                     
