@@ -590,6 +590,20 @@ function confirmarReserva() {
         return;
     }
 
+    // Verificar si hay sesión iniciada
+    const hasSession = window.compraConfig && window.compraConfig.pasajeroPrincipal && window.compraConfig.pasajeroPrincipal.email;
+    if (!hasSession) {
+        // Mostrar modal de confirmación para invitado
+        const modal = document.getElementById('guestWarningModal');
+        if (modal) modal.classList.remove('hidden');
+        return;
+    }
+
+    // Si hay sesión, proceder directamente
+    realizarReserva();
+}
+
+function realizarReserva() {
     const btn = document.querySelector('.btn-pay-confirm');
     if (btn) btn.disabled = true;
 
@@ -648,10 +662,13 @@ document.addEventListener('DOMContentLoaded', function () {
     window.seleccionarTrenVuelta = seleccionarTrenVuelta;
     window.reservarSoloIdaDesdeModal = reservarSoloIdaDesdeModal;
     window.cerrarModalVuelta = cerrarModalVuelta;
+    window.cerrarModalInvitado = cerrarModalInvitado;
+    window.confirmarCompraInvitado = confirmarCompraInvitado;
 
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             cerrarModalVuelta();
+            cerrarModalInvitado();
         }
     });
 
@@ -660,6 +677,15 @@ document.addEventListener('DOMContentLoaded', function () {
         returnModal.addEventListener('click', function (e) {
             if (e.target === returnModal) {
                 cerrarModalVuelta();
+            }
+        });
+    }
+
+    const guestModal = document.getElementById('guestWarningModal');
+    if (guestModal) {
+        guestModal.addEventListener('click', function (e) {
+            if (e.target === guestModal) {
+                cerrarModalInvitado();
             }
         });
     }
@@ -685,3 +711,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     refrescarResumenAsientosSeleccionados();
 });
+
+function cerrarModalInvitado() {
+    const modal = document.getElementById('guestWarningModal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function confirmarCompraInvitado() {
+    cerrarModalInvitado();
+    // Proceder con la reserva
+    realizarReserva();
+}

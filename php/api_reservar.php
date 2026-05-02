@@ -41,9 +41,7 @@ try {
     $idViajeVuelta = isset($input['id_viaje_vuelta']) ? (int)$input['id_viaje_vuelta'] : 0;
     $esIdaVuelta = $idViajeVuelta > 0;
 
-    if (!isset($_SESSION['usuario']['id_usuario'])) {
-        responderJson(401, ['error' => 'Sesion no valida.']);
-    }
+    // Permitir reservas sin sesión (modo invitado)
 
     $asientosIda = [];
     $asientosVuelta = [];
@@ -128,19 +126,18 @@ try {
 
     // 1. Priorizar id_pasajero_compra (vendedor comprando para cliente)
     // 2. Si no existe, buscar por id_usuario del usuario en sesión (cliente normal)
-    $idPasajeroComprador = 0;
+    // 3. Para invitados, dejar como null
+    $idPasajeroComprador = null;
     
     if (isset($_SESSION['id_pasajero_compra']) && (int)$_SESSION['id_pasajero_compra'] > 0) {
         $idPasajeroComprador = (int)$_SESSION['id_pasajero_compra'];
-    } else {
+    } elseif (isset($_SESSION['usuario']['id_usuario'])) {
         $stmtPasajero = $pdo->prepare('SELECT id_pasajero FROM pasajero WHERE id_usuario = :id_usuario LIMIT 1');
         $stmtPasajero->execute([':id_usuario' => (int)$_SESSION['usuario']['id_usuario']]);
         $idPasajeroComprador = (int)$stmtPasajero->fetchColumn();
     }
 
-    if ($idPasajeroComprador <= 0) {
-        responderJson(403, ['error' => 'Usuario sin perfil de pasajero. Por favor, contacta con administración.']);
-    }
+    // No requerir id_pasajero para invitados
 
     $stmtViaje = $pdo->prepare(
         'SELECT v.id_viaje, v.fecha, v.hora_salida, v.hora_llegada, r.origen, r.destino, t.modelo AS tipo_tren

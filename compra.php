@@ -713,6 +713,26 @@ if ($id_pasajero_actual) {
             </div>
         </section>
 
+        <!-- Modal de confirmación para compra como invitado -->
+        <div id="guestWarningModal" class="modal hidden" aria-hidden="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fa-solid fa-exclamation-triangle"></i> Confirmación de compra como invitado</h3>
+                    <button type="button" class="modal-close" onclick="cerrarModalInvitado()" aria-label="Cerrar">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Estás comprando un billete sin iniciar sesión. Asegúrate de que el correo electrónico del pasajero sea correcto, ya que no podrás acceder a tu cuenta para modificarlo o gestionar el billete más tarde.</p>
+                    <p>¿Deseas continuar con la compra?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="cerrarModalInvitado()">Cancelar</button>
+                    <button type="button" class="btn-confirm" onclick="confirmarCompraInvitado()">Confirmar y continuar</button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
