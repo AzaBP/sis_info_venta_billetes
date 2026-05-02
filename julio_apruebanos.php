@@ -124,7 +124,7 @@
         <p style="font-style: italic; font-size: 1.4rem;">
             ¡¡Esperamos que te este gustando la web tanto como a nosotros tu asignatura!!
         </p>
-        <a href="index.php" class="btn-back">Ir a una web top top</a>
+        <a href="index.php" class="btn-back">Que buenos alumnos tengo</a>
     </div>
 
     <div class="train-animation">
