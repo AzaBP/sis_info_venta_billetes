@@ -217,24 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             let errorMsg = '';
-            
-            // Validate origin against database
-            if (origen && origenesDb.length > 0) {
-                const isValidOrigen = origenesDb.some(c => c.toLowerCase() === origen.toLowerCase());
-                if (!isValidOrigen) {
-                    errorMsg = t_err('error_origen');
-                }
-            }
-            
-            // Validate destination against database
-            if (destino && destinosDb.length > 0 && !errorMsg) {
-                const isValidDestino = destinosDb.some(c => c.toLowerCase() === destino.toLowerCase());
-                if (!isValidDestino) {
-                    errorMsg = t_err('error_destino');
-                }
-            }
-
-            if (fechaIda && fechaIda.value && !errorMsg) {
+            if (fechaIda && fechaIda.value) {
                 const hoy = new Date();
                 const fIda = new Date(fechaIda.value);
                 hoy.setHours(0,0,0,0);
