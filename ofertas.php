@@ -450,7 +450,7 @@ try {
             <div class="footer-column">
                 <h4 data-i18n="footer-services">Servicios</h4>
                 <a href="#"><i class="fa-solid fa-ticket"></i> <span data-i18n="footer-billetes">Billetes</span></a>
-                <a href="#"><i class="fa-solid fa-clock"></i> <span data-i18n="footer-horarios">Horarios</span></a>
+                <a href="horarios.php"><i class="fa-solid fa-clock"></i> <span data-i18n="footer-horarios">Horarios</span></a>
                 <a href="ofertas.html"><i class="fa-solid fa-tags"></i> <span data-i18n="footer-ofertas">Ofertas</span></a>
                 <a href="#"><i class="fa-solid fa-headset"></i> <span data-i18n="footer-atencion">Atención al cliente</span></a>
             </div>

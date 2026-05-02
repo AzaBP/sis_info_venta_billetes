@@ -170,6 +170,17 @@ document.addEventListener('DOMContentLoaded', () => {
             abono_desc_anual: 'Viajes ilimitados durante 365 días. Ideal para viajes frecuentes con descuentos exclusivos y flexibilidad total.',
             mas_informacion: 'Más información',
 
+            // Horarios
+            horarios_titulo: 'Horarios y Rutas',
+            horarios_desc: 'Consulta todas las frecuencias de nuestros trenes entre las principales ciudades.',
+            tabla_origen: 'Origen',
+            tabla_destino: 'Destino',
+            tabla_salida: 'Salida',
+            tabla_llegada: 'Llegada',
+            tabla_duracion: 'Duración',
+            tabla_precio: 'Precio desde',
+            ver_billetes: 'Ver billetes',
+
             // Cancelación
             cancelar_titulo: '¿Necesitas cancelar tu billete?',
             cancelar_desc: 'Introduce el código localizador de tu billete para proceder con la cancelación automática.',
@@ -611,6 +622,17 @@ document.addEventListener('DOMContentLoaded', () => {
             abono_nombre_anual: 'Annual',
             abono_desc_anual: 'Unlimited travel for 365 days. Ideal for frequent trips with exclusive discounts and total flexibility.',
             mas_informacion: 'More information',
+
+            // Schedules
+            horarios_titulo: 'Schedules and Routes',
+            horarios_desc: 'Check all train frequencies between major cities.',
+            tabla_origen: 'Origin',
+            tabla_destino: 'Destination',
+            tabla_salida: 'Departure',
+            tabla_llegada: 'Arrival',
+            tabla_duracion: 'Duration',
+            tabla_precio: 'Price from',
+            ver_billetes: 'View tickets',
 
             // Cancelación
             cancelar_titulo: 'Need to cancel your ticket?',
