@@ -166,7 +166,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                     <i class="fa-regular fa-envelope"></i>
                     <h3 data-i18n="formulario_quejas">Formulario / Quejas</h3>
                     <p data-i18n="formulario_desc">Para reclamaciones formales o consultas extensas, utiliza nuestro formulario.</p>
-                    <a href="#" class="btn-primary" data-i18n="abrir_formulario">Abrir formulario</a>
+                    <a href="ayuda_formulario.php" class="btn-primary" data-i18n="abrir_formulario">Abrir formulario</a>
                 </div>
             </div>
 
