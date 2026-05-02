@@ -7,22 +7,16 @@ ini_set('memory_limit', '512M');
 set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../php');
 header('Content-Type: text/html; charset=utf-8');
 
-// Ajuste de rutas para estar en /baseDatos/
-require_once __DIR__ . '/../php/DAO/ViajeDAO.php';
-require_once __DIR__ . '/../php/DAO/BilleteMongoDB.php';
-require_once __DIR__ . '/../php/VO/Viaje.php';
-require_once __DIR__ . '/../php/VO/Billete.php';
+// Ajuste de rutas para estar en /baseDatos/ (Usamos conexiones directas para no depender de los DAO)
+require_once __DIR__ . '/../php/Conexion.php';
+require_once __DIR__ . '/../php/ConexionMongo.php';
 
 echo "<h1>🚀 Panel de Carga Masiva - CAESARAV</h1>";
 echo "<div style='font-family: monospace; background: #222; color: #0f0; padding: 20px; border-radius: 10px; max-height: 500px; overflow-y: scroll;'>";
 
 try {
-    // 1. Crear una instancia de conexión primero
-    $conexionBase = new Conexion();
-    
-    // 2. Ahora instanciar los DAOs
-    $viajeDAO = new ViajeDAO();
-    $billeteMongo = new BilleteMongoDB();
+    // 1. Conexiones directas a las bases de datos (Saltamos el DAO para evitar el error estático)
+    $pdo = (new Conexion())->conectar();
 
     // 2. Datos Maestros (Extraídos de tus consultas SQL)
     $rutas = [
@@ -82,10 +76,22 @@ try {
 
                 $precio_base = rand(45, 95) + 0.90;
 
-                // A) Insertar en PostgreSQL (VIAJE)
-                // Usamos id_maquinista = 1 por defecto
-                $objViaje = new Viaje(null, $ruta['id_vendedor'], $ruta['id_ruta'], $tren['id_tren'], 1, $fecha_str, $hora_salida_str, $hora_llegada_str, $precio_base, 'programado');
-                $id_viaje_sql = $viajeDAO->insertar($objViaje);
+                // A) Insertar en PostgreSQL (VIAJE) mediante SQL directo
+                $sqlViaje = "INSERT INTO VIAJE (id_vendedor, id_ruta, id_tren, id_maquinista, fecha, hora_salida, hora_llegada, precio, estado)
+                             VALUES (:id_vendedor, :id_ruta, :id_tren, :id_maquinista, :fecha, :hora_salida, :hora_llegada, :precio, :estado)";
+                $stmt = $pdo->prepare($sqlViaje);
+                $stmt->execute([
+                    ':id_vendedor' => $ruta['id_vendedor'],
+                    ':id_ruta' => $ruta['id_ruta'],
+                    ':id_tren' => $tren['id_tren'],
+                    ':id_maquinista' => 1,
+                    ':fecha' => $fecha_str,
+                    ':hora_salida' => $hora_salida_str,
+                    ':hora_llegada' => $hora_llegada_str,
+                    ':precio' => $precio_base,
+                    ':estado' => 'programado'
+                ]);
+                $id_viaje_sql = $pdo->lastInsertId();
 
                 if ($id_viaje_sql) {
                     $totalViajes++;
