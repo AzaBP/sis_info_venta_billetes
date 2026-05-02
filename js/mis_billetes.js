@@ -213,13 +213,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- NUEVAS FUNCIONES PARA EL FLUJO DE CANCELACIÓN ---
 
     function abrirModalCancelacion(codigo, mensaje) {
-        const msgElement = document.getElementById('confirmCancelMessage');
-        if (msgElement) {
-            // Aquí es donde le decimos que use el mensaje que viene de attachTicketListeners
-            msgElement.textContent = mensaje; 
-        }
         ticketIdAPreparar = codigo;
-        confirmModal.classList.add('active');
+        
+        // 1. Buscamos el elemento del mensaje
+        const msgElement = document.getElementById('confirmCancelMessage');
+        
+        // 2. Le asignamos el texto que viene de attachTicketListeners
+        if (msgElement) {
+            msgElement.textContent = mensaje;
+        }
+        
+        // 3. Mostramos el modal
+        if (confirmModal) {
+            confirmModal.classList.add('active');
+        }
     }
 
     async function procesarCancelacion(codigoBillete, modalBody) {
