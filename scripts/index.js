@@ -254,25 +254,25 @@ document.addEventListener("DOMContentLoaded", function () {
         // Validar en cada cambio de campo relevante
         [inputOrigen, inputDestino].forEach(input => {
             input.addEventListener('input', function() {
+                // No marcamos usuarioHaInteractuado en 'input' para evitar mostrar error del siguiente campo mientras se teclea
+                validarFormulario();
+            });
+            input.addEventListener('blur', function() {
                 window.usuarioHaInteractuado = true;
                 validarFormulario();
             });
         });
-        form.querySelector('select[name="pasajeros"]').addEventListener('change', function() {
+        
+        form.querySelector('select[name="pasajeros"]')?.addEventListener('change', function() {
             window.usuarioHaInteractuado = true;
             validarFormulario();
         });
-        // Solo marcar interacción de usuario si el cambio no es en los radios de tipo de viaje
+        
         form.addEventListener('change', function(e) {
-            if (!e.target.name || e.target.name !== 'trip') {
-                window.usuarioHaInteractuado = true;
-            }
             validarFormulario();
         });
+        
         form.addEventListener('input', function(e) {
-            if (!e.target.name || e.target.name !== 'trip') {
-                window.usuarioHaInteractuado = true;
-            }
             validarFormulario();
         });
 

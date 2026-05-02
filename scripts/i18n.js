@@ -1401,6 +1401,15 @@ document.addEventListener('DOMContentLoaded', () => {
             desc_valencia: 'Côte méditerranéenne et villes modernes reliées par le train.',
             ver_rutas: 'Voir les trajets',
 
+            // Search Errors
+            error_origen: 'Veuillez sélectionner une origine.',
+            error_destino: 'Veuillez sélectionner une destination.',
+            error_fecha_ida: 'Veuillez sélectionner une date de départ.',
+            error_fecha_vuelta: 'Veuillez sélectionner une date de retour.',
+            error_pasajeros: 'Veuillez sélectionner le nombre de passagers.',
+            error_fecha_pasada: 'La date de départ ne peut pas être dans le passé.',
+            error_fecha_orden: 'La date de retour ne peut pas être antérieure à la date de départ.',
+
             // Passes and Promotions
             abonos_promociones: 'Abonnements et Promotions',
             comprar: 'Acheter',
@@ -1807,6 +1816,15 @@ document.addEventListener('DOMContentLoaded', () => {
             desc_sevilla: 'Kultur, Geschichte und Gastronomie an jeder Station.',
             desc_valencia: 'Mittelmeerküste und moderne Städte per Zug verbunden.',
             ver_rutas: 'Routen ansehen',
+
+            // Search Errors
+            error_origen: 'Bitte wählen Sie einen Abfahrtsort.',
+            error_destino: 'Bitte wählen Sie ein Reiseziel.',
+            error_fecha_ida: 'Bitte wählen Sie ein Abfahrtsdatum.',
+            error_fecha_vuelta: 'Bitte wählen Sie ein Rückfahrtsdatum.',
+            error_pasajeros: 'Bitte wählen Sie die Anzahl der Fahrgäste.',
+            error_fecha_pasada: 'Das Abfahrtsdatum darf nicht in der Vergangenheit liegen.',
+            error_fecha_orden: 'Das Rückfahrtsdatum darf nicht vor dem Abfahrtsdatum liegen.',
 
             // Passes and Promotions
             abonos_promociones: 'Abos und Aktionen',
