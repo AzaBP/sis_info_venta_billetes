@@ -18,6 +18,14 @@ try {
     // 1. Conexiones directas a las bases de datos (Saltamos el DAO para evitar el error estático)
     $pdo = (new Conexion())->conectar();
 
+    // Extraer maquinistas válidos para no violar la clave foránea
+    $stmtMaq = $pdo->query("SELECT id_empleado FROM MAQUINISTA");
+    $maquinistasBD = $stmtMaq->fetchAll(PDO::FETCH_COLUMN);
+    
+    if (empty($maquinistasBD)) {
+        throw new Exception("No hay ningún maquinista en la base de datos. Inicia sesión como administrador y crea al menos un maquinista antes de lanzar la carga masiva.");
+    }
+
     // 2. Datos Maestros (Extraídos de tus consultas SQL)
     $rutas = [
         ['id_ruta' => 1, 'origen' => 'Madrid Puerta de Atocha', 'destino' => 'Barcelona Sants', 'duracion' => '02:30:00', 'id_vendedor' => 1],
@@ -84,7 +92,7 @@ try {
                     ':id_vendedor' => $ruta['id_vendedor'],
                     ':id_ruta' => $ruta['id_ruta'],
                     ':id_tren' => $tren['id_tren'],
-                    ':id_maquinista' => 1,
+                    ':id_maquinista' => $maquinistasBD[array_rand($maquinistasBD)],
                     ':fecha' => $fecha_str,
                     ':hora_salida' => $hora_salida_str,
                     ':hora_llegada' => $hora_llegada_str,
