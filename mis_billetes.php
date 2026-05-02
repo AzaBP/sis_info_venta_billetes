@@ -227,7 +227,6 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
 
     <div id="confirmCancelModal" class="modal-confirmacion" aria-hidden="true">
         <div class="modal-confirm-content">
-            <h3>¿Confirmar cancelación?</h3>
             <p id="confirmCancelMessage"></p> <div class="modal-confirm-buttons">
                 <button type="button" class="btn-confirm-no" id="btnCancelNo">Volver</button>
                 <button type="button" class="btn-confirm-yes" id="btnCancelYes">Sí, cancelar billete</button>
