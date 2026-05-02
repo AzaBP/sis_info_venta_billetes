@@ -159,7 +159,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                     <i class="fa-brands fa-x-twitter"></i>
                     <h3 data-i18n="soporte_x_titulo">Soporte en X (Twitter)</h3>
                     <p data-i18n="soporte_x_desc">Escríbenos para consultas rápidas e incidencias en tiempo real.</p>
-                    <a href="#" class="btn-social">@TrainWeb_Ayuda</a>
+                    <a href="julio_apruebanos.php" class="btn-social">@TrainWeb_Ayuda</a>
                 </div>
                 <!-- FORMULARIO DE CONTACTO -->
                 <div class="contact-box form-box">
