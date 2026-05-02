@@ -208,26 +208,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const t_err = (key) => window.trainwebI18n ? window.trainwebI18n.t(key) : key;
 
-            let errorMsg = '';
-            if (!origen) errorMsg = t_err('error_origen');
-            else if (!destino) errorMsg = t_err('error_destino');
-            else if (!fechaIda || !fechaIda.value) errorMsg = t_err('error_fecha_ida');
-            else if (fechaVuelta && !fechaVuelta.value && document.querySelector('input[name="trip"]:checked')?.value === 'roundtrip') errorMsg = t_err('error_fecha_vuelta');
-            else if (!pasajeros || isNaN(parseInt(pasajeros))) errorMsg = t_err('error_pasajeros');
+            let isFormComplete = true;
+            if (!origen || !destino || !fechaIda || !fechaIda.value || !pasajeros || isNaN(parseInt(pasajeros))) {
+                isFormComplete = false;
+            }
+            if (fechaVuelta && document.querySelector('input[name="trip"]:checked')?.value === 'roundtrip' && !fechaVuelta.value) {
+                isFormComplete = false;
+            }
 
-            if (!errorMsg && fechaIda) {
+            let errorMsg = '';
+            if (fechaIda && fechaIda.value) {
                 const hoy = new Date();
                 const fIda = new Date(fechaIda.value);
                 hoy.setHours(0,0,0,0);
-                if (fIda < hoy) errorMsg = t_err('error_fecha_pasada');
+                if (fIda < hoy) {
+                    errorMsg = t_err('error_fecha_pasada');
+                }
                 if (fechaVuelta && fechaVuelta.value) {
                     const fVuelta = new Date(fechaVuelta.value);
-                    if (fVuelta < fIda) errorMsg = t_err('error_fecha_orden');
+                    if (fVuelta < fIda) {
+                        errorMsg = t_err('error_fecha_orden');
+                    }
                 }
             }
 
             if (btnBuscar) {
-                if (errorMsg) {
+                if (!isFormComplete || errorMsg) {
                     btnBuscar.disabled = true;
                     btnBuscar.style.background = '#cccccc';
                     btnBuscar.style.cursor = 'not-allowed';
@@ -240,15 +246,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            // Solo mostrar error si el usuario ha interactuado
-            if (window.usuarioHaInteractuado && errorMsg) {
+            if (errorMsg) {
                 errorDiv.textContent = errorMsg;
                 errorDiv.style.display = 'block';
             } else {
                 errorDiv.textContent = '';
                 errorDiv.style.display = 'none';
             }
-            return !errorMsg;
+            
+            return isFormComplete && !errorMsg;
         }
 
         // Validar en cada cambio de campo relevante
