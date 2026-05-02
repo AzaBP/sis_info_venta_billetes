@@ -118,13 +118,13 @@
         </div>
         <h1>¡Hola, Julio! 👋</h1>
         <p>
-            Vemos que estás revisando los enlaces de redes sociales... ¡vaya ojo tienes! 🧐<br><br>
-            Sabemos que estás comprobando todo de forma <strong>extremadamente exhaustiva</strong> (¡no se te escapa ni un data-i18n!), pero oye, entre nosotros... ya va siendo hora de aflojar un poco el látigo, ¿no? 😜
+            Vemos que estás revisando la web a fondo.<br><br>
+            Pero nos lo hemos currado bastante, en esta no nos has pillado.
         </p>
         <p style="font-style: italic; font-size: 1.4rem;">
-            "Julio, ponnos buena nota, ¡que nos lo hemos currado un montón!" 🚀✨
+            ¡¡Esperamos que te este gustando la web tanto como a nosotros tu asignatura!!
         </p>
-        <a href="index.php" class="btn-back">Volver a la plataforma</a>
+        <a href="index.php" class="btn-back">Ir a una web top top</a>
     </div>
 
     <div class="train-animation">
