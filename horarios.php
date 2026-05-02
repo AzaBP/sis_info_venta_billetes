@@ -1,20 +1,46 @@
 <?php
 session_start();
 require_once __DIR__ . '/php/auth_helpers.php';
+require_once __DIR__ . '/php/Conexion.php';
 
 // Obtener los datos de sesión para el Header
 $usuarioSesion = $_SESSION['usuario'] ?? null;
 $nombreSesion = $usuarioSesion['nombre'] ?? '';
 
-// Mockup de horarios (esto normalmente vendría de la base de datos)
-$horarios = [
-    ['origen' => 'Madrid', 'destino' => 'Barcelona', 'salida' => '07:00', 'llegada' => '09:30', 'duracion' => '2h 30m', 'precio' => '35.00'],
-    ['origen' => 'Zaragoza', 'destino' => 'Madrid', 'salida' => '08:15', 'llegada' => '09:35', 'duracion' => '1h 20m', 'precio' => '25.00'],
-    ['origen' => 'Sevilla', 'destino' => 'Madrid', 'salida' => '09:45', 'llegada' => '12:15', 'duracion' => '2h 30m', 'precio' => '40.00'],
-    ['origen' => 'Barcelona', 'destino' => 'Zaragoza', 'salida' => '10:30', 'llegada' => '11:55', 'duracion' => '1h 25m', 'precio' => '28.00'],
-    ['origen' => 'Madrid', 'destino' => 'Sevilla', 'salida' => '12:00', 'llegada' => '14:35', 'duracion' => '2h 35m', 'precio' => '42.00'],
-    ['origen' => 'Valencia', 'destino' => 'Madrid', 'salida' => '14:10', 'llegada' => '15:50', 'duracion' => '1h 40m', 'precio' => '32.00'],
-];
+$viajes = [];
+
+try {
+    $pdo = (new Conexion())->conectar();
+    if ($pdo) {
+        // Consultar los próximos 6 viajes disponibles
+        $sql = "SELECT v.id_viaje, v.fecha, v.hora_salida, v.hora_llegada, v.precio,
+                       r.origen, r.destino
+                FROM VIAJE v
+                JOIN RUTA r ON v.id_ruta = r.id_ruta
+                WHERE v.estado <> 'cancelado' 
+                  AND (v.fecha > CURRENT_DATE OR (v.fecha = CURRENT_DATE AND v.hora_salida > CURRENT_TIME))
+                ORDER BY v.fecha ASC, v.hora_salida ASC
+                LIMIT 6";
+        
+        $stmt = $pdo->query($sql);
+        $viajes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+} catch (PDOException $e) {
+    // Si falla la BD, el array se queda vacío
+}
+
+/**
+ * Calcula la diferencia entre dos horas en formato HH:MM:SS
+ */
+function calcularDuracion($salida, $llegada) {
+    $start = strtotime($salida);
+    $end = strtotime($llegada);
+    if ($end < $start) $end += 86400; // Caso de llegada al día siguiente
+    $diff = $end - $start;
+    $h = floor($diff / 3600);
+    $m = floor(($diff % 3600) / 60);
+    return "{$h}h {$m}m";
+}
 ?>
 
 <!DOCTYPE html>
@@ -205,25 +231,31 @@ $horarios = [
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($horarios as $h): ?>
+                    <?php foreach ($viajes as $v): ?>
+                    <?php
+                        $urlReserva = 'compra.php?trip=oneway&pasajeros=1&id_viaje=' . $v['id_viaje']
+                            . '&origen=' . urlencode($v['origen'])
+                            . '&destino=' . urlencode($v['destino'])
+                            . '&fecha=' . urlencode($v['fecha']);
+                    ?>
                     <tr>
                         <td>
                             <div class="route-info">
                                 <div class="route-icon"><i class="fa-solid fa-location-dot"></i></div>
-                                <span><?= $h['origen'] ?></span>
+                                <span><?= htmlspecialchars($v['origen']) ?></span>
                             </div>
                         </td>
                         <td>
                             <div class="route-info">
                                 <div class="route-icon" style="background:#f0fdf4; color:#22c55e;"><i class="fa-solid fa-location-arrow"></i></div>
-                                <span><?= $h['destino'] ?></span>
+                                <span><?= htmlspecialchars($v['destino']) ?></span>
                             </div>
                         </td>
-                        <td><div class="time-box"><?= $h['salida'] ?></div></td>
-                        <td><div class="time-box"><?= $h['llegada'] ?></div></td>
-                        <td><span class="duration-tag"><?= $h['duracion'] ?></span></td>
-                        <td><span class="price-text"><?= $h['precio'] ?> €</span></td>
-                        <td><a href="index.php" class="btn-view" data-i18n="ver_billetes">Ver billetes</a></td>
+                        <td><div class="time-box"><?= substr($v['hora_salida'], 0, 5) ?></div></td>
+                        <td><div class="time-box"><?= substr($v['hora_llegada'], 0, 5) ?></div></td>
+                        <td><span class="duration-tag"><?= calcularDuracion($v['hora_salida'], $v['hora_llegada']) ?></span></td>
+                        <td><span class="price-text"><?= number_format($v['precio'], 2) ?> €</span></td>
+                        <td><a href="<?= $urlReserva ?>" class="btn-view" data-i18n="reservar_billete">Reservar billete</a></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
