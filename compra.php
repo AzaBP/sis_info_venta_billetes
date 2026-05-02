@@ -293,7 +293,7 @@ if ($id_pasajero_actual) {
         <div class="progress-bar-container">
             <div class="step active" id="step1" onclick="irAPaso(1)" style="cursor: pointer;"><span class="step-num">1</span> <span data-i18n="trenes_disponibles">Trenes disponibles</span></div>
             <div class="step" id="step2" onclick="irAPaso(2)" style="cursor: pointer;"><span class="step-num">2</span> <span data-i18n="seleccion_asientos">Selección de asientos</span></div>
-            <div class="step" id="step3" onclick="irAPaso(3)" style="cursor: pointer;"><span class="step-num">3</span> Datos de pasajeros</div>
+            <div class="step" id="step3" onclick="irAPaso(3)" style="cursor: pointer;"><span class="step-num">3</span> <span data-i18n="datos_pasajeros_h3">Datos de pasajeros</span></div>
             <div class="step" id="step4" onclick="irAPaso(4)" style="cursor: pointer;"><span class="step-num">4</span> <span data-i18n="resumen_descuentos">Resumen y Descuentos</span></div>
             <div class="step" id="step5" onclick="irAPaso(5)" style="cursor: pointer;"><span class="step-num">5</span> <span data-i18n="pago_seguro">Pago seguro</span></div>
         </div>
@@ -412,7 +412,7 @@ if ($id_pasajero_actual) {
         <div id="returnTripModal" class="return-modal hidden" aria-hidden="true">
             <div class="return-modal-content">
                 <div class="return-modal-header">
-                    <h3><i class="fa-solid fa-repeat"></i> Selecciona tu tren de vuelta</h3>
+                    <h3><i class="fa-solid fa-repeat"></i> <span data-i18n="selecciona_vuelta">Selecciona tu tren de vuelta</span></h3>
                     <button type="button" class="return-modal-close" onclick="cerrarModalVuelta()" aria-label="Cerrar">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
@@ -422,7 +422,7 @@ if ($id_pasajero_actual) {
                     <?php if ($fecha_vuelta !== ''): ?>
                         | <?= htmlspecialchars($fecha_vuelta, ENT_QUOTES, 'UTF-8') ?>
                     <?php else: ?>
-                        | <span>selecciona fecha de vuelta</span>
+                        | <span data-i18n="selecciona_fecha_vuelta">selecciona fecha de vuelta</span>
                     <?php endif; ?>
                 </p>
 
@@ -430,15 +430,16 @@ if ($id_pasajero_actual) {
                     <?php if (empty($trayectos_vuelta)): ?>
                         <div class="no-return-trains">
                             <i class="fa-solid fa-circle-exclamation"></i>
-                            <p class="no-return-message"><?php echo htmlspecialchars($mensaje_vuelta ?? 'No hay trenes de vuelta para la fecha seleccionada.', ENT_QUOTES, 'UTF-8'); ?></p>
+                            <p class="no-return-message" data-i18n="no_trenes_vuelta"><?php echo htmlspecialchars($mensaje_vuelta ?? 'No hay trenes de vuelta para la fecha seleccionada.', ENT_QUOTES, 'UTF-8'); ?></p>
                             <?php if (!empty($mensaje_vuelta)): ?>
                                 <div class="no-return-actions">
                                     <button
                                         type="button"
                                         class="btn-select"
                                         onclick="reservarSoloIdaDesdeModal()"
+                                        data-i18n="reservar_solo_ida"
                                     >Reservar solo ida</button>
-                                    <a href="index.php" class="btn-select">Volver al inicio</a>
+                                    <a href="index.php" class="btn-select" data-i18n="volver_inicio">Volver al inicio</a>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -467,14 +468,15 @@ if ($id_pasajero_actual) {
                                 </div>
                                 <div class="col-price">
                                     <?php if ($isFullV): ?>
-                                        <div class="price-full">Completo</div>
-                                        <button class="btn-select" disabled>Agotado</button>
+                                        <div class="price-full" data-i18n="completo">Completo</div>
+                                        <button class="btn-select" disabled data-i18n="agotado">Agotado</button>
                                     <?php else: ?>
                                         <div class="price"><?= $precioV ?> €</div>
                                         <button
                                             type="button"
                                             class="btn-select"
-                                            onclick="seleccionarTrenVuelta(<?= $trayectoVuelta['id_viaje'] ?>, '<?= $trayectoVuelta['tipo_tren'] ?>', <?= $trayectoVuelta['precio_base'] ?>)">
+                                            onclick="seleccionarTrenVuelta(<?= $trayectoVuelta['id_viaje'] ?>, '<?= $trayectoVuelta['tipo_tren'] ?>', <?= $trayectoVuelta['precio_base'] ?>)"
+                                            data-i18n="elegir_vuelta">
                                             Elegir vuelta
                                         </button>
                                     <?php endif; ?>
@@ -492,10 +494,10 @@ if ($id_pasajero_actual) {
                 
                 <?php if ($es_ida_vuelta): ?>
                 <div class="seat-leg-switcher">
-                    <p>Selecciona asientos para:</p>
+                    <p data-i18n="selecciona_asientos_para">Selecciona asientos para:</p>
                     <div class="seat-leg-buttons">
-                        <button type="button" id="btnTramoIda" class="tramo-btn active" onclick="cambiarTramo('ida')">Ida</button>
-                        <button type="button" id="btnTramoVuelta" class="tramo-btn" onclick="cambiarTramo('vuelta')">Vuelta</button>
+                        <button type="button" id="btnTramoIda" class="tramo-btn active" onclick="cambiarTramo('ida')" data-i18n="ida">Ida</button>
+                        <button type="button" id="btnTramoVuelta" class="tramo-btn" onclick="cambiarTramo('vuelta')" data-i18n="vuelta">Vuelta</button>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -591,19 +593,19 @@ if ($id_pasajero_actual) {
                 <div class="selection-info">
                     <span data-i18n="asiento">Asientos</span> (<strong id="requiredPassengersCount"><?php echo $pasajeros; ?></strong>): <strong id="displaySeat" data-i18n="ninguno">Ninguno</strong> <br><span data-i18n="precio_base_label">Precio Base</span>: <strong id="displayPrice">0,00 €</strong>
                 </div>
-                <button class="btn-next" id="btnToPassengerData" disabled onclick="irAPaso(3)">Continuar a Datos de Pasajeros</button>
+                <button class="btn-next" id="btnToPassengerData" disabled onclick="irAPaso(3)" data-i18n="continuar_datos_pasajeros">Continuar a Datos de Pasajeros</button>
             </div>
         </section>
 
         <section id="sectionPassengers" class="booking-section hidden">
             <div class="payment-container" style="max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
                 <div class="payment-header" style="border-bottom: none; margin-bottom: 10px;">
-                    <h3><i class="fa-solid fa-users"></i> Datos de pasajeros</h3>
+                    <h3><i class="fa-solid fa-users"></i> <span data-i18n="datos_pasajeros_h3">Datos de pasajeros</span></h3>
                 </div>
                 <div id="passengersFormsContainer" class="passengers-forms-container"></div>
                 <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
-                    <button class="btn-next" type="button" onclick="irAPaso(2)" style="background: #666;">Volver a asientos</button>
-                    <button class="btn-next" type="button" onclick="irAPaso(4)">Continuar al Resumen</button>
+                    <button class="btn-next" type="button" onclick="irAPaso(2)" style="background: #666;" data-i18n="volver_asientos">Volver a asientos</button>
+                    <button class="btn-next" type="button" onclick="irAPaso(4)" data-i18n="continuar_resumen">Continuar al Resumen</button>
                 </div>
             </div>
         </section>
@@ -691,7 +693,7 @@ if ($id_pasajero_actual) {
                 <form class="payment-form" onsubmit="event.preventDefault(); confirmarReserva();" autocomplete="off">
                     <div class="form-group full-width">
                         <label for="cardHolder" data-i18n="titular">Titular</label>
-                        <input type="text" id="cardHolder" required placeholder="Ej: Juan Pérez" data-i18n="ej_juan_perez">
+                        <input type="text" id="cardHolder" required placeholder="Ej: Juan Pérez" data-i18n-placeholder="ej_juan_perez">
                         <span class="input-error" id="errCardHolder" style="display:none;"></span>
                     </div>
                     <div class="form-group full-width">
@@ -705,12 +707,12 @@ if ($id_pasajero_actual) {
                     <div class="form-row" style="display: flex; gap: 15px;">
                         <div class="form-group expand">
                             <label for="cardExpiry" data-i18n="caducidad">Caducidad</label>
-                            <input type="text" id="cardExpiry" required placeholder="MM/AA" data-i18n="mm_aa" maxlength="5" inputmode="numeric">
+                            <input type="text" id="cardExpiry" required placeholder="MM/AA" data-i18n-placeholder="mm_aa" maxlength="5" inputmode="numeric">
                             <span class="input-error" id="errCardExpiry" style="display:none;"></span>
                         </div>
                         <div class="form-group expand">
                             <label for="cardCVV" data-i18n="cvv">CVV</label>
-                            <input type="password" id="cardCVV" required placeholder="Ej: 123" data-i18n="ej_123" data-i18n-placeholder="cvv_placeholder" maxlength="3" inputmode="numeric">
+                            <input type="password" id="cardCVV" required placeholder="Ej: 123" data-i18n-placeholder="ej_123" maxlength="3" inputmode="numeric">
                             <span class="input-error" id="errCardCVV" style="display:none;"></span>
                         </div>
                     </div>
@@ -726,20 +728,20 @@ if ($id_pasajero_actual) {
         <div id="guestWarningModal" class="modal hidden" aria-hidden="true">
             <div class="modal-content guest-modal">
                 <div class="modal-header">
-                    <h3><i class="fa-solid fa-exclamation-triangle"></i> Confirmación de compra como invitado</h3>
+                    <h3 data-i18n="confirmacion_invitado_h3"><i class="fa-solid fa-exclamation-triangle"></i> Confirmación de compra como invitado</h3>
                     <button type="button" class="modal-close" onclick="cerrarModalInvitado()" aria-label="Cerrar">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Compra como invitado. Verifica que el correo sea correcto:</p>
-                    <p><strong>Correo: <span id="guestEmail"></span></strong></p>
-                    <p>No podrás gestionar el billete sin cuenta registrada.</p>
-                    <p>¿Continuar?</p>
+                    <p data-i18n="confirmacion_invitado_desc">Compra como invitado. Verifica que el correo sea correcto:</p>
+                    <p><strong><span data-i18n="correo_label">Correo</span>: <span id="guestEmail"></span></strong></p>
+                    <p data-i18n="confirmacion_invitado_no_gestionar">No podrás gestionar el billete sin cuenta registrada.</p>
+                    <p data-i18n="confirmacion_invitado_pregunta">¿Continuar?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-cancel" onclick="cerrarModalInvitado()">Cancelar</button>
-                    <button type="button" class="btn-confirm" onclick="confirmarCompraInvitado()">Confirmar y continuar</button>
+                    <button type="button" class="btn-cancel" onclick="cerrarModalInvitado()" data-i18n="cancelar">Cancelar</button>
+                    <button type="button" class="btn-confirm" onclick="confirmarCompraInvitado()" data-i18n="confirmar_continuar">Confirmar y continuar</button>
                 </div>
             </div>
         </div>
@@ -843,7 +845,7 @@ if ($id_pasajero_actual) {
                 return false;
             }
             if (!/^\d{16}$/.test(value)) {
-                errCardNumber.textContent = 'Introduce 16 dígitos válidos.';
+                errCardNumber.textContent = window.trainwebI18n.t('error_tarjeta_16');
                 errCardNumber.style.display = 'block';
                 cardNumber.classList.add('input-invalid');
                 return false;
@@ -860,7 +862,7 @@ if ($id_pasajero_actual) {
                 return false;
             }
             if (!/^\d{2}\/\d{2}$/.test(value)) {
-                errCardExpiry.textContent = 'Formato MM/AA.';
+                errCardExpiry.textContent = window.trainwebI18n.t('error_tarjeta_formato');
                 errCardExpiry.style.display = 'block';
                 cardExpiry.classList.add('input-invalid');
                 return false;
@@ -868,7 +870,7 @@ if ($id_pasajero_actual) {
             // Validar mes y año
             const [mes, anio] = value.split('/').map(Number);
             if (mes < 1 || mes > 12) {
-                errCardExpiry.textContent = 'Mes inválido.';
+                errCardExpiry.textContent = window.trainwebI18n.t('error_tarjeta_mes');
                 errCardExpiry.style.display = 'block';
                 cardExpiry.classList.add('input-invalid');
                 return false;
@@ -878,7 +880,7 @@ if ($id_pasajero_actual) {
             const expYear = 2000 + anio;
             const expDate = new Date(expYear, mes - 1, 1);
             if (expDate < new Date(hoy.getFullYear(), hoy.getMonth(), 1)) {
-                errCardExpiry.textContent = 'Tarjeta caducada.';
+                errCardExpiry.textContent = window.trainwebI18n.t('error_tarjeta_caducada');
                 errCardExpiry.style.display = 'block';
                 cardExpiry.classList.add('input-invalid');
                 return false;
@@ -895,7 +897,7 @@ if ($id_pasajero_actual) {
                 return false;
             }
             if (!/^\d{3}$/.test(value)) {
-                errCardCVV.textContent = 'CVV de 3 dígitos.';
+                errCardCVV.textContent = window.trainwebI18n.t('error_tarjeta_cvv');
                 errCardCVV.style.display = 'block';
                 cardCVV.classList.add('input-invalid');
                 return false;
@@ -912,7 +914,7 @@ if ($id_pasajero_actual) {
                 return false;
             }
             if (value.length < 3) {
-                errCardHolder.textContent = 'Introduce el nombre y apellidos del titular.';
+                errCardHolder.textContent = window.trainwebI18n.t('error_tarjeta_titular');
                 errCardHolder.style.display = 'block';
                 cardHolder.classList.add('input-invalid');
                 return false;

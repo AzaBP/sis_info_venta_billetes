@@ -106,8 +106,8 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
     <main class="payment-wrapper">
         <div class="payment-container">
             <div class="abono-header">
-                <h1><?= htmlspecialchars($abono['nombre']) ?></h1>
-                <p><?= htmlspecialchars($abono['descripcion']) ?></p>
+                <h1 data-i18n="abono_<?= strtolower($tipo_codigo) ?>_nombre"><?= htmlspecialchars($abono['nombre']) ?></h1>
+                <p data-i18n="abono_<?= strtolower($tipo_codigo) ?>_desc"><?= htmlspecialchars($abono['descripcion']) ?></p>
                 <div class="abono-price"><?= $precio_formateado ?></div>
             </div>
 
@@ -125,7 +125,7 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
 
                 <div class="form-group">
                     <label data-i18n="titular_tarjeta">Titular de la tarjeta</label>
-                    <input type="text" id="cardHolder" name="titular" placeholder="Nombre completo" data-i18n="nombre_completo" required>
+                    <input type="text" id="cardHolder" name="titular" placeholder="Nombre completo" data-i18n-placeholder="nombre_completo" required>
                     <span class="input-error" id="errCardHolder" style="display:none;"></span>
                 </div>
 
@@ -138,7 +138,7 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
                 <div style="display: flex; gap: 15px;">
                     <div class="form-group expand">
                         <label data-i18n="caducidad">Caducidad</label>
-                        <input type="text" id="cardExpiry" name="caducidad" placeholder="MM/AA" data-i18n="mm_aa" maxlength="5" required>
+                        <input type="text" id="cardExpiry" name="caducidad" placeholder="MM/AA" data-i18n-placeholder="mm_aa" maxlength="5" required>
                         <span class="input-error" id="errCardExpiry" style="display:none;"></span>
                     </div>
                     <div class="form-group expand">
