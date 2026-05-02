@@ -251,13 +251,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            if (errorMsg) {
-                errorDiv.textContent = errorMsg;
-                errorDiv.style.display = 'block';
-            } else {
-                errorDiv.textContent = '';
-                errorDiv.style.display = 'none';
-            }
+            // Ocultamos permanentemente el mensaje rojo según requerimiento
+            errorDiv.style.display = 'none';
             
             return isFormComplete && !errorMsg;
         }
