@@ -432,18 +432,22 @@ function renderizarFormulariosPasajeros() {
                     <div class="form-group full-width">
                         <label>${tr('nombre', 'Nombre')}</label>
                         <input type="text" id="pasajero_nombre_${i}" value="${String(nombre).replace(/"/g, '&quot;')}" maxlength="80" required>
+                        <span class="input-error" id="err_nombre_${i}" style="display:none;"></span>
                     </div>
                     <div class="form-group full-width">
                         <label>${tr('apellidos', 'Apellidos')}</label>
                         <input type="text" id="pasajero_apellidos_${i}" value="${String(apellidos).replace(/"/g, '&quot;')}" maxlength="120" required>
+                        <span class="input-error" id="err_apellidos_${i}" style="display:none;"></span>
                     </div>
                     <div class="form-group full-width">
                         <label>${tr('documento_identidad', 'Documento de identidad')}</label>
                         <input type="text" id="pasajero_documento_${i}" value="${String(previo.documento || '').replace(/"/g, '&quot;')}" maxlength="20" required>
+                        <span class="input-error" id="err_documento_${i}" style="display:none;"></span>
                     </div>
                     <div class="form-group full-width">
                         <label>${tr('email', 'Email')}</label>
                         <input type="email" id="pasajero_email_${i}" value="${String(email).replace(/"/g, '&quot;')}" maxlength="120" required>
+                        <span class="input-error" id="err_email_${i}" style="display:none;"></span>
                     </div>
                 </div>
             </div>
@@ -453,29 +457,144 @@ function renderizarFormulariosPasajeros() {
     container.innerHTML = bloques.join('');
 }
 
+function validarDNI(dni) {
+    const dniLimpio = dni.toUpperCase().replace(/\s/g, '');
+    if (dniLimpio.length < 6) return false;
+    if (/^\d{8}[A-Z]$/.test(dniLimpio)) return true;
+    if (/^[XYZ]\d{7}[A-Z]$/.test(dniLimpio)) return true;
+    if (/^[A-Z0-9]{6,20}$/.test(dniLimpio)) return true;
+    return false;
+}
+
 function validarYGuardarDatosPasajeros() {
     const datos = [];
+    let hayErrores = false;
 
     for (let i = 0; i < totalPasajeros; i++) {
-        const nombre = (document.getElementById(`pasajero_nombre_${i}`)?.value || '').trim();
-        const apellidos = (document.getElementById(`pasajero_apellidos_${i}`)?.value || '').trim();
-        const documento = (document.getElementById(`pasajero_documento_${i}`)?.value || '').trim();
-        const email = (document.getElementById(`pasajero_email_${i}`)?.value || '').trim();
+        const inputNombre = document.getElementById(`pasajero_nombre_${i}`);
+        const inputApellidos = document.getElementById(`pasajero_apellidos_${i}`);
+        const inputDocumento = document.getElementById(`pasajero_documento_${i}`);
+        const inputEmail = document.getElementById(`pasajero_email_${i}`);
+        
+        const errNombre = document.getElementById(`err_nombre_${i}`);
+        const errApellidos = document.getElementById(`err_apellidos_${i}`);
+        const errDocumento = document.getElementById(`err_documento_${i}`);
+        const errEmail = document.getElementById(`err_email_${i}`);
 
-        if (!nombre || !apellidos || !documento || !email) {
-            alert(tr('pasajeros_incompletos', 'Completa todos los datos de los pasajeros.'));
-            return false;
+        const nombre = (inputNombre?.value || '').trim();
+        const apellidos = (inputApellidos?.value || '').trim();
+        const documento = (inputDocumento?.value || '').trim();
+        const email = (inputEmail?.value || '').trim();
+
+        if (errNombre) errNombre.style.display = 'none';
+        if (errApellidos) errApellidos.style.display = 'none';
+        if (errDocumento) errDocumento.style.display = 'none';
+        if (errEmail) errEmail.style.display = 'none';
+
+        if (!nombre || nombre.length < 2) {
+            if (errNombre) {
+                errNombre.textContent = 'El nombre debe tener al menos 2 caracteres.';
+                errNombre.style.display = 'block';
+            }
+            hayErrores = true;
         }
 
-        const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        if (!emailValido) {
-            alert(tr('email_invalido_pasajero', 'Revisa el email del pasajero {n}.', { n: i + 1 }));
-            return false;
+        if (!apellidos || apellidos.length < 2) {
+            if (errApellidos) {
+                errApellidos.textContent = 'Los apellidos deben tener al menos 2 caracteres.';
+                errApellidos.style.display = 'block';
+            }
+            hayErrores = true;
         }
 
-        datos.push({ nombre, apellidos, documento, email });
+        if (!documento) {
+            if (errDocumento) {
+                errDocumento.textContent = 'El documento es requerido.';
+                errDocumento.style.display = 'block';
+            }
+            hayErrores = true;
+        } else if (!validarDNI(documento)) {
+            if (errDocumento) {
+                errDocumento.textContent = 'El documento no es valido (DNI, NIE o pasaporte).';
+                errDocumento.style.display = 'block';
+            }
+            hayErrores = true;
+        }
+
+        if (!email) {
+            if (errEmail) {
+                errEmail.textContent = 'El email es requerido.';
+                errEmail.style.display = 'block';
+            }
+            hayErrores = true;
+        } else {
+            const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            if (!emailValido) {
+                if (errEmail) {
+                    errEmail.textContent = 'El email no es valido.';
+                    errEmail.style.display = 'block';
+                }
+                hayErrores = true;
+            }
+        }
+
+        let pasajeroValido = true;
+
+        if (!nombre || nombre.length < 2) {
+            if (errNombre) {
+                errNombre.textContent = 'El nombre debe tener al menos 2 caracteres.';
+                errNombre.style.display = 'block';
+            }
+            pasajeroValido = false;
+        }
+
+        if (!apellidos || apellidos.length < 2) {
+            if (errApellidos) {
+                errApellidos.textContent = 'Los apellidos deben tener al menos 2 caracteres.';
+                errApellidos.style.display = 'block';
+            }
+            pasajeroValido = false;
+        }
+
+        if (!documento) {
+            if (errDocumento) {
+                errDocumento.textContent = 'El documento es requerido.';
+                errDocumento.style.display = 'block';
+            }
+            pasajeroValido = false;
+        } else if (!validarDNI(documento)) {
+            if (errDocumento) {
+                errDocumento.textContent = 'El documento no es valido (DNI, NIE o pasaporte).';
+                errDocumento.style.display = 'block';
+            }
+            pasajeroValido = false;
+        }
+
+        if (!email) {
+            if (errEmail) {
+                errEmail.textContent = 'El email es requerido.';
+                errEmail.style.display = 'block';
+            }
+            pasajeroValido = false;
+        } else {
+            const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            if (!emailValido) {
+                if (errEmail) {
+                    errEmail.textContent = 'El email no es valido.';
+                    errEmail.style.display = 'block';
+                }
+                pasajeroValido = false;
+            }
+        }
+
+        if (!pasajeroValido) {
+            hayErrores = true;
+        } else {
+            datos.push({ nombre, apellidos, documento, email });
+        }
     }
 
+    if (hayErrores) return false;
     estado.datosPasajeros = datos;
     return true;
 }

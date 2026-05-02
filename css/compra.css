@@ -472,6 +472,18 @@
     cursor: pointer;
 }
 
+.input-invalid {
+    border-color: #e74c3c !important;
+    background: #fff6f6 !important;
+}
+
+.input-error {
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin-top: 2px;
+    display: block;
+}
+
 @media (max-width: 900px) {
     .seat-header {
         flex-direction: column;
