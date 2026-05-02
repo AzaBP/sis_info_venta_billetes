@@ -36,13 +36,6 @@ body {
     align-items: center;
 }
 
-.user-actions,
-.dropdown {
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
-
 .nav a,
 .dropdown > a {
     color: white;
@@ -53,8 +46,6 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    line-height: 1;
-    height: 100%;
 }
 
 .nav a:hover,
@@ -62,8 +53,10 @@ body {
 
 .dropdown {
     position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
-
 .dropdown-content {
     position: absolute;
     top: 40px;
@@ -74,19 +67,9 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.12);
     display: none;
     z-index: 10;
-    overflow: hidden;
 }
-
 .dropdown:hover .dropdown-content { display: block; }
-
-.dropdown-content a {
-    color: #333;
-    padding: 10px;
-    display: block;
-    cursor: pointer;
-}
-
-.dropdown-content a:hover { background: #f0f0f0; }
+.dropdown-content a { color: #333; padding: 10px; display:block; }
 
 .btn-login { color: white; text-decoration: none; padding: 8px 18px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); }
 
