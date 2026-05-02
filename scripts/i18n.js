@@ -17,6 +17,21 @@ document.addEventListener('DOMContentLoaded', () => {
             panel_vendedor: 'Panel Vendedor',
             panel_mantenimiento: 'Panel Mantenimiento',
             panel: 'Panel de Control',
+            
+            // Footer
+            footer_services: 'Servicios',
+            footer_descripcion: 'Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.',
+            footer_legal: 'Información legal',
+            footer_social: 'Redes sociales',
+            footer_billetes: 'Billetes',
+            footer_horarios: 'Horarios',
+            footer_ofertas: 'Ofertas',
+            footer_atencion: 'Atención al cliente',
+            footer_aviso: 'Aviso legal',
+            footer_privacidad: 'Privacidad',
+            footer_cookies: 'Cookies',
+            footer_terminos: 'Términos y condiciones',
+            footer_copyright: '© 2026 TrainWeb · Todos los derechos reservados',
 
             // Login
             login_bienvenida: 'Bienvenido a TrainWeb',
@@ -471,6 +486,21 @@ document.addEventListener('DOMContentLoaded', () => {
             panel_mantenimiento: 'Maintenance Panel',
             panel: 'Control Panel',
 
+            // Footer
+            footer_services: 'Services',
+            footer_descripcion: 'Digital platform for searching and buying train tickets across the country.',
+            footer_legal: 'Legal information',
+            footer_social: 'Social media',
+            footer_billetes: 'Tickets',
+            footer_horarios: 'Timetables',
+            footer_ofertas: 'Deals',
+            footer_atencion: 'Customer support',
+            footer_aviso: 'Legal notice',
+            footer_privacidad: 'Privacy',
+            footer_cookies: 'Cookies',
+            footer_terminos: 'Terms and conditions',
+            footer_copyright: '© 2026 TrainWeb · All rights reserved',
+
             // Login
             login_bienvenida: 'Welcome to TrainWeb',
             login_desc: 'Access your account to manage bookings, check schedules and enjoy our exclusive promotions.',
@@ -923,6 +953,21 @@ document.addEventListener('DOMContentLoaded', () => {
             panel_vendedor: 'Panneau Vendeur',
             panel_mantenimiento: 'Panneau Maintenance',
             panel: 'Tableau de bord',
+            
+            // Footer
+            footer_services: 'Services',
+            footer_descripcion: 'Plateforme numérique pour la recherche et l\'achat de billets de train dans tout le pays.',
+            footer_legal: 'Informations légales',
+            footer_social: 'Réseaux sociaux',
+            footer_billetes: 'Billets',
+            footer_horarios: 'Horaires',
+            footer_ofertas: 'Offres',
+            footer_atencion: 'Service client',
+            footer_aviso: 'Mentions légales',
+            footer_privacidad: 'Confidentialité',
+            footer_cookies: 'Cookies',
+            footer_terminos: 'Termes et conditions',
+            footer_copyright: '© 2026 TrainWeb · Tous droits réservés',
 
             // Login
             login_bienvenida: 'Bienvenue sur TrainWeb',
@@ -1356,6 +1401,21 @@ document.addEventListener('DOMContentLoaded', () => {
             panel_vendedor: 'Verkäufer-Panel',
             panel_mantenimiento: 'Wartungs-Panel',
             panel: 'Kontrollpanel',
+            
+            // Footer
+            footer_services: 'Dienstleistungen',
+            footer_descripcion: 'Digitale Plattform für die Suche und den Kauf von Fahrkarten im ganzen Land.',
+            footer_legal: 'Rechtliche Informationen',
+            footer_social: 'Soziale Netzwerke',
+            footer_billetes: 'Fahrkarten',
+            footer_horarios: 'Fahrpläne',
+            footer_ofertas: 'Angebote',
+            footer_atencion: 'Kundendienst',
+            footer_aviso: 'Impressum',
+            footer_privacidad: 'Datenschutz',
+            footer_cookies: 'Cookies',
+            footer_terminos: 'Allgemeine Geschäftsbedingungen',
+            footer_copyright: '© 2026 TrainWeb · Alle Rechte vorbehalten',
 
             // Index / Search
             busca_tren: 'Finden Sie Ihren Zug',

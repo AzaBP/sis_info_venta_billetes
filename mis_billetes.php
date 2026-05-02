@@ -185,6 +185,15 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
         <nav class="nav">
             <a href="index.php" data-i18n="inicio">Inicio</a>
             <a href="mis_billetes.php" data-i18n="mis_billetes">Mis billetes</a>
+            <div class="dropdown">
+                <a href="#"><i class="fa-solid fa-earth-europe"></i> <span data-i18n="idiomas">Idiomas</span> <i class="fa-solid fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="#" data-lang="es" data-i18n="es">Español</a>
+                    <a href="#" data-lang="en" data-i18n="en">Inglés</a>
+                    <a href="#" data-lang="fr" data-i18n="fr">Francés</a>
+                    <a href="#" data-lang="de" data-i18n="de">Alemán</a>
+                </div>
+            </div>
             <a href="ofertas.php" data-i18n="ofertas">Ofertas</a>
             <a href="ayuda.php" data-i18n="ayuda">Ayuda</a>
         </nav>
@@ -233,6 +242,37 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
             </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>TrainWeb</h3>
+                <p data-i18n="footer_descripcion">Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
+            </div>
+            <div class="footer-column">
+                <h4 data-i18n="footer_services">Servicios</h4>
+                <a href="mis_billetes.php"><i class="fa-solid fa-ticket"></i> <span data-i18n="footer_billetes">Billetes</span></a>
+                <a href="horarios.php"><i class="fa-solid fa-clock"></i> <span data-i18n="footer_horarios">Horarios</span></a>
+                <a href="ofertas.php"><i class="fa-solid fa-tags"></i> <span data-i18n="footer_ofertas">Ofertas</span></a>
+                <a href="ayuda.php"><i class="fa-solid fa-headset"></i> <span data-i18n="footer_atencion">Atención al cliente</span></a>
+            </div>
+            <div class="footer-column">
+                <h4 data-i18n="footer_legal">Información legal</h4>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="footer_aviso">Aviso legal</span></a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> <span data-i18n="footer_privacidad">Privacidad</span></a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> <span data-i18n="footer_cookies">Cookies</span></a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> <span data-i18n="footer_terminos">Términos y condiciones</span></a>
+            </div>
+            <div class="footer-column">
+                <h4 data-i18n="footer_social">Redes sociales</h4>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+            </div>
+        </div>
+        <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>
+    </footer>
 
     <script src="scripts/i18n.js?v=<?php echo urlencode($assetVersion); ?>"></script>
     <script>

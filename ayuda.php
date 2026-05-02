@@ -196,10 +196,10 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
             </div>
             <div class="footer-column">
                 <h4 data-i18n="footer_social">Redes sociales</h4>
-                <a href="julio_apruebanos.php"><i class="fa-brands fa-facebook-f"></i> <span data-i18n="social_facebook">Facebook</span></a>
-                <a href="julio_apruebanos.php"><i class="fa-brands fa-x-twitter"></i> <span data-i18n="social_twitter">Twitter</span></a>
-                <a href="julio_apruebanos.php"><i class="fa-brands fa-instagram"></i> <span data-i18n="social_instagram">Instagram</span></a>
-                <a href="julio_apruebanos.php"><i class="fa-brands fa-linkedin-in"></i> <span data-i18n="social_linkedin">LinkedIn</span></a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
             </div>
         </div>
         <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>

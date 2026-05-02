@@ -403,7 +403,7 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
         <div class="footer-container">
             <div class="footer-column">
                 <h3>TrainWeb</h3>
-                <p data-i18n="footer_descripcion">Plataforma digital para la busqueda y compra de billetes de tren en todo el territorio nacional.</p>
+                <p data-i18n="footer_descripcion">Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
             </div>
             <div class="footer-column">
                 <h4 data-i18n="footer_services">Servicios</h4>
@@ -413,18 +413,18 @@ $notificacionesOfertas = (bool)$perfil['notificaciones_ofertas'];
                 <a href="ayuda.php"><i class="fa-solid fa-headset"></i> <span data-i18n="footer_atencion">Atención al cliente</span></a>
             </div>
             <div class="footer-column">
-                <h4 data-i18n="footer_legal">Informacion legal</h4>
+                <h4 data-i18n="footer_legal">Información legal</h4>
                 <a href="#"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="footer_aviso">Aviso legal</span></a>
                 <a href="#"><i class="fa-solid fa-user-shield"></i> <span data-i18n="footer_privacidad">Privacidad</span></a>
                 <a href="#"><i class="fa-solid fa-cookie-bite"></i> <span data-i18n="footer_cookies">Cookies</span></a>
-                <a href="#"><i class="fa-solid fa-file-contract"></i> <span data-i18n="footer_terminos">Terminos y condiciones</span></a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> <span data-i18n="footer_terminos">Términos y condiciones</span></a>
             </div>
             <div class="footer-column">
                 <h4 data-i18n="footer_social">Redes sociales</h4>
-                <a href="julio_apruebanos.php"><i class="fa-brands fa-facebook-f"></i> <span data-i18n="social_facebook">Facebook</span></a>
-                <a href="julio_apruebanos.php"><i class="fa-brands fa-x-twitter"></i> <span data-i18n="social_twitter">Twitter</span></a>
-                <a href="julio_apruebanos.php"><i class="fa-brands fa-instagram"></i> <span data-i18n="social_instagram">Instagram</span></a>
-                <a href="julio_apruebanos.php"><i class="fa-brands fa-linkedin-in"></i> <span data-i18n="social_linkedin">LinkedIn</span></a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
             </div>
         </div>
         <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>

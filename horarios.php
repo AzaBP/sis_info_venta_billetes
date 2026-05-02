@@ -271,21 +271,21 @@ function calcularDuracion($salida, $llegada) {
                 <p data-i18n="footer_descripcion">Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
             </div>
             <div class="footer-column">
-                <h4 data-i18n="footer-services">Servicios</h4>
-                <a href="mis_billetes.php"><i class="fa-solid fa-ticket"></i> <span data-i18n="footer-billetes">Billetes</span></a>
-                <a href="horarios.php"><i class="fa-solid fa-clock"></i> <span data-i18n="footer-horarios">Horarios</span></a>
-                <a href="ofertas.php"><i class="fa-solid fa-tags"></i> <span data-i18n="footer-ofertas">Ofertas</span></a>
-                <a href="ayuda.php"><i class="fa-solid fa-headset"></i> <span data-i18n="footer-atencion">Atención al cliente</span></a>
+                <h4 data-i18n="footer_services">Servicios</h4>
+                <a href="mis_billetes.php"><i class="fa-solid fa-ticket"></i> <span data-i18n="footer_billetes">Billetes</span></a>
+                <a href="horarios.php"><i class="fa-solid fa-clock"></i> <span data-i18n="footer_horarios">Horarios</span></a>
+                <a href="ofertas.php"><i class="fa-solid fa-tags"></i> <span data-i18n="footer_ofertas">Ofertas</span></a>
+                <a href="ayuda.php"><i class="fa-solid fa-headset"></i> <span data-i18n="footer_atencion">Atención al cliente</span></a>
             </div>
             <div class="footer-column">
-                <h4 data-i18n="footer-legal">Información legal</h4>
-                <a href="#"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="footer-aviso">Aviso legal</span></a>
-                <a href="#"><i class="fa-solid fa-user-shield"></i> <span data-i18n="footer-privacidad">Privacidad</span></a>
-                <a href="#"><i class="fa-solid fa-cookie-bite"></i> <span data-i18n="footer-cookies">Cookies</span></a>
-                <a href="#"><i class="fa-solid fa-file-contract"></i> <span data-i18n="footer-terminos">Términos y condiciones</span></a>
+                <h4 data-i18n="footer_legal">Información legal</h4>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="footer_aviso">Aviso legal</span></a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> <span data-i18n="footer_privacidad">Privacidad</span></a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> <span data-i18n="footer_cookies">Cookies</span></a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> <span data-i18n="footer_terminos">Términos y condiciones</span></a>
             </div>
             <div class="footer-column">
-                <h4 data-i18n="footer-social">Redes sociales</h4>
+                <h4 data-i18n="footer_social">Redes sociales</h4>
                 <a href="julio_apruebanos.php"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
                 <a href="julio_apruebanos.php"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
                 <a href="julio_apruebanos.php"><i class="fa-brands fa-instagram"></i> Instagram</a>
