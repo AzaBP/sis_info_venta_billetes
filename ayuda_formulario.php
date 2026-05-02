@@ -7,6 +7,11 @@ if ($usuarioSesion && ($usuarioSesion['tipo_usuario'] ?? '') === 'empleado') {
     exit;
 }
 $nombreSesion = $usuarioSesion['nombre'] ?? '';
+
+$enviado = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $enviado = true;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -92,6 +97,26 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
         .back-link:hover {
             text-decoration: underline;
         }
+        .success-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .success-icon {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        .success-title {
+            color: #0a2a66;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        .success-text {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
@@ -134,41 +159,58 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
 
     <main class="help-main">
         <div class="form-container">
-            <h1 data-i18n="formulario_contacto_h1">Formulario de Contacto</h1>
-            <p data-i18n="formulario_contacto_p">Cuéntanos tu problema o duda y te responderemos lo antes posible.</p>
-            
-            <form action="index.php" method="GET">
-                <div class="form-group">
-                    <label for="nombre" data-i18n="form_nombre">Nombre completo</label>
-                    <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre..." data-i18n-placeholder="form_placeholder_nombre">
+            <?php if ($enviado): ?>
+                <div class="success-container">
+                    <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <h2 class="success-title" data-i18n="form_enviado_titulo">¡Formulario enviado con éxito!</h2>
+                    <p class="success-text" data-i18n="form_enviado_desc">
+                        Hemos recibido tu consulta correctamente. Nuestro equipo de atención al cliente revisará tu solicitud y te responderá brevemente en un plazo máximo de <strong>48 horas hábiles</strong>.
+                    </p>
+                    <a href="ayuda.php" class="btn-submit" style="display: inline-block; text-decoration: none;" data-i18n="volver_ayuda_btn">Volver a Ayuda</a>
                 </div>
+            <?php else: ?>
+                <h1 data-i18n="formulario_contacto_h1">Formulario de Contacto</h1>
+                <p data-i18n="formulario_contacto_p">Cuéntanos tu problema o duda y te responderemos lo antes posible.</p>
                 
-                <div class="form-group">
-                    <label for="email" data-i18n="form_email">Correo electrónico</label>
-                    <input type="email" id="email" name="email" required placeholder="tu@email.com" data-i18n-placeholder="form_placeholder_email">
-                </div>
+                <form action="ayuda_formulario.php" method="POST">
+                    <div class="form-group">
+                        <label for="nombre" data-i18n="form_nombre">Nombre completo</label>
+                        <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre..." data-i18n-placeholder="form_placeholder_nombre">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" data-i18n="form_email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" required 
+                               placeholder="tu@email.com" 
+                               pattern="[^@\s]+@[^@\s]+\.[^@\s]+" 
+                               title="Por favor, introduce un correo válido (ejemplo@dominio.com)"
+                               data-i18n-placeholder="form_placeholder_email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="motivo" data-i18n="form_motivo">Motivo de la consulta</label>
+                        <select id="motivo" name="motivo" required>
+                            <option value="" disabled selected data-i18n="form_selecciona">Selecciona una opción</option>
+                            <option value="reclamacion" data-i18n="motivo_reclamacion">Reclamación</option>
+                            <option value="consulta" data-i18n="motivo_consulta">Consulta general</option>
+                            <option value="incidencia" data-i18n="motivo_incidencia">Incidencia técnica</option>
+                            <option value="sugerencia" data-i18n="motivo_sugerencia">Sugerencia</option>
+                            <option value="otros" data-i18n="motivo_otros">Otros</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mensaje" data-i18n="form_mensaje">Mensaje</label>
+                        <textarea id="mensaje" name="mensaje" required 
+                                  placeholder="Quiero poner un 10 a Azahara, Yousra y Chema por su gran trabajo." 
+                                  data-i18n-placeholder="form_placeholder_mensaje"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit" data-i18n="enviar_formulario">Enviar formulario</button>
+                </form>
                 
-                <div class="form-group">
-                    <label for="motivo" data-i18n="form_motivo">Motivo de la consulta</label>
-                    <select id="motivo" name="motivo" required>
-                        <option value="" disabled selected data-i18n="form_selecciona">Selecciona una opción</option>
-                        <option value="reclamacion" data-i18n="motivo_reclamacion">Reclamación</option>
-                        <option value="consulta" data-i18n="motivo_consulta">Consulta general</option>
-                        <option value="incidencia" data-i18n="motivo_incidencia">Incidencia técnica</option>
-                        <option value="sugerencia" data-i18n="motivo_sugerencia">Sugerencia</option>
-                        <option value="otros" data-i18n="motivo_otros">Otros</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="mensaje" data-i18n="form_mensaje">Mensaje</label>
-                    <textarea id="mensaje" name="mensaje" required placeholder="Escribe aquí tu mensaje..." data-i18n-placeholder="form_placeholder_mensaje"></textarea>
-                </div>
-                
-                <button type="submit" class="btn-submit" data-i18n="enviar_formulario">Enviar formulario</button>
-            </form>
-            
-            <a href="ayuda.php" class="back-link" data-i18n="volver_ayuda"><i class="fa-solid fa-arrow-left"></i> Volver a ayuda</a>
+                <a href="ayuda.php" class="back-link" data-i18n="volver_ayuda"><i class="fa-solid fa-arrow-left"></i> Volver a ayuda</a>
+            <?php endif; ?>
         </div>
     </main>
 
