@@ -106,8 +106,8 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
     <main class="payment-wrapper">
         <div class="payment-container">
             <div class="abono-header">
-                <h1 data-i18n="abono_<?= strtolower($tipo_codigo) ?>_nombre"><?= htmlspecialchars($abono['nombre']) ?></h1>
-                <p data-i18n="abono_<?= strtolower($tipo_codigo) ?>_desc"><?= htmlspecialchars($abono['descripcion']) ?></p>
+                <h1 data-i18n="abono_nombre_<?= strtolower($tipo_codigo) ?>"><?= htmlspecialchars($abono['nombre']) ?></h1>
+                <p data-i18n="abono_desc_<?= strtolower($tipo_codigo) ?>"><?= htmlspecialchars($abono['descripcion']) ?></p>
                 <div class="abono-price"><?= $precio_formateado ?></div>
             </div>
 
@@ -219,11 +219,11 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
         function validateCardNumber() {
             const value = cardNumber.value.replace(/\D/g, '');
             if (value === '') {
-                mostrarError(cardNumber, errCardNumber, 'Introduce el número de tarjeta.');
+                mostrarError(cardNumber, errCardNumber, window.trainwebI18n.t('error_tarjeta_16')); // O una clave específica
                 return false;
             }
             if (!/^\d{16}$/.test(value)) {
-                mostrarError(cardNumber, errCardNumber, 'Introduce 16 dígitos válidos.');
+                mostrarError(cardNumber, errCardNumber, window.trainwebI18n.t('error_tarjeta_16'));
                 return false;
             }
             limpiarError(cardNumber, errCardNumber);
@@ -233,23 +233,23 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
         function validateCardExpiry() {
             const value = cardExpiry.value;
             if (value === '') {
-                mostrarError(cardExpiry, errCardExpiry, 'Introduce la fecha de caducidad.');
+                mostrarError(cardExpiry, errCardExpiry, window.trainwebI18n.t('error_tarjeta_formato'));
                 return false;
             }
             if (!/^\d{2}\/\d{2}$/.test(value)) {
-                mostrarError(cardExpiry, errCardExpiry, 'Formato MM/AA.');
+                mostrarError(cardExpiry, errCardExpiry, window.trainwebI18n.t('error_tarjeta_formato'));
                 return false;
             }
             const [mes, anio] = value.split('/').map(Number);
             if (mes < 1 || mes > 12) {
-                mostrarError(cardExpiry, errCardExpiry, 'Mes inválido.');
+                mostrarError(cardExpiry, errCardExpiry, window.trainwebI18n.t('error_tarjeta_mes'));
                 return false;
             }
             const hoy = new Date();
             const expYear = 2000 + anio;
             const expDate = new Date(expYear, mes - 1, 1);
             if (expDate < new Date(hoy.getFullYear(), hoy.getMonth(), 1)) {
-                mostrarError(cardExpiry, errCardExpiry, 'Tarjeta caducada.');
+                mostrarError(cardExpiry, errCardExpiry, window.trainwebI18n.t('error_tarjeta_caducada'));
                 return false;
             }
             limpiarError(cardExpiry, errCardExpiry);
@@ -259,11 +259,11 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
         function validateCardCVV() {
             const value = cardCVV.value;
             if (value === '') {
-                mostrarError(cardCVV, errCardCVV, 'Introduce el CVV.');
+                mostrarError(cardCVV, errCardCVV, window.trainwebI18n.t('error_tarjeta_cvv'));
                 return false;
             }
             if (!/^\d{3}$/.test(value)) {
-                mostrarError(cardCVV, errCardCVV, 'CVV de 3 dígitos.');
+                mostrarError(cardCVV, errCardCVV, window.trainwebI18n.t('error_tarjeta_cvv'));
                 return false;
             }
             limpiarError(cardCVV, errCardCVV);
@@ -273,11 +273,11 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
         function validateCardHolder() {
             const value = cardHolder.value.trim();
             if (value === '') {
-                mostrarError(cardHolder, errCardHolder, 'Introduce el nombre y apellidos del titular.');
+                mostrarError(cardHolder, errCardHolder, window.trainwebI18n.t('error_tarjeta_titular'));
                 return false;
             }
             if (value.length < 3) {
-                mostrarError(cardHolder, errCardHolder, 'Introduce el nombre y apellidos del titular.');
+                mostrarError(cardHolder, errCardHolder, window.trainwebI18n.t('error_tarjeta_titular'));
                 return false;
             }
             limpiarError(cardHolder, errCardHolder);

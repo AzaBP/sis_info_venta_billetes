@@ -779,7 +779,6 @@ if ($id_pasajero_actual) {
         <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
 
-    <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
     <script>
     window.compraConfig = {
         totalPasajeros: <?php echo (int)$pasajeros; ?>,
@@ -797,6 +796,8 @@ if ($id_pasajero_actual) {
     };
     </script>
     <script src="js/compra.js?v=<?php echo urlencode((string)@filemtime(__DIR__ . '/js/compra.js')); ?>"></script>
+    <script src="scripts/i18n.js?v=<?php echo (string)@filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
+    <script src="scripts/session_menu.js"></script>
     <script>
     // --- Formato y validación de pago seguro ---
     document.addEventListener('DOMContentLoaded', function() {

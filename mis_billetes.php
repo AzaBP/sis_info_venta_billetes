@@ -214,18 +214,18 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
 
     <main class="my-tickets-page">
         <section class="page-hero">
-            <h1>Mis billetes</h1>
-            <p>Consulta tus reservas y descarga el PDF con QR de cada viaje.</p>
+            <h1 data-i18n="mis_billetes_hero_title">Mis billetes</h1>
+            <p data-i18n="mis_billetes_hero_desc">Consulta tus reservas y descarga el PDF con QR de cada viaje.</p>
         </section>
 
-        <div id="ticketsState" class="tickets-loading">Cargando tus billetes...</div>
+        <div id="ticketsState" class="tickets-loading" data-i18n="cargando_billetes">Cargando tus billetes...</div>
         <div id="ticketsList" class="tickets-list" hidden></div>
     </main>
 
     <div id="ticketModal" class="ticket-modal hidden" aria-hidden="true">
         <div class="ticket-modal-content">
             <div class="ticket-modal-top">
-                <h3 style="margin:0; color:#0a2a66;">Detalles del billete</h3>
+                <h3 style="margin:0; color:#0a2a66;" data-i18n="detalles_billete">Detalles del billete</h3>
                 <button type="button" id="ticketModalClose" class="ticket-modal-close" aria-label="Cerrar">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -237,8 +237,8 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
     <div id="confirmCancelModal" class="modal-confirmacion" aria-hidden="true">
         <div class="modal-confirm-content">
             <p id="confirmCancelMessage"></p> <div class="modal-confirm-buttons">
-                <button type="button" class="btn-confirm-no" id="btnCancelNo">Volver</button>
-                <button type="button" class="btn-confirm-yes" id="btnCancelYes">Sí, cancelar billete</button>
+                <button type="button" class="btn-confirm-no" id="btnCancelNo" data-i18n="volver">Volver</button>
+                <button type="button" class="btn-confirm-yes" id="btnCancelYes" data-i18n="si_cancelar">Sí, cancelar billete</button>
             </div>
         </div>
     </div>

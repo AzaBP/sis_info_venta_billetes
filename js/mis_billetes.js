@@ -12,6 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCancelYes = document.getElementById('btnCancelYes');
     let ticketIdAPreparar = null;
 
+    function tr(key, fallback, params = {}) {
+        const i18n = window.trainwebI18n;
+        let text = (i18n && typeof i18n.t === 'function') ? i18n.t(key) : null;
+        if (!text) text = fallback;
+        Object.keys(params).forEach((k) => {
+            text = text.replace(`{${k}}`, params[k]);
+        });
+        return text;
+    }
+
     function setState(message, isError = false) {
         if (!state) return;
         state.hidden = false;
@@ -78,8 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <article class="ticket-row" data-ticket-id="${escapeHtml(ticketKey)}">
                 <div class="ticket-route">
                     <div class="ticket-badges">
-                        <span class="badge badge-soft">${escapeHtml(ticket.tipo_tren || 'Tren')}</span>
-                        <span class="badge ${esPasado ? 'badge-soft' : 'badge-ok'}">${esPasado ? 'Finalizado' : 'Activo'}</span>
+                        <span class="badge badge-soft">${escapeHtml(ticket.tipo_tren || tr('tren_label', 'Tren'))}</span>
+                        <span class="badge ${esPasado ? 'badge-soft' : 'badge-ok'}">${esPasado ? tr('finalizado', 'Finalizado') : tr('activo', 'Activo')}</span>
                     </div>
                     <h3>${escapeHtml(ruta)}</h3>
                 </div>
@@ -91,11 +101,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <div class="ticket-actions">
                     <button class="btn-link btn-open-modal" type="button">
-                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i> Ver detalles
+                        <i class="fa-solid fa-up-right-and-down-left-from-center"></i> ${tr('ver_detalles', 'Ver detalles')}
                     </button>
                     ${!esPasado ? `
                     <button class="btn-link btn-cancel-ticket" type="button" data-codigo="${escapeHtml(ticket.codigo_billete || '')}" style="background-color: #8e2e2e; margin-top: 6px;">
-                        <i class="fa-solid fa-trash"></i> Cancelar
+                        <i class="fa-solid fa-trash"></i> ${tr('cancelar', 'Cancelar')}
                     </button>
                     ` : ''}
                 </div>
@@ -113,19 +123,19 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="ticket-details-grid">
                 <div class="ticket-details-info">
-                    <p><strong>Código billete:</strong> ${escapeHtml(ticket.codigo_billete || '')}</p>
-                    <p><strong>Pasajero:</strong> ${escapeHtml(pasajero || 'N/D')}</p>
-                    <p><strong>Documento:</strong> ${escapeHtml(ticket.pasajero_documento || 'N/D')}</p>
-                    <p><strong>Fecha:</strong> ${escapeHtml(ticket.fecha_viaje || '')}</p>
-                    <p><strong>Horario:</strong> ${escapeHtml((ticket.hora_salida || '') + ' - ' + (ticket.hora_llegada || ''))}</p>
-                    <p><strong>Asiento:</strong> ${escapeHtml(ticket.numero_asiento || '')}${ticket.vagon ? ` · Vagón ${escapeHtml(ticket.vagon)}` : ''}</p>
-                    <p><strong>Precio:</strong> ${formatMoney(ticket.precio_pagado)}</p>
+                    <p><strong>${tr('codigo_billete_label', 'Código billete')}:</strong> ${escapeHtml(ticket.codigo_billete || '')}</p>
+                    <p><strong>${tr('pasajero_label', 'Pasajero')}:</strong> ${escapeHtml(pasajero || 'N/D')}</p>
+                    <p><strong>${tr('documento_label', 'Documento')}:</strong> ${escapeHtml(ticket.pasajero_documento || 'N/D')}</p>
+                    <p><strong>${tr('fecha', 'Fecha')}:</strong> ${escapeHtml(ticket.fecha_viaje || '')}</p>
+                    <p><strong>${tr('horario', 'Horario')}:</strong> ${escapeHtml((ticket.hora_salida || '') + ' - ' + (ticket.hora_llegada || ''))}</p>
+                    <p><strong>${tr('asiento_label', 'Asiento')}:</strong> ${escapeHtml(ticket.numero_asiento || '')}${ticket.vagon ? ` · ${tr('vagon', 'Vagón')} ${escapeHtml(ticket.vagon)}` : ''}</p>
+                    <p><strong>${tr('precio', 'Precio')}:</strong> ${formatMoney(ticket.precio_pagado)}</p>
                 </div>
                 ${generateQRCode(ticket)}
             </div>
             <div class="ticket-detail-actions">
                 <a class="btn-link" href="${config.downloadUrl || 'php/descargar_billete.php'}?id_mongo=${encodeURIComponent(ticket.id_mongo || '')}">
-                    <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+                    <i class="fa-solid fa-file-pdf"></i> ${tr('descargar_pdf', 'Descargar PDF')}
                 </a>
             </div>
         `;
@@ -193,12 +203,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnCancel.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const b = ticketsById.get(ticketId);
-                    const mensaje = `¿Estás seguro de que deseas cancelar este billete?<br><br>
-                        Viaje: <strong>${b.origen} ➔ ${b.destino}</strong><br>
-                        Fecha: <strong>${b.fecha_viaje}</strong><br>
-                        Hora: <strong>${b.hora_salida.slice(0, 5)}h</strong><br>
-                        Asiento: <strong>${b.numero_asiento}</strong><br><br>
-                        <span style='color:#8e2e2e;'>Esta acción no se puede deshacer.</span>`;
+                    const mensaje = `${tr('cancelar_confirmacion_msg', '¿Estás seguro de que deseas cancelar este billete?')}<br><br>
+                        ${tr('viaje', 'Viaje')}: <strong>${b.origen} ➔ ${b.destino}</strong><br>
+                        ${tr('fecha', 'Fecha')}: <strong>${b.fecha_viaje}</strong><br>
+                        ${tr('hora_salida', 'Hora')}: <strong>${b.hora_salida.slice(0, 5)}h</strong><br>
+                        ${tr('asiento_label', 'Asiento')}: <strong>${b.numero_asiento}</strong><br><br>
+                        <span style='color:#8e2e2e;'>${tr('accion_no_deshacer', 'Esta acción no se puede deshacer.')}</span>`;
                     abrirModalCancelacion(b.codigo_billete, mensaje);
                 });
             }
@@ -259,8 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
             modalBody.innerHTML = `
                 <div style="text-align: center; padding: 20px;">
                     <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; color: #8e2e2e; margin-bottom: 15px;"></i>
-                    <p style="font-size: 1.1rem;">Error de conexión al intentar cancelar el billete.</p>
-                    <button onclick="document.getElementById('ticketModal').classList.add('hidden')" style="margin-top: 20px; padding: 8px 20px; cursor: pointer; border-radius: 5px; border: 1px solid #ccc; background: white;">Cerrar</button>
+                    <p style="font-size: 1.1rem;">${tr('error_conexion', 'Error de conexión al intentar cancelar el billete.')}</p>
+                    <button onclick="document.getElementById('ticketModal').classList.add('hidden')" style="margin-top: 20px; padding: 8px 20px; cursor: pointer; border-radius: 5px; border: 1px solid #ccc; background: white;">${tr('cerrar', 'Cerrar')}</button>
                 </div>
             `;
         }
@@ -285,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
             state.hidden = true;
             attachTicketListeners();
         } catch (error) {
-            setState(error.message || 'No se pudieron cargar tus billetes.', true);
+            setState(tr('error_cargar_billetes', 'No se pudieron cargar tus billetes.'), true);
         }
     }
 
