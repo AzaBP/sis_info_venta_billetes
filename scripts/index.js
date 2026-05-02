@@ -217,14 +217,19 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             let errorMsg = '';
-            if (fechaIda && fechaIda.value) {
+            
+            if (origen && origenesDb.length > 0 && !origenesDb.some(c => c.toLowerCase() === origen.toLowerCase())) {
+                errorMsg = t_err('ciudad_invalida_error') || 'Ciudad inválida';
+            } else if (destino && destinosDb.length > 0 && !destinosDb.some(c => c.toLowerCase() === destino.toLowerCase())) {
+                errorMsg = t_err('ciudad_invalida_error') || 'Ciudad inválida';
+            } else if (fechaIda && fechaIda.value) {
                 const hoy = new Date();
                 const fIda = new Date(fechaIda.value);
                 hoy.setHours(0,0,0,0);
                 if (fIda < hoy) {
                     errorMsg = t_err('error_fecha_pasada');
                 }
-                if (fechaVuelta && fechaVuelta.value) {
+                if (fechaVuelta && fechaVuelta.value && document.querySelector('input[name="trip"]:checked')?.value === 'roundtrip') {
                     const fVuelta = new Date(fechaVuelta.value);
                     if (fVuelta < fIda) {
                         errorMsg = t_err('error_fecha_orden');
