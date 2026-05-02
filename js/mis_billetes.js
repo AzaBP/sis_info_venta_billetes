@@ -212,41 +212,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- NUEVAS FUNCIONES PARA EL FLUJO DE CANCELACIÓN ---
 
-    function abrirModalCancelacion(codigoBillete) {
-        const modal = document.getElementById('ticketModal');
-        const modalBody = document.getElementById('ticketModalBody');
-        const modalTitle = modal.querySelector('.ticket-modal-top h3');
-        
-        if (modalTitle) modalTitle.textContent = 'Confirmar Cancelación';
-
-        // Inyectamos el diseño de confirmación dentro del modal
-        modalBody.innerHTML = `
-            <div style="text-align: center; padding: 20px;">
-                <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; color: #8e2e2e; margin-bottom: 15px;"></i>
-                <p style="font-size: 1.1rem; margin-bottom: 20px;">
-                    ¿Estás seguro de que deseas cancelar el billete <strong>${escapeHtml(codigoBillete)}</strong>?<br>
-                    Esta acción liberará tu asiento y no se puede deshacer.
-                </p>
-                <div style="display: flex; justify-content: center; gap: 15px;">
-                    <button id="btnConfirmarSi" style="background-color: #8e2e2e; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: opacity 0.2s;">Sí, cancelar billete</button>
-                    <button id="btnConfirmarNo" style="background-color: #e0e0e0; color: #333; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background 0.2s;">No, mantener billete</button>
-                </div>
-            </div>
-        `;
-
-        modal.classList.remove('hidden');
-
-        // Botón SÍ: Muestra un loader y llama al servidor
-        document.getElementById('btnConfirmarSi').addEventListener('click', async () => {
-            modalBody.innerHTML = '<p style="text-align:center; font-size: 1.2rem; padding: 30px;">Procesando cancelación <i class="fa-solid fa-spinner fa-spin"></i></p>';
-            await procesarCancelacion(codigoBillete, modalBody);
-        });
-
-        // Botón NO: Cierra el modal
-        document.getElementById('btnConfirmarNo').addEventListener('click', () => {
-            modal.classList.add('hidden');
-            if (modalTitle) modalTitle.textContent = 'Detalles del billete';
-        });
+    function abrirModalCancelacion(codigo, mensaje) {
+        const msgElement = document.getElementById('confirmCancelMessage');
+        if (msgElement) {
+            // Aquí es donde le decimos que use el mensaje que viene de attachTicketListeners
+            msgElement.textContent = mensaje; 
+        }
+        ticketIdAPreparar = codigo;
+        confirmModal.classList.add('active');
     }
 
     async function procesarCancelacion(codigoBillete, modalBody) {

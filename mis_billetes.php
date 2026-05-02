@@ -227,11 +227,11 @@ $nombreSesion = $usuarioSesion['nombre'] ?? 'Usuario';
 
     <div id="confirmCancelModal" class="modal-confirmacion" aria-hidden="true">
         <div class="modal-confirm-content">
-            <h3 style="color: #0a2a66; margin-bottom: 15px;">¿Confirmar cancelación?</h3>
-            <p id="confirmCancelMessage" style="color: #555; margin-bottom: 25px; line-height: 1.5;"></p>
-            <div class="modal-confirm-buttons" style="display: flex; gap: 10px; justify-content: center;">
-                <button type="button" class="btn-confirm-no" id="btnCancelNo" style="background: #e5e7eb; color: #374151; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">Volver</button>
-                <button type="button" class="btn-confirm-yes" id="btnCancelYes" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">Sí, cancelar billete</button>
+            <h3>¿Confirmar cancelación?</h3>
+            <p id="confirmCancelMessage"></p>
+            <div class="modal-confirm-buttons">
+                <button type="button" class="btn-confirm-no" id="btnCancelNo">Volver</button>
+                <button type="button" class="btn-confirm-yes" id="btnCancelYes">Sí, cancelar billete</button>
             </div>
         </div>
     </div>
