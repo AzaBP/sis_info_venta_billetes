@@ -206,14 +206,14 @@ try {
                         <div class="offer-card" style="background: #fff; border: 1px solid #ddd; border-radius: 12px; overflow: hidden; min-width: 280px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center;">
                             <img src="<?= $imagen ?>" alt="<?= htmlspecialchars($abono['nombre']) ?>" style="width: 100%; height: 150px; object-fit: cover;">
                             <div style="padding: 20px;">
-                                <h3 style="margin: 0 0 10px 0; color: #0a2a66; font-size: 1.2rem;"><?= htmlspecialchars($abono['nombre']) ?></h3>
-                                <p style="font-size: 0.9rem; color: #555; margin: 0 0 15px 0; line-height: 1.4;"><?= $descripcion_extendida ?></p>
+                                <h3 style="margin: 0 0 10px 0; color: #0a2a66; font-size: 1.2rem;" data-i18n="abono_nombre_<?= strtolower($abono['tipo_codigo']) ?>"><?= htmlspecialchars($abono['nombre']) ?></h3>
+                                <p style="font-size: 0.9rem; color: #555; margin: 0 0 15px 0; line-height: 1.4;" data-i18n="abono_desc_<?= strtolower($abono['tipo_codigo']) ?>"><?= $descripcion_extendida ?></p>
                                 <div style="font-size: 1.5rem; font-weight: bold; color: #17632A; margin-bottom: 15px;">
                                     <?= number_format($abono['precio'], 2, ',', '.') ?> €
                                 </div>
                                 <div style="display: flex; gap: 10px; justify-content: center;">
-                                    <a href="ofertas.php" class="btn-info" style="background: #6c757d; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">Más información</a>
-                                    <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-comprar" style="background: #0a2a66; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">Comprar</a>
+                                    <a href="ofertas.php" class="btn-info" style="background: #6c757d; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;" data-i18n="mas_informacion">Más información</a>
+                                    <a href="comprar_abono.php?tipo=<?= urlencode($abono['tipo_codigo']) ?>" class="btn-comprar" style="background: #0a2a66; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-size: 0.9rem;" data-i18n="comprar">Comprar</a>
                                 </div>
                             </div>
                         </div>
@@ -229,12 +229,12 @@ try {
         </section>
 
         <section class="cancel-section" style="padding: 40px 20px; background-color: #eef2f7; text-align: center; margin: 40px auto; max-width: 800px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <h2 style="color: #0a2a66; margin-bottom: 10px;"><i class="fa-solid fa-ticket-simple"></i> ¿Necesitas cancelar tu billete?</h2>
-            <p style="color: #666; margin-bottom: 20px;">Introduce el código localizador de tu billete para proceder con la cancelación automática.</p>
+            <h2 style="color: #0a2a66; margin-bottom: 10px;" data-i18n="cancelar_titulo"><i class="fa-solid fa-ticket-simple"></i> ¿Necesitas cancelar tu billete?</h2>
+            <p style="color: #666; margin-bottom: 20px;" data-i18n="cancelar_desc">Introduce el código localizador de tu billete para proceder con la cancelación automática.</p>
             
             <div style="display: flex; justify-content: center; gap: 10px; max-width: 500px; margin: 0 auto;">
-                <input type="text" id="codigo_cancelacion" placeholder="Ej: 69c126f8..." style="flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;">
-                <button id="btn_cancelar_billete" class="btn-primary" style="padding: 12px 24px; border: none; border-radius: 6px; background-color: #0a2a66; color: white; font-weight: bold; cursor: pointer; transition: background 0.3s;">Cancelar viaje</button>
+                <input type="text" id="codigo_cancelacion" placeholder="Ej: TW-2024..." data-i18n-placeholder="cancelar_placeholder" style="flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;">
+                <button id="btn_cancelar_billete" class="btn-primary" style="padding: 12px 24px; border: none; border-radius: 6px; background-color: #0a2a66; color: white; font-weight: bold; cursor: pointer; transition: background 0.3s;" data-i18n="boton_cancelar">Cancelar viaje</button>
             </div>
             
             <div id="cancel_msg" style="display: none; margin-top: 15px; padding: 10px; border-radius: 6px; font-weight: bold;"></div>
@@ -305,14 +305,18 @@ function mostrarPromoAleatoria() {
     // Creamos el elemento
     const popup = document.createElement('div');
     popup.className = 'promo-popup';
+    
+    const titulo = window.trainwebI18n ? window.trainwebI18n.t('oferta_especial_titulo') : "¡Oferta Especial! 🚅";
+    const body = window.trainwebI18n ? window.trainwebI18n.t('oferta_especial_body', { code: promo.codigo, pct: promo.descuento_porcentaje }) : `Usa el código <strong>${promo.codigo}</strong> y obtén un <strong>${promo.descuento_porcentaje}%</strong> de descuento.`;
+    const verMas = window.trainwebI18n ? window.trainwebI18n.t('ver_mas_ofertas') : "Ver más en ofertas";
+
     popup.innerHTML = `
         <span class="promo-close" onclick="this.parentElement.remove()">×</span>
-        <div class="promo-header">¡Oferta Especial! 🚅</div>
+        <div class="promo-header">${titulo}</div>
         <div class="promo-body">
-            Usa el código <strong>${promo.codigo}</strong> y obtén un 
-            <strong>${promo.descuento_porcentaje}%</strong> de descuento.
-            
-            <a href="ofertas.php">Ver más en ofertas</a>
+            ${body}
+            <br><br>
+            <a href="ofertas.php">${verMas}</a>
         </div>
     `;
 

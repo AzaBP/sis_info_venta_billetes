@@ -146,6 +146,28 @@ document.addEventListener('DOMContentLoaded', () => {
             valido_hasta: 'Válido hasta',
             sin_ofertas: 'Actualmente no hay ofertas disponibles. ¡Vuelve pronto!',
             dto: 'Dto.',
+            abono_nombre_mensual: 'Mensual',
+            abono_desc_mensual: 'Viajes ilimitados durante 30 días. Ideal para viajes frecuentes con descuentos exclusivos y flexibilidad total.',
+            abono_nombre_trimestral: 'Trimestral',
+            abono_desc_trimestral: 'Viajes ilimitados durante 90 días. Ideal para viajes frecuentes con descuentos exclusivos y flexibilidad total.',
+            abono_nombre_10_viajes: '10 viajes',
+            abono_desc_10_viajes: 'Bono de 10 viajes válido por 60 días. Ideal para viajes frecuentes con descuentos exclusivos y flexibilidad total.',
+            abono_nombre_20_viajes: '20 viajes',
+            abono_desc_20_viajes: 'Bono de 20 viajes válido por 90 días. Ideal para viajes frecuentes con descuentos exclusivos y flexibilidad total.',
+            abono_nombre_anual: 'Anual',
+            abono_desc_anual: 'Viajes ilimitados durante 365 días. Ideal para viajes frecuentes con descuentos exclusivos y flexibilidad total.',
+            mas_informacion: 'Más información',
+            
+            // Cancelación
+            cancelar_titulo: '¿Necesitas cancelar tu billete?',
+            cancelar_desc: 'Introduce el código localizador de tu billete para proceder con la cancelación automática.',
+            cancelar_placeholder: 'Ej: TW-2024...',
+            boton_cancelar: 'Cancelar viaje',
+            
+            // Ofertas Especiales (Popups)
+            oferta_especial_titulo: '¡Oferta Especial! 🚅',
+            oferta_especial_body: 'Usa el código <strong>{code}</strong> y obtén un <strong>{pct}%</strong> de descuento.',
+            ver_mas_ofertas: 'Ver más en ofertas',
             
             // Billetes
             mis_billetes: 'Mis Billetes',
@@ -548,12 +570,34 @@ document.addEventListener('DOMContentLoaded', () => {
             ver_rutas: 'View routes',
             
             // Passes and Promotions
-            abonos_promociones: 'Passes and promotions',
+            abonos_promociones: 'Passes and Promotions',
             comprar: 'Buy',
             usa_codigo: 'Use code',
             valido_hasta: 'Valid until',
-            sin_ofertas: 'There are currently no offers available. Please come back soon!',
-            dto: 'Off.',
+            sin_ofertas: 'Currently no offers available. Check back soon!',
+            dto: 'Disc.',
+            abono_nombre_mensual: 'Monthly',
+            abono_desc_mensual: 'Unlimited travel for 30 days. Ideal for frequent trips with exclusive discounts and total flexibility.',
+            abono_nombre_trimestral: 'Quarterly',
+            abono_desc_trimestral: 'Unlimited travel for 90 days. Ideal for frequent trips with exclusive discounts and total flexibility.',
+            abono_nombre_10_viajes: '10 trips',
+            abono_desc_10_viajes: '10-trip pass valid for 60 days. Ideal for frequent trips with exclusive discounts and total flexibility.',
+            abono_nombre_20_viajes: '20 trips',
+            abono_desc_20_viajes: '20-trip pass valid for 90 days. Ideal for frequent trips with exclusive discounts and total flexibility.',
+            abono_nombre_anual: 'Annual',
+            abono_desc_anual: 'Unlimited travel for 365 days. Ideal for frequent trips with exclusive discounts and total flexibility.',
+            mas_informacion: 'More information',
+            
+            // Cancelación
+            cancelar_titulo: 'Need to cancel your ticket?',
+            cancelar_desc: 'Enter your ticket locator code to proceed with the automatic cancellation.',
+            cancelar_placeholder: 'Ex: TW-2024...',
+            boton_cancelar: 'Cancel trip',
+            
+            // Ofertas Especiales (Popups)
+            oferta_especial_titulo: 'Special Offer! 🚅',
+            oferta_especial_body: 'Use the code <strong>{code}</strong> and get a <strong>{pct}%</strong> discount.',
+            ver_mas_ofertas: 'See more deals',
             
             // Tickets
             mis_billetes: 'My Tickets',
@@ -956,12 +1000,34 @@ document.addEventListener('DOMContentLoaded', () => {
             ver_rutas: 'Voir les trajets',
             
             // Passes and Promotions
-            abonos_promociones: 'Abonnements et promotions',
+            abonos_promociones: 'Abonnements et Promotions',
             comprar: 'Acheter',
             usa_codigo: 'Utilisez le code',
             valido_hasta: 'Valable jusqu\'au',
-            sin_ofertas: 'Il n\'y a actuellement aucune offre disponible. Revenez bientôt!',
-            dto: 'Réduc.',
+            sin_ofertas: 'Aucune offre disponible pour le moment. Revenez bientôt !',
+            dto: 'Rem.',
+            abono_nombre_mensual: 'Mensuel',
+            abono_desc_mensual: 'Voyages illimités pendant 30 jours. Idéal pour les voyages fréquents avec des remises exclusives et une flexibilité totale.',
+            abono_nombre_trimestral: 'Trimestriel',
+            abono_desc_trimestral: 'Voyages illimités pendant 90 jours. Idéal pour les voyages fréquents avec des remises exclusives et une flexibilité totale.',
+            abono_nombre_10_viajes: '10 voyages',
+            abono_desc_10_viajes: 'Forfait 10 voyages valable 60 jours. Idéal pour les voyages fréquents avec des remises exclusives et une flexibilité totale.',
+            abono_nombre_20_viajes: '20 voyages',
+            abono_desc_20_viajes: 'Forfait 20 voyages valable 90 jours. Idéal pour les voyages fréquents avec des remises exclusives et une flexibilité totale.',
+            abono_nombre_anual: 'Annuel',
+            abono_desc_anual: 'Voyages illimités pendant 365 jours. Idéal pour les voyages fréquents avec des remises exclusives et une flexibilité totale.',
+            mas_informacion: 'Plus d\'informations',
+            
+            // Cancelación
+            cancelar_titulo: 'Besoin d\'annuler votre billet ?',
+            cancelar_desc: 'Entrez le code de localisation de votre billet pour procéder à l\'annulation automatique.',
+            cancelar_placeholder: 'Ex: TW-2024...',
+            boton_cancelar: 'Annuler le voyage',
+            
+            // Ofertas Especiales (Popups)
+            oferta_especial_titulo: 'Offre Spéciale ! 🚅',
+            oferta_especial_body: 'Utilisez le code <strong>{code}</strong> et profitez de <strong>{pct}%</strong> de réduction.',
+            ver_mas_ofertas: 'Voir plus d\'offres',
             
             // Tickets
             mis_billetes: 'Mes Billets',
@@ -1262,6 +1328,28 @@ document.addEventListener('DOMContentLoaded', () => {
             valido_hasta: 'Gültig bis',
             sin_ofertas: 'Derzeit sind keine Angebote verfügbar. Bitte kommen Sie bald wieder!',
             dto: 'Rab.',
+            abono_nombre_mensual: 'Monatlich',
+            abono_desc_mensual: 'Unbegrenzte Fahrten für 30 Tage. Ideal für Vielfahrer mit exklusiven Rabatten und voller Flexibilität.',
+            abono_nombre_trimestral: 'Vierteljährlich',
+            abono_desc_trimestral: 'Unbegrenzte Fahrten für 90 Tage. Ideal für Vielfahrer mit exklusiven Rabatten und voller Flexibilität.',
+            abono_nombre_10_viajes: '10 Fahrten',
+            abono_desc_10_viajes: '10-Fahrten-Abo gültig für 60 Tage. Ideal für Vielfahrer mit exklusiven Rabatten und voller Flexibilität.',
+            abono_nombre_20_viajes: '20 Fahrten',
+            abono_desc_20_viajes: '20-Fahrten-Abo gültig für 90 Tage. Ideal für Vielfahrer mit exklusiven Rabatten und voller Flexibilität.',
+            abono_nombre_anual: 'Jährlich',
+            abono_desc_anual: 'Unbegrenzte Fahrten für 365 Tage. Ideal für Vielfahrer mit exklusiven Rabatten und voller Flexibilität.',
+            mas_informacion: 'Mehr Informationen',
+            
+            // Cancelación
+            cancelar_titulo: 'Müssen Sie Ihr Ticket stornieren?',
+            cancelar_desc: 'Geben Sie Ihren Buchungscode ein, um mit der automatischen Stornierung fortzufahren.',
+            cancelar_placeholder: 'Z. B.: TW-2024...',
+            boton_cancelar: 'Reise stornieren',
+            
+            // Ofertas Especiales (Popups)
+            oferta_especial_titulo: 'Sonderangebot! 🚅',
+            oferta_especial_body: 'Nutzen Sie den Code <strong>{code}</strong> und erhalten Sie <strong>{pct}%</strong> Rabatt.',
+            ver_mas_ofertas: 'Mehr Angebote sehen',
             
             // Tickets
             mis_billetes: 'Meine Tickets',
@@ -1320,7 +1408,6 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_privacidad: 'Datenschutz',
             footer_cookies: 'Cookies',
             footer_terminos: 'Allgemeine Geschäftsbedingungen',
-            ofertas_h1: 'Entdecken Sie Unsere Angebote',
             ofertas_desc: 'Sparen Sie bei Ihren Reisen mit unseren Abos und exklusiven Aktionen.',
             
             // Login

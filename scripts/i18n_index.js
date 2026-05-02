@@ -42,7 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_privacidad: 'Privacidad',
             footer_cookies: 'Cookies',
             footer_terminos: 'Términos y condiciones',
-            footer_copyright: '© 2026 TrainWeb · Todos los derechos reservados'
+            footer_copyright: '© 2026 TrainWeb · Todos los derechos reservados',
+            // Cancelación
+            cancelar_titulo: '¿Necesitas cancelar tu billete?',
+            cancelar_desc: 'Introduce el código localizador de tu billete para proceder con la cancelación automática.',
+            cancelar_placeholder: 'Ej: TW-2024...',
+            boton_cancelar: 'Cancelar viaje',
+            // Ofertas Especiales (Popups)
+            oferta_especial_titulo: '¡Oferta Especial! 🚅',
+            oferta_especial_body: 'Usa el código <strong>{code}</strong> y obtén un <strong>{pct}%</strong> de descuento.',
+            ver_mas_ofertas: 'Ver más en ofertas'
         },
         en: {
             billetes: 'Tickets',
@@ -86,7 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_privacidad: 'Privacy',
             footer_cookies: 'Cookies',
             footer_terminos: 'Terms and conditions',
-            footer_copyright: '© 2026 TrainWeb · All rights reserved'
+            footer_copyright: '© 2026 TrainWeb · All rights reserved',
+            // Cancelación
+            cancelar_titulo: 'Need to cancel your ticket?',
+            cancelar_desc: 'Enter your ticket locator code to proceed with the automatic cancellation.',
+            cancelar_placeholder: 'Ex: TW-2024...',
+            boton_cancelar: 'Cancel trip',
+            // Ofertas Especiales (Popups)
+            oferta_especial_titulo: 'Special Offer! 🚅',
+            oferta_especial_body: 'Use the code <strong>{code}</strong> and get a <strong>{pct}%</strong> discount.',
+            ver_mas_ofertas: 'See more deals'
         },
         fr: {
             billetes: 'Billets',
@@ -130,7 +148,16 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_privacidad: 'Confidentialité',
             footer_cookies: 'Cookies',
             footer_terminos: 'Conditions générales',
-            footer_copyright: '© 2026 TrainWeb · Tous droits réservés'
+            footer_copyright: '© 2026 TrainWeb · Tous droits réservés',
+            // Cancelación
+            cancelar_titulo: 'Besoin d\'annuler votre billet ?',
+            cancelar_desc: 'Entrez le code de localisation de votre billet pour procéder à l\'annulation automatique.',
+            cancelar_placeholder: 'Ex: TW-2024...',
+            boton_cancelar: 'Annuler le voyage',
+            // Ofertas Especiales (Popups)
+            oferta_especial_titulo: 'Offre Spéciale ! 🚅',
+            oferta_especial_body: 'Utilisez le code <strong>{code}</strong> et profitez de <strong>{pct}%</strong> de réduction.',
+            ver_mas_ofertas: 'Voir plus d\'offres'
         },
         de: {
             billetes: 'Tickets',
@@ -174,7 +201,16 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_privacidad: 'Datenschutz',
             footer_cookies: 'Cookies',
             footer_terminos: 'Allgemeine Geschäftsbedingungen',
-            footer_copyright: '© 2026 TrainWeb · Alle Rechte vorbehalten'
+            footer_copyright: '© 2026 TrainWeb · Alle Rechte vorbehalten',
+            // Cancelación
+            cancelar_titulo: 'Müssen Sie Ihr Ticket stornieren?',
+            cancelar_desc: 'Geben Sie Ihren Buchungscode ein, um mit der automatischen Stornierung fortzufahren.',
+            cancelar_placeholder: 'Z. B.: TW-2024...',
+            boton_cancelar: 'Reise stornieren',
+            // Ofertas Especiales (Popups)
+            oferta_especial_titulo: 'Sonderangebot! 🚅',
+            oferta_especial_body: 'Nutzen Sie den Code <strong>{code}</strong> und erhalten Sie <strong>{pct}%</strong> Rabatt.',
+            ver_mas_ofertas: 'Mehr Angebote sehen'
         }
     };
 
@@ -187,7 +223,12 @@ document.addEventListener('DOMContentLoaded', () => {
             'Abonico Majico': 'Magic pass',
             'abono para gente tajo maja': 'Pass for very nice people',
             'Abono 60': 'Pass 60',
-            'Abono para jovenes de 60 años, que les guste viajar a un precio asequible': 'Pass for young 60-year-old travelers who want affordable prices'
+            'Abono para jovenes de 60 años, que les guste viajar a un precio asequible': 'Pass for young 60-year-old travelers who want affordable prices',
+            'Mensual': 'Monthly',
+            'Trimestral': 'Quarterly',
+            'Anual': 'Annual',
+            '10 viajes': '10 trips',
+            '20 viajes': '20 trips'
         },
         fr: {
             'Estudiantes': 'Étudiants',
@@ -225,13 +266,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return normalizeLanguage(saved || 'es');
     }
 
-    function t(key, lang = getLanguage()) {
+    function t(key, params = {}, lang = getLanguage()) {
         const normalizedKey = String(key || '').replace(/-/g, '_');
-        return (
+        let text = (
             (translations[lang] && (translations[lang][key] || translations[lang][normalizedKey])) ||
             (translations.es && (translations.es[key] || translations.es[normalizedKey])) ||
             null
         );
+
+        if (text && typeof text === 'string') {
+            Object.keys(params).forEach(param => {
+                text = text.replace(new RegExp(`{${param}}`, 'g'), params[param]);
+            });
+        }
+        return text;
     }
 
     function applyTranslations() {
