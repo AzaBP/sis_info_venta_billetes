@@ -715,7 +715,7 @@ if ($id_pasajero_actual) {
 
         <!-- Modal de confirmación para compra como invitado -->
         <div id="guestWarningModal" class="modal hidden" aria-hidden="true">
-            <div class="modal-content">
+            <div class="modal-content guest-modal">
                 <div class="modal-header">
                     <h3><i class="fa-solid fa-exclamation-triangle"></i> Confirmación de compra como invitado</h3>
                     <button type="button" class="modal-close" onclick="cerrarModalInvitado()" aria-label="Cerrar">
@@ -723,8 +723,10 @@ if ($id_pasajero_actual) {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Estás comprando un billete sin iniciar sesión. Asegúrate de que el correo electrónico del pasajero sea correcto, ya que no podrás acceder a tu cuenta para modificarlo o gestionar el billete más tarde.</p>
-                    <p>¿Deseas continuar con la compra?</p>
+                    <p>Compra como invitado. Verifica que el correo sea correcto:</p>
+                    <p><strong>Correo: <span id="guestEmail"></span></strong></p>
+                    <p>No podrás gestionar el billete sin cuenta registrada.</p>
+                    <p>¿Continuar?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-cancel" onclick="cerrarModalInvitado()">Cancelar</button>

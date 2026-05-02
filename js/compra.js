@@ -593,6 +593,11 @@ function confirmarReserva() {
     // Verificar si hay sesión iniciada
     const hasSession = window.compraConfig && window.compraConfig.pasajeroPrincipal && window.compraConfig.pasajeroPrincipal.email;
     if (!hasSession) {
+        // Setear el email del pasajero 1 en el modal
+        const guestEmail = document.getElementById('guestEmail');
+        if (guestEmail) {
+            guestEmail.textContent = estado.datosPasajeros[0]?.email || '';
+        }
         // Mostrar modal de confirmación para invitado
         const modal = document.getElementById('guestWarningModal');
         if (modal) modal.classList.remove('hidden');

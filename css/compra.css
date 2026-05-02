@@ -409,6 +409,10 @@
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
 }
 
+.guest-modal {
+    width: min(550px, 100%);
+}
+
 .modal-header {
     display: flex;
     align-items: center;
@@ -434,6 +438,7 @@
 
 .modal-body {
     margin-bottom: 20px;
+    font-size: 0.9rem;
 }
 
 .modal-footer {
@@ -443,7 +448,7 @@
 }
 
 .btn-cancel {
-    background: #666;
+    background: #dc3545;
     color: white;
     border: none;
     padding: 10px 20px;
