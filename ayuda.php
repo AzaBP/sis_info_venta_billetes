@@ -182,10 +182,10 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
             </div>
             <div class="footer-column">
                 <h4 data-i18n="footer_services">Servicios</h4>
-                <a href="#"><i class="fa-solid fa-ticket"></i> <span data-i18n="footer_billetes">Billetes</span></a>
+                <a href="mis_billetes.php"><i class="fa-solid fa-ticket"></i> <span data-i18n="footer_billetes">Billetes</span></a>
                 <a href="horarios.php"><i class="fa-solid fa-clock"></i> <span data-i18n="footer_horarios">Horarios</span></a>
                 <a href="ofertas.php"><i class="fa-solid fa-tags"></i> <span data-i18n="footer_ofertas">Ofertas</span></a>
-                <a href="#"><i class="fa-solid fa-headset"></i> <span data-i18n="footer_atencion">Atención al cliente</span></a>
+                <a href="ayuda.php"><i class="fa-solid fa-headset"></i> <span data-i18n="footer_atencion">Atención al cliente</span></a>
             </div>
             <div class="footer-column">
                 <h4 data-i18n="footer_legal">Información legal</h4>
