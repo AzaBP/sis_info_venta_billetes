@@ -460,9 +460,26 @@ function renderizarFormulariosPasajeros() {
 function validarDNI(dni) {
     const dniLimpio = dni.toUpperCase().replace(/\s/g, '');
     if (dniLimpio.length < 6) return false;
-    if (/^\d{8}[A-Z]$/.test(dniLimpio)) return true;
-    if (/^[XYZ]\d{7}[A-Z]$/.test(dniLimpio)) return true;
-    if (/^[A-Z0-9]{6,20}$/.test(dniLimpio)) return true;
+
+    const letras = 'TRWAGMYFPDXBNJZSQVHLCKE';
+
+    if (/^\d{8}[A-Z]$/.test(dniLimpio)) {
+        const numero = parseInt(dniLimpio.slice(0, 8), 10);
+        const letraEsperada = letras[numero % 23];
+        return dniLimpio[8] === letraEsperada;
+    }
+
+    if (/^[XYZ]\d{7}[A-Z]$/.test(dniLimpio)) {
+        const prefijo = dniLimpio[0] === 'X' ? '0' : dniLimpio[0] === 'Y' ? '1' : '2';
+        const numero = parseInt(prefijo + dniLimpio.slice(1, 8), 10);
+        const letraEsperada = letras[numero % 23];
+        return dniLimpio[8] === letraEsperada;
+    }
+
+    if (/^[A-Z0-9]{6,20}$/.test(dniLimpio)) {
+        return true;
+    }
+
     return false;
 }
 
