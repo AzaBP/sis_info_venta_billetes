@@ -12,15 +12,17 @@ require_once __DIR__ . '/../php/DAO/ViajeDAO.php';
 require_once __DIR__ . '/../php/DAO/BilleteMongoDB.php';
 require_once __DIR__ . '/../php/VO/Viaje.php';
 require_once __DIR__ . '/../php/VO/Billete.php';
-require_once __DIR__ . '/../php/Conexion.php'; // Para consultas directas de apoyo
 
 echo "<h1>🚀 Panel de Carga Masiva - CAESARAV</h1>";
 echo "<div style='font-family: monospace; background: #222; color: #0f0; padding: 20px; border-radius: 10px; max-height: 500px; overflow-y: scroll;'>";
 
 try {
+    // 1. Crear una instancia de conexión primero
+    $conexionBase = new Conexion();
+    
+    // 2. Ahora instanciar los DAOs
     $viajeDAO = new ViajeDAO();
     $billeteMongo = new BilleteMongoDB();
-    $pdo = (new Conexion())->conectar();
 
     // 2. Datos Maestros (Extraídos de tus consultas SQL)
     $rutas = [
