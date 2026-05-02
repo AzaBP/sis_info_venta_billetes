@@ -128,7 +128,7 @@
     </div>
 
     <div class="train-animation">
-        <i class="fa-solid fa-train-subway"></i> 🚋🚋🚋
+        🚋🚋🚋
     </div>
 </body>
 </html>
