@@ -14,7 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
             iniciar_sesion: 'Iniciar sesión',
             cerrar_sesion: 'Cerrar sesión',
             mi_perfil: 'Mi perfil',
-            
+            panel_vendedor: 'Panel Vendedor',
+            panel_mantenimiento: 'Panel Mantenimiento',
+            panel: 'Panel de Control',
+
             // Login
             login_bienvenida: 'Bienvenido a TrainWeb',
             login_desc: 'Accede a tu cuenta para gestionar reservas, consultar horarios y aprovechar nuestras promociones exclusivas.',
@@ -36,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contrasena_requerida: 'La contraseña es requerida',
             error_interno: 'Error interno. Intenta de nuevo más tarde.',
             correo_verificado_exito: '¡Correo verificado correctamente! Ya puedes iniciar sesión.',
-            
+
             // Registro
             registro_paso1_label: 'Personales',
             registro_paso1_titulo: 'Datos Personales',
@@ -122,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             error_crear_usuario: '⚠️ Error al crear el usuario.',
             error_crear_perfil: '⚠️ Error al crear el perfil del pasajero.',
             datos_incompletos_error: '⚠️ Faltan datos obligatorios en el formulario de registro.',
-            
+
             // Index / Búsqueda
             busca_tren: 'Busca tu tren',
             solo_ida: 'Solo ida',
@@ -138,7 +141,16 @@ document.addEventListener('DOMContentLoaded', () => {
             desc_sevilla: 'Cultura, historia y gastronomía en cada estación.',
             desc_valencia: 'Costa mediterránea y ciudades modernas conectadas por tren.',
             ver_rutas: 'Ver rutas',
-            
+
+            // Errores Buscador
+            error_origen: 'Selecciona un origen.',
+            error_destino: 'Selecciona un destino.',
+            error_fecha_ida: 'Selecciona una fecha de ida.',
+            error_fecha_vuelta: 'Selecciona una fecha de vuelta.',
+            error_pasajeros: 'Selecciona el número de pasajeros.',
+            error_fecha_pasada: 'La fecha de ida no puede ser anterior a hoy.',
+            error_fecha_orden: 'La fecha de vuelta no puede ser anterior a la de ida.',
+
             // Abonos y Promociones
             abonos_promociones: 'Abonos y Promociones',
             comprar: 'Comprar',
@@ -157,18 +169,18 @@ document.addEventListener('DOMContentLoaded', () => {
             abono_nombre_anual: 'Anual',
             abono_desc_anual: 'Viajes ilimitados durante 365 días. Ideal para viajes frecuentes con descuentos exclusivos y flexibilidad total.',
             mas_informacion: 'Más información',
-            
+
             // Cancelación
             cancelar_titulo: '¿Necesitas cancelar tu billete?',
             cancelar_desc: 'Introduce el código localizador de tu billete para proceder con la cancelación automática.',
-            cancelar_placeholder: 'Ej: TW-2024...',
+            cancelar_placeholder: 'Ej: TW-20...',
             boton_cancelar: 'Cancelar viaje',
-            
+
             // Ofertas Especiales (Popups)
             oferta_especial_titulo: '¡Oferta Especial! 🚅',
             oferta_especial_body: 'Usa el código <strong>{code}</strong> y obtén un <strong>{pct}%</strong> de descuento.',
             ver_mas_ofertas: 'Ver más en ofertas',
-            
+
             // Billetes
             mis_billetes: 'Mis Billetes',
             fecha: 'Fecha',
@@ -178,13 +190,13 @@ document.addEventListener('DOMContentLoaded', () => {
             precio: 'Precio',
             origen: 'Origen',
             destino: 'Destino',
-            
+
             // Compra
             resumen_compra: 'Resumen de Compra',
             pasajeros: 'Pasajeros',
             total: 'Total',
             confirmar_compra: 'Confirmar Compra',
-            
+
             // Ayuda
             ayuda_titulo: '¿En qué podemos ayudarte?',
             ayuda_desc: 'Busca soluciones rápidas a tus dudas sobre viajes, billetes y servicios.',
@@ -212,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formulario_quejas: 'Formulario / Quejas',
             formulario_desc: 'Para reclamaciones formales o consultas extensas, utiliza nuestro formulario.',
             abrir_formulario: 'Abrir formulario',
-            
+
             // Footer
             footer_services: 'Servicios',
             footer_descripcion: 'Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.',
@@ -444,7 +456,10 @@ document.addEventListener('DOMContentLoaded', () => {
             iniciar_sesion: 'Sign in',
             cerrar_sesion: 'Sign out',
             mi_perfil: 'My profile',
-            
+            panel_vendedor: 'Seller Panel',
+            panel_mantenimiento: 'Maintenance Panel',
+            panel: 'Control Panel',
+
             // Login
             login_bienvenida: 'Welcome to TrainWeb',
             login_desc: 'Access your account to manage bookings, check schedules and enjoy our exclusive promotions.',
@@ -466,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contrasena_requerida: 'Password is required',
             error_interno: 'Internal error. Try again later.',
             correo_verificado_exito: 'Email verified successfully! You can now log in.',
-            
+
             // Registro
             registro_paso1_label: 'Personal',
             registro_paso1_titulo: 'Personal Details',
@@ -552,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
             error_crear_usuario: '⚠️ Error creating user.',
             error_crear_perfil: '⚠️ Error creating passenger profile.',
             datos_incompletos_error: '⚠️ Missing required data in the registration form.',
-            
+
             // Index / Search
             busca_tren: 'Find your train',
             solo_ida: 'One way',
@@ -568,7 +583,16 @@ document.addEventListener('DOMContentLoaded', () => {
             desc_sevilla: 'Culture, history and gastronomy at every station.',
             desc_valencia: 'Mediterranean coast and modern cities connected by rail.',
             ver_rutas: 'View routes',
-            
+
+            // Search Errors
+            error_origen: 'Please select an origin.',
+            error_destino: 'Please select a destination.',
+            error_fecha_ida: 'Please select a departure date.',
+            error_fecha_vuelta: 'Please select a return date.',
+            error_pasajeros: 'Please select the number of passengers.',
+            error_fecha_pasada: 'Departure date cannot be in the past.',
+            error_fecha_orden: 'Return date cannot be before departure date.',
+
             // Passes and Promotions
             abonos_promociones: 'Passes and Promotions',
             comprar: 'Buy',
@@ -587,18 +611,18 @@ document.addEventListener('DOMContentLoaded', () => {
             abono_nombre_anual: 'Annual',
             abono_desc_anual: 'Unlimited travel for 365 days. Ideal for frequent trips with exclusive discounts and total flexibility.',
             mas_informacion: 'More information',
-            
+
             // Cancelación
             cancelar_titulo: 'Need to cancel your ticket?',
             cancelar_desc: 'Enter your ticket locator code to proceed with the automatic cancellation.',
-            cancelar_placeholder: 'Ex: TW-2024...',
+            cancelar_placeholder: 'Ex: TW-20...',
             boton_cancelar: 'Cancel trip',
-            
+
             // Ofertas Especiales (Popups)
             oferta_especial_titulo: 'Special Offer! 🚅',
             oferta_especial_body: 'Use the code <strong>{code}</strong> and get a <strong>{pct}%</strong> discount.',
             ver_mas_ofertas: 'See more deals',
-            
+
             // Tickets
             mis_billetes: 'My Tickets',
             fecha: 'Date',
@@ -608,13 +632,13 @@ document.addEventListener('DOMContentLoaded', () => {
             precio: 'Price',
             origen: 'Origin',
             destino: 'Destination',
-            
+
             // Purchase
             resumen_compra: 'Purchase Summary',
             pasajeros: 'Passengers',
             total: 'Total',
             confirmar_compra: 'Confirm Purchase',
-            
+
             // Help
             ayuda_titulo: 'How can we help you?',
             ayuda_desc: 'Find quick solutions to your questions about trips, tickets and services.',
@@ -642,7 +666,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formulario_quejas: 'Form / Complaints',
             formulario_desc: 'For formal complaints or detailed inquiries, use our form.',
             abrir_formulario: 'Open form',
-            
+
             // Footer
             footer_services: 'Services',
             footer_descripcion: 'Digital platform for searching and buying train tickets across the country.',
@@ -874,7 +898,10 @@ document.addEventListener('DOMContentLoaded', () => {
             iniciar_sesion: 'Se connecter',
             cerrar_sesion: 'Se déconnecter',
             mi_perfil: 'Mon profil',
-            
+            panel_vendedor: 'Panneau Vendeur',
+            panel_mantenimiento: 'Panneau Maintenance',
+            panel: 'Tableau de bord',
+
             // Login
             login_bienvenida: 'Bienvenue sur TrainWeb',
             login_desc: 'Accédez à votre compte pour gérer vos réservations, consulter les horaires et profiter de nos promotions exclusives.',
@@ -896,7 +923,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contrasena_requerida: 'Le mot de passe est requis',
             error_interno: 'Erreur interne. Réessayez plus tard.',
             correo_verificado_exito: 'E-mail vérifié avec succès ! Vous pouvez maintenant vous connecter.',
-            
+
             // Registro
             registro_paso1_label: 'Personnel',
             registro_paso1_titulo: 'Détails Personnels',
@@ -982,7 +1009,7 @@ document.addEventListener('DOMContentLoaded', () => {
             error_crear_usuario: '⚠️ Erreur lors de la création de l\'utilisateur.',
             error_crear_perfil: '⚠️ Erreur lors de la création du profil passager.',
             datos_incompletos_error: '⚠️ Données obligatoires manquantes dans le formulaire d\'inscription.',
-            
+
             // Index / Search
             busca_tren: 'Trouvez votre train',
             solo_ida: 'Aller simple',
@@ -998,7 +1025,7 @@ document.addEventListener('DOMContentLoaded', () => {
             desc_sevilla: 'Culture, histoire et gastronomie à chaque station.',
             desc_valencia: 'Côte méditerranéenne et villes modernes reliées par le train.',
             ver_rutas: 'Voir les trajets',
-            
+
             // Passes and Promotions
             abonos_promociones: 'Abonnements et Promotions',
             comprar: 'Acheter',
@@ -1017,18 +1044,18 @@ document.addEventListener('DOMContentLoaded', () => {
             abono_nombre_anual: 'Annuel',
             abono_desc_anual: 'Voyages illimités pendant 365 jours. Idéal pour les voyages fréquents avec des remises exclusives et une flexibilité totale.',
             mas_informacion: 'Plus d\'informations',
-            
+
             // Cancelación
             cancelar_titulo: 'Besoin d\'annuler votre billet ?',
             cancelar_desc: 'Entrez le code de localisation de votre billet pour procéder à l\'annulation automatique.',
-            cancelar_placeholder: 'Ex: TW-2024...',
+            cancelar_placeholder: 'Ex: TW-20...',
             boton_cancelar: 'Annuler le voyage',
-            
+
             // Ofertas Especiales (Popups)
             oferta_especial_titulo: 'Offre Spéciale ! 🚅',
             oferta_especial_body: 'Utilisez le code <strong>{code}</strong> et profitez de <strong>{pct}%</strong> de réduction.',
             ver_mas_ofertas: 'Voir plus d\'offres',
-            
+
             // Tickets
             mis_billetes: 'Mes Billets',
             fecha: 'Date',
@@ -1038,13 +1065,13 @@ document.addEventListener('DOMContentLoaded', () => {
             precio: 'Prix',
             origen: 'Origine',
             destino: 'Destination',
-            
+
             // Purchase
             resumen_compra: 'Résumé de l\'achat',
             pasajeros: 'Passagers',
             total: 'Total',
             confirmar_compra: 'Confirmer l\'achat',
-            
+
             // Help
             ayuda_titulo: 'Comment pouvons-nous vous aider?',
             ayuda_desc: 'Trouvez des solutions rapides à vos questions sur les voyages, les billets et les services.',
@@ -1072,7 +1099,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formulario_quejas: 'Formulaire / Réclamations',
             formulario_desc: 'Pour les réclamations formelles ou les demandes détaillées, utilisez notre formulaire.',
             abrir_formulario: 'Ouvrir le formulaire',
-            
+
             // Footer
             footer_services: 'Services',
             footer_descripcion: 'Plateforme numérique pour la recherche et l\'achat de billets de train sur tout le territoire national.',
@@ -1304,7 +1331,10 @@ document.addEventListener('DOMContentLoaded', () => {
             iniciar_sesion: 'Anmelden',
             cerrar_sesion: 'Abmelden',
             mi_perfil: 'Mein Profil',
-            
+            panel_vendedor: 'Verkäufer-Panel',
+            panel_mantenimiento: 'Wartungs-Panel',
+            panel: 'Kontrollpanel',
+
             // Index / Search
             busca_tren: 'Finden Sie Ihren Zug',
             solo_ida: 'Nur Hinfahrt',
@@ -1320,7 +1350,7 @@ document.addEventListener('DOMContentLoaded', () => {
             desc_sevilla: 'Kultur, Geschichte und Gastronomie an jeder Station.',
             desc_valencia: 'Mittelmeerküste und moderne Städte per Zug verbunden.',
             ver_rutas: 'Routen ansehen',
-            
+
             // Passes and Promotions
             abonos_promociones: 'Abos und Aktionen',
             comprar: 'Kaufen',
@@ -1339,18 +1369,18 @@ document.addEventListener('DOMContentLoaded', () => {
             abono_nombre_anual: 'Jährlich',
             abono_desc_anual: 'Unbegrenzte Fahrten für 365 Tage. Ideal für Vielfahrer mit exklusiven Rabatten und voller Flexibilität.',
             mas_informacion: 'Mehr Informationen',
-            
+
             // Cancelación
             cancelar_titulo: 'Müssen Sie Ihr Ticket stornieren?',
             cancelar_desc: 'Geben Sie Ihren Buchungscode ein, um mit der automatischen Stornierung fortzufahren.',
-            cancelar_placeholder: 'Z. B.: TW-2024...',
+            cancelar_placeholder: 'Z. B.: TW-20...',
             boton_cancelar: 'Reise stornieren',
-            
+
             // Ofertas Especiales (Popups)
             oferta_especial_titulo: 'Sonderangebot! 🚅',
             oferta_especial_body: 'Nutzen Sie den Code <strong>{code}</strong> und erhalten Sie <strong>{pct}%</strong> Rabatt.',
             ver_mas_ofertas: 'Mehr Angebote sehen',
-            
+
             // Tickets
             mis_billetes: 'Meine Tickets',
             fecha: 'Datum',
@@ -1360,13 +1390,13 @@ document.addEventListener('DOMContentLoaded', () => {
             precio: 'Preis',
             origen: 'Abfahrt',
             destino: 'Ziel',
-            
+
             // Purchase
             resumen_compra: 'Kaufzusammenfassung',
             pasajeros: 'Fahrgäste',
             total: 'Gesamt',
             confirmar_compra: 'Kauf bestätigen',
-            
+
             // Help
             ayuda_titulo: 'Wie können wir dir helfen?',
             ayuda_desc: 'Finden Sie schnelle Lösungen für Ihre Fragen zu Reisen, Tickets und Diensten.',
@@ -1394,7 +1424,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formulario_quejas: 'Formular / Beschwerden',
             formulario_desc: 'Für formelle Beschwerden oder ausführliche Anfragen nutzen Sie unser Formular.',
             abrir_formulario: 'Formular öffnen',
-            
+
             // Footer
             footer_services: 'Services',
             footer_descripcion: 'Digitale Plattform für die Suche und den Kauf von Zugtickets im ganzen Land.',
@@ -1409,7 +1439,7 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_cookies: 'Cookies',
             footer_terminos: 'Allgemeine Geschäftsbedingungen',
             ofertas_desc: 'Sparen Sie bei Ihren Reisen mit unseren Abos und exklusiven Aktionen.',
-            
+
             // Login
             login_bienvenida: 'Willkommen bei TrainWeb',
             login_desc: 'Greifen Sie auf Ihr Konto zu, um Buchungen zu verwalten, Fahrpläne zu prüfen und unsere exklusiven Angebote zu nutzen.',
@@ -1431,7 +1461,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contrasena_requerida: 'Passwort ist erforderlich',
             error_interno: 'Interner Fehler. Versuchen Sie es später erneut.',
             correo_verificado_exito: 'E-Mail erfolgreich verifiziert! Sie können sich jetzt anmelden.',
-            
+
             // Registro
             registro_paso1_label: 'Persönliches',
             registro_paso1_titulo: 'Persönliche Daten',
@@ -1733,13 +1763,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return normalizeLanguage(saved || 'es');
     }
 
-    function t(key, lang = getLanguage()) {
+    function t(key, params = {}, lang = getLanguage()) {
+        // Soporte para firma t(key, lang)
+        if (typeof params === 'string') {
+            lang = params;
+            params = {};
+        }
+
         const normalizedKey = String(key || '').replace(/-/g, '_');
-        return (
+        let text = (
             (translations[lang] && (translations[lang][key] || translations[lang][normalizedKey])) ||
             (translations.es && (translations.es[key] || translations.es[normalizedKey])) ||
             null
         );
+
+        if (text && typeof text === 'string') {
+            Object.keys(params).forEach(param => {
+                text = text.replace(new RegExp(`{${param}}`, 'g'), params[param]);
+            });
+        }
+        return text;
     }
 
     function normalizeDynamicKey(raw) {
@@ -1838,9 +1881,22 @@ document.addEventListener('DOMContentLoaded', () => {
         setLanguage(lang);
     });
 
+    // MutationObserver para detectar cambios dinámicos (como la carga de abonos o menús de usuario)
+    let translationTimeout = null;
+    const observer = new MutationObserver(() => {
+        clearTimeout(translationTimeout);
+        translationTimeout = setTimeout(() => {
+            applyTranslations();
+        }, 100);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
     // Inicializar
     const startupLanguage = getLanguage();
     localStorage.setItem(storageKey, startupLanguage);
     window.trainwebI18n = { t, getLanguage, setLanguage, applyTranslations };
+    
+    // Ejecutar inmediatamente y tras un pequeño delay por si hay renderizado asíncrono
     applyTranslations();
+    setTimeout(applyTranslations, 100);
 });

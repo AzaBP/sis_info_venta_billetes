@@ -72,8 +72,8 @@ try {
                         <i class="fa-solid fa-caret-down"></i>
                     </button>
                     <div class="account-menu">
-                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> Mi perfil</a>
-                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</a>
+                        <a href="perfil_pasajero.php"><i class="fa-solid fa-user"></i> <span data-i18n="mi_perfil">Mi perfil</span></a>
+                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="cerrar_sesion">Cerrar sesión</span></a>
                     </div>
                 </div>
             <?php else: ?>
@@ -233,7 +233,7 @@ try {
             <p style="color: #666; margin-bottom: 20px;" data-i18n="cancelar_desc">Introduce el código localizador de tu billete para proceder con la cancelación automática.</p>
             
             <div style="display: flex; justify-content: center; gap: 10px; max-width: 500px; margin: 0 auto;">
-                <input type="text" id="codigo_cancelacion" placeholder="Ej: TW-2024..." data-i18n-placeholder="cancelar_placeholder" style="flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;">
+                <input type="text" id="codigo_cancelacion" placeholder="Ej: TW-20..." data-i18n-placeholder="cancelar_placeholder" style="flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem;">
                 <button id="btn_cancelar_billete" class="btn-primary" style="padding: 12px 24px; border: none; border-radius: 6px; background-color: #0a2a66; color: white; font-weight: bold; cursor: pointer; transition: background 0.3s;" data-i18n="boton_cancelar">Cancelar viaje</button>
             </div>
             
@@ -273,7 +273,7 @@ try {
         </div>
         <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
-    <script src="scripts/i18n_index.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n_index.js'); ?>"></script>
+    <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
     <script>
         const tracks = document.querySelectorAll('.offers-track, .popular-track');
         const nextBtns = document.querySelectorAll('.next');

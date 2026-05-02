@@ -206,21 +206,23 @@ document.addEventListener("DOMContentLoaded", function () {
             const fechaVuelta = document.getElementById('fecha-vuelta');
             const pasajeros = form.querySelector('select[name="pasajeros"]')?.value;
 
+            const t_err = (key) => window.trainwebI18n ? window.trainwebI18n.t(key) : key;
+
             let errorMsg = '';
-            if (!origen) errorMsg = 'Selecciona un origen.';
-            else if (!destino) errorMsg = 'Selecciona un destino.';
-            else if (!fechaIda || !fechaIda.value) errorMsg = 'Selecciona una fecha de ida.';
-            else if (fechaVuelta && !fechaVuelta.value && document.querySelector('input[name="trip"]:checked')?.value === 'roundtrip') errorMsg = 'Selecciona una fecha de vuelta.';
-            else if (!pasajeros || isNaN(parseInt(pasajeros))) errorMsg = 'Selecciona el número de pasajeros.';
+            if (!origen) errorMsg = t_err('error_origen');
+            else if (!destino) errorMsg = t_err('error_destino');
+            else if (!fechaIda || !fechaIda.value) errorMsg = t_err('error_fecha_ida');
+            else if (fechaVuelta && !fechaVuelta.value && document.querySelector('input[name="trip"]:checked')?.value === 'roundtrip') errorMsg = t_err('error_fecha_vuelta');
+            else if (!pasajeros || isNaN(parseInt(pasajeros))) errorMsg = t_err('error_pasajeros');
 
             if (!errorMsg && fechaIda) {
                 const hoy = new Date();
                 const fIda = new Date(fechaIda.value);
                 hoy.setHours(0,0,0,0);
-                if (fIda < hoy) errorMsg = 'La fecha de ida no puede ser anterior a hoy.';
+                if (fIda < hoy) errorMsg = t_err('error_fecha_pasada');
                 if (fechaVuelta && fechaVuelta.value) {
                     const fVuelta = new Date(fechaVuelta.value);
-                    if (fVuelta < fIda) errorMsg = 'La fecha de vuelta no puede ser anterior a la de ida.';
+                    if (fVuelta < fIda) errorMsg = t_err('error_fecha_orden');
                 }
             }
 

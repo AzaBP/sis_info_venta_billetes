@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Cancelación
             cancelar_titulo: '¿Necesitas cancelar tu billete?',
             cancelar_desc: 'Introduce el código localizador de tu billete para proceder con la cancelación automática.',
-            cancelar_placeholder: 'Ej: TW-2024...',
+            cancelar_placeholder: 'Ej: TW-20...',
             boton_cancelar: 'Cancelar viaje',
             // Ofertas Especiales (Popups)
             oferta_especial_titulo: '¡Oferta Especial! 🚅',
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Cancelación
             cancelar_titulo: 'Need to cancel your ticket?',
             cancelar_desc: 'Enter your ticket locator code to proceed with the automatic cancellation.',
-            cancelar_placeholder: 'Ex: TW-2024...',
+            cancelar_placeholder: 'Ex: TW-20...',
             boton_cancelar: 'Cancel trip',
             // Ofertas Especiales (Popups)
             oferta_especial_titulo: 'Special Offer! 🚅',
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Cancelación
             cancelar_titulo: 'Besoin d\'annuler votre billet ?',
             cancelar_desc: 'Entrez le code de localisation de votre billet pour procéder à l\'annulation automatique.',
-            cancelar_placeholder: 'Ex: TW-2024...',
+            cancelar_placeholder: 'Ex: TW-20...',
             boton_cancelar: 'Annuler le voyage',
             // Ofertas Especiales (Popups)
             oferta_especial_titulo: 'Offre Spéciale ! 🚅',
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Cancelación
             cancelar_titulo: 'Müssen Sie Ihr Ticket stornieren?',
             cancelar_desc: 'Geben Sie Ihren Buchungscode ein, um mit der automatischen Stornierung fortzufahren.',
-            cancelar_placeholder: 'Z. B.: TW-2024...',
+            cancelar_placeholder: 'Z. B.: TW-20...',
             boton_cancelar: 'Reise stornieren',
             // Ofertas Especiales (Popups)
             oferta_especial_titulo: 'Sonderangebot! 🚅',
@@ -267,6 +267,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function t(key, params = {}, lang = getLanguage()) {
+        // Soporte para firma t(key, lang)
+        if (typeof params === 'string') {
+            lang = params;
+            params = {};
+        }
+
         const normalizedKey = String(key || '').replace(/-/g, '_');
         let text = (
             (translations[lang] && (translations[lang][key] || translations[lang][normalizedKey])) ||

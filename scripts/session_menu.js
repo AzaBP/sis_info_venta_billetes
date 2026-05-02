@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     const userActions = document.getElementById("userActions");
     if (!userActions) return;
 
@@ -16,18 +16,27 @@
 
             let enlacePanel = "perfil_pasajero.php";
             let textoPanel = "Mi perfil";
+            let i18nKey = "mi_perfil";
 
             if (tipoUsuario === "empleado") {
                 if (tipoEmpleado === "vendedor") {
                     enlacePanel = "vendedor.php";
                     textoPanel = "Panel vendedor";
+                    i18nKey = "panel_vendedor";
                 } else if (tipoEmpleado === "mantenimiento") {
                     enlacePanel = "mantenimiento.php";
                     textoPanel = "Panel mantenimiento";
+                    i18nKey = "panel_mantenimiento";
                 } else {
                     enlacePanel = "index.php";
                     textoPanel = "Panel";
+                    i18nKey = "panel";
                 }
+            }
+
+            // Traducir si i18n está disponible
+            if (window.trainwebI18n) {
+                textoPanel = window.trainwebI18n.t(i18nKey) || textoPanel;
             }
 
             userActions.innerHTML = `
@@ -38,8 +47,8 @@
                         <i class="fa-solid fa-caret-down"></i>
                     </button>
                     <div class="account-menu" id="accountMenu">
-                        <a href="${enlacePanel}"><i class="fa-solid fa-user"></i> ${textoPanel}</a>
-                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesion</a>
+                        <a href="${enlacePanel}"><i class="fa-solid fa-user"></i> <span data-i18n="${i18nKey}">${textoPanel}</span></a>
+                        <a href="cerrar_sesion.php"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="cerrar_sesion">${window.trainwebI18n ? window.trainwebI18n.t('cerrar_sesion') : 'Cerrar sesión'}</span></a>
                     </div>
                 </div>
             `;
