@@ -6,6 +6,9 @@ $reserva = $_SESSION['ultima_reserva'] ?? null;
 $valida = is_array($reserva) && ($reserva['token'] ?? '') === $token;
 $billetes = $valida ? ($reserva['billetes'] ?? []) : [];
 $precioTotal = $valida ? (float)($reserva['precio_total'] ?? 0) : 0;
+
+// Detectar si es compra como invitado (sin usuario logueado)
+$esInvitado = !isset($_SESSION['usuario']) || !isset($_SESSION['usuario']['id_usuario']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -60,8 +63,10 @@ $precioTotal = $valida ? (float)($reserva['precio_total'] ?? 0) : 0;
 
             <div class="actions">
                 <a class="btn-primary" href="php/descargar_billetes.php?token=<?php echo urlencode($token); ?>">Descargar PDF de billetes</a>
-                <a class="btn-secondary" href="mis_billetes.php">Ver mis billetes</a>
-                <a class="btn-secondary" href="perfil_pasajero.php">Ir a mi perfil</a>
+                <?php if (!$esInvitado): ?>
+                    <a class="btn-secondary" href="mis_billetes.php">Ver mis billetes</a>
+                    <a class="btn-secondary" href="perfil_pasajero.php">Ir a mi perfil</a>
+                <?php endif; ?>
                 <a class="btn-secondary" href="index.php">Volver al inicio</a>
             </div>
         <?php endif; ?>

@@ -456,6 +456,13 @@
     cursor: pointer;
 }
 
+.btn-cancel:hover,
+.btn-cancel:active,
+.btn-cancel:focus {
+    background: #c82333;
+    color: white !important;
+}
+
 .btn-confirm {
     background: #17632A;
     color: white;

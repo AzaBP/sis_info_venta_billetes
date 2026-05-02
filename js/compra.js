@@ -560,6 +560,53 @@ function recalcularPrecio() {
 }
 
 // ================= PASO 5: PAGO Y RESERVA =================
+function validarFormularioPago() {
+    const cardNumber = document.getElementById('cardNumber');
+    const cardExpiry = document.getElementById('cardExpiry');
+    const cardCVV = document.getElementById('cardCVV');
+    const cardHolder = document.getElementById('cardHolder');
+
+    if (!cardNumber || !cardExpiry || !cardCVV || !cardHolder) {
+        return true; // Si no existen los elementos, asumir que está bien
+    }
+
+    // Validar número de tarjeta
+    let value = cardNumber.value.replace(/\s/g, '');
+    if (!/^\d{16}$/.test(value)) {
+        return false;
+    }
+
+    // Validar caducidad
+    value = cardExpiry.value;
+    if (!/^\d{2}\/\d{2}$/.test(value)) {
+        return false;
+    }
+    const [mes, anio] = value.split('/').map(Number);
+    if (mes < 1 || mes > 12) {
+        return false;
+    }
+    const hoy = new Date();
+    const expYear = 2000 + anio;
+    const expDate = new Date(expYear, mes - 1, 1);
+    if (expDate < new Date(hoy.getFullYear(), hoy.getMonth(), 1)) {
+        return false;
+    }
+
+    // Validar CVV
+    value = cardCVV.value;
+    if (!/^\d{3}$/.test(value)) {
+        return false;
+    }
+
+    // Validar titular
+    value = cardHolder.value.trim();
+    if (value.length < 3) {
+        return false;
+    }
+
+    return true;
+}
+
 function confirmarReserva() {
     if (!viajeSeleccionado) {
         alert(tr('faltan_datos_reserva', 'Faltan datos para la reserva.'));
@@ -587,6 +634,11 @@ function confirmarReserva() {
     }
 
     if (!validarYGuardarDatosPasajeros()) {
+        return;
+    }
+
+    // Validar formulario de pago antes de continuar
+    if (!validarFormularioPago()) {
         return;
     }
 
