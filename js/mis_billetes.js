@@ -193,18 +193,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnCancel.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const b = ticketsById.get(ticketId);
-
-                    // Mensaje de confirmación detallado
-                    const mensaje = `¿Estás seguro de que deseas cancelar este billete?
-                    
-                    Viaje: ${b.origen} ➔ ${b.destino}
-                    Fecha: ${b.fecha_viaje}
-                    Hora: ${b.hora_salida.slice(0, 5)}h
-                    Asiento: ${b.numero_asiento}
-
-                    Esta acción no se puede deshacer.`;
-
-                    abrirModalCancelacion(b.codigo_billete);
+                    const mensaje = `¿Estás seguro de que deseas cancelar este billete?<br><br>
+                        Viaje: <strong>${b.origen} ➔ ${b.destino}</strong><br>
+                        Fecha: <strong>${b.fecha_viaje}</strong><br>
+                        Hora: <strong>${b.hora_salida.slice(0, 5)}h</strong><br>
+                        Asiento: <strong>${b.numero_asiento}</strong><br><br>
+                        <span style='color:#8e2e2e;'>Esta acción no se puede deshacer.</span>`;
+                    abrirModalCancelacion(b.codigo_billete, mensaje);
                 });
             }
         });
@@ -220,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 2. Le asignamos el texto que viene de attachTicketListeners
         if (msgElement) {
-            msgElement.textContent = mensaje;
+            msgElement.innerHTML = mensaje;
         }
         
         // 3. Mostramos el modal
