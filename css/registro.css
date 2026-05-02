@@ -16,7 +16,7 @@ body {
 .header {
     background-color: #0a2a66;
     color: white;
-    padding: 16px 40px;
+    padding: 16px 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -24,7 +24,7 @@ body {
 }
 
 .logo {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: 600;
     color: inherit;
     text-decoration: none;
@@ -32,22 +32,36 @@ body {
 
 .nav {
     display: flex;
-    gap: 20px;
+    gap: 25px;
     margin-left: auto;
     margin-right: 30px;
+    align-items: center;
 }
 
-.nav a {
+.nav a,
+.dropdown > a {
     color: white;
     text-decoration: none;
-    padding: 8px 12px;
+    padding: 8px 14px;
     border-radius: 6px;
-    transition: background 0.25s;
+    transition: background 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.nav a:hover { background: rgba(255,255,255,0.12); }
+.nav a:hover,
+.dropdown > a:hover {
+    background: rgba(255,255,255,0.2);
+}
 
-.dropdown { position: relative; }
+.dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
 .dropdown-content {
     position: absolute;
     top: 40px;
@@ -55,14 +69,38 @@ body {
     background: white;
     min-width: 140px;
     border-radius: 6px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     display: none;
+    overflow: hidden;
     z-index: 10;
 }
-.dropdown:hover .dropdown-content { display: block; }
-.dropdown-content a { color: #333; padding: 10px; display: block; }
 
-.btn-login { color: white; text-decoration: none; padding: 8px 18px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); }
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 10px;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background: #f0f0f0;
+}
+
+.btn-login {
+    color: white;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.5);
+    transition: background 0.3s;
+}
+
+.btn-login:hover {
+    background: rgba(255,255,255,0.2);
+}
 
 /* ================= MAIN ================= */
 .main { padding: 40px 20px; }
