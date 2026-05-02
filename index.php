@@ -265,10 +265,10 @@ try {
             </div>
             <div class="footer-column">
                 <h4 data-i18n="footer-social">Redes sociales</h4>
-                <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
-                <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
-                <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
-                <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="julio_apruebanos.php"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
             </div>
         </div>
         <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>
