@@ -51,8 +51,8 @@ try {
     ];
 
     // 3. Rango de fechas: 05 de Mayo al 07 de Noviembre 2026
-    $fecha_inicio = new DateTime('2026-05-02');
-    $fecha_fin = new DateTime('2026-05-03');
+    $fecha_inicio = new DateTime('2026-05-05');
+    $fecha_fin = new DateTime('2026-11-07');
     $intervalo = new DateInterval('P1D');
     $periodo = new DatePeriod($fecha_inicio, $intervalo, $fecha_fin->modify('+1 day'));
 
