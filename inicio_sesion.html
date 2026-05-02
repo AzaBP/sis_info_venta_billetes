@@ -36,14 +36,14 @@
         <section class="login-wrap">
             <div class="login-card">
                 <div class="login-info">
-                    <h1>Bienvenido a TrainWeb</h1>
-                    <p>Accede a tu cuenta para gestionar reservas, consultar horarios y aprovechar nuestras promociones exclusivas.</p>
+                    <h1 data-i18n="login_bienvenida">Bienvenido a TrainWeb</h1>
+                    <p data-i18n="login_desc">Accede a tu cuenta para gestionar reservas, consultar horarios y aprovechar nuestras promociones exclusivas.</p>
                     <ul>
-                        <li>Búsqueda rápida de rutas y horarios</li>
-                        <li>Seguimiento de tus reservas</li>
-                        <li>Ofertas y descuentos personalizados</li>
+                        <li data-i18n="login_caracteristica1">Búsqueda rápida de rutas y horarios</li>
+                        <li data-i18n="login_caracteristica2">Seguimiento de tus reservas</li>
+                        <li data-i18n="login_caracteristica3">Ofertas y descuentos personalizados</li>
                     </ul>
-                    <p class="register-cta">¿No tienes cuenta? <a href="registro.html" class="link-register">Regístrate aquí</a></p>
+                    <p class="register-cta"><span data-i18n="login_no_cuenta">¿No tienes cuenta?</span> <a href="registro.html" class="link-register" data-i18n="login_registrate_aqui">Regístrate aquí</a></p>
                 </div>
 
                 <div class="login-form-container">
@@ -53,20 +53,20 @@
                     </div>
                     
                     <form class="login-form" id="loginForm" method="POST" action="procesar_inicio_sesion.php">
-                        <label for="username">Correo electrónico</label>
-                        <input type="text" id="username" name="username" placeholder="ejemplo@correo.com" required>
+                        <label for="username" data-i18n="correo_label">Correo electrónico</label>
+                        <input type="text" id="username" name="username" placeholder="ejemplo@correo.com" data-i18n-placeholder="correo_placeholder" required>
                         <div id="error-username" class="error-campo" style="display:none; color:#dc3545; font-size:0.85em; margin-top:4px;"></div>
 
-                        <label for="password" style="margin-top:12px;">Contraseña</label>
-                        <input type="password" id="password" name="password" placeholder="********" required>
+                        <label for="password" style="margin-top:12px;" data-i18n="contrasena_label">Contraseña</label>
+                        <input type="password" id="password" name="password" placeholder="********" data-i18n-placeholder="contrasena_placeholder" required>
                         <div id="error-password" class="error-campo" style="display:none; color:#dc3545; font-size:0.85em; margin-top:4px;"></div>
 
                         <div class="form-actions">
-                            <label class="remember"><input type="checkbox" name="remember"> Recuérdame</label>
-                            <a href="olvidaste_contrasena.php" class="forgot">¿Olvidaste tu contraseña?</a>
+                            <label class="remember"><input type="checkbox" name="remember"> <span data-i18n="recordarme">Recuérdame</span></label>
+                            <a href="olvidaste_contrasena.php" class="forgot" data-i18n="olvidaste_contrasena">¿Olvidaste tu contraseña?</a>
                         </div>
 
-                        <button type="submit" class="btn-login primary">Iniciar sesión</button>
+                        <button type="submit" class="btn-login primary" data-i18n="iniciar_sesion">Iniciar sesión</button>
                     </form>
                 </div>
             </div>
@@ -88,49 +88,52 @@
             // MOSTRAR MENSAJE DE ÉXITO
             if (verificado === 'ok') {
                 if (successDiv) {
-                    document.getElementById('success-text').textContent = '¡Correo verificado correctamente! Ya puedes iniciar sesión.';
+                    const text = (window.trainwebI18n && window.trainwebI18n.t) ? window.trainwebI18n.t('correo_verificado_exito') : '¡Correo verificado correctamente! Ya puedes iniciar sesión.';
+                    document.getElementById('success-text').textContent = text;
                     successDiv.style.display = 'block';
                 }
                 // Limpiar URL sin recargar
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
             
+            const t = (key) => (window.trainwebI18n && window.trainwebI18n.t) ? window.trainwebI18n.t(key) : null;
+
             // MOSTRAR ERRORES DEBAJO DE CAMPOS
             if (err === 'email_no_existe') {
                 if (errorUsername && usernameInput) {
-                    errorUsername.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Correo no registrado';
+                    errorUsername.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${t('correo_no_registrado') || 'Correo no registrado'}`;
                     errorUsername.style.display = 'block';
                     usernameInput.style.borderColor = '#dc3545';
                     usernameInput.style.backgroundColor = '#fff5f5';
                 }
             } else if (err === 'password_incorrecta') {
                 if (errorPassword && passwordInput) {
-                    errorPassword.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Contraseña incorrecta';
+                    errorPassword.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${t('contrasena_incorrecta') || 'Contraseña incorrecta'}`;
                     errorPassword.style.display = 'block';
                     passwordInput.style.borderColor = '#dc3545';
                     passwordInput.style.backgroundColor = '#fff5f5';
                 }
             } else if (err === 'email_no_verificado') {
                 if (errorUsername && usernameInput) {
-                    errorUsername.innerHTML = '<i class="fa-solid fa-exclamation-circle"></i> Tu correo no está verificado. Revisa tu bandeja.';
+                    errorUsername.innerHTML = `<i class="fa-solid fa-exclamation-circle"></i> ${t('correo_no_verificado') || 'Tu correo no está verificado. Revisa tu bandeja.'}`;
                     errorUsername.style.display = 'block';
                     usernameInput.style.borderColor = '#ffc107';
                     usernameInput.style.backgroundColor = '#fffbf0';
                 }
             } else if (err === 'campos_vacios') {
                 if (errorUsername && usernameInput && !usernameInput.value.trim()) {
-                    errorUsername.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> El correo es requerido';
+                    errorUsername.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${t('correo_requerido') || 'El correo es requerido'}`;
                     errorUsername.style.display = 'block';
                     usernameInput.style.borderColor = '#dc3545';
                 }
                 if (errorPassword && passwordInput && !passwordInput.value.trim()) {
-                    errorPassword.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> La contraseña es requerida';
+                    errorPassword.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${t('contrasena_requerida') || 'La contraseña es requerida'}`;
                     errorPassword.style.display = 'block';
                     passwordInput.style.borderColor = '#dc3545';
                 }
             } else if (err === 'interno') {
                 if (errorUsername) {
-                    errorUsername.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Error interno. Intenta de nuevo más tarde.';
+                    errorUsername.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${t('error_interno') || 'Error interno. Intenta de nuevo más tarde.'}`;
                     errorUsername.style.display = 'block';
                 }
             }
@@ -142,31 +145,31 @@
         <div class="footer-container">
             <div class="footer-column">
                 <h3>TrainWeb</h3>
-                <p>Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
+                <p data-i18n="footer_descripcion">Plataforma digital para la búsqueda y compra de billetes de tren en todo el territorio nacional.</p>
             </div>
             <div class="footer-column">
-                <h4>Servicios</h4>
-                <a href="#"><i class="fa-solid fa-ticket"></i> Billetes</a>
-                <a href="#"><i class="fa-solid fa-clock"></i> Horarios</a>
-                <a href="#"><i class="fa-solid fa-tags"></i> Ofertas</a>
-                <a href="#"><i class="fa-solid fa-headset"></i> Atención al cliente</a>
+                <h4 data-i18n="footer_services">Servicios</h4>
+                <a href="#"><i class="fa-solid fa-ticket"></i> <span data-i18n="footer_billetes">Billetes</span></a>
+                <a href="#"><i class="fa-solid fa-clock"></i> <span data-i18n="footer_horarios">Horarios</span></a>
+                <a href="#"><i class="fa-solid fa-tags"></i> <span data-i18n="footer_ofertas">Ofertas</span></a>
+                <a href="#"><i class="fa-solid fa-headset"></i> <span data-i18n="footer_atencion">Atención al cliente</span></a>
             </div>
             <div class="footer-column">
-                <h4>Información legal</h4>
-                <a href="#"><i class="fa-solid fa-scale-balanced"></i> Aviso legal</a>
-                <a href="#"><i class="fa-solid fa-user-shield"></i> Privacidad</a>
-                <a href="#"><i class="fa-solid fa-cookie-bite"></i> Cookies</a>
-                <a href="#"><i class="fa-solid fa-file-contract"></i> Términos y condiciones</a>
+                <h4 data-i18n="footer_legal">Información legal</h4>
+                <a href="#"><i class="fa-solid fa-scale-balanced"></i> <span data-i18n="footer_aviso">Aviso legal</span></a>
+                <a href="#"><i class="fa-solid fa-user-shield"></i> <span data-i18n="footer_privacidad">Privacidad</span></a>
+                <a href="#"><i class="fa-solid fa-cookie-bite"></i> <span data-i18n="footer_cookies">Cookies</span></a>
+                <a href="#"><i class="fa-solid fa-file-contract"></i> <span data-i18n="footer_terminos">Términos y condiciones</span></a>
             </div>
             <div class="footer-column">
-                <h4>Redes sociales</h4>
+                <h4 data-i18n="footer_social">Redes sociales</h4>
                 <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
                 <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
                 <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
                 <a href="#"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
             </div>
         </div>
-        <div class="footer-bottom">© 2026 TrainWeb · Todos los derechos reservados</div>
+        <div class="footer-bottom" data-i18n="footer_copyright">© 2026 TrainWeb · Todos los derechos reservados</div>
     </footer>
 
     <script src="scripts/i18n.js"></script>
