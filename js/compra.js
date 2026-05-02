@@ -475,7 +475,7 @@ function validarYGuardarDatosPasajeros() {
         const inputApellidos = document.getElementById(`pasajero_apellidos_${i}`);
         const inputDocumento = document.getElementById(`pasajero_documento_${i}`);
         const inputEmail = document.getElementById(`pasajero_email_${i}`);
-        
+
         const errNombre = document.getElementById(`err_nombre_${i}`);
         const errApellidos = document.getElementById(`err_apellidos_${i}`);
         const errDocumento = document.getElementById(`err_documento_${i}`);
@@ -486,57 +486,15 @@ function validarYGuardarDatosPasajeros() {
         const documento = (inputDocumento?.value || '').trim();
         const email = (inputEmail?.value || '').trim();
 
+        if (inputNombre) inputNombre.classList.remove('input-invalid');
+        if (inputApellidos) inputApellidos.classList.remove('input-invalid');
+        if (inputDocumento) inputDocumento.classList.remove('input-invalid');
+        if (inputEmail) inputEmail.classList.remove('input-invalid');
+
         if (errNombre) errNombre.style.display = 'none';
         if (errApellidos) errApellidos.style.display = 'none';
         if (errDocumento) errDocumento.style.display = 'none';
         if (errEmail) errEmail.style.display = 'none';
-
-        if (!nombre || nombre.length < 2) {
-            if (errNombre) {
-                errNombre.textContent = 'El nombre debe tener al menos 2 caracteres.';
-                errNombre.style.display = 'block';
-            }
-            hayErrores = true;
-        }
-
-        if (!apellidos || apellidos.length < 2) {
-            if (errApellidos) {
-                errApellidos.textContent = 'Los apellidos deben tener al menos 2 caracteres.';
-                errApellidos.style.display = 'block';
-            }
-            hayErrores = true;
-        }
-
-        if (!documento) {
-            if (errDocumento) {
-                errDocumento.textContent = 'El documento es requerido.';
-                errDocumento.style.display = 'block';
-            }
-            hayErrores = true;
-        } else if (!validarDNI(documento)) {
-            if (errDocumento) {
-                errDocumento.textContent = 'El documento no es valido (DNI, NIE o pasaporte).';
-                errDocumento.style.display = 'block';
-            }
-            hayErrores = true;
-        }
-
-        if (!email) {
-            if (errEmail) {
-                errEmail.textContent = 'El email es requerido.';
-                errEmail.style.display = 'block';
-            }
-            hayErrores = true;
-        } else {
-            const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            if (!emailValido) {
-                if (errEmail) {
-                    errEmail.textContent = 'El email no es valido.';
-                    errEmail.style.display = 'block';
-                }
-                hayErrores = true;
-            }
-        }
 
         let pasajeroValido = true;
 
@@ -545,6 +503,7 @@ function validarYGuardarDatosPasajeros() {
                 errNombre.textContent = 'El nombre debe tener al menos 2 caracteres.';
                 errNombre.style.display = 'block';
             }
+            if (inputNombre) inputNombre.classList.add('input-invalid');
             pasajeroValido = false;
         }
 
@@ -553,6 +512,7 @@ function validarYGuardarDatosPasajeros() {
                 errApellidos.textContent = 'Los apellidos deben tener al menos 2 caracteres.';
                 errApellidos.style.display = 'block';
             }
+            if (inputApellidos) inputApellidos.classList.add('input-invalid');
             pasajeroValido = false;
         }
 
@@ -561,12 +521,14 @@ function validarYGuardarDatosPasajeros() {
                 errDocumento.textContent = 'El documento es requerido.';
                 errDocumento.style.display = 'block';
             }
+            if (inputDocumento) inputDocumento.classList.add('input-invalid');
             pasajeroValido = false;
         } else if (!validarDNI(documento)) {
             if (errDocumento) {
                 errDocumento.textContent = 'El documento no es valido (DNI, NIE o pasaporte).';
                 errDocumento.style.display = 'block';
             }
+            if (inputDocumento) inputDocumento.classList.add('input-invalid');
             pasajeroValido = false;
         }
 
@@ -575,6 +537,7 @@ function validarYGuardarDatosPasajeros() {
                 errEmail.textContent = 'El email es requerido.';
                 errEmail.style.display = 'block';
             }
+            if (inputEmail) inputEmail.classList.add('input-invalid');
             pasajeroValido = false;
         } else {
             const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -583,6 +546,7 @@ function validarYGuardarDatosPasajeros() {
                     errEmail.textContent = 'El email no es valido.';
                     errEmail.style.display = 'block';
                 }
+                if (inputEmail) inputEmail.classList.add('input-invalid');
                 pasajeroValido = false;
             }
         }
