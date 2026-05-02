@@ -114,7 +114,7 @@
     
     <div class="container">
         <div class="icon-box">
-            <i class="fa-solid fa-graduation-cap"></i>
+            <i class="fa-solid fa-train-subway"></i>
         </div>
         <h1>¡Hola, Julio! 👋</h1>
         <p>
