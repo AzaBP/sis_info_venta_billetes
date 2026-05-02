@@ -8,10 +8,16 @@ if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') 
     header('Location: ' . trainwebRutaPorRol($_SESSION['usuario']));
     exit;
 }
-require_once __DIR__ . '/php/Conexion.php';
 
 // 1. Recoger el tipo de abono de la URL (por defecto 'mensual' si alguien entra sin hacer clic)
 $tipo_codigo = $_GET['tipo'] ?? 'mensual';
+
+if (!$usuarioSesion) {
+    header('Location: inicio_sesion.html?redirect=' . urlencode('comprar_abono.php?tipo=' . $tipo_codigo));
+    exit;
+}
+
+require_once __DIR__ . '/php/Conexion.php';
 $abono = null;
 
 try {
@@ -105,7 +111,7 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
                 <div class="abono-price"><?= $precio_formateado ?></div>
             </div>
 
-            <form action="procesar_compra_abono.php" method="POST">
+            <form class="payment-form" action="procesar_compra_abono.php" method="POST" autocomplete="off">
                 <input type="hidden" name="tipo_abono" value="<?= htmlspecialchars($tipo_codigo) ?>">
                 <input type="hidden" name="precio" value="<?= $abono['precio'] ?>">
 
@@ -119,22 +125,26 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
 
                 <div class="form-group">
                     <label data-i18n="titular_tarjeta">Titular de la tarjeta</label>
-                    <input type="text" name="titular" placeholder="Nombre completo" data-i18n="nombre_completo" required>
+                    <input type="text" id="cardHolder" name="titular" placeholder="Nombre completo" data-i18n="nombre_completo" required>
+                    <span class="input-error" id="errCardHolder" style="display:none;"></span>
                 </div>
 
                 <div class="form-group">
                     <label data-i18n="numero_tarjeta">Número de tarjeta</label>
-                    <input type="text" name="tarjeta" placeholder="0000 0000 0000 0000" data-i18n-placeholder="card_number_placeholder" maxlength="16" required>
+                    <input type="text" id="cardNumber" name="tarjeta" placeholder="0000 0000 0000 0000" data-i18n-placeholder="card_number_placeholder" maxlength="19" required>
+                    <span class="input-error" id="errCardNumber" style="display:none;"></span>
                 </div>
 
                 <div style="display: flex; gap: 15px;">
                     <div class="form-group expand">
                         <label data-i18n="caducidad">Caducidad</label>
-                        <input type="text" name="caducidad" placeholder="MM/AA" data-i18n="mm_aa" maxlength="5" required>
+                        <input type="text" id="cardExpiry" name="caducidad" placeholder="MM/AA" data-i18n="mm_aa" maxlength="5" required>
+                        <span class="input-error" id="errCardExpiry" style="display:none;"></span>
                     </div>
                     <div class="form-group expand">
                         <label data-i18n="cvv">CVV</label>
-                        <input type="password" name="cvv" placeholder="123" data-i18n-placeholder="cvv_placeholder" maxlength="3" required>
+                        <input type="password" id="cardCVV" name="cvv" placeholder="123" data-i18n-placeholder="cvv_placeholder" maxlength="3" required>
+                        <span class="input-error" id="errCardCVV" style="display:none;"></span>
                     </div>
                 </div>
 
@@ -151,6 +161,140 @@ $precio_formateado = number_format($abono['precio'], 2, ',', '.') . ' €';
 
     <script src="scripts/i18n.js?v=<?php echo @filemtime(__DIR__ . '/scripts/i18n.js'); ?>"></script>
     <script src="scripts/session_menu.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cardNumber = document.getElementById('cardNumber');
+        const cardExpiry = document.getElementById('cardExpiry');
+        const cardCVV = document.getElementById('cardCVV');
+        const cardHolder = document.getElementById('cardHolder');
+        const errCardNumber = document.getElementById('errCardNumber');
+        const errCardExpiry = document.getElementById('errCardExpiry');
+        const errCardCVV = document.getElementById('errCardCVV');
+        const errCardHolder = document.getElementById('errCardHolder');
+        const paymentForm = document.querySelector('.payment-form');
+
+        function limpiarError(input, errorElement) {
+            if (input) input.classList.remove('input-invalid');
+            if (errorElement) {
+                errorElement.style.display = 'none';
+                errorElement.textContent = '';
+            }
+        }
+
+        function mostrarError(input, errorElement, mensaje) {
+            if (input) input.classList.add('input-invalid');
+            if (errorElement) {
+                errorElement.textContent = mensaje;
+                errorElement.style.display = 'block';
+            }
+        }
+
+        function validateCardNumber() {
+            const value = cardNumber.value.replace(/\D/g, '');
+            if (value === '') {
+                mostrarError(cardNumber, errCardNumber, 'Introduce el número de tarjeta.');
+                return false;
+            }
+            if (!/^\d{16}$/.test(value)) {
+                mostrarError(cardNumber, errCardNumber, 'Introduce 16 dígitos válidos.');
+                return false;
+            }
+            limpiarError(cardNumber, errCardNumber);
+            return true;
+        }
+
+        function validateCardExpiry() {
+            const value = cardExpiry.value;
+            if (value === '') {
+                mostrarError(cardExpiry, errCardExpiry, 'Introduce la fecha de caducidad.');
+                return false;
+            }
+            if (!/^\d{2}\/\d{2}$/.test(value)) {
+                mostrarError(cardExpiry, errCardExpiry, 'Formato MM/AA.');
+                return false;
+            }
+            const [mes, anio] = value.split('/').map(Number);
+            if (mes < 1 || mes > 12) {
+                mostrarError(cardExpiry, errCardExpiry, 'Mes inválido.');
+                return false;
+            }
+            const hoy = new Date();
+            const expYear = 2000 + anio;
+            const expDate = new Date(expYear, mes - 1, 1);
+            if (expDate < new Date(hoy.getFullYear(), hoy.getMonth(), 1)) {
+                mostrarError(cardExpiry, errCardExpiry, 'Tarjeta caducada.');
+                return false;
+            }
+            limpiarError(cardExpiry, errCardExpiry);
+            return true;
+        }
+
+        function validateCardCVV() {
+            const value = cardCVV.value;
+            if (value === '') {
+                mostrarError(cardCVV, errCardCVV, 'Introduce el CVV.');
+                return false;
+            }
+            if (!/^\d{3}$/.test(value)) {
+                mostrarError(cardCVV, errCardCVV, 'CVV de 3 dígitos.');
+                return false;
+            }
+            limpiarError(cardCVV, errCardCVV);
+            return true;
+        }
+
+        function validateCardHolder() {
+            const value = cardHolder.value.trim();
+            if (value === '') {
+                mostrarError(cardHolder, errCardHolder, 'Introduce el nombre y apellidos del titular.');
+                return false;
+            }
+            if (value.length < 3) {
+                mostrarError(cardHolder, errCardHolder, 'Introduce el nombre y apellidos del titular.');
+                return false;
+            }
+            limpiarError(cardHolder, errCardHolder);
+            return true;
+        }
+
+        cardNumber.addEventListener('input', function() {
+            let value = cardNumber.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.slice(0, 16);
+            cardNumber.value = value.replace(/(.{4})/g, '$1 ').trim();
+        });
+
+        cardExpiry.addEventListener('input', function() {
+            let value = cardExpiry.value.replace(/[^\d]/g, '');
+            if (value.length > 4) value = value.slice(0, 4);
+            if (value.length > 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2);
+            }
+            cardExpiry.value = value;
+        });
+
+        cardCVV.addEventListener('input', function() {
+            let value = cardCVV.value.replace(/\D/g, '');
+            if (value.length > 3) value = value.slice(0, 3);
+            cardCVV.value = value;
+        });
+
+        cardNumber.addEventListener('blur', validateCardNumber);
+        cardExpiry.addEventListener('blur', validateCardExpiry);
+        cardCVV.addEventListener('blur', validateCardCVV);
+        cardHolder.addEventListener('blur', validateCardHolder);
+
+        paymentForm.addEventListener('submit', function(e) {
+            let valid = true;
+            if (!validateCardHolder()) valid = false;
+            if (!validateCardNumber()) valid = false;
+            if (!validateCardExpiry()) valid = false;
+            if (!validateCardCVV()) valid = false;
+            if (!valid) {
+                e.preventDefault();
+            }
+        });
+    });
+    </script>
 
 </body>
 </html>

@@ -7,6 +7,11 @@ if (isset($_SESSION['usuario']) && ($_SESSION['usuario']['tipo_usuario'] ?? '') 
     exit;
 }
 
+if (!isset($_SESSION['usuario']['id_usuario'])) {
+    header('Location: inicio_sesion.html');
+    exit;
+}
+
 $id_usuario = $_SESSION['usuario']['id_usuario'];
 
 require_once __DIR__ . '/php/Conexion.php';
