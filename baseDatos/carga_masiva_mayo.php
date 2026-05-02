@@ -1,12 +1,10 @@
 <?php
-/**
- * carga_masiva_mayo.php
- * Ubicación: /baseDatos/carga_masiva_mayo.php
- */
 
 // 1. Configuración de entorno
 set_time_limit(0); 
 ini_set('memory_limit', '512M');
+
+set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__ . '/../php');
 header('Content-Type: text/html; charset=utf-8');
 
 // Ajuste de rutas para estar en /baseDatos/
