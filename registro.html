@@ -46,19 +46,19 @@
                     <div class="steps-tracker">
                         <div class="step active" data-step="1">
                             <div class="step-number">1</div>
-                            <div class="step-label">Personales</div>
+                            <div class="step-label" data-i18n="registro_paso1_label">Personales</div>
                         </div>
                         <div class="step" data-step="2">
                             <div class="step-number">2</div>
-                            <div class="step-label">Contacto</div>
+                            <div class="step-label" data-i18n="registro_paso2_label">Contacto</div>
                         </div>
                         <div class="step" data-step="3">
                             <div class="step-number">3</div>
-                            <div class="step-label">Seguridad</div>
+                            <div class="step-label" data-i18n="registro_paso3_label">Seguridad</div>
                         </div>
                         <div class="step" data-step="4">
                             <div class="step-number">4</div>
-                            <div class="step-label">Términos</div>
+                            <div class="step-label" data-i18n="registro_paso4_label">Términos</div>
                         </div>
                     </div>
                 </div>
@@ -71,50 +71,50 @@
                     <!-- STEP 1: DATOS PERSONALES -->
                     <div class="form-step active" data-step="1">
                         <div class="step-header">
-                            <h2>Datos Personales</h2>
-                            <p>Cuéntanos quién eres</p>
+                            <h2 data-i18n="registro_paso1_titulo">Datos Personales</h2>
+                            <p data-i18n="registro_paso1_desc">Cuéntanos quién eres</p>
                         </div>
 
                         <div class="step-content">
                             <div class="form-group">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan" required>
+                                <label for="nombre" data-i18n="nombre_label">Nombre</label>
+                                <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan" data-i18n-placeholder="nombre_placeholder" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="apellido">Apellido</label>
-                                <input type="text" id="apellido" name="apellido" placeholder="Ej: García López" required>
+                                <label for="apellido" data-i18n="apellido_label">Apellido</label>
+                                <input type="text" id="apellido" name="apellido" placeholder="Ej: García López" data-i18n-placeholder="apellido_placeholder" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="nacimiento">Fecha de Nacimiento</label>
+                                <label for="nacimiento" data-i18n="nacimiento_label">Fecha de Nacimiento</label>
                                 <input type="date" id="nacimiento" name="nacimiento" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="genero">Género</label>
+                                <label for="genero" data-i18n="genero_label">Género</label>
                                 <select id="genero" name="genero" required>
-                                    <option value="">Seleccionar</option>
-                                    <option value="masculino">Masculino</option>
-                                    <option value="femenino">Femenino</option>
-                                    <option value="otro">Otro</option>
-                                    <option value="no_especificar">Prefiero no especificar</option>
+                                    <option value="" data-i18n="seleccionar_opcion">Seleccionar</option>
+                                    <option value="masculino" data-i18n="genero_masculino">Masculino</option>
+                                    <option value="femenino" data-i18n="genero_femenino">Femenino</option>
+                                    <option value="otro" data-i18n="genero_otro">Otro</option>
+                                    <option value="no_especificar" data-i18n="genero_no_especificar">Prefiero no especificar</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label for="tipo_documento">Tipo de Documento</label>
+                                <label for="tipo_documento" data-i18n="tipo_documento_label">Tipo de Documento</label>
                                 <select id="tipo_documento" name="tipo_documento" required>
-                                    <option value="">Seleccionar</option>
-                                    <option value="dni">DNI</option>
-                                    <option value="nie">NIE</option>
-                                    <option value="pasaporte">Pasaporte</option>
+                                    <option value="" data-i18n="seleccionar_opcion">Seleccionar</option>
+                                    <option value="dni" data-i18n="dni">DNI</option>
+                                    <option value="nie" data-i18n="nie">NIE</option>
+                                    <option value="pasaporte" data-i18n="pasaporte">Pasaporte</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label for="numero_documento">Número de Documento</label>
-                                <input type="text" id="numero_documento" name="numero_documento" placeholder="Ej: 12345678A" required>
+                                <label for="numero_documento" data-i18n="numero_documento_label">Número de Documento</label>
+                                <input type="text" id="numero_documento" name="numero_documento" placeholder="Ej: 12345678A" data-i18n-placeholder="numero_documento_placeholder" required>
                             </div>
                         </div>
                     </div>
@@ -122,45 +122,45 @@
                     <!-- STEP 2: CONTACTO -->
                     <div class="form-step" data-step="2">
                         <div class="step-header">
-                            <h2>Información de Contacto</h2>
-                            <p>¿Dónde te encontramos?</p>
+                            <h2 data-i18n="registro_paso2_titulo">Información de Contacto</h2>
+                            <p data-i18n="registro_paso2_desc">¿Dónde te encontramos?</p>
                         </div>
 
                         <div class="step-content">
                             <div class="form-group">
-                                <label for="email">Correo Electrónico</label>
-                                <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                                <label for="email" data-i18n="correo_label">Correo Electrónico</label>
+                                <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" data-i18n-placeholder="correo_placeholder" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="telefono">Teléfono</label>
-                                <input type="tel" id="telefono" name="telefono" placeholder="+34 612 345 678" required>
+                                <label for="telefono" data-i18n="telefono_label">Teléfono</label>
+                                <input type="tel" id="telefono" name="telefono" placeholder="+34 612 345 678" data-i18n-placeholder="telefono_placeholder" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="calle">Calle y Número</label>
-                                <input type="text" id="calle" name="calle" placeholder="Ej: Calle Principal 42" required>
+                                <label for="calle" data-i18n="calle_label">Calle y Número</label>
+                                <input type="text" id="calle" name="calle" placeholder="Ej: Calle Principal 42" data-i18n-placeholder="calle_placeholder" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="ciudad">Ciudad</label>
-                                <input type="text" id="ciudad" name="ciudad" placeholder="Ej: Madrid" required>
+                                <label for="ciudad" data-i18n="ciudad_label">Ciudad</label>
+                                <input type="text" id="ciudad" name="ciudad" placeholder="Ej: Madrid" data-i18n-placeholder="ciudad_placeholder" required>
                             </div>
 
                             <div class="form-group-row">
                                 <div class="form-group">
-                                    <label for="codigo_postal">Código Postal</label>
-                                    <input type="text" id="codigo_postal" name="codigo_postal" placeholder="28001" required>
+                                    <label for="codigo_postal" data-i18n="codigo_postal_label">Código Postal</label>
+                                    <input type="text" id="codigo_postal" name="codigo_postal" placeholder="28001" data-i18n-placeholder="codigo_postal_placeholder" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="pais">País</label>
+                                    <label for="pais" data-i18n="pais_label">País</label>
                                     <select id="pais" name="pais" required>
-                                        <option value="">Seleccionar</option>
-                                        <option value="españa">España</option>
-                                        <option value="portugal">Portugal</option>
-                                        <option value="francia">Francia</option>
-                                        <option value="italia">Italia</option>
-                                        <option value="otro">Otro</option>
+                                        <option value="" data-i18n="seleccionar_opcion">Seleccionar</option>
+                                        <option value="españa" data-i18n="pais_espana">España</option>
+                                        <option value="portugal" data-i18n="pais_portugal">Portugal</option>
+                                        <option value="francia" data-i18n="pais_francia">Francia</option>
+                                        <option value="italia" data-i18n="pais_italia">Italia</option>
+                                        <option value="otro" data-i18n="genero_otro">Otro</option>
                                     </select>
                                 </div>
                             </div>
@@ -170,39 +170,39 @@
                     <!-- STEP 3: SEGURIDAD -->
                     <div class="form-step" data-step="3">
                         <div class="step-header">
-                            <h2>Crea tu Contraseña</h2>
-                            <p>Mantén tu cuenta segura</p>
+                            <h2 data-i18n="registro_paso3_titulo">Crea tu Contraseña</h2>
+                            <p data-i18n="registro_paso3_desc">Mantén tu cuenta segura</p>
                         </div>
 
                         <div class="step-content">
                             <div class="form-group">
-                                <label for="contrasena">Contraseña</label>
+                                <label for="contrasena" data-i18n="contrasena_label">Contraseña</label>
                                 <div class="password-input-wrapper">
-                                    <input type="password" id="contrasena" name="password" placeholder="Mínimo 8 caracteres" required>
+                                    <input type="password" id="contrasena" name="password" placeholder="Mínimo 8 caracteres" data-i18n-placeholder="contrasena_reg_placeholder" required>
                                     <button type="button" class="toggle-password"><i class="fa-solid fa-eye"></i></button>
                                 </div>
                                 <div class="password-strength">
                                     <div class="strength-bar"></div>
-                                    <span class="strength-text">Fuerza: <strong>Débil</strong></span>
+                                    <span class="strength-text"><span data-i18n="fuerza_label">Fuerza</span>: <strong data-i18n="fuerza_debil">Débil</strong></span>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="confirmar_contraseña">Confirmar Contraseña</label>
+                                <label for="confirmar_contraseña" data-i18n="confirmar_contrasena_label">Confirmar Contraseña</label>
                                 <div class="password-input-wrapper">
-                                    <input type="password" id="confirmar_contraseña" name="confirmar_contraseña" placeholder="Repite tu contraseña" required>
+                                    <input type="password" id="confirmar_contraseña" name="confirmar_contraseña" placeholder="Repite tu contraseña" data-i18n-placeholder="confirmar_contrasena_placeholder" required>
                                     <button type="button" class="toggle-password"><i class="fa-solid fa-eye"></i></button>
                                 </div>
                             </div>
 
                             <div class="password-tips">
-                                <p class="tips-title">Una buena contraseña contiene:</p>
+                                <p class="tips-title" data-i18n="consejos_contrasena_titulo">Una buena contraseña contiene:</p>
                                 <div class="tips-list">
-                                    <div class="tip" id="tip-length"><i class="fa-solid fa-circle-xmark"></i> Al menos 8 caracteres</div>
-                                    <div class="tip" id="tip-upper"><i class="fa-solid fa-circle-xmark"></i> Mayúsculas</div>
-                                    <div class="tip" id="tip-lower"><i class="fa-solid fa-circle-xmark"></i> Minúsculas</div>
-                                    <div class="tip" id="tip-number"><i class="fa-solid fa-circle-xmark"></i> Números</div>
-                                    <div class="tip" id="tip-special"><i class="fa-solid fa-circle-xmark"></i> Caracteres especiales (!@#$%)</div>
+                                    <div class="tip" id="tip-length"><i class="fa-solid fa-circle-xmark"></i> <span data-i18n="consejo_longitud">Al menos 8 caracteres</span></div>
+                                    <div class="tip" id="tip-upper"><i class="fa-solid fa-circle-xmark"></i> <span data-i18n="consejo_mayusculas">Mayúsculas</span></div>
+                                    <div class="tip" id="tip-lower"><i class="fa-solid fa-circle-xmark"></i> <span data-i18n="consejo_minusculas">Minúsculas</span></div>
+                                    <div class="tip" id="tip-number"><i class="fa-solid fa-circle-xmark"></i> <span data-i18n="consejo_numeros">Números</span></div>
+                                    <div class="tip" id="tip-special"><i class="fa-solid fa-circle-xmark"></i> <span data-i18n="consejo_especiales">Caracteres especiales (!@#$%)</span></div>
                                 </div>
                             </div>
                         </div>
@@ -211,8 +211,8 @@
                     <!-- STEP 4: TÉRMINOS Y CONDICIONES -->
                     <div class="form-step" data-step="4">
                         <div class="step-header">
-                            <h2>Términos y Condiciones</h2>
-                            <p>Casi listo, acepta nuestros términos</p>
+                            <h2 data-i18n="registro_paso4_titulo">Términos y Condiciones</h2>
+                            <p data-i18n="registro_paso4_desc">Casi listo, acepta nuestros términos</p>
                         </div>
 
                         <div class="step-content">
@@ -220,17 +220,17 @@
                                 <label class="checkbox-custom">
                                     <input type="checkbox" name="terminos" value="1">
                                     <span class="checkmark"></span>
-                                    Acepto los <a href="terminos_y_condiciones.php" class="link-term" target="_blank" rel="noopener">Términos y Condiciones</a>
+                                    <span data-i18n="acepto_terminos_parte1">Acepto los </span>&nbsp;<a href="terminos_y_condiciones.php" class="link-term" target="_blank" rel="noopener" data-i18n="terminos_y_condiciones_link">Términos y Condiciones</a>
                                 </label>
                                 <label class="checkbox-custom">
                                     <input type="checkbox" name="privacidad" value="1">
                                     <span class="checkmark"></span>
-                                    Acepto la <a href="politica_privacidad.php" class="link-term" target="_blank" rel="noopener">Política de Privacidad</a>
+                                    <span data-i18n="acepto_privacidad_parte1">Acepto la </span>&nbsp;<a href="politica_privacidad.php" class="link-term" target="_blank" rel="noopener" data-i18n="politica_privacidad_link">Política de Privacidad</a>
                                 </label>
                                 <label class="checkbox-custom">
                                     <input type="checkbox" name="newsletter" value="1">
                                     <span class="checkmark"></span>
-                                    Deseo recibir ofertas y promociones
+                                    <span data-i18n="aceptar_newsletter">Deseo recibir ofertas y promociones</span>
                                 </label>
                             </div>
 
@@ -240,8 +240,8 @@
                                 <div class="success-icon">
                                     <i class="fa-solid fa-check-circle"></i>
                                 </div>
-                                <h3>¡Casi listo!</h3>
-                                <p>Haz clic en "Crear Cuenta" para completar tu registro y disfrutar de todos nuestros servicios</p>
+                                <h3 data-i18n="casi_listo_titulo">¡Casi listo!</h3>
+                                <p data-i18n="casi_listo_desc">Haz clic en "Crear Cuenta" para completar tu registro y disfrutar de todos nuestros servicios</p>
                             </div>
                         </div>
                     </div>
@@ -249,10 +249,9 @@
                     <!-- FORM ACTIONS -->
                     <div class="form-actions">
                         <button type="button" class="btn-prev" id="prevBtn" style="display:none;">
-                            <i class="fa-solid fa-chevron-left"></i> Atrás
+                            <i class="fa-solid fa-chevron-left"></i> <span data-i18n="boton_atras">Atrás</span>
                         </button>
-                        <button type="submit" class="btn-next" id="nextBtn">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
-                        
+                        <button type="submit" class="btn-next" id="nextBtn"><span data-i18n="boton_siguiente">Siguiente</span> <i class="fa-solid fa-chevron-right"></i></button>
                     </div>
                 </form>
             </div>

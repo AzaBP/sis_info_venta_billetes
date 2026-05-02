@@ -85,11 +85,13 @@ function updateProgress() {
 
     prevBtn.style.display = currentStep === 1 ? 'none' : 'flex';
 
+    const t = (key) => (window.trainwebI18n && window.trainwebI18n.t) ? window.trainwebI18n.t(key) : null;
+
     if(currentStep === 4){
-        nextBtn.innerHTML = "Crear Cuenta";
+        nextBtn.innerHTML = t('boton_crear_cuenta') || "Crear Cuenta";
         nextBtn.type = "submit";
     }else{
-        nextBtn.innerHTML = 'Siguiente <i class="fa-solid fa-chevron-right"></i>';
+        nextBtn.innerHTML = `${t('boton_siguiente') || 'Siguiente'} <i class="fa-solid fa-chevron-right"></i>`;
         nextBtn.type = "button";
     }
 }
@@ -167,6 +169,7 @@ allInputs.forEach(input=>{
 
         guardarDatosFormulario();
 
+        const t = (key) => (window.trainwebI18n && window.trainwebI18n.t) ? window.trainwebI18n.t(key) : null;
         const value = input.value.trim();
         let error = "";
 
@@ -175,7 +178,7 @@ allInputs.forEach(input=>{
             case "nombre":
             case "apellido":
                 if(!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,}$/.test(value)){
-                    error = "Solo letras (mínimo 2)";
+                    error = t('solo_letras_error') || "Solo letras (mínimo 2)";
                 }
             break;
 
@@ -188,62 +191,62 @@ allInputs.forEach(input=>{
                 if(m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) edad--;
 
                 if(edad < 14){
-                    error = "Debes tener mínimo 14 años";
+                    error = t('minimo_14_anios_error') || "Debes tener mínimo 14 años";
                 }
             break;
 
             case "email":
                 if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)){
-                    error = "Email inválido";
+                    error = t('email_invalido_error') || "Email inválido";
                 }
             break;
 
             case "telefono":
                 if(!/^[0-9+\s]{7,15}$/.test(value)){
-                    error = "Teléfono inválido";
+                    error = t('telefono_invalido_error') || "Teléfono inválido";
                 }
             break;
 
             case "codigo_postal":
                 if(!/^[0-9]{4,6}$/.test(value)){
-                    error = "Código postal inválido";
+                    error = t('cp_invalido_error') || "Código postal inválido";
                 }
             break;
 
             case "ciudad":
                 if(!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{2,}$/.test(value)){
-                    error = "Ciudad inválida";
+                    error = t('ciudad_invalida_error') || "Ciudad inválida";
                 }
             break;
 
             case "numero_documento":
                 if(!validarDocumento(value)){
-                    error = "Documento inválido";
+                    error = t('documento_invalido_error') || "Documento inválido";
                 }
             break;
 
             case "contrasena":
                 if(value.length < 8){
-                    error = "Mínimo 8 caracteres";
+                    error = t('min_8_caracteres_error') || "Mínimo 8 caracteres";
                 }
                 else if(!/[A-Z]/.test(value)){
-                    error = "Debe tener mayúscula";
+                    error = t('mayuscula_requerida_error') || "Debe tener mayúscula";
                 }
                 else if(!/[a-z]/.test(value)){
-                    error = "Debe tener minúscula";
+                    error = t('minuscula_requerida_error') || "Debe tener minúscula";
                 }
                 else if(!/[0-9]/.test(value)){
-                    error = "Debe tener número";
+                    error = t('numero_requerido_error') || "Debe tener número";
                 }
                 else if(!/[!@#$%^&*]/.test(value)){
-                    error = "Debe tener carácter especial";
+                    error = t('especial_requerido_error') || "Debe tener carácter especial";
                 }
             break;
 
             case "confirmar_contraseña":
                 const pass = document.getElementById("contrasena").value;
                 if(value !== pass){
-                    error = "Las contraseñas no coinciden";
+                    error = t('contrasenas_no_coinciden_error') || "Las contraseñas no coinciden";
                 }
             break;
 
@@ -263,7 +266,9 @@ allInputs.forEach(input=>{
 // BOTONES
 // ==========================
 
-nextBtn.addEventListener("click",(e)=>{
+    nextBtn.addEventListener("click",(e)=>{
+
+    const t = (key) => (window.trainwebI18n && window.trainwebI18n.t) ? window.trainwebI18n.t(key) : null;
 
     if(currentStep < 4){
 
@@ -277,7 +282,7 @@ nextBtn.addEventListener("click",(e)=>{
         stepInputs.forEach(input=>{
             if(input.classList.contains("error") || !input.value.trim()){
                 valid = false;
-                showError(input,"Campo inválido");
+                showError(input, t('campo_invalido_error') || "Campo inválido");
             }
         });
 
@@ -296,7 +301,7 @@ nextBtn.addEventListener("click",(e)=>{
         const confirm = document.getElementById("confirmar_contraseña").value;
 
         if(pass !== confirm){
-            alert("Las contraseñas no coinciden");
+            alert(t('contrasenas_no_coinciden_error') || "Las contraseñas no coinciden");
             return;
         }
 
@@ -305,7 +310,7 @@ nextBtn.addEventListener("click",(e)=>{
         const privacidad = document.querySelector('input[name="privacidad"]').checked;
 
         if(!terminos || !privacidad){
-            mostrarErrorTerminos('Debes aceptar los términos y la política de privacidad para continuar.');
+            mostrarErrorTerminos(t('aceptar_terminos_error') || 'Debes aceptar los términos y la política de privacidad para continuar.');
             return;
         }
 
@@ -382,24 +387,26 @@ if(error){
     mensajeDiv.style.display = "block";
     mensajeDiv.classList.add("error");
 
+    const t = (key) => (window.trainwebI18n && window.trainwebI18n.t) ? window.trainwebI18n.t(key) : null;
+
     if(error === "usuario_existente"){
-        mensajeDiv.textContent = "⚠️ Este correo ya está registrado.";
+        mensajeDiv.textContent = t('correo_ya_registrado_error') || "⚠️ Este correo ya está registrado.";
     }
 
     if(error === "error_usuario"){
-        mensajeDiv.textContent = "⚠️ Error al crear el usuario.";
+        mensajeDiv.textContent = t('error_crear_usuario') || "⚠️ Error al crear el usuario.";
     }
 
     if(error === "error_pasajero"){
-        mensajeDiv.textContent = "⚠️ Error al crear el perfil del pasajero.";
+        mensajeDiv.textContent = t('error_crear_perfil') || "⚠️ Error al crear el perfil del pasajero.";
     }
 
     if(error === "aceptar_politicas"){
-        mensajeDiv.textContent = "⚠️ Debes aceptar los términos y la política de privacidad para continuar.";
+        mensajeDiv.textContent = t('aceptar_terminos_error') || "⚠️ Debes aceptar los términos y la política de privacidad para continuar.";
     }
 
     if(error === "datos_incompletos"){
-        mensajeDiv.textContent = "⚠️ Faltan datos obligatorios en el formulario de registro.";
+        mensajeDiv.textContent = t('datos_incompletos_error') || "⚠️ Faltan datos obligatorios en el formulario de registro.";
     }
 }
 
@@ -439,21 +446,23 @@ if (passwordInput) {
         if (hasNumber) strength += 20;
         if (hasSpecial) strength += 20;
 
+        const t = (key) => (window.trainwebI18n && window.trainwebI18n.t) ? window.trainwebI18n.t(key) : null;
+
         // 🔹 MOVER BARRA
         strengthBar.style.width = strength + "%";
 
         // 🔹 COLOR + TEXTO
         if (strength < 40) {
             strengthBar.style.background = "#ff4d4d";
-            strengthTextStrong.textContent = "Débil";
+            strengthTextStrong.textContent = t('fuerza_debil') || "Débil";
         }
         else if (strength < 80) {
             strengthBar.style.background = "#ffa500";
-            strengthTextStrong.textContent = "Media";
+            strengthTextStrong.textContent = t('fuerza_media') || "Media";
         }
         else {
             strengthBar.style.background = "#17632A";
-            strengthTextStrong.textContent = "Fuerte";
+            strengthTextStrong.textContent = t('fuerza_fuerte') || "Fuerte";
         }
 
         // 🔹 TICKS VERDES
