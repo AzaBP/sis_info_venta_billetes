@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function actualizarModoViaje(tipoViaje) {
         if (!searchForm) return;
         searchForm.classList.toggle('roundtrip-mode', tipoViaje === 'roundtrip');
+        searchForm.classList.toggle('oneway-mode', tipoViaje === 'oneway');
     }
 
     function activarValidacionFechas() {

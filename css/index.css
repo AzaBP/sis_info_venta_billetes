@@ -255,16 +255,32 @@ body {
 }
 
 .search-submit-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+/* En solo ida: el select y botón aparecen como hermanos normales */
+.search-form.oneway-mode .search-submit-row {
     display: contents;
 }
 
+.search-form.oneway-mode .search-submit-row select {
+    flex: 0 0 180px;
+}
+
+/* En ida/vuelta: pasajeros y botón en segunda línea, espaciados */
 .search-form.roundtrip-mode .search-submit-row {
-    display: flex;
-    width: 100%;
     flex-basis: 100%;
     order: 99;
-    justify-content: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
     margin-top: 10px;
+}
+
+.search-form.roundtrip-mode .search-submit-row select {
+    flex: 0 0 180px;
 }
 
 .search-form button:hover {

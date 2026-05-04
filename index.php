@@ -119,13 +119,13 @@ try {
                     <input type="date" id="fecha-ida" name="fecha" required>
                 </div>
 
-                <select name="pasajeros">
-                    <option value="1" data-i18n="pasajero_1">1 pasajero</option>
-                    <option value="2" data-i18n="pasajero_2">2 pasajeros</option>
-                    <option value="3" data-i18n="pasajero_3">3 pasajeros</option>
-                    <option value="4" data-i18n="pasajero_4">4 pasajeros</option>
-                </select>
                 <div class="search-submit-row">
+                    <select name="pasajeros">
+                        <option value="1" data-i18n="pasajero_1">1 pasajero</option>
+                        <option value="2" data-i18n="pasajero_2">2 pasajeros</option>
+                        <option value="3" data-i18n="pasajero_3">3 pasajeros</option>
+                        <option value="4" data-i18n="pasajero_4">4 pasajeros</option>
+                    </select>
                     <button type="submit" data-i18n="buscar_billetes">Buscar billetes</button>
                 </div>
             </form>
