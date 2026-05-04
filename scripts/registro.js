@@ -373,12 +373,19 @@ const error = params.get("error");
 const requestedStep = parseInt(params.get("step"), 10);
 const freshStart = params.get("fresh") === "1";
 
-if (freshStart) {
+// Si no viene de navegación interna (step o error en proceso de registro), limpiar
+// La navegación interna es cuando: tiene step válido O tiene error (significa que estaba en registro)
+const isInternalNavigation = (!isNaN(requestedStep) && requestedStep >= 1 && requestedStep <= 4) || error;
+
+if (freshStart || !isInternalNavigation) {
     limpiarDatosFormulario();
     registerForm.reset();
     currentStep = 1;
-    const cleanUrl = window.location.pathname + (window.location.hash || '');
-    window.history.replaceState({}, document.title, cleanUrl);
+    // Limpiar URL si viene con parámetros innecesarios
+    if (freshStart) {
+        const cleanUrl = window.location.pathname + (window.location.hash || '');
+        window.history.replaceState({}, document.title, cleanUrl);
+    }
 }
 
 if (!Number.isNaN(requestedStep) && requestedStep >= 1 && requestedStep <= 4) {

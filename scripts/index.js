@@ -24,30 +24,37 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         };
 
-        ['input', 'change', 'keyup', 'blur'].forEach((eventName) => {
+        // Listeners para validación (input, keyup, blur) - sin comparación
+        ['input', 'keyup', 'blur'].forEach((eventName) => {
             fechaIda.addEventListener(eventName, dispararValidacion);
         });
 
+        // Solo en change: permitir que el navegador valide primero, luego comparar
         fechaIda.addEventListener("change", function () {
+            dispararValidacion();
 
-            if (fechaVuelta) {
+            if (fechaVuelta && this.value) {
                 fechaVuelta.min = this.value;
 
-                // Si la vuelta es menor que la ida → limpiar (solo si ambas están completas)
-                if (fechaVuelta.value && this.value && fechaVuelta.value < this.value) {
+                // Solo limpiar si vuelta está completa Y es menor que ida
+                if (fechaVuelta.value && new Date(fechaVuelta.value) < new Date(this.value)) {
                     fechaVuelta.value = "";
                 }
             }
         });
 
         if (fechaVuelta) {
-            ['input', 'change', 'keyup', 'blur'].forEach((eventName) => {
+            // Listeners para validación (input, keyup, blur) - sin comparación
+            ['input', 'keyup', 'blur'].forEach((eventName) => {
                 fechaVuelta.addEventListener(eventName, dispararValidacion);
             });
 
+            // Solo en change: permitir que el navegador valide primero, luego comparar
             fechaVuelta.addEventListener("change", function () {
-                // Solo limpiar si la fecha está completa y es menor que la ida
-                if (this.value && fechaIda.value && this.value < fechaIda.value) {
+                dispararValidacion();
+                
+                // Solo limpiar si está completa Y es menor que ida
+                if (this.value && fechaIda.value && new Date(this.value) < new Date(fechaIda.value)) {
                     this.value = "";
                 }
             });
