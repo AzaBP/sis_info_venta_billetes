@@ -196,6 +196,7 @@ body {
     flex-wrap: wrap;
     gap: 16px;
     justify-content: center;
+    align-items: flex-start;
 }
 
 .search-form input,
@@ -209,7 +210,8 @@ body {
 }
 
 .search-form .input-group,
-.search-form .date-field-group {
+.search-form .date-field-group,
+.search-form .date-type {
     width: 180px;
     flex: 0 0 180px;
 }
@@ -224,12 +226,13 @@ body {
 }
 
 .search-form .trip-type {
-    width: 180px;
-    flex: 0 0 180px;
+    order: -1;
+    width: 100%;
+    flex: 0 0 100%;
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    gap: 6px;
+    gap: 25px;
+    margin-bottom: 2px;
 }
 
 .search-form input:hover,
@@ -247,6 +250,8 @@ body {
     color: white;
     cursor: pointer;
     transition: transform 0.3s, background 0.3s;
+    width: 180px;
+    flex: 0 0 180px;
 }
 
 .search-form button:hover {
