@@ -29,13 +29,30 @@ try {
     }
 
     // 2. Datos Maestros (Extraídos de tus consultas SQL)
-    // Extraer TODAS las rutas de la base de datos dinámicamente para el test
-    $stmtRutas = $pdo->query("SELECT id_ruta, origen, destino, duracion, id_vendedor FROM RUTA");
-    $rutas = $stmtRutas->fetchAll(PDO::FETCH_ASSOC);
-    
-    if (empty($rutas)) {
-        throw new Exception("No hay rutas en la base de datos para generar los viajes.");
-    }
+    $rutas = [
+        ['id_ruta' => 1, 'origen' => 'Madrid Puerta de Atocha', 'destino' => 'Barcelona Sants', 'duracion' => '02:30:00', 'id_vendedor' => 1],
+        ['id_ruta' => 2, 'origen' => 'Zaragoza Delicias', 'destino' => 'Madrid Puerta de Atocha', 'duracion' => '01:15:00', 'id_vendedor' => 1],
+        ['id_ruta' => 3, 'origen' => 'Zaragoza Delicias', 'destino' => 'Barcelona Sants', 'duracion' => '01:30:00', 'id_vendedor' => 1],
+        ['id_ruta' => 4, 'origen' => 'Valencia Joaquín Sorolla', 'destino' => 'Madrid Puerta de Atocha', 'duracion' => '01:50:00', 'id_vendedor' => 1],
+        ['id_ruta' => 5, 'origen' => 'Sevilla Santa Justa', 'destino' => 'Madrid Puerta de Atocha', 'duracion' => '02:30:00', 'id_vendedor' => 1],
+        ['id_ruta' => 36, 'origen' => 'Barcelona Sants', 'destino' => 'Madrid Puerta de Atocha', 'duracion' => '02:30:00', 'id_vendedor' => 1],
+
+        ['id_ruta' => 7, 'origen' => 'Madrid Puerta de Atocha', 'destino' => 'Valencia Joaquín Sorolla', 'duracion' => '01:50:00', 'id_vendedor' => 1],
+        ['id_ruta' => 8, 'origen' => 'Barcelona Sants', 'destino' => 'Sevilla Santa Justa', 'duracion' => '03:00:00', 'id_vendedor' => 8],
+        ['id_ruta' => 9, 'origen' => 'Valencia Joaquín Sorolla', 'destino' => 'Alicante Término', 'duracion' => '01:00:00', 'id_vendedor' => 1],
+        ['id_ruta' => 10, 'origen' => 'Madrid Puerta de Atocha', 'destino' => 'Bilbao Abando', 'duracion' => '02:30:00', 'id_vendedor' => 1],
+        ['id_ruta' => 11, 'origen' => 'Barcelona Sants', 'destino' => 'Valencia Joaquín Sorolla', 'duracion' => '01:30:00', 'id_vendedor' => 8],
+        ['id_ruta' => 12, 'origen' => 'Sevilla Santa Justa', 'destino' => 'Córdoba Central', 'duracion' => '01:00:00', 'id_vendedor' => 1],
+        ['id_ruta' => 13, 'origen' => 'Madrid Puerta de Atocha', 'destino' => 'Toledo Estación', 'duracion' => '00:45:00', 'id_vendedor' => 1],
+        
+        ['id_ruta' => 14, 'origen' => 'Bilbao Abando', 'destino' => 'San Sebastián Donostia', 'duracion' => '01:30:00', 'id_vendedor' => 8],
+        ['id_ruta' => 15, 'origen' => 'Barcelona Sants', 'destino' => 'Girona Estación', 'duracion' => '01:00:00', 'id_vendedor' => 1],
+        ['id_ruta' => 16, 'origen' => 'Madrid Puerta de Atocha', 'destino' => 'Segovia-Guadarrama', 'duracion' => '01:00:00', 'id_vendedor' => 1],
+        ['id_ruta' => 17, 'origen' => 'Valencia Joaquín Sorolla', 'destino' => 'Tarragona Central', 'duracion' => '01:30:00', 'id_vendedor' => 8],
+        ['id_ruta' => 18, 'origen' => 'Sevilla Santa Justa', 'destino' => 'Cádiz Término', 'duracion' => '02:00:00', 'id_vendedor' => 1],
+        ['id_ruta' => 19, 'origen' => 'Valencia Joaquín Sorolla', 'destino' => 'Cuenca Fernando Zóbel', 'duracion' => '01:30:00', 'id_vendedor' => 1],
+        ['id_ruta' => 20, 'origen' => 'Madrid Puerta de Atocha', 'destino' => 'Guadalajara Central', 'duracion' => '00:40:00', 'id_vendedor' => 8]
+    ];
 
     $trenes = [
         ['id_tren' => 1, 'modelo' => 'AVE', 'capacidad' => 300],
