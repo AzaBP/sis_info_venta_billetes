@@ -251,7 +251,8 @@ body {
     cursor: pointer;
     transition: transform 0.3s, background 0.3s;
     width: 180px;
-    flex: 0 0 180px;
+    flex: 0 0 100%;
+    order: 99;
 }
 
 .search-form button:hover {
