@@ -232,8 +232,28 @@ body {
 
 #date-container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
+}
+
+.date-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.date-field-error {
+    min-height: 16px;
+    max-width: 180px;
+    color: #b30000;
+    font-size: 0.82rem;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.search-form input.input-error {
+    border-color: #b30000;
+    box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.12);
 }
 
 /* ================= SECCIONES ================= */

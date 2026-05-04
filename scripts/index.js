@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // No permitir fechas pasadas
         const hoy = new Date().toISOString().split("T")[0];
         fechaIda.min = hoy;
+        if (fechaVuelta && fechaIda.value) {
+            fechaVuelta.min = fechaIda.value;
+        }
 
         const dispararValidacion = () => {
             if (typeof window.validarBusquedaViajes === 'function') {
@@ -57,20 +60,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
         dateContainer.innerHTML = "";
 
+        const fechaIdaGroup = document.createElement("div");
+        fechaIdaGroup.className = "date-field-group";
+
         const fechaIda = document.createElement("input");
         fechaIda.type = "date";
         fechaIda.id = "fecha-ida";
         fechaIda.name = "fecha";
         fechaIda.required = true;
-        dateContainer.appendChild(fechaIda);
+
+        const fechaIdaError = document.createElement("div");
+        fechaIdaError.id = "fecha-ida-error";
+        fechaIdaError.className = "date-field-error";
+        fechaIdaError.setAttribute("aria-live", "polite");
+
+        fechaIdaGroup.appendChild(fechaIda);
+        fechaIdaGroup.appendChild(fechaIdaError);
+        dateContainer.appendChild(fechaIdaGroup);
 
         if (tipoViaje === "roundtrip") {
+            const fechaVueltaGroup = document.createElement("div");
+            fechaVueltaGroup.className = "date-field-group";
+
             const fechaVuelta = document.createElement("input");
             fechaVuelta.type = "date";
             fechaVuelta.id = "fecha-vuelta";
             fechaVuelta.name = "fecha_vuelta";
             fechaVuelta.required = true;
-            dateContainer.appendChild(fechaVuelta);
+
+            const fechaVueltaError = document.createElement("div");
+            fechaVueltaError.id = "fecha-vuelta-error";
+            fechaVueltaError.className = "date-field-error";
+            fechaVueltaError.setAttribute("aria-live", "polite");
+
+            fechaVueltaGroup.appendChild(fechaVuelta);
+            fechaVueltaGroup.appendChild(fechaVueltaError);
+            dateContainer.appendChild(fechaVueltaGroup);
         }
 
         activarValidacionFechas();
@@ -258,25 +283,59 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             let errorMsg = '';
+            let errorFechaIda = '';
+            let errorFechaVuelta = '';
+
+            const mostrarErrorFecha = (input, errorEl, mensaje) => {
+                if (!errorEl || !input) return;
+                errorEl.textContent = mensaje || '';
+                if (mensaje) {
+                    input.classList.add('input-error');
+                } else {
+                    input.classList.remove('input-error');
+                }
+            };
+
+            const fechaIdaErrorEl = document.getElementById('fecha-ida-error');
+            const fechaVueltaErrorEl = document.getElementById('fecha-vuelta-error');
             
             if (origen && origenesDb.length > 0 && !origenesDb.some(c => c.toLowerCase() === origen.toLowerCase())) {
                 errorMsg = t_err('ciudad_invalida_error') || 'Ciudad inválida';
-            } else if (destino && destinosDb.length > 0 && !destinosDb.some(c => c.toLowerCase() === destino.toLowerCase())) {
-                errorMsg = t_err('ciudad_invalida_error') || 'Ciudad inválida';
-            } else if (fechaIda && fechaIda.value) {
+            }
+
+            if (destino && destinosDb.length > 0 && !destinosDb.some(c => c.toLowerCase() === destino.toLowerCase())) {
+                errorMsg = errorMsg || (t_err('ciudad_invalida_error') || 'Ciudad inválida');
+            }
+
+            if (fechaIda && fechaIda.value) {
                 const hoy = new Date();
                 const fIda = new Date(fechaIda.value);
                 hoy.setHours(0,0,0,0);
                 if (fIda < hoy) {
-                    errorMsg = t_err('error_fecha_pasada');
+                    errorFechaIda = t_err('error_fecha_pasada');
+                    errorMsg = errorMsg || errorFechaIda;
                 }
                 if (fechaVuelta && fechaVuelta.value && document.querySelector('input[name="trip"]:checked')?.value === 'roundtrip') {
                     const fVuelta = new Date(fechaVuelta.value);
                     if (fVuelta < fIda) {
-                        errorMsg = t_err('error_fecha_orden');
+                        errorFechaVuelta = t_err('error_fecha_orden');
+                        errorMsg = errorMsg || errorFechaVuelta;
                     }
                 }
             }
+
+            // Mensaje de apoyo para vuelta obligatoria en ida/vuelta tras interacción
+            if (
+                fechaVuelta &&
+                document.querySelector('input[name="trip"]:checked')?.value === 'roundtrip' &&
+                !fechaVuelta.value &&
+                window.usuarioHaInteractuado
+            ) {
+                errorFechaVuelta = errorFechaVuelta || (t_err('fecha_vuelta_obligatoria') || 'Selecciona una fecha de vuelta.');
+            }
+
+            mostrarErrorFecha(fechaIda, fechaIdaErrorEl, errorFechaIda);
+            mostrarErrorFecha(fechaVuelta, fechaVueltaErrorEl, errorFechaVuelta);
 
             if (btnBuscar) {
                 if (!isFormComplete || errorMsg) {
