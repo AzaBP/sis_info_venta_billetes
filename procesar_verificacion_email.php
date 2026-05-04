@@ -4,7 +4,7 @@ require_once __DIR__ . '/php/DAO/UsuarioDAO.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim((string)($_POST['email'] ?? ''));
-    $codigo = strtoupper(trim((string)($_POST['codigo'] ?? '')));
+    $codigo = trim((string)($_POST['codigo'] ?? ''));
 
     error_log('[VERIFICACION] Intento validar codigo para email=' . $email . ' codigo=' . $codigo);
 

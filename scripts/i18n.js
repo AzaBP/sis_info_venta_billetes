@@ -1800,6 +1800,7 @@ document.addEventListener('DOMContentLoaded', () => {
             footer_cookies: 'Cookies',
             footer_terminos: 'Allgemeine Geschäftsbedingungen',
             footer_copyright: '© 2026 TrainWeb · Alle Rechte vorbehalten',
+            ofertas_h1: 'Entdecken Sie unsere Angebote',
 
             // Index / Search
             busca_tren: 'Finden Sie Ihren Zug',

@@ -51,7 +51,8 @@ $error = $_GET['error'] ?? '';
                         maxlength="6"
                         required 
                         autocomplete="off"
-                        pattern="[A-Z0-9]{6}">
+                        autocapitalize="characters"
+                        pattern="[A-Za-z0-9]{6}">
                     
                     <div class="verify-form-actions">
                         <button type="submit" class="btn-verify"><i class="fa-solid fa-check"></i> Verificar</button>

@@ -36,9 +36,7 @@ $updatedAt = '30/04/2026';
 
             <h2>6. Contacto</h2>
             <p>Si necesitas aclarar cualquiera de estos puntos, usa la sección de ayuda o el correo de soporte publicado en la plataforma.</p>
-
             <div class="legal-note">Última actualización: <?php echo htmlspecialchars($updatedAt, ENT_QUOTES, 'UTF-8'); ?></div>
-            <a class="legal-back" href="registro.html"><i class="fa-solid fa-arrow-left"></i> Volver al registro</a>
         </section>
     </main>
 </body>

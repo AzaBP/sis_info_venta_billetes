@@ -17,6 +17,51 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
     <link rel="stylesheet" href="css/ayuda.css">
     <link rel="stylesheet" href="css/perfil_pasajero.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .search-box {
+            position: relative;
+        }
+
+        .help-suggestions {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 8px);
+            background: #fff;
+            border: 1px solid rgba(10, 42, 102, 0.16);
+            border-radius: 14px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.14);
+            overflow: hidden;
+            z-index: 40;
+        }
+
+        .help-suggestions[hidden] {
+            display: none;
+        }
+
+        .help-suggestion-item {
+            width: 100%;
+            border: 0;
+            background: #fff;
+            padding: 12px 14px;
+            text-align: left;
+            cursor: pointer;
+            border-bottom: 1px solid #edf1f7;
+        }
+
+        .help-suggestion-item:last-child {
+            border-bottom: 0;
+        }
+
+        .help-suggestion-item:hover {
+            background: #f3f7ff;
+        }
+
+        .topic-card.hidden,
+        .accordion-item.hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <!--HEADER -->
@@ -66,6 +111,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     <input type="text" data-i18n="help_search_placeholder" placeholder="Ej: Cambiar billete, equipaje, mascotas...">
                     <button data-i18n="buscar">Buscar</button>
+                    <div id="helpSuggestions" class="help-suggestions" hidden></div>
                 </div>
             </div>
         </section>
@@ -75,27 +121,27 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
             <!-- TEMAS FRECUENTES -->
             <h2 class="section-title" data-i18n="temas_frecuentes">Temas frecuentes</h2>
             <div class="topics-grid">
-                <a href="#" class="topic-card">
+                <a href="ayuda_compra_cambio.php" class="topic-card" data-help-target="compra-cambio">
                     <i class="fa-solid fa-ticket"></i>
                     <span data-i18n="tema_compra_cambio">Compra y Cambio</span>
                 </a>
-                <a href="#" class="topic-card">
+                <a href="ayuda_equipajes.php" class="topic-card" data-help-target="equipajes">
                     <i class="fa-solid fa-suitcase-rolling"></i>
                     <span data-i18n="tema_equipajes">Equipajes</span>
                 </a>
-                <a href="#" class="topic-card">
+                <a href="ayuda_mascotas.php" class="topic-card" data-help-target="mascotas">
                     <i class="fa-solid fa-dog"></i>
                     <span data-i18n="tema_mascotas">Mascotas</span>
                 </a>
-                <a href="#" class="topic-card">
+                <a href="ayuda_asistencia_pmr.php" class="topic-card" data-help-target="pmr">
                     <i class="fa-solid fa-wheelchair"></i>
                     <span data-i18n="tema_asistencia_pmr">Asistencia PMR</span>
                 </a>
-                <a href="#" class="topic-card">
+                <a href="ayuda_estado_trenes.php" class="topic-card" data-help-target="estado-trenes">
                     <i class="fa-solid fa-train-subway"></i>
                     <span data-i18n="tema_estado_trenes">Estado de trenes</span>
                 </a>
-                <a href="#" class="topic-card">
+                <a href="ayuda_facturas.php" class="topic-card" data-help-target="facturas">
                     <i class="fa-solid fa-file-invoice"></i>
                     <span data-i18n="tema_facturas">Facturas</span>
                 </a>
@@ -105,7 +151,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
             <!--ACORDEON DE FRECUENTES-->
             <div class="profile-panel accordion-wrapper">
                 <!-- PREGUNTA 1-->
-                <div class="accordion-item">
+                <div class="accordion-item" data-help-keywords="anular billete cancelar viajes">
                     <div class="accordion-header">
                         <div class="header-title" data-i18n="faq_q1">¿Cómo puedo anular mi billete?</div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
@@ -117,7 +163,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                     </div>
                 </div>
                 <!-- PREGUNTA 2-->
-                <div class="accordion-item">
+                <div class="accordion-item" data-help-keywords="antelacion estación seguridad llegada tren">
                     <div class="accordion-header">
                         <div class="header-title" data-i18n="faq_q2">¿Con cuánta antelación debo llegar a la estación?</div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
@@ -129,7 +175,7 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                     </div>
                 </div>
                 <!-- PREGUNTA 3-->
-                <div class="accordion-item">
+                <div class="accordion-item" data-help-keywords="indemnizaciones retraso devolución compensación">
                     <div class="accordion-header">
                         <div class="header-title" data-i18n="faq_q3">Indemnizaciones por retraso</div>
                         <i class="fa-solid fa-chevron-down arrow-icon"></i>
@@ -215,6 +261,92 @@ $nombreSesion = $usuarioSesion['nombre'] ?? '';
                 item.classList.toggle('active');
             });
         });
+
+        const helpInput = document.querySelector('.search-box input');
+        const helpSuggestions = document.getElementById('helpSuggestions');
+        const helpTopics = Array.from(document.querySelectorAll('.topic-card'));
+        const helpFaqs = Array.from(document.querySelectorAll('.accordion-item'));
+
+        const helpItems = [
+            { label: 'Compra y cambio', target: 'compra-cambio', type: 'topic' },
+            { label: 'Equipajes', target: 'equipajes', type: 'topic' },
+            { label: 'Mascotas', target: 'mascotas', type: 'topic' },
+            { label: 'Asistencia PMR', target: 'pmr', type: 'topic' },
+            { label: 'Estado de trenes', target: 'estado-trenes', type: 'topic' },
+            { label: 'Facturas', target: 'facturas', type: 'topic' },
+            { label: '¿Cómo puedo anular mi billete?', target: 'faq-1', type: 'faq' },
+            { label: '¿Con cuánta antelación debo llegar a la estación?', target: 'faq-2', type: 'faq' },
+            { label: 'Indemnizaciones por retraso', target: 'faq-3', type: 'faq' }
+        ];
+
+        helpFaqs.forEach((item, index) => item.dataset.helpTarget = `faq-${index + 1}`);
+
+        function abrirResultadoAyuda(item) {
+            if (item.type === 'topic') {
+                const target = helpTopics.find(card => card.dataset.helpTarget === item.target);
+                if (target) target.click();
+                return;
+            }
+
+            const faq = helpFaqs.find(card => card.dataset.helpTarget === item.target);
+            if (faq) {
+                faq.classList.add('active');
+                faq.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function renderHelpSuggestions(value) {
+            if (!helpSuggestions) return;
+            const query = value.trim().toLowerCase();
+            if (!query) {
+                helpSuggestions.hidden = true;
+                helpSuggestions.innerHTML = '';
+                helpTopics.forEach(card => card.classList.remove('hidden'));
+                helpFaqs.forEach(item => item.classList.remove('hidden'));
+                return;
+            }
+
+            const matched = helpItems.filter(item => item.label.toLowerCase().includes(query));
+            helpSuggestions.innerHTML = '';
+            matched.forEach(item => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'help-suggestion-item';
+                button.textContent = item.label;
+                button.addEventListener('click', () => {
+                    helpInput.value = item.label;
+                    helpSuggestions.hidden = true;
+                    helpSuggestions.innerHTML = '';
+                    abrirResultadoAyuda(item);
+                });
+                helpSuggestions.appendChild(button);
+            });
+
+            helpTopics.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.classList.toggle('hidden', !text.includes(query));
+            });
+
+            helpFaqs.forEach(item => {
+                const keywords = (item.dataset.helpKeywords || item.textContent).toLowerCase();
+                item.classList.toggle('hidden', !keywords.includes(query));
+            });
+
+            helpSuggestions.hidden = false;
+            if (matched.length === 0) {
+                helpSuggestions.innerHTML = '<button type="button" class="help-suggestion-item" disabled>No hay coincidencias</button>';
+            }
+        }
+
+        if (helpInput && helpSuggestions) {
+            helpInput.addEventListener('input', (e) => renderHelpSuggestions(e.target.value));
+            helpInput.addEventListener('focus', (e) => renderHelpSuggestions(e.target.value));
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-box')) {
+                    helpSuggestions.hidden = true;
+                }
+            });
+        }
     </script>
     <script src="scripts/session_menu.js"></script>
 

@@ -32,7 +32,8 @@ try {
             JOIN RUTA r ON v.id_ruta = r.id_ruta
             JOIN TREN t ON v.id_tren = t.id_tren
             WHERE " . implode(' AND ', $where) . "
-            ORDER BY v.fecha ASC, v.hora_salida ASC";
+            ORDER BY v.fecha ASC, v.hora_salida ASC
+            LIMIT 12";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);

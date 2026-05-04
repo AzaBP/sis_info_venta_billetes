@@ -371,6 +371,38 @@ togglePasswordButtons.forEach(btn => {
 const params = new URLSearchParams(window.location.search);
 const error = params.get("error");
 const requestedStep = parseInt(params.get("step"), 10);
+const freshStart = params.get("fresh") === "1";
+
+// Si no viene de navegación interna (step o error en proceso de registro), limpiar
+// La navegación interna es cuando: tiene step válido O tiene error (significa que estaba en registro)
+const isInternalNavigation = (!isNaN(requestedStep) && requestedStep >= 1 && requestedStep <= 4) || error;
+
+function limpiarCamposVisibles() {
+    const inputs = registerForm.querySelectorAll('input, select, textarea');
+    inputs.forEach((input) => {
+        if (input.type === 'checkbox' || input.type === 'radio') {
+            input.checked = false;
+            return;
+        }
+        if (input.tagName === 'SELECT') {
+            input.selectedIndex = 0;
+            return;
+        }
+        input.value = '';
+    });
+}
+
+if (freshStart || !isInternalNavigation) {
+    limpiarDatosFormulario();
+    registerForm.reset();
+    limpiarCamposVisibles();
+    currentStep = 1;
+    // Limpiar URL si viene con parámetros innecesarios
+    if (freshStart) {
+        const cleanUrl = window.location.pathname + (window.location.hash || '');
+        window.history.replaceState({}, document.title, cleanUrl);
+    }
+}
 
 if (!Number.isNaN(requestedStep) && requestedStep >= 1 && requestedStep <= 4) {
     currentStep = requestedStep;
@@ -411,7 +443,9 @@ if(error){
 }
 
 // Recuperar datos guardados en sessionStorage al cargar la página
-recuperarDatosFormulario();
+if (!freshStart && isInternalNavigation) {
+    recuperarDatosFormulario();
+}
 
 // Limpiar datos cuando se envía el formulario exitosamente
 registerForm.addEventListener('submit', () => {

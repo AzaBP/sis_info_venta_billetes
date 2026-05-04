@@ -1,6 +1,6 @@
 <?php
 session_start();
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=UTF-8');
 require_once __DIR__ . '/Conexion.php';
 
 $usuario = $_SESSION['usuario'] ?? null;
@@ -17,7 +17,7 @@ $tipos = [
     'frenos' => ['desc' => 'Fallo en sistema de frenos', 'afecta' => true],
     'puertas' => ['desc' => 'Puertas no cierran correctamente', 'afecta' => true],
     'climatizacion' => ['desc' => 'Fallo de climatizacion', 'afecta' => false],
-    'senalizacion' => ['desc' => 'Incidencia en senalizacion', 'afecta' => true]
+    'senalizacion' => ['desc' => 'Incidencia en señalización', 'afecta' => true]
 ];
 
 if ($tipo === '' || !isset($tipos[$tipo])) {

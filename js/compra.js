@@ -11,6 +11,7 @@ let precioBaseViaje = 0;
 let precioBaseViajeVuelta = 0;
 let precioFinalConDescuento = 0;
 let idaPendiente = null;
+let reservaEnCurso = false;
 
 let estado = {
     pasoActual: 1,
@@ -423,6 +424,7 @@ function renderizarFormulariosPasajeros() {
         const previo = datosPrevios[i] || {};
         const nombre = i === 0 ? (previo.nombre || pasajeroPrincipal.nombre || '') : (previo.nombre || '');
         const apellidos = i === 0 ? (previo.apellidos || pasajeroPrincipal.apellidos || '') : (previo.apellidos || '');
+        const documento = i === 0 ? (previo.documento || pasajeroPrincipal.documento || '') : (previo.documento || '');
         const email = i === 0 ? (previo.email || pasajeroPrincipal.email || '') : (previo.email || '');
 
         bloques.push(`
@@ -441,7 +443,7 @@ function renderizarFormulariosPasajeros() {
                     </div>
                     <div class="form-group full-width">
                         <label>${tr('documento_identidad', 'Documento de identidad')}</label>
-                        <input type="text" id="pasajero_documento_${i}" value="${String(previo.documento || '').replace(/"/g, '&quot;')}" maxlength="20" required>
+                        <input type="text" id="pasajero_documento_${i}" value="${String(documento).replace(/"/g, '&quot;')}" maxlength="20" required>
                         <span class="input-error" id="err_documento_${i}" style="display:none;"></span>
                     </div>
                     <div class="form-group full-width">
@@ -761,7 +763,10 @@ function confirmarReserva() {
 }
 
 function realizarReserva() {
-    const btn = document.querySelector('.btn-pay-confirm');
+    if (reservaEnCurso) return;
+    reservaEnCurso = true;
+
+    const btn = document.querySelector('.payment-form .btn-pay-confirm');
     if (btn) btn.disabled = true;
 
     fetch('php/api_reservar.php', {
@@ -806,10 +811,12 @@ function realizarReserva() {
 
             const err = data.error || tr('error_desconocido', 'Error desconocido.');
             alert(tr('error_reservar', 'Error al reservar: {error}', { error: err }));
+            reservaEnCurso = false;
             if (btn) btn.disabled = false;
         })
         .catch(err => {
             alert(tr('error_reservar', 'Error al reservar: {error}', { error: err.message || err }));
+            reservaEnCurso = false;
             if (btn) btn.disabled = false;
         });
 }

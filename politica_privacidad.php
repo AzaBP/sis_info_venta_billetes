@@ -38,7 +38,6 @@ $updatedAt = '30/04/2026';
             <p>Aplicamos medidas técnicas y organizativas razonables para proteger tus datos, incluyendo el uso de conexiones seguras y validaciones de acceso.</p>
 
             <div class="legal-note">Última actualización: <?php echo htmlspecialchars($updatedAt, ENT_QUOTES, 'UTF-8'); ?></div>
-            <a class="legal-back" href="registro.html"><i class="fa-solid fa-arrow-left"></i> Volver al registro</a>
         </section>
     </main>
 </body>
