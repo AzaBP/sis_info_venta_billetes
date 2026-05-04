@@ -6,6 +6,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const tripRadios = document.querySelectorAll('input[name="trip"]');
     const dateContainer = document.getElementById("date-container");
+    const searchForm = document.querySelector('form.search-form');
+
+    function actualizarModoViaje(tipoViaje) {
+        if (!searchForm) return;
+        searchForm.classList.toggle('roundtrip-mode', tipoViaje === 'roundtrip');
+    }
 
     function activarValidacionFechas() {
 
@@ -99,6 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         activarValidacionFechas();
+        actualizarModoViaje(tipoViaje);
     }
 
     // Forzar que "Solo ida" esté marcado por defecto al cargar
@@ -119,6 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     // Crear inputs de fecha según el valor por defecto (solo ida)
+    actualizarModoViaje('oneway');
     crearInputsFecha('oneway');
 
     // Añadir eventos para cambiar inputs de fecha según el tipo de viaje
