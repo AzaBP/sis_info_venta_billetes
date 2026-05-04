@@ -252,7 +252,6 @@ body {
     transition: transform 0.3s, background 0.3s;
     width: 180px;
     flex: 0 0 180px;
-    order: 0;
 }
 
 .search-submit-row {
@@ -261,14 +260,11 @@ body {
 
 .search-form.roundtrip-mode .search-submit-row {
     display: flex;
-    flex-basis: 100%;
     width: 100%;
+    flex-basis: 100%;
     order: 99;
     justify-content: center;
-}
-
-.search-form.roundtrip-mode .search-submit-row button {
-    margin: 0 auto;
+    margin-top: 10px;
 }
 
 .search-form button:hover {
