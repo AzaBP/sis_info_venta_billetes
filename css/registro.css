@@ -378,11 +378,15 @@ body {
 .checkbox-custom {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     margin-bottom: 16px;
     cursor: pointer;
     font-size: 0.95rem;
     color: #333;
+}
+
+.consent-copy {
+    display: inline;
 }
 
 .checkbox-custom:last-child {
