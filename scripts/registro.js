@@ -371,6 +371,15 @@ togglePasswordButtons.forEach(btn => {
 const params = new URLSearchParams(window.location.search);
 const error = params.get("error");
 const requestedStep = parseInt(params.get("step"), 10);
+const freshStart = params.get("fresh") === "1";
+
+if (freshStart) {
+    limpiarDatosFormulario();
+    registerForm.reset();
+    currentStep = 1;
+    const cleanUrl = window.location.pathname + (window.location.hash || '');
+    window.history.replaceState({}, document.title, cleanUrl);
+}
 
 if (!Number.isNaN(requestedStep) && requestedStep >= 1 && requestedStep <= 4) {
     currentStep = requestedStep;
@@ -411,7 +420,9 @@ if(error){
 }
 
 // Recuperar datos guardados en sessionStorage al cargar la página
-recuperarDatosFormulario();
+if (!freshStart) {
+    recuperarDatosFormulario();
+}
 
 // Limpiar datos cuando se envía el formulario exitosamente
 registerForm.addEventListener('submit', () => {

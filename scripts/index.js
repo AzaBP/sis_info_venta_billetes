@@ -33,8 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (fechaVuelta) {
                 fechaVuelta.min = this.value;
 
-                // Si la vuelta es menor que la ida → limpiar
-                if (fechaVuelta.value && fechaVuelta.value < this.value) {
+                // Si la vuelta es menor que la ida → limpiar (solo si ambas están completas)
+                if (fechaVuelta.value && this.value && fechaVuelta.value < this.value) {
                     fechaVuelta.value = "";
                 }
             }
@@ -46,7 +46,8 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             fechaVuelta.addEventListener("change", function () {
-                if (this.value < fechaIda.value) {
+                // Solo limpiar si la fecha está completa y es menor que la ida
+                if (this.value && fechaIda.value && this.value < fechaIda.value) {
                     this.value = "";
                 }
             });
@@ -89,13 +90,42 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Estado global para preservar fechas al cambiar tipo de viaje
+    let estadoFechas = {
+        fechaIda: '',
+        fechaVuelta: ''
+    };
+
     // Crear inputs de fecha según el valor por defecto (solo ida)
     crearInputsFecha('oneway');
 
     // Añadir eventos para cambiar inputs de fecha según el tipo de viaje
     tripRadios.forEach(function (radio) {
         radio.addEventListener("change", function () {
+            // Guardar fechas antes de recrear
+            const fechaIdaActual = document.getElementById('fecha-ida') || document.getElementById('fecha');
+            const fechaVueltaActual = document.getElementById('fecha-vuelta');
+            
+            if (fechaIdaActual && fechaIdaActual.value) {
+                estadoFechas.fechaIda = fechaIdaActual.value;
+            }
+            if (fechaVueltaActual && fechaVueltaActual.value) {
+                estadoFechas.fechaVuelta = fechaVueltaActual.value;
+            }
+            
             crearInputsFecha(this.value);
+            
+            // Restaurar fechas después de recrear
+            const nuevaFechaIda = document.getElementById('fecha-ida') || document.getElementById('fecha');
+            const nuevaFechaVuelta = document.getElementById('fecha-vuelta');
+            
+            if (nuevaFechaIda && estadoFechas.fechaIda) {
+                nuevaFechaIda.value = estadoFechas.fechaIda;
+            }
+            if (nuevaFechaVuelta && estadoFechas.fechaVuelta && this.value === 'roundtrip') {
+                nuevaFechaVuelta.value = estadoFechas.fechaVuelta;
+            }
+            
             // No mostrar error al cambiar tipo de viaje si el usuario no ha interactuado
             if (typeof usuarioHaInteractuado !== 'undefined') usuarioHaInteractuado = false;
         });
