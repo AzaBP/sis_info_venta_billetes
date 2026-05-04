@@ -215,9 +215,21 @@ body {
 }
 
 .search-form .input-group input,
-.search-form .date-field-group input,
-.search-form select {
+.search-form .date-field-group input {
     width: 100%;
+}
+
+.search-form select {
+    flex: 0 0 180px;
+}
+
+.search-form .trip-type {
+    width: 180px;
+    flex: 0 0 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
 }
 
 .search-form input:hover,
