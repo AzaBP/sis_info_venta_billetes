@@ -208,6 +208,18 @@ body {
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
+.search-form .input-group,
+.search-form .date-field-group {
+    width: 180px;
+    flex: 0 0 180px;
+}
+
+.search-form .input-group input,
+.search-form .date-field-group input,
+.search-form select {
+    width: 100%;
+}
+
 .search-form input:hover,
 .search-form select:hover {
     transform: scale(1.05);
@@ -284,7 +296,6 @@ body {
     gap: 25px;
     overflow-x: auto;
     scroll-behavior: smooth;
-    scrollbar-width: none;
 }
 
 .popular-track::-webkit-scrollbar,

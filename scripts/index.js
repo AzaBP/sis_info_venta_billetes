@@ -331,7 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 !fechaVuelta.value &&
                 window.usuarioHaInteractuado
             ) {
-                errorFechaVuelta = errorFechaVuelta || (t_err('fecha_vuelta_obligatoria') || 'Selecciona una fecha de vuelta.');
+                errorFechaVuelta = errorFechaVuelta || (t_err('error_fecha_vuelta') || 'Selecciona una fecha de vuelta.');
             }
 
             mostrarErrorFecha(fechaIda, fechaIdaErrorEl, errorFechaIda);
