@@ -272,6 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Variable global para evitar mostrar error tras cambiar tipo de viaje
         window.usuarioHaInteractuado = false;
+        window.estaBuscando = false;
 
         function validarFormulario() {
             const origen = inputOrigen.value.trim();
@@ -332,12 +333,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            // Mensaje de apoyo para vuelta obligatoria en ida/vuelta tras interacción
+            // Mensaje de apoyo para vuelta obligatoria en ida/vuelta SOLO si está buscando
             if (
                 fechaVuelta &&
                 document.querySelector('input[name="trip"]:checked')?.value === 'roundtrip' &&
                 !fechaVuelta.value &&
-                window.usuarioHaInteractuado
+                window.estaBuscando
             ) {
                 errorFechaVuelta = errorFechaVuelta || (t_err('error_fecha_vuelta') || 'Selecciona una fecha de vuelta.');
             }
@@ -394,11 +395,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Validar al intentar enviar
         form.addEventListener('submit', function(e) {
-            window.usuarioHaInteractuado = true;
+            window.estaBuscando = true;
             if (!validarFormulario()) {
                 e.preventDefault();
                 return false;
             }
+            window.estaBuscando = false;
         });
 
         const fechaIdaInput = document.getElementById('fecha-ida');
