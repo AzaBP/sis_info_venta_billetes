@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-Type: text/html; charset=UTF-8');
 
 require_once __DIR__ . '/php/Conexion.php';
 require_once __DIR__ . '/php/auth_helpers.php';
@@ -114,7 +115,7 @@ try {
             <button class="btn-incident red" data-tipo="frenos"><i class="fa-solid fa-train-tram"></i> Frenos</button>
             <button class="btn-incident yellow" data-tipo="puertas"><i class="fa-solid fa-door-closed"></i> Puertas</button>
             <button class="btn-incident lightblue" data-tipo="climatizacion"><i class="fa-solid fa-wind"></i> Climatizacion</button>
-            <button class="btn-incident green" data-tipo="senalizacion"><i class="fa-solid fa-signal"></i> Senalizacion</button>
+            <button class="btn-incident green" data-tipo="senalizacion"><i class="fa-solid fa-signal"></i> Señalización</button>
         </div>
 
         <div id="maqStatus" class="maq-status"></div>

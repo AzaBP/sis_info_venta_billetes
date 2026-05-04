@@ -20,7 +20,7 @@ $id_pasajero_gestionado = $_SESSION['cliente_gestionado'] ?? ($_GET['id_pasajero
 
 // Si el vendedor está gestionando a alguien, cargamos los datos de ESE pasajero
 if ($id_pasajero_gestionado) {
-    $stmt = $pdo->prepare('SELECT p.id_pasajero, u.nombre, u.apellido, u.email FROM PASAJERO p JOIN USUARIO u ON p.id_usuario = u.id_usuario WHERE p.id_pasajero = :id_pasajero');
+    $stmt = $pdo->prepare('SELECT p.id_pasajero, p.numero_documento, u.nombre, u.apellido, u.email FROM PASAJERO p JOIN USUARIO u ON p.id_usuario = u.id_usuario WHERE p.id_pasajero = :id_pasajero');
     $stmt->execute([':id_pasajero' => $id_pasajero_gestionado]);
     $pasajero = $stmt->fetch(PDO::FETCH_ASSOC);
     
@@ -32,6 +32,7 @@ if ($id_pasajero_gestionado) {
             'nombre' => $pasajero['nombre'],
             'apellido' => $pasajero['apellido'],
             'email' => $pasajero['email'],
+            'numero_documento' => $pasajero['numero_documento'] ?? '',
             'id_pasajero' => $pasajero['id_pasajero'] // ESTO ES LO IMPORTANTE
         ];
         // Guardamos en sesión para que las APIs de guardado lo vean
@@ -222,6 +223,19 @@ if ($id_pasajero_actual) {
     $stmt_abonos = $pdo->prepare($sql_abonos);
     $stmt_abonos->execute([':id_pasajero' => $id_pasajero_actual]);
     $abonos_usuario = $stmt_abonos->fetchAll(PDO::FETCH_ASSOC);
+}
+
+$documentoSesion = '';
+if (!empty($usuarioSesion['numero_documento'])) {
+    $documentoSesion = (string)$usuarioSesion['numero_documento'];
+} elseif ($id_pasajero_actual) {
+    $stmtDoc = $pdo->prepare('SELECT numero_documento FROM PASAJERO WHERE id_pasajero = :id_pasajero LIMIT 1');
+    $stmtDoc->execute([':id_pasajero' => (int)$id_pasajero_actual]);
+    $documentoSesion = (string)($stmtDoc->fetchColumn() ?: '');
+} elseif (isset($_SESSION['usuario']['id_usuario'])) {
+    $stmtDoc = $pdo->prepare('SELECT p.numero_documento FROM PASAJERO p WHERE p.id_usuario = :id_usuario LIMIT 1');
+    $stmtDoc->execute([':id_usuario' => (int)$_SESSION['usuario']['id_usuario']]);
+    $documentoSesion = (string)($stmtDoc->fetchColumn() ?: '');
 }
 
 ?>
@@ -791,7 +805,8 @@ if ($id_pasajero_actual) {
         pasajeroPrincipal: {
             nombre: <?php echo json_encode((string)($usuarioSesion['nombre'] ?? '')); ?>,
             apellidos: <?php echo json_encode((string)($usuarioSesion['apellido'] ?? '')); ?>,
-            email: <?php echo json_encode((string)($usuarioSesion['email'] ?? '')); ?>
+            email: <?php echo json_encode((string)($usuarioSesion['email'] ?? '')); ?>,
+            documento: <?php echo json_encode((string)$documentoSesion); ?>
         }
     };
     </script>

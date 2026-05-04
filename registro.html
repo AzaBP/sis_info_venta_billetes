@@ -7,6 +7,64 @@
     <link rel="stylesheet" href="css/session_menu.css">
     <link rel="stylesheet" href="css/legal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .legal-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 12, 28, 0.72);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 3000;
+        }
+
+        .legal-modal[hidden] {
+            display: none;
+        }
+
+        .legal-modal-card {
+            width: min(100%, 980px);
+            height: min(88vh, 900px);
+            background: #fff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .legal-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, #0a2a66, #123b85);
+            color: #fff;
+        }
+
+        .legal-modal-header h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .legal-modal-close {
+            border: 0;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;
+            cursor: pointer;
+        }
+
+        .legal-modal-frame {
+            width: 100%;
+            flex: 1;
+            border: 0;
+            background: #fff;
+        }
+    </style>
 </head>
 <body>
 
@@ -220,12 +278,12 @@
                                 <label class="checkbox-custom">
                                     <input type="checkbox" name="terminos" value="1">
                                     <span class="checkmark"></span>
-                                    <span data-i18n="acepto_terminos_parte1">Acepto los </span>&nbsp;<a href="terminos_y_condiciones.php" class="link-term" target="_blank" rel="noopener" data-i18n="terminos_y_condiciones_link">Términos y Condiciones</a>
+                                    <span data-i18n="acepto_terminos_parte1">Acepto los </span>&nbsp;<a href="terminos_y_condiciones.php" class="link-term" data-legal-src="terminos_y_condiciones.php" data-i18n="terminos_y_condiciones_link">Términos y Condiciones</a>
                                 </label>
                                 <label class="checkbox-custom">
                                     <input type="checkbox" name="privacidad" value="1">
                                     <span class="checkmark"></span>
-                                    <span data-i18n="acepto_privacidad_parte1">Acepto la </span>&nbsp;<a href="politica_privacidad.php" class="link-term" target="_blank" rel="noopener" data-i18n="politica_privacidad_link">Política de Privacidad</a>
+                                    <span data-i18n="acepto_privacidad_parte1">Acepto la </span>&nbsp;<a href="politica_privacidad.php" class="link-term" data-legal-src="politica_privacidad.php" data-i18n="politica_privacidad_link">Política de Privacidad</a>
                                 </label>
                                 <label class="checkbox-custom">
                                     <input type="checkbox" name="newsletter" value="1">
@@ -257,6 +315,18 @@
             </div>
         </section>
     </main>
+
+    <div id="legalModal" class="legal-modal" hidden>
+        <div class="legal-modal-card" role="dialog" aria-modal="true" aria-labelledby="legalModalTitle">
+            <div class="legal-modal-header">
+                <h3 id="legalModalTitle">Documento legal</h3>
+                <button type="button" class="legal-modal-close" id="legalModalClose" aria-label="Volver al registro">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <iframe id="legalModalFrame" class="legal-modal-frame" title="Documento legal"></iframe>
+        </div>
+    </div>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -297,6 +367,44 @@
         // NOTA: La validación de términos y privacidad ahora se realiza en cliente (scripts/registro.js)
         // para evitar recargar la página y perder los datos del formulario.
         // Si por algún motivo llegara aquí desde el servidor, la validación en cliente lo debería prevenir.
+
+        const legalModal = document.getElementById('legalModal');
+        const legalModalFrame = document.getElementById('legalModalFrame');
+        const legalModalClose = document.getElementById('legalModalClose');
+        const legalModalTitle = document.getElementById('legalModalTitle');
+
+        function cerrarLegalModal() {
+            if (!legalModal) return;
+            legalModal.hidden = true;
+            if (legalModalFrame) legalModalFrame.src = 'about:blank';
+            document.body.classList.remove('modal-open');
+        }
+
+        document.querySelectorAll('[data-legal-src]').forEach((link) => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const src = link.getAttribute('data-legal-src');
+                if (!src || !legalModal || !legalModalFrame) return;
+                legalModalTitle.textContent = link.textContent.trim();
+                legalModalFrame.src = src;
+                legalModal.hidden = false;
+                document.body.classList.add('modal-open');
+            });
+        });
+
+        if (legalModalClose) {
+            legalModalClose.addEventListener('click', cerrarLegalModal);
+        }
+
+        if (legalModal) {
+            legalModal.addEventListener('click', (e) => {
+                if (e.target === legalModal) cerrarLegalModal();
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') cerrarLegalModal();
+        });
     </script>
 </body>
 </html>

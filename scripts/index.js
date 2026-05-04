@@ -18,6 +18,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const hoy = new Date().toISOString().split("T")[0];
         fechaIda.min = hoy;
 
+        const dispararValidacion = () => {
+            if (typeof window.validarBusquedaViajes === 'function') {
+                window.validarBusquedaViajes();
+            }
+        };
+
+        ['input', 'change', 'keyup', 'blur'].forEach((eventName) => {
+            fechaIda.addEventListener(eventName, dispararValidacion);
+        });
+
         fechaIda.addEventListener("change", function () {
 
             if (fechaVuelta) {
@@ -31,6 +41,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         if (fechaVuelta) {
+            ['input', 'change', 'keyup', 'blur'].forEach((eventName) => {
+                fechaVuelta.addEventListener(eventName, dispararValidacion);
+            });
+
             fechaVuelta.addEventListener("change", function () {
                 if (this.value < fechaIda.value) {
                     this.value = "";
@@ -257,6 +271,8 @@ document.addEventListener("DOMContentLoaded", function () {
             return isFormComplete && !errorMsg;
         }
 
+        window.validarBusquedaViajes = validarFormulario;
+
         // Validar en cada cambio de campo relevante
         [inputOrigen, inputDestino].forEach(input => {
             input.addEventListener('input', function() {
@@ -289,6 +305,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.preventDefault();
                 return false;
             }
+        });
+
+        const fechaIdaInput = document.getElementById('fecha-ida');
+        const fechaVueltaInput = document.getElementById('fecha-vuelta');
+        [fechaIdaInput, fechaVueltaInput].forEach((input) => {
+            if (!input) return;
+            ['input', 'change', 'keyup', 'blur'].forEach((eventName) => {
+                input.addEventListener(eventName, validarFormulario);
+            });
         });
 
         // Validar al cargar (sin mostrar error)
