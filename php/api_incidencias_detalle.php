@@ -31,18 +31,6 @@ try {
         throw new RuntimeException('Conexion no disponible');
     }
 
-    $idEmpleado = null;
-    if (!$esAdmin) {
-        $stmt = $pdo->prepare(
-            "SELECT e.id_empleado
-             FROM empleado e
-             WHERE e.id_usuario = :id_usuario
-             LIMIT 1"
-        );
-        $stmt->execute([':id_usuario' => (int)$usuario['id_usuario']]);
-        $idEmpleado = (int)$stmt->fetchColumn();
-    }
-
     $sql = "SELECT i.id_incidencia, i.id_viaje, i.id_mantenimiento, i.id_maquinista, i.tipo_incidencia, i.origen, i.descripcion,
                    i.fecha_reporte, i.estado, i.afecta_pasajero, i.resolucion, i.fecha_resolucion,
                    v.fecha, v.hora_salida, v.hora_llegada, v.estado AS estado_viaje, v.id_tren,
@@ -57,16 +45,8 @@ try {
             LEFT JOIN usuario u ON u.id_usuario = em.id_usuario
             WHERE i.id_incidencia = :id_incidencia";
 
-    if (!$esAdmin) {
-        $sql .= " AND i.id_mantenimiento = :id_mantenimiento";
-    }
-
     $stmt = $pdo->prepare($sql);
-    $params = [':id_incidencia' => $id_incidencia];
-    if (!$esAdmin) {
-        $params[':id_mantenimiento'] = $idEmpleado;
-    }
-    $stmt->execute($params);
+    $stmt->execute([':id_incidencia' => $id_incidencia]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$row) {
