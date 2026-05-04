@@ -35,11 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (fechaVuelta && this.value) {
                 fechaVuelta.min = this.value;
-
-                // Solo limpiar si vuelta está completa Y es menor que ida
-                if (fechaVuelta.value && new Date(fechaVuelta.value) < new Date(this.value)) {
-                    fechaVuelta.value = "";
-                }
             }
         });
 
@@ -52,11 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
             // Solo en change: permitir que el navegador valide primero, luego comparar
             fechaVuelta.addEventListener("change", function () {
                 dispararValidacion();
-                
-                // Solo limpiar si está completa Y es menor que ida
-                if (this.value && fechaIda.value && new Date(this.value) < new Date(fechaIda.value)) {
-                    this.value = "";
-                }
             });
         }
     }

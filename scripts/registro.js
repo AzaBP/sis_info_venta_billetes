@@ -377,9 +377,25 @@ const freshStart = params.get("fresh") === "1";
 // La navegación interna es cuando: tiene step válido O tiene error (significa que estaba en registro)
 const isInternalNavigation = (!isNaN(requestedStep) && requestedStep >= 1 && requestedStep <= 4) || error;
 
+function limpiarCamposVisibles() {
+    const inputs = registerForm.querySelectorAll('input, select, textarea');
+    inputs.forEach((input) => {
+        if (input.type === 'checkbox' || input.type === 'radio') {
+            input.checked = false;
+            return;
+        }
+        if (input.tagName === 'SELECT') {
+            input.selectedIndex = 0;
+            return;
+        }
+        input.value = '';
+    });
+}
+
 if (freshStart || !isInternalNavigation) {
     limpiarDatosFormulario();
     registerForm.reset();
+    limpiarCamposVisibles();
     currentStep = 1;
     // Limpiar URL si viene con parámetros innecesarios
     if (freshStart) {
@@ -427,7 +443,7 @@ if(error){
 }
 
 // Recuperar datos guardados en sessionStorage al cargar la página
-if (!freshStart) {
+if (!freshStart && isInternalNavigation) {
     recuperarDatosFormulario();
 }
 
